@@ -16,12 +16,6 @@
   page above the fields, as the button of an offer page will.
 -->
 <script src="shared/head.js"></script>
-<script>
-  // Open decisions of the form: the depth of the fields (?depth=2|3|4|5) and their corners
-  // (?radius=0|2|4).
-  if (["2", "3", "4", "5"].includes(query.get("depth"))) document.documentElement.style.setProperty("--depth", `${query.get("depth")}px`);
-  if (["0", "2", "4"].includes(query.get("radius"))) document.documentElement.style.setProperty("--field-radius", `${query.get("radius")}px`);
-</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Anaheim:wght@500&display=block">
@@ -37,7 +31,7 @@
 
   /* ── Form: neumorphic, the fields pressed into the page ────────────────────────── */
 
-  /* The depth of the pressed fields and their corners: open decisions (?depth=, ?radius=). */
+  /* The depth of the pressed fields and their corners, chosen by the owner. */
   :root { --depth: 3px; --field-radius: 2px; }
 
   /* No panel: the fields are pressed into the page itself, aligned with the text above. */
