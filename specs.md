@@ -103,7 +103,7 @@ Each offer page shows:
 - the audience and the level (e.g. « Étudiants, développeurs, chefs de projet technique »);
 - the prerequisites;
 - the objectives;
-- the modules, each with an indicative duration (« 2 jours, adaptable ») and a summary of its program;
+- the modules, each with an indicative duration (« 2 jours, adaptable ») and a summary of its program. The modules are independent: a client takes one or several, in any order, so the site never presents them as a sequence to follow (« Voir les modules », not « Voir le programme », and no module numbers);
 - the formats (on-site or remote) and the note that the program and exercises are adapted to the group;
 - a call to action to the contact form, with the domain preselected in the form;
 - links to the related domains.
