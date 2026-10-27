@@ -44,7 +44,7 @@
   const VARIANTS = {
     text: {
       label: "Text font",
-      options: { roboto: "Roboto", "open-sans": "Open Sans" },
+      options: { roboto: "Roboto", "open-sans": "Open Sans", "google-sans": "Google Sans", "alegreya-sans": "Alegreya Sans" },
       fallback: "roboto",
     },
     view: {
@@ -55,7 +55,7 @@
   };
   // Iteration 2: the Console style chosen by the owner, in white instead of green, Manrope and
   // Roboto only, the headings of the former site. Atelier was set aside.
-  const NOTE = "Night style, iteration 3: neutral blacks and white, Manrope for the titles, Roboto or Open Sans for the text, the SYLENT logo, the headings of the former site.";
+  const NOTE = "Night style, iteration 3: neutral blacks and white, Manrope for the titles, a text font to choose, the SYLENT logo, the headings of the former site.";
 
   const params = new URLSearchParams(location.search);
   const chosen = Object.fromEntries(Object.entries(VARIANTS).map(([key, variant]) =>
