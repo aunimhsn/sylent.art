@@ -29,6 +29,8 @@
   const query = new URLSearchParams(location.search);
   const reduced = query.get("motion") === "off" || matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.documentElement.dataset.motion = reduced ? "off" : "on";
+  // ?debug=1 shows the script errors in a red band at the top of the page.
+  if (query.has("debug")) { const show = text => document.body.insertAdjacentHTML("afterbegin", `<pre style="position:fixed;z-index:999;top:0;left:0;right:0;white-space:pre-wrap;background:#c00;color:#fff;font:14px monospace">${text}</pre>`); addEventListener("error", e => show(e.message + " " + e.filename + ":" + e.lineno)); addEventListener("unhandledrejection", e => show("rejection " + (e.reason && e.reason.stack || e.reason))); }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
