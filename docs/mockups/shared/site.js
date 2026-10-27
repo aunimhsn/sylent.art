@@ -37,7 +37,7 @@ const currentPage = document.body.dataset.page;
 const current = page => page === currentPage ? ' aria-current="page"' : "";
 
 // A link to another site opens in a new tab, which a screen reader announces.
-const external = (href, label) => `<a href="${href}" target="_blank" rel="noopener">${label}<span class="app-hidden"> (nouvel onglet)</span></a>`;
+const external = (href, label) => `<a href="${href}" target="_blank" rel="noopener">${label}<span class="app-hidden"> [nouvel onglet]</span></a>`;
 
 // The call to action and the footer, which a page places at its end.
 const siteCta = () => `
