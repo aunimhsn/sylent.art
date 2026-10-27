@@ -155,6 +155,112 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll('a[href^="tel:"]').forEach(link => { link.tabIndex = -1; });
 });
 
+// The footer grid: under the pointer, an orange fluid runs along its lines. Each crossing of the
+// grid holds some energy: the pointer pours energy into the crossings around it as it moves, the
+// energy spreads to the neighbor crossings and fades, and each line glows with the energy of its
+// two ends. Nothing moves when the visitor asked to reduce motion.
+document.addEventListener("DOMContentLoaded", () => {
+  const footer = document.querySelector(".app-footer");
+  if (!footer || reduced) return;
+  const CELL = 40;
+  const canvas = Object.assign(document.createElement("canvas"), { className: "app-footer-fluid" });
+  canvas.setAttribute("aria-hidden", "true");
+  footer.prepend(canvas);
+  const context = canvas.getContext("2d");
+  const orange = getComputedStyle(document.documentElement).getPropertyValue("--signal").trim() || "#d3450e";
+  const [red, green, blue] = [1, 3, 5].map(index => parseInt(orange.slice(index, index + 2), 16));
+  let columns = 0, rows = 0, energy = new Float32Array(0), next = new Float32Array(0);
+  let width = 0, height = 0, running = false, seen = false, pointer = null;
+
+  function resize() {
+    const ratio = Math.min(devicePixelRatio, 2);
+    width = footer.clientWidth;
+    height = footer.clientHeight;
+    canvas.width = Math.round(width * ratio);
+    canvas.height = Math.round(height * ratio);
+    context.setTransform(ratio, 0, 0, ratio, 0, 0);
+    columns = Math.ceil(width / CELL) + 1;
+    rows = Math.ceil(height / CELL) + 1;
+    energy = new Float32Array(columns * rows);
+    next = new Float32Array(columns * rows);
+  }
+  new ResizeObserver(resize).observe(footer);
+  new IntersectionObserver(([entry]) => { seen = entry.isIntersecting; }).observe(footer);
+
+  // Pour energy into the crossings within 1.6 cells of the pointer, more as it moves faster.
+  footer.addEventListener("pointermove", event => {
+    const box = footer.getBoundingClientRect();
+    const x = event.clientX - box.left, y = event.clientY - box.top;
+    const moved = pointer ? Math.hypot(x - pointer.x, y - pointer.y) : 0;
+    pointer = { x, y };
+    const amount = Math.min(0.9, 0.12 + moved / 60);
+    const reach = CELL * 1.6;
+    for (let row = Math.max(0, Math.floor((y - reach) / CELL)); row <= Math.min(rows - 1, Math.ceil((y + reach) / CELL)); row++) {
+      for (let column = Math.max(0, Math.floor((x - reach) / CELL)); column <= Math.min(columns - 1, Math.ceil((x + reach) / CELL)); column++) {
+        const distance = Math.hypot(column * CELL - x, row * CELL - y);
+        if (distance < reach) {
+          const index = row * columns + column;
+          energy[index] = Math.min(1, energy[index] + amount * (1 - distance / reach));
+        }
+      }
+    }
+    if (!running) { running = true; requestAnimationFrame(step); }
+  });
+  footer.addEventListener("pointerleave", () => { pointer = null; });
+
+  function line(x1, y1, x2, y2, a, b) {
+    if (a + b < 0.02) return;
+    const gradient = context.createLinearGradient(x1, y1, x2, y2);
+    gradient.addColorStop(0, `rgba(${red}, ${green}, ${blue}, ${Math.min(1, a * 1.3)})`);
+    gradient.addColorStop(1, `rgba(${red}, ${green}, ${blue}, ${Math.min(1, b * 1.3)})`);
+    context.strokeStyle = gradient;
+    context.beginPath();
+    context.moveTo(x1, y1);
+    context.lineTo(x2, y2);
+    context.stroke();
+  }
+
+  function step() {
+    // Spread: each crossing moves toward the mean of its neighbors, then fades a little.
+    let total = 0;
+    for (let row = 0; row < rows; row++) {
+      for (let column = 0; column < columns; column++) {
+        const index = row * columns + column;
+        let sum = 0, count = 0;
+        if (column > 0) { sum += energy[index - 1]; count++; }
+        if (column < columns - 1) { sum += energy[index + 1]; count++; }
+        if (row > 0) { sum += energy[index - columns]; count++; }
+        if (row < rows - 1) { sum += energy[index + columns]; count++; }
+        const value = (energy[index] + (sum / count - energy[index]) * 0.42) * 0.968;
+        next[index] = value < 0.004 ? 0 : value;
+        total += next[index];
+      }
+    }
+    [energy, next] = [next, energy];
+
+    if (seen) {
+      context.clearRect(0, 0, width, height);
+      // A soft wide stroke for the glow, then the thin line itself.
+      for (const [lineWidth, alpha] of [[4, 0.22], [1, 1]]) {
+        context.lineWidth = lineWidth;
+        context.globalAlpha = alpha;
+        for (let row = 0; row < rows; row++) {
+          for (let column = 0; column < columns; column++) {
+            const index = row * columns + column;
+            const x = column * CELL + 0.5, y = row * CELL + 0.5;
+            if (column < columns - 1) line(x, y, x + CELL, y, energy[index], energy[index + 1]);
+            if (row < rows - 1) line(x, y, x, y + CELL, energy[index], energy[index + columns]);
+          }
+        }
+      }
+      context.globalAlpha = 1;
+    }
+    // Stop once the fluid is gone, until the pointer moves again.
+    if (total > 0.01 || pointer) requestAnimationFrame(step);
+    else { running = false; context.clearRect(0, 0, width, height); }
+  }
+});
+
 // The reveals start hidden; if the animations don't start (a library that doesn't load), show
 // everything.
 document.documentElement.classList.add("is-js");
