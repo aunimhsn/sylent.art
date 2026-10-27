@@ -39,8 +39,8 @@ What the primary audiences must find before getting in touch:
 
 Differentiators, centered on pedagogy and the human side (the trainer is not presented as a « field developer »):
 
-1. **Making the complex clear**: popularizing complex concepts with analogies and metaphors.
-2. **Step-by-step guidance**: patience and empathy, from a point A to a point B, « en toute sérénité ».
+1. **Defining a why** (« Définir un pourquoi »): starting from the meaning: why learn this notion, why this module, why with this trainer.
+2. **Patience and kindness** (« Avec patience et bienveillance »): step by step, with analogies and metaphors that make complex concepts clear, from a point A to a point B, « en toute sérénité ».
 3. **Learning to learn**: a self-taught profile in computing, who passes on curiosity and the method to keep learning.
 4. **Experience**: teaching since 2021, more than 900 training hours per year since 2023, with five schools and training organizations.
 
