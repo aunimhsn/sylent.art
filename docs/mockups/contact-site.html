@@ -26,6 +26,19 @@
   /* Room at the bottom for the wordmark of the footer, which straddles its top edge. */
   .app-contact { padding: calc(var(--header-height) + clamp(48px, 7vw, 96px)) 0 clamp(150px, 17vw, 230px); }
   .app-contact .app-lead { margin-bottom: clamp(40px, 5vw, 64px); }
+  /* Texture: the grid of the hero of the home page, fading out from the top of the page. */
+  .app-contact { position: relative; }
+  .app-contact::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: min(100%, 1100px);
+    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mask-image: linear-gradient(#000, transparent);
+    pointer-events: none;
+  }
+  .app-contact .app-wrap { position: relative; }
   .app-contact-grid { display: grid; gap: 56px; }
   @media (min-width: 960px) { .app-contact-grid { grid-template-columns: 7fr 4fr; gap: 72px; align-items: start; } }
 
