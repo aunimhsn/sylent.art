@@ -41,7 +41,7 @@ Differentiators, centered on pedagogy and the human side (the trainer is not pre
 
 1. **Defining a why** (« Définir un pourquoi »): starting from the meaning: why this notion, why this module, why together; once the meaning is understood, the wish to learn follows.
 2. **Step by step** (« Pas à pas »): with patience and kindness, one analogy after another, from the learners' point A to their point B, « en toute sérénité ».
-3. **Learning to learn** (« Apprendre à apprendre »): an indispensable skill in computing, where everything changes fast; the trainer, self-taught, passes on its two keys, curiosity and method.
+3. **Learning to learn** (« Apprendre à apprendre »): computing changes fast, so learning on one's own becomes indispensable; the trainer, self-taught, passes on its two keys, curiosity and method.
 4. **Experience**: teaching since 2021, more than 900 training hours per year since 2023, with five schools and training organizations.
 
 Rejected as slogans, because they are expected of any trainer: « savoir-faire et savoir-être », « il n'y a pas de questions bêtes ».
