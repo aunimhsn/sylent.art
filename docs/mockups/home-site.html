@@ -330,12 +330,8 @@
 
   /* ── About ──────────────────────────────────────────────────────────────────────── */
 
-  .app-about-grid { display: grid; gap: 40px; align-items: center; }
-  @media (min-width: 900px) { .app-about-grid { grid-template-columns: 5fr 7fr; gap: 72px; } }
-  .app-portrait { position: relative; aspect-ratio: 4 / 5; overflow: hidden; color: var(--text); background: repeating-linear-gradient(-49.5deg, transparent 0 22px, var(--grid-line) 22px 23px), radial-gradient(70% 70% at 30% 20%, rgb(255 255 255 / .07), transparent 70%), var(--panel); }
-  /* Placeholder until the owner chooses a photo. */
-  .app-portrait .app-mark { position: absolute; left: 50%; top: 50%; height: 34%; width: auto; transform: translate(-50%, -50%); opacity: .9; }
-  .app-portrait span { position: absolute; left: 18px; bottom: 16px; color: var(--dim); font: italic var(--text-weight) 13px/1 var(--font-text); }
+  /* No photo for now: the text alone, aligned left. */
+  .app-about-grid { max-width: 760px; }
   .app-about-name { margin: 0; font: 800 clamp(30px, 3.6vw, 46px)/1.05 var(--font-title); letter-spacing: var(--title-tracking); }
   .app-about-grid .app-lead { margin-top: 18px; }
   .app-figures { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 32px 0; padding: 24px 0; border-block: 1px solid var(--line); }
@@ -528,7 +524,6 @@
       <div class="app-wrap">
         ${heading(`Qui suis-je${NB}?`, "Transmettre", "about-title")}
         <div class="app-about-grid">
-          <div class="app-portrait app-reveal">${MARK}<span>Photo à venir</span></div>
           <div class="app-reveal">
             <h3 class="app-about-name">Aunim Hassan</h3>
             <p class="app-lead">J’aime apprendre et enseigner ce qui me passionne. C’est pourquoi, aujourd’hui, je mets à profit mes connaissances et mon savoir-faire afin de vous fournir les meilleurs outils et les compétences nécessaires à la réalisation de vos projets.</p>
