@@ -30,6 +30,9 @@ const heading = (title, ghost, id, level = 2) => `
 const PAGES = { home: "home-site.html", contact: "contact-site.html" };
 // The articles are left out of the first release.
 const NAVIGATION = [["Formations", `${PAGES.home}#formations`, "courses"], ["À propos", "#", "about"], ["Contact", PAGES.contact, "contact"]];
+// The header and the menu leave out Contact: their « Me contacter » button leads there. The
+// footer keeps the full list.
+const MENU = NAVIGATION.filter(([, , page]) => page !== "contact");
 const currentPage = document.body.dataset.page;
 const current = page => page === currentPage ? ' aria-current="page"' : "";
 
@@ -62,14 +65,14 @@ document.body.insertAdjacentHTML("afterbegin", `
   <header class="app-header" id="header">
     <div class="app-wrap">
       <a class="app-logo" href="${PAGES.home}" aria-label="Sylent, accueil">${MARK}${WORDMARK}</a>
-      <nav class="app-nav" aria-label="Navigation principale">${NAVIGATION.map(([label, href, page]) => `<a href="${href}"${current(page)}>${label}</a>`).join("")}</nav>
-      <a class="app-button app-magnetic" href="${PAGES.contact}">Me contacter</a>
+      <nav class="app-nav" aria-label="Navigation principale">${MENU.map(([label, href, page]) => `<a href="${href}"${current(page)}>${label}</a>`).join("")}</nav>
+      <a class="app-button app-magnetic" href="${PAGES.contact}"${current("contact")}>Me contacter</a>
       <button class="app-burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Ouvrir le menu" id="burger">${icon("menu", 24)}</button>
     </div>
   </header>
   <div class="app-menu" id="menu" aria-hidden="true">
-    ${NAVIGATION.map(([label, href, page]) => `<a class="app-menu-link" href="${href}"${current(page)}>${label}</a>`).join("")}
-    <a class="app-button" href="${PAGES.contact}">Me contacter</a>
+    ${MENU.map(([label, href, page]) => `<a class="app-menu-link" href="${href}"${current(page)}>${label}</a>`).join("")}
+    <a class="app-button" href="${PAGES.contact}"${current("contact")}>Me contacter</a>
     <p class="app-motto">Une vie, mille leçons</p>
   </div>
   <button class="app-top" type="button" id="back-to-top" aria-label="Revenir en haut de la page">${icon("up", 20)}</button>`);

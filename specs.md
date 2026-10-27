@@ -78,7 +78,7 @@ Proofs:
 | Legal notice and privacy policy | `/policy` | The legal information and how the form and audience data are handled. |
 | Not found | `404.html` | A page « Page introuvable » with links to the home page and the offers. |
 
-Every page has a header with the navigation (Formations, Articles, À propos, Contact) and a visible « Me contacter » call to action, and a footer with the contact details, the legal page and the signature.
+Every page has a header with the navigation (Formations, Articles, À propos) and a visible « Me contacter » button, which leads to the contact page (so the navigation has no separate « Contact » link), and a footer with the navigation, the contact details, the legal page and the signature.
 
 **First release**: the articles are left out, to meet the deadline of the old server (see `roadmap.md`). The navigation has no « Articles » link until they come back, and their former URLs redirect to the home page (see [URLs and redirects](#urls-and-redirects)).
 
