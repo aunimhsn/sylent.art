@@ -182,7 +182,7 @@
   const ways = `
     <aside class="app-ways app-reveal" aria-labelledby="ways-title">
       <h2 id="ways-title">Autres moyens</h2>
-      <ul>${WAYS.map(([label, value, href]) => `<li><span>${label}</span><a href="${href}">${value}</a></li>`).join("")}</ul>
+      <ul>${WAYS.map(([label, value, href]) => `<li><span>${label}</span>${href.startsWith("https:") ? external(href, value) : `<a href="${href}">${value}</a>`}</li>`).join("")}</ul>
     </aside>`;
 
   document.getElementById("content").innerHTML = `

@@ -242,3 +242,33 @@ img, svg, canvas { display: block; }
 html[data-motion="on"].is-js .app-reveal { opacity: 0; transform: translateY(36px); }
 html[data-motion="on"].is-js .app-intro { visibility: hidden; }
 html:not(.is-js) .app-intro { visibility: visible !important; }
+
+/* ── Contact links: the email copies itself, the phone calls only on touch screens ───────── */
+
+/* The badge that confirms the copy of the email address: it fades in while rising a little,
+   then fades out. */
+.app-copied {
+  position: absolute;
+  z-index: 60;
+  padding: 6px 10px;
+  border-radius: 2px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font: 700 12px/1 var(--font-title);
+  letter-spacing: .02em;
+  pointer-events: none;
+  animation: app-copied 1.6s ease forwards;
+}
+@keyframes app-copied {
+  0% { opacity: 0; transform: translate(-50%, 6px); }
+  18% { opacity: 1; transform: translate(-50%, 0); }
+  72% { opacity: 1; transform: translate(-50%, -3px); }
+  100% { opacity: 0; transform: translate(-50%, -10px); }
+}
+html[data-motion="off"] .app-copied { animation-name: app-copied-still; }
+@keyframes app-copied-still { 0%, 100% { opacity: 0; transform: translate(-50%, 0); } 15%, 75% { opacity: 1; transform: translate(-50%, 0); } }
+.app-announce, .app-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+/* A phone number is a link only where it can call: elsewhere it is plain text, without hover. */
+@media not (pointer: coarse) {
+  a[href^="tel:"] { pointer-events: none; cursor: text; }
+}

@@ -36,6 +36,9 @@ const MENU = NAVIGATION.filter(([, , page]) => page !== "contact");
 const currentPage = document.body.dataset.page;
 const current = page => page === currentPage ? ' aria-current="page"' : "";
 
+// A link to another site opens in a new tab, which a screen reader announces.
+const external = (href, label) => `<a href="${href}" target="_blank" rel="noopener">${label}<span class="app-hidden"> (nouvel onglet)</span></a>`;
+
 // The call to action and the footer, which a page places at its end.
 const siteCta = () => `
   <section class="app-cta" aria-labelledby="cta-title">
@@ -52,7 +55,7 @@ const siteFooter = () => `
       <div class="app-footer-grid">
         <div><p class="app-motto">Une vie, mille leçons</p><p>Formateur en informatique, sur site ou à distance.</p></div>
         <div><h2>Navigation</h2><ul>${NAVIGATION.map(([label, href]) => `<li><a href="${href}">${label}</a></li>`).join("")}</ul></div>
-        <div><h2>Contact</h2><ul><li><a href="mailto:aunim.hassan@gmail.com">aunim.hassan@gmail.com</a></li><li><a href="tel:+33613449424">06${NB}13${NB}44${NB}94${NB}24</a></li><li><a href="https://www.linkedin.com/in/aunimhsn/">linkedin.com/in/aunimhsn</a></li><li><a href="https://github.com/aunimhsn">github.com/aunimhsn</a></li></ul></div>
+        <div><h2>Contact</h2><ul><li><a href="mailto:aunim.hassan@gmail.com">aunim.hassan@gmail.com</a></li><li><a href="tel:+33613449424">06${NB}13${NB}44${NB}94${NB}24</a></li><li>${external("https://www.linkedin.com/in/aunimhsn/", "linkedin.com/in/aunimhsn")}</li><li>${external("https://github.com/aunimhsn", "github.com/aunimhsn")}</li></ul></div>
         <div><h2>Informations</h2><ul><li><a href="#">Mentions légales</a></li><li><a href="#">Confidentialité</a></li><li>NDA${NB}: à fournir</li></ul></div>
       </div>
       <p class="app-footer-bottom">© 2026 Aunim Hassan · Micro-entreprise</p>
@@ -111,6 +114,45 @@ addEventListener("scroll", () => backToTop.classList.toggle("is-visible", scroll
 backToTop.addEventListener("click", () => {
   scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
   document.querySelector(".app-logo").focus({ preventScroll: true });
+});
+
+// Contact links. A click on an email address copies it, with a small « Copiée » badge, since
+// many visitors have no mail application set up on their computer; a screen reader hears it too.
+// A phone number is a link only on touch screens, where it opens the phone application.
+const announcer = document.createElement("p");
+announcer.className = "app-announce";
+announcer.setAttribute("aria-live", "polite");
+document.body.appendChild(announcer);
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    // Older browsers, or a page that isn't served over HTTPS: the former way to copy.
+    const area = Object.assign(document.createElement("textarea"), { value: text });
+    area.setAttribute("readonly", "");
+    Object.assign(area.style, { position: "fixed", opacity: "0" });
+    document.body.appendChild(area);
+    area.select();
+    document.execCommand("copy");
+    area.remove();
+  }
+}
+document.addEventListener("click", async event => {
+  const link = event.target.closest('a[href^="mailto:"]');
+  if (!link) return;
+  event.preventDefault();
+  await copyText(link.href.replace("mailto:", ""));
+  const box = link.getBoundingClientRect();
+  const badge = Object.assign(document.createElement("span"), { className: "app-copied", textContent: "Copiée" });
+  Object.assign(badge.style, { left: `${box.left + box.width / 2 + scrollX}px`, top: `${box.top + scrollY - 34}px` });
+  badge.addEventListener("animationend", () => badge.remove());
+  document.body.appendChild(badge);
+  announcer.textContent = "";
+  announcer.textContent = "Adresse email copiée";
+});
+document.addEventListener("DOMContentLoaded", () => {
+  if (matchMedia("(pointer: coarse)").matches) return;
+  document.querySelectorAll('a[href^="tel:"]').forEach(link => { link.tabIndex = -1; });
 });
 
 // The reveals start hidden; if the animations don't start (a library that doesn't load), show
