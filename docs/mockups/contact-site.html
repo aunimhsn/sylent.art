@@ -16,6 +16,10 @@
   page above the fields, as the button of an offer page will.
 -->
 <script src="shared/head.js"></script>
+<script>
+  // Open decision: the style of the fields (?fields=pressed|flat-dark|flat-light).
+  if (["flat-dark", "flat-light"].includes(query.get("fields"))) document.documentElement.dataset.fields = query.get("fields");
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Anaheim:wght@500&display=block">
@@ -47,6 +51,11 @@
   @media (min-width: 960px) { .app-contact-grid { grid-template-columns: 7fr 4fr; gap: 72px; align-items: start; } }
 
   /* ── Form: neumorphic, the fields pressed into the page ────────────────────────── */
+
+  /* Open decision: neumorphic fields, or flat ones filled with a gray darker or lighter than
+     the page (?fields=pressed|flat-dark|flat-light). */
+  :root[data-fields="flat-dark"] .app-form { --surface: #030303; --pressed: none; }
+  :root[data-fields="flat-light"] .app-form { --surface: #161616; --pressed: none; }
 
   /* The depth of the pressed fields and their corners, chosen by the owner. */
   :root { --depth: 3px; --field-radius: 2px; }
@@ -108,7 +117,7 @@
     textarea.app-input { scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
   }
   /* The domain chosen on an offer page, above the fields. */
-  .app-topic { display: inline-flex; align-items: center; gap: 12px; margin: 0 0 26px; padding: 10px 10px 10px 16px; border-radius: var(--field-radius); box-shadow: var(--pressed); color: var(--secondary); }
+  .app-topic { display: inline-flex; align-items: center; gap: 12px; margin: 0 0 26px; padding: 10px 10px 10px 16px; border-radius: var(--field-radius); background: var(--surface); box-shadow: var(--pressed); color: var(--secondary); }
   .app-topic strong { color: var(--text); font-weight: inherit; }
   .app-topic button { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; background: none; color: var(--secondary); cursor: pointer; transition: color .25s; }
   .app-topic button:hover { color: var(--text); }
