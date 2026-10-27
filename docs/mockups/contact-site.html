@@ -25,20 +25,24 @@
 
   /* Room at the bottom for the wordmark of the footer, which straddles its top edge. */
   .app-contact { padding: calc(var(--header-height) + clamp(48px, 7vw, 96px)) 0 clamp(150px, 17vw, 230px); }
-  .app-contact .app-lead { margin-bottom: clamp(40px, 5vw, 64px); }
-  /* Texture: the grid of the hero of the home page, fading out from the top of the page. */
-  .app-contact { position: relative; }
-  .app-contact::before {
+  /* Texture: the grid of the hero of the home page, from the top of the page; it fades out
+     just before the first field of the form. */
+  .app-contact-head { position: relative; padding-bottom: clamp(40px, 5vw, 64px); }
+  .app-contact-head .app-lead { margin-bottom: 0; }
+  .app-contact-head::before {
     content: "";
     position: absolute;
-    inset: 0 0 auto;
-    height: min(100%, 1100px);
+    z-index: -1;
+    left: 50%;
+    width: 100vw;
+    translate: -50% 0;
+    top: calc(-1 * (var(--header-height) + clamp(48px, 7vw, 96px)));
+    bottom: -34px;
     background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
     background-size: 32px 32px;
-    mask-image: linear-gradient(#000, transparent);
+    mask-image: linear-gradient(#000 35%, transparent);
     pointer-events: none;
   }
-  .app-contact .app-wrap { position: relative; }
   .app-contact-grid { display: grid; gap: 56px; }
   @media (min-width: 960px) { .app-contact-grid { grid-template-columns: 7fr 4fr; gap: 72px; align-items: start; } }
 
@@ -181,8 +185,10 @@
   document.getElementById("content").innerHTML = `
     <section class="app-contact" aria-labelledby="contact-title">
       <div class="app-wrap">
-        ${heading("Contact", "Echanger", "contact-title", 1)}
-        <p class="app-lead app-reveal">Un module, une classe, une équipe à former${NB}? Décrivez votre besoin.</p>
+        <div class="app-contact-head">
+          ${heading("Contact", "Echanger", "contact-title", 1)}
+          <p class="app-lead app-reveal">Un module, une classe, une équipe à former${NB}? Décrivez votre besoin.</p>
+        </div>
         <div class="app-contact-grid">${form}${ways}</div>
       </div>
     </section>
