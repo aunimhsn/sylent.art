@@ -1,128 +1,72 @@
 <!doctype html>
-<html lang="fr" data-theme="console">
+<html lang="fr" data-theme="night">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sylent · Formateur en informatique</title>
 <meta name="description" content="Formateur en informatique depuis 2021 : développement, bases de données, tests, Python et IA, pour les écoles, les organismes de formation et les entreprises.">
 <!--
-  The home page of sylent.art, in the style chosen with ?variant=console|atelier (mock-up,
-  step 4 of roadmap.md). It is shown at phone and desktop width by home.html; open it alone
-  to see it at the width of the window. ?motion=off shows the page without animations, as
-  for a visitor who asked their system to reduce motion; ?shot=1 copies the 3D scene into an
-  image, since headless screenshots don't show WebGL.
+  The home page of sylent.art (mock-up, step 4 of roadmap.md), shown at phone and desktop width
+  by home.html; open it alone to see it at the width of the window.
+  ?motion=off shows the page without animations, as for a visitor who asked their system to
+  reduce motion; ?shot=1 copies the 3D scene into an image, since headless screenshots don't
+  show WebGL.
 
-  Layout: set 1 of docs/wireframes (home.excalidraw). Each style only sets tokens (CSS
-  variables under :root[data-theme="…"]); the components use nothing else.
-  The fonts come from Google Fonts here (all under the SIL Open Font License); the site will
-  self-host them. Three.js and GSAP come from jsDelivr here; the site will bundle them.
-  The texts are sample content close to specs.md; the phone number, the photo and the partner
-  logos are placeholders.
+  Layout: set 1 of docs/wireframes (home.excalidraw). The style only sets tokens (CSS variables
+  under :root[data-theme="…"]); the components use nothing else.
+  Brand: the mark and the SYLENT wordmark (Montserrat 800, -0.195 em, drawn as a path so that
+  the site loads no third font) follow the charter of sylent-slides. The section headings take
+  up the principle of the former site: a title over a large faded word (Partenaires over
+  Confiance).
+  Fonts: Manrope (titles, interface) and Roboto (text), from Google Fonts here, self-hosted by
+  the site. Three.js and GSAP come from jsDelivr here; the site will bundle them.
+  The texts are sample content close to specs.md; the phone number and the photo are
+  placeholders, and the logo of IGENSIA Tech is missing.
 -->
 <script>
-  // The style and the motion are chosen before the first paint, so that nothing flashes.
+  // The motion is chosen before the first paint, so that nothing flashes.
   const query = new URLSearchParams(location.search);
-  const variant = ["console", "atelier"].includes(query.get("variant")) ? query.get("variant") : "console";
-  document.documentElement.dataset.theme = variant;
   const reduced = query.get("motion") === "off" || matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.documentElement.dataset.motion = reduced ? "off" : "on";
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=Source+Code+Pro:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=block">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Roboto:ital,wght@0,400;0,500;1,400&display=block">
 <style>
-  /* ── Styles: tokens only ─────────────────────────────────────────────────────────── */
+  /* ── Style: tokens only ──────────────────────────────────────────────────────────── */
 
-  /* A · Console: the identity of the course materials (docs/branding of sylent-courses):
-     night background, mint green accent, Poppins titles, a serif to read, monospace labels. */
-  :root[data-theme="console"] {
-    --font-display: "Poppins", sans-serif;
-    --font-text: "Source Serif 4", Georgia, serif;
-    --font-label: "Source Code Pro", ui-monospace, monospace;
-    --display-weight: 700;
-    --display-tracking: -0.035em;
-    --display-line: 1.04;
-    --highlight-style: normal;
-    --label-case: lowercase;
-    --label-prefix: "// ";
-    --wordmark-font: "Poppins", sans-serif;
-    --wordmark-weight: 800;
-    --wordmark-case: uppercase;
+  /* Night: neutral blacks without a blue tint, white as the only accent, sharp buttons,
+     glass cards. */
+  :root[data-theme="night"] {
+    --font-title: "Manrope", system-ui, sans-serif;
+    --font-text: "Roboto", system-ui, sans-serif;
+    --title-weight: 800;
+    --title-tracking: -0.045em;
 
-    --bg: #0b1015;
-    --bg-alt: #0f161c;
-    --card: #0f161c;
-    --card-hover: #121b23;
-    --line: #1b2630;
-    --text: #e7edf3;
-    --weak: #8b9aa7;
-    --accent: #3ddc84;
-    --accent-text: #3ddc84;
-    --on-accent: #0b1015;
-    --accent-soft: rgb(61 220 132 / 0.13);
-    --button-bg: #3ddc84;
-    --button-text: #0b1015;
-    --button-line: #3ddc84;
-    --ghost-line: #2c3a46;
-    --header-bg: rgb(11 16 21 / 0.72);
-    --grid-line: rgb(61 220 132 / 0.07);
-    --glow: rgb(61 220 132 / 0.22);
-    --badge-bg: #0f161c;
-    --chip-bg: transparent;
-    --cta-bg: #0f161c;
+    --bg: #0a0a0a;
+    --bg-alt: #0d0d0d;
+    --panel: #171717;
+    --text: #ffffff;
+    --secondary: #a3a3a3;
+    --dim: #737373;
+    --line: #262626;
+    --line-strong: #404040;
+    --accent: #ffffff;
+    --on-accent: #0a0a0a;
+    --ghost-word: rgb(255 255 255 / 0.055);
+    --highlight: linear-gradient(100deg, #ffffff 30%, #8f8f8f 100%);
+    --glass: rgb(255 255 255 / 0.035);
+    --glass-hover: rgb(255 255 255 / 0.06);
+    --glass-line: rgb(255 255 255 / 0.09);
+    --glass-blur: 14px;
+    --spot: rgb(255 255 255 / 0.09);
+    --grid-line: rgb(255 255 255 / 0.05);
+    --glow: rgb(255 255 255 / 0.10);
+    --header-bg: rgb(10 10 10 / 0.72);
 
-    --radius-button: 4px;
-    --radius-card: 6px;
-    --radius-chip: 3px;
-    --cursor-display: inline-block;
-    --seal-display: none;
-    --grain-opacity: 0;
-  }
-
-  /* B · Atelier: a warm, editorial page: paper, ink, a vermilion accent, a soft serif with
-     character for the titles, a humanist sans to read, rounded pills. */
-  :root[data-theme="atelier"] {
-    --font-display: "Fraunces", Georgia, serif;
-    --font-text: "Manrope", system-ui, sans-serif;
-    --font-label: "IBM Plex Mono", ui-monospace, monospace;
-    --display-weight: 480;
-    --display-tracking: -0.025em;
-    --display-line: 1.02;
-    --highlight-style: italic;
-    --label-case: uppercase;
-    --label-prefix: "— ";
-    --wordmark-font: "Fraunces", Georgia, serif;
-    --wordmark-weight: 500;
-    --wordmark-case: none;
-
-    --bg: #f4efe6;
-    --bg-alt: #ebe4d6;
-    --card: #fbf8f2;
-    --card-hover: #fffdf8;
-    --line: #d9cfbd;
-    --text: #17140f;
-    --weak: #655c50;
-    --accent: #e0482b;
-    --accent-text: #c23a1f;
-    --on-accent: #ffffff;
-    --accent-soft: rgb(224 72 43 / 0.10);
-    --button-bg: #17140f;
-    --button-text: #f4efe6;
-    --button-line: #17140f;
-    --ghost-line: #17140f;
-    --header-bg: rgb(244 239 230 / 0.8);
-    --grid-line: rgb(23 20 15 / 0.07);
-    --glow: rgb(224 72 43 / 0.16);
-    --badge-bg: #fbf8f2;
-    --chip-bg: #f4efe6;
-    --cta-bg: #17140f;
-
-    --radius-button: 999px;
-    --radius-card: 20px;
+    --radius-button: 0;
+    --radius-card: 10px;
     --radius-chip: 999px;
-    --cursor-display: none;
-    --seal-display: block;
-    --grain-opacity: 0.35;
   }
 
   /* ── Base ──────────────────────────────────────────────────────────────────────── */
@@ -130,7 +74,7 @@
   :root {
     --gutter: clamp(20px, 5vw, 80px);
     --width: 1200px;
-    --header-height: 72px;
+    --header-height: 76px;
   }
   *, *::before, *::after { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
@@ -143,68 +87,78 @@
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
-  /* Paper grain of Atelier, invisible in Console. */
-  body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 100;
-    pointer-events: none;
-    opacity: var(--grain-opacity);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.09 0 0 0 0 0.08 0 0 0 0 0.06 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    mix-blend-mode: multiply;
-  }
   a { color: inherit; text-decoration: none; }
   img, svg, canvas { display: block; }
-  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
-  .app-skip { position: absolute; left: 12px; top: -60px; z-index: 50; padding: 10px 14px; background: var(--button-bg); color: var(--button-text); border-radius: var(--radius-button); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .app-skip { position: absolute; left: 12px; top: -60px; z-index: 50; padding: 10px 14px; background: var(--accent); color: var(--on-accent); }
   .app-skip:focus { top: 12px; }
   .app-wrap { width: min(100% - 2 * var(--gutter), var(--width)); margin-inline: auto; }
+  .app-lead { margin: 0; max-width: 58ch; color: var(--secondary); font-size: 18px; text-wrap: pretty; }
+  .app-highlight { background: var(--highlight); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .app-section { position: relative; padding-block: clamp(80px, 11vw, 140px); }
 
-  .app-label {
-    display: inline-block;
-    font: 500 13px/1.4 var(--font-label);
-    letter-spacing: 0.08em;
-    text-transform: var(--label-case);
-    color: var(--accent-text);
-  }
-  .app-label::before { content: var(--label-prefix); }
-  .app-title {
-    margin: 10px 0 0;
-    font: var(--display-weight) clamp(34px, 5vw, 56px)/var(--display-line) var(--font-display);
-    letter-spacing: var(--display-tracking);
-    text-wrap: balance;
-  }
-  .app-lead { margin: 18px 0 0; max-width: 60ch; color: var(--weak); font-size: 18px; text-wrap: pretty; }
-  .app-highlight { font-style: var(--highlight-style); color: var(--accent-text); }
-  .app-section { padding-block: clamp(72px, 10vw, 128px); }
-  .app-section-head { margin-bottom: clamp(36px, 5vw, 56px); }
+  /* The logo: the mark and the wordmark, in the proportions of the charter (gap one third of
+     the mark, letters half of it). */
+  .app-logo { --logo-height: 34px; display: flex; align-items: center; gap: calc(var(--logo-height) / 3); color: var(--text); }
+  .app-logo .app-mark { height: var(--logo-height); width: auto; }
+  .app-logo .app-wordmark { height: calc(var(--logo-height) * 0.5 * 0.728); width: auto; }
 
-  /* Buttons */
+  /* Section heading, after the former site: a title over a large faded word. */
+  .app-heading { position: relative; margin-bottom: clamp(36px, 5vw, 64px); padding-top: clamp(14px, 2.2vw, 30px); }
+  .app-heading-ghost {
+    display: block;
+    margin-left: 0.12em;
+    font: 800 clamp(58px, 13vw, 176px)/0.8 var(--font-title);
+    letter-spacing: -0.06em;
+    text-transform: uppercase;
+    color: var(--ghost-word);
+    white-space: nowrap;
+    user-select: none;
+  }
+  .app-heading-title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    font: var(--title-weight) clamp(32px, 5.4vw, 68px)/1 var(--font-title);
+    letter-spacing: var(--title-tracking);
+    text-transform: uppercase;
+  }
+  .app-heading + .app-lead { margin-top: calc(-1 * clamp(12px, 2vw, 32px)); margin-bottom: clamp(36px, 5vw, 56px); }
+
+  /* Buttons: white and sharp, or outlined. */
   .app-button {
-    position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    padding: 15px 24px;
-    border: 1.5px solid var(--button-line);
+    justify-content: center;
+    padding: 16px 26px;
+    border: 1px solid var(--accent);
     border-radius: var(--radius-button);
-    background: var(--button-bg);
-    color: var(--button-text);
-    font: 600 16px/1 var(--font-display);
+    background: var(--accent);
+    color: var(--on-accent);
+    font: 700 15px/1 var(--font-title);
     letter-spacing: 0.01em;
     cursor: pointer;
-    transition: background-color .25s, color .25s, border-color .25s, box-shadow .25s;
+    transition: box-shadow .35s, background-color .3s, border-color .3s, color .3s;
     will-change: transform;
   }
-  .app-button:hover { box-shadow: 0 10px 30px -10px var(--glow), 0 0 0 4px var(--accent-soft); }
-  .app-button.is-ghost { background: transparent; color: var(--text); border-color: var(--ghost-line); }
-  .app-button.is-ghost:hover { border-color: var(--accent); color: var(--accent-text); }
-  .app-button svg { transition: transform .3s; }
-  .app-button:hover svg { transform: translateX(3px); }
-  .app-link { display: inline-flex; align-items: center; gap: 8px; font: 600 15px/1.2 var(--font-display); color: var(--accent-text); }
-  .app-link svg { transition: transform .3s; }
-  .app-link:hover svg { transform: translateX(4px); }
+  .app-button:hover { box-shadow: 0 14px 40px -12px rgb(255 255 255 / .35); }
+  .app-button.is-outline { background: transparent; color: var(--text); border-color: var(--line-strong); }
+  .app-button.is-outline:hover { border-color: var(--text); box-shadow: none; }
+  .app-link { font: 700 15px/1.2 var(--font-title); border-bottom: 1px solid var(--line-strong); padding-bottom: 4px; transition: border-color .3s; }
+  .app-link:hover { border-color: var(--text); }
+
+  /* Glass: a translucent panel that blurs what lies behind it. */
+  .app-glass {
+    border: 1px solid var(--glass-line);
+    border-radius: var(--radius-card);
+    background-color: var(--glass);
+    backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
+  }
+  /* Soft white lights behind a group of glass cards, so that the glass has something to blur. */
+  .app-lights { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+  .app-lights i { position: absolute; width: 38vw; height: 38vw; max-width: 520px; max-height: 520px; border-radius: 50%; background: radial-gradient(circle, rgb(255 255 255 / .09), transparent 65%); }
 
   /* ── Header ─────────────────────────────────────────────────────────────────────── */
 
@@ -213,20 +167,18 @@
     inset: 0 0 auto;
     z-index: 40;
     height: var(--header-height);
-    transition: background-color .35s, border-color .35s, transform .45s cubic-bezier(.2,.7,.2,1);
     border-bottom: 1px solid transparent;
+    transition: background-color .35s, border-color .35s, transform .45s cubic-bezier(.2,.7,.2,1);
   }
-  .app-header.is-scrolled { background: var(--header-bg); border-color: var(--line); backdrop-filter: blur(14px) saturate(1.4); }
+  .app-header.is-scrolled { background: var(--header-bg); border-color: var(--line); backdrop-filter: blur(16px) saturate(1.3); }
   .app-header.is-hidden { transform: translateY(-100%); }
   .app-header .app-wrap { display: flex; align-items: center; height: 100%; gap: 28px; }
-  .app-logo { display: flex; align-items: center; gap: 10px; color: var(--text); }
-  .app-logo svg { width: 15px; height: auto; color: var(--accent); }
-  .app-logo span { font: 700 21px/1 "Poppins", sans-serif; letter-spacing: -0.045em; }
-  .app-nav { display: none; margin-left: auto; gap: 30px; }
-  .app-nav a { position: relative; font: 500 15px/1 var(--font-display); color: var(--text); }
-  .app-nav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -7px; height: 1.5px; background: var(--accent); transform: scaleX(0); transform-origin: right; transition: transform .35s cubic-bezier(.2,.7,.2,1); }
+  .app-nav { display: none; margin-left: auto; gap: 32px; }
+  .app-nav a { position: relative; font: 600 15px/1 var(--font-title); color: var(--secondary); transition: color .3s; }
+  .app-nav a:hover { color: var(--text); }
+  .app-nav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -8px; height: 2px; background: var(--text); transform: scaleX(0); transform-origin: right; transition: transform .35s cubic-bezier(.2,.7,.2,1); }
   .app-nav a:hover::after { transform: scaleX(1); transform-origin: left; }
-  .app-header .app-button { margin-left: auto; padding: 11px 16px; font-size: 14px; }
+  .app-header .app-button { margin-left: auto; padding: 12px 18px; font-size: 14px; }
   .app-burger { display: grid; place-items: center; width: 44px; height: 44px; margin-right: -10px; border: 0; background: none; color: var(--text); cursor: pointer; }
   @media (min-width: 900px) {
     .app-nav { display: flex; }
@@ -244,14 +196,13 @@
     padding: calc(var(--header-height) + 24px) var(--gutter) 32px;
     background: var(--bg);
     visibility: hidden;
-    clip-path: circle(0 at calc(100% - 40px) 36px);
+    clip-path: circle(0 at calc(100% - 40px) 38px);
     transition: clip-path .7s cubic-bezier(.7,0,.2,1), visibility 0s .7s;
   }
-  .app-menu.is-open { visibility: visible; clip-path: circle(150% at calc(100% - 40px) 36px); transition: clip-path .7s cubic-bezier(.7,0,.2,1); }
-  .app-menu a.app-menu-link { display: flex; align-items: baseline; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--line); font: var(--display-weight) 38px/1.1 var(--font-display); letter-spacing: var(--display-tracking); }
-  .app-menu a.app-menu-link small { font: 500 12px/1 var(--font-label); color: var(--accent-text); }
-  .app-menu .app-button { align-self: flex-start; margin-top: 32px; }
-  .app-menu-motto { margin-top: auto; color: var(--weak); font: 500 13px/1.4 var(--font-label); }
+  .app-menu.is-open { visibility: visible; clip-path: circle(150% at calc(100% - 40px) 38px); transition: clip-path .7s cubic-bezier(.7,0,.2,1); }
+  .app-menu-link { padding: 16px 0; border-bottom: 1px solid var(--line); font: 800 40px/1.05 var(--font-title); letter-spacing: var(--title-tracking); text-transform: uppercase; }
+  .app-menu .app-button { align-self: stretch; margin-top: 32px; }
+  .app-menu-motto { margin-top: auto; color: var(--dim); font: italic 400 15px/1.4 var(--font-text); }
   .app-header.is-menu { background: transparent; border-color: transparent; backdrop-filter: none; z-index: 46; }
 
   /* ── Hero ──────────────────────────────────────────────────────────────────────── */
@@ -259,10 +210,8 @@
   .app-hero {
     position: relative;
     overflow: hidden;
-    padding: calc(var(--header-height) + 36px) 0 56px;
-    background:
-      radial-gradient(60% 50% at 78% 45%, var(--glow), transparent 70%),
-      var(--bg);
+    padding: calc(var(--header-height) + 40px) 0 56px;
+    background: radial-gradient(55% 50% at 78% 45%, var(--glow), transparent 70%), var(--bg);
   }
   .app-hero::before {
     content: "";
@@ -276,55 +225,45 @@
   .app-hero .app-wrap { position: relative; display: grid; gap: 8px; }
   .app-hero-text { position: relative; z-index: 2; }
   .app-hero-title {
-    margin: 18px 0 0;
-    font: var(--display-weight) clamp(42px, 6.6vw, 84px)/var(--display-line) var(--font-display);
-    letter-spacing: var(--display-tracking);
+    margin: 0;
+    font: var(--title-weight) clamp(44px, 6.8vw, 92px)/0.98 var(--font-title);
+    letter-spacing: var(--title-tracking);
     text-wrap: balance;
   }
-  .app-hero-sub { margin: 24px 0 0; max-width: 54ch; color: var(--weak); font-size: clamp(17px, 1.6vw, 19px); text-wrap: pretty; }
-  .app-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
-  .app-hero-motto { display: flex; align-items: center; gap: 12px; margin-top: 36px; color: var(--weak); font: 500 14px/1 var(--font-label); letter-spacing: .04em; }
-  .app-hero-motto::before { content: ""; width: 36px; height: 1px; background: currentColor; }
-  .app-hero-visual { position: relative; height: 360px; cursor: grab; touch-action: pan-y; }
+  .app-hero-sub { margin: 28px 0 0; max-width: 52ch; color: var(--secondary); font-size: clamp(17px, 1.5vw, 19px); text-wrap: pretty; }
+  .app-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+  .app-hero-motto { display: flex; align-items: center; gap: 14px; margin: 40px 0 0; color: var(--dim); font: italic 400 16px/1 var(--font-text); }
+  .app-hero-motto::before { content: ""; width: 40px; height: 1px; background: currentColor; }
+  .app-hero-visual { position: relative; height: 380px; cursor: grab; touch-action: pan-y; }
   .app-hero-visual:active { cursor: grabbing; }
-  .app-hero-hint { position: absolute; right: 0; bottom: 0; color: var(--weak); font: 500 12px/1 var(--font-label); letter-spacing: .06em; }
-  .app-badge {
-    position: absolute;
-    left: 0;
-    bottom: 18px;
-    z-index: 2;
-    padding: 14px 18px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-card);
-    background: var(--badge-bg);
-    box-shadow: 0 20px 50px -20px rgb(0 0 0 / .45);
-  }
-  .app-badge strong { display: block; font: 700 30px/1 var(--font-display); letter-spacing: -0.03em; color: var(--accent-text); }
-  .app-badge > span { color: var(--weak); font-size: 14px; }
+  .app-badge { position: absolute; left: 0; bottom: 12px; z-index: 2; padding: 16px 20px; box-shadow: 0 24px 60px -24px rgb(0 0 0 / .8); }
+  .app-badge strong { display: block; font: 800 32px/1 var(--font-title); letter-spacing: -0.04em; }
+  .app-badge > span { color: var(--secondary); font-size: 14px; }
   @media (min-width: 900px) {
-    .app-hero { min-height: min(100svh, 860px); display: grid; align-items: center; padding-bottom: 72px; }
+    .app-hero { min-height: min(100svh, 880px); display: grid; align-items: center; padding-bottom: 72px; }
     .app-hero .app-wrap { grid-template-columns: 7fr 5fr; align-items: center; }
-    .app-hero-visual { height: 520px; }
-    .app-badge { left: -40px; bottom: 60px; }
+    .app-hero-visual { height: 540px; }
+    .app-badge { left: -48px; bottom: 64px; }
   }
 
   /* ── Partners ───────────────────────────────────────────────────────────────────── */
 
-  .app-partners { padding-block: 40px; border-block: 1px solid var(--line); }
-  .app-partners .app-wrap { display: grid; gap: 22px; }
-  .app-partners .app-label { justify-self: center; color: var(--weak); }
-  .app-partner-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 0; padding: 0; list-style: none; }
-  .app-partner-list li { display: grid; place-items: center; height: 64px; border: 1px dashed var(--line); border-radius: var(--radius-card); color: var(--weak); font: 700 17px/1 "Poppins", sans-serif; letter-spacing: -0.02em; transition: color .3s, border-color .3s; }
-  .app-partner-list li:hover { color: var(--text); border-color: var(--accent); }
+  .app-partner-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 0; padding: 0; list-style: none; }
+  .app-partner-list li { display: grid; place-items: center; height: 104px; padding: 20px; transition: background-color .35s, border-color .35s; }
+  .app-partner-list li:hover { background-color: var(--glass-hover); border-color: rgb(255 255 255 / .2); }
+  .app-partner-list img { max-width: 100%; max-height: 46px; width: auto; height: auto; opacity: .82; transition: opacity .3s; }
+  .app-partner-list li:hover img { opacity: 1; }
   .app-partner-list li:last-child { grid-column: 1 / -1; }
+  .app-partner-name { font: 800 21px/1 var(--font-title); letter-spacing: -0.04em; text-transform: uppercase; opacity: .82; }
   @media (min-width: 760px) {
     .app-partner-list { grid-template-columns: repeat(5, 1fr); }
+    .app-partner-list li { height: 120px; }
     .app-partner-list li:last-child { grid-column: auto; }
   }
 
   /* ── Cards: audiences and domains ────────────────────────────────────────────────── */
 
-  .app-cards { display: grid; gap: 16px; margin: 0; padding: 0; list-style: none; }
+  .app-cards { position: relative; display: grid; gap: 16px; margin: 0; padding: 0; list-style: none; }
   @media (min-width: 640px) { .app-cards.is-domains { grid-template-columns: repeat(2, 1fr); } }
   @media (min-width: 900px) { .app-cards.is-audiences { grid-template-columns: repeat(3, 1fr); } }
   @media (min-width: 1100px) { .app-cards.is-domains { grid-template-columns: repeat(4, 1fr); } }
@@ -335,118 +274,97 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-    padding: 26px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-card);
-    background: radial-gradient(420px circle at var(--mx) var(--my), var(--accent-soft), transparent 45%), var(--card);
-    transition: border-color .35s, background-color .35s, transform .5s cubic-bezier(.2,.7,.2,1);
-    transform-style: preserve-3d;
+    padding: 28px 26px;
+    overflow: hidden;
+    background-image: radial-gradient(380px circle at var(--mx) var(--my), var(--spot), transparent 50%);
+    transition: border-color .35s, background-color .35s;
   }
-  .app-card:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); }
-  .app-card h3 { margin: 0; font: 600 21px/1.2 var(--font-display); letter-spacing: -0.015em; }
-  .app-card p { margin: 0; color: var(--weak); font-size: 15.5px; line-height: 1.55; }
-  .app-card-icon { display: grid; place-items: center; width: 46px; height: 46px; border: 1px solid var(--line); border-radius: calc(var(--radius-card) - 2px); color: var(--accent-text); background: var(--bg); }
-  .app-card .app-link { margin-top: auto; padding-top: 10px; }
-  .app-card a.app-card-cover { position: absolute; inset: 0; border-radius: inherit; }
-  .app-card .app-link, .app-card h3 { position: relative; }
-  .app-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 0; padding: 0; list-style: none; }
-  .app-chips li { padding: 5px 9px; border: 1px solid var(--line); border-radius: var(--radius-chip); background: var(--chip-bg); font: 500 12px/1 var(--font-label); color: var(--text); }
-  .app-new { align-self: flex-start; padding: 5px 9px; border-radius: var(--radius-chip); background: var(--accent); color: var(--on-accent); font: 600 11px/1 var(--font-label); letter-spacing: .08em; text-transform: uppercase; }
-  .app-card.is-custom { border-style: dashed; background: transparent; justify-content: center; }
+  .app-card:hover { border-color: rgb(255 255 255 / .22); background-color: var(--glass-hover); }
+  .app-card h3 { margin: 0; font: 700 21px/1.2 var(--font-title); letter-spacing: -0.025em; }
+  .app-card p { margin: 0; color: var(--secondary); font-size: 15.5px; line-height: 1.55; }
+  .app-card-icon { display: grid; place-items: center; width: 48px; height: 48px; border: 1px solid var(--glass-line); border-radius: 50%; color: var(--text); background: rgb(255 255 255 / .04); }
+  .app-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 18px; padding: 0; list-style: none; }
+  .app-chips li { padding: 6px 10px; border: 1px solid var(--glass-line); border-radius: var(--radius-chip); font: 600 12px/1 var(--font-title); color: var(--secondary); }
+  .app-new { align-self: flex-start; padding: 6px 10px; background: var(--accent); color: var(--on-accent); font: 800 11px/1 var(--font-title); letter-spacing: .1em; text-transform: uppercase; }
+  /* "Voir les modules": a white band across the bottom of the card; the whole card is the link. */
+  .app-card-more {
+    display: block;
+    margin: auto -26px -28px;
+    padding: 16px;
+    background: var(--accent);
+    color: var(--on-accent);
+    text-align: center;
+    font: 700 15px/1 var(--font-title);
+    transition: padding .35s;
+  }
+  .app-card-more::after { content: ""; position: absolute; inset: 0; }
+  .app-card:hover .app-card-more { padding-block: 19px; }
+  .app-card.is-custom { border-style: dashed; justify-content: center; background-color: transparent; }
   .app-card.is-custom h3 { font-size: 24px; }
+  .app-card.is-custom p { margin-bottom: 18px; }
+  .app-card.is-custom .app-card-more { background: transparent; color: var(--text); border-top: 1px dashed var(--glass-line); }
   .app-card.is-audience { flex-direction: row; flex-wrap: wrap; align-items: center; column-gap: 16px; }
   .app-card.is-audience p { flex-basis: 100%; }
 
   /* ── Pedagogy ───────────────────────────────────────────────────────────────────── */
 
-  .app-steps { display: grid; gap: 40px; margin: 0; padding: 0; list-style: none; counter-reset: step; }
+  .app-steps { display: grid; gap: 44px; margin: 0; padding: 0; list-style: none; }
   @media (min-width: 640px) { .app-steps { grid-template-columns: repeat(2, 1fr); } }
   @media (min-width: 1100px) { .app-steps { grid-template-columns: repeat(4, 1fr); gap: 32px; } }
-  .app-step-number { font: 500 44px/1 var(--font-label); color: var(--accent-text); letter-spacing: -0.04em; }
-  .app-step-rule { height: 1px; margin: 18px 0 22px; background: var(--line); transform-origin: left; position: relative; overflow: hidden; }
-  .app-step-rule::after { content: ""; position: absolute; inset: 0; background: var(--accent); transform: scaleX(var(--progress, 1)); transform-origin: left; }
-  .app-steps h3 { margin: 0; font: 600 22px/1.2 var(--font-display); letter-spacing: -0.015em; }
-  .app-steps p { margin: 10px 0 0; color: var(--weak); font-size: 16px; }
+  .app-step-number { font: 200 64px/1 var(--font-title); letter-spacing: -0.05em; }
+  .app-step-rule { position: relative; height: 1px; margin: 20px 0 22px; overflow: hidden; background: var(--line); }
+  .app-step-rule::after { content: ""; position: absolute; inset: 0; background: var(--text); transform: scaleX(var(--progress, 1)); transform-origin: left; }
+  .app-steps h3 { margin: 0; font: 700 22px/1.2 var(--font-title); letter-spacing: -0.025em; }
+  .app-steps p { margin: 10px 0 0; color: var(--secondary); font-size: 16px; }
 
   /* ── About ──────────────────────────────────────────────────────────────────────── */
 
-  .app-about .app-wrap { display: grid; gap: 40px; align-items: center; }
-  @media (min-width: 900px) { .app-about .app-wrap { grid-template-columns: 5fr 7fr; gap: 72px; } }
-  .app-portrait {
-    position: relative;
-    aspect-ratio: 1;
-    overflow: hidden;
-    border-radius: var(--radius-card);
-    background:
-      repeating-linear-gradient(-49.5deg, transparent 0 22px, var(--grid-line) 22px 23px),
-      radial-gradient(70% 70% at 30% 20%, var(--accent-soft), transparent 70%),
-      var(--bg-alt);
-    border: 1px solid var(--line);
-  }
-  .app-portrait svg { position: absolute; left: 50%; top: 50%; width: 30%; transform: translate(-50%, -50%); color: var(--accent); opacity: .9; }
-  .app-portrait span { position: absolute; left: 18px; bottom: 16px; color: var(--weak); font: 500 12px/1 var(--font-label); letter-spacing: .06em; }
+  .app-about-grid { display: grid; gap: 40px; align-items: center; }
+  @media (min-width: 900px) { .app-about-grid { grid-template-columns: 5fr 7fr; gap: 72px; } }
+  .app-portrait { position: relative; aspect-ratio: 4 / 5; overflow: hidden; color: var(--text); background: repeating-linear-gradient(-49.5deg, transparent 0 22px, var(--grid-line) 22px 23px), radial-gradient(70% 70% at 30% 20%, rgb(255 255 255 / .07), transparent 70%), var(--panel); }
+  .app-portrait .app-mark { position: absolute; left: 50%; top: 50%; height: 34%; width: auto; transform: translate(-50%, -50%); opacity: .9; }
+  .app-portrait span { position: absolute; left: 18px; bottom: 16px; color: var(--dim); font: italic 400 13px/1 var(--font-text); }
+  .app-about-name { margin: 0; font: 800 clamp(30px, 3.6vw, 46px)/1.05 var(--font-title); letter-spacing: var(--title-tracking); }
+  .app-about-grid .app-lead { margin-top: 18px; }
   .app-figures { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 32px 0; padding: 24px 0; border-block: 1px solid var(--line); }
-  .app-figures strong { display: block; font: 700 clamp(28px, 4vw, 40px)/1 var(--font-display); letter-spacing: -0.04em; }
-  .app-figures div > span { display: block; margin-top: 8px; color: var(--weak); font-size: 14px; line-height: 1.35; }
+  .app-figures strong { display: block; font: 800 clamp(28px, 4vw, 44px)/1 var(--font-title); letter-spacing: -0.05em; }
+  .app-figures div > span { display: block; margin-top: 8px; color: var(--secondary); font-size: 14px; line-height: 1.35; }
 
   /* ── Call to action ─────────────────────────────────────────────────────────────── */
 
-  .app-cta { position: relative; overflow: hidden; padding-block: clamp(80px, 11vw, 140px); background: var(--cta-bg); color: #f4efe6; text-align: center; }
-  :root[data-theme="console"] .app-cta { color: var(--text); border-top: 1px solid var(--line); }
-  .app-cta::before {
-    content: "";
-    position: absolute;
-    inset: -50%;
-    background: conic-gradient(from var(--angle, 0deg) at 50% 50%, transparent 0 70%, var(--glow) 80%, transparent 90%);
-    animation: app-spin 14s linear infinite;
-    opacity: .9;
-  }
+  .app-cta { position: relative; overflow: hidden; padding-block: clamp(90px, 12vw, 160px); background: var(--bg-alt); border-top: 1px solid var(--line); text-align: center; }
+  .app-cta::before { content: ""; position: absolute; inset: -50%; background: conic-gradient(from var(--angle, 0deg) at 50% 50%, transparent 0 70%, var(--glow) 80%, transparent 90%); animation: app-spin 16s linear infinite; }
   @property --angle { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
   @keyframes app-spin { to { --angle: 360deg; } }
   html[data-motion="off"] .app-cta::before { animation: none; }
   .app-cta .app-wrap { position: relative; display: grid; justify-items: center; }
-  .app-cta .app-title { max-width: 18ch; font-size: clamp(36px, 6vw, 72px); }
-  .app-cta .app-label { color: var(--accent); }
-  .app-cta p { margin: 20px 0 32px; color: color-mix(in srgb, currentColor 70%, transparent); }
-  .app-cursor { display: var(--cursor-display); width: .5em; height: .9em; margin-left: .08em; background: var(--accent); vertical-align: -0.08em; animation: app-blink 1.1s steps(1) infinite; }
-  @keyframes app-blink { 50% { opacity: 0; } }
-  html[data-motion="off"] .app-cursor { animation: none; }
-  :root[data-theme="atelier"] .app-cta .app-button { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
-  .app-seal { display: var(--seal-display); position: absolute; right: max(var(--gutter), calc(50% - 600px)); top: 48px; width: 150px; height: 150px; color: var(--accent); }
-  .app-seal text { font: 500 11.5px var(--font-label); letter-spacing: .32em; text-transform: uppercase; fill: currentColor; }
-  @media (max-width: 899px) { .app-seal { position: relative; right: auto; top: auto; margin: 40px auto 0; width: 120px; height: 120px; } }
+  .app-cta-ghost { position: absolute; left: 50%; top: 50%; translate: -50% -58%; font: 800 clamp(80px, 19vw, 280px)/0.8 var(--font-title); letter-spacing: -0.06em; text-transform: uppercase; color: var(--ghost-word); white-space: nowrap; pointer-events: none; }
+  .app-cta h2 { position: relative; max-width: 16ch; margin: 0; font: var(--title-weight) clamp(38px, 6vw, 76px)/1 var(--font-title); letter-spacing: var(--title-tracking); text-wrap: balance; }
+  .app-cta p { position: relative; margin: 22px 0 34px; color: var(--secondary); }
 
   /* ── Footer ─────────────────────────────────────────────────────────────────────── */
 
   .app-footer {
     position: relative;
     overflow: hidden;
-    padding: clamp(48px, 7vw, 88px) 0 28px;
-    background-color: var(--bg-alt);
+    padding: clamp(56px, 8vw, 96px) 0 28px;
+    background-color: var(--bg);
     background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
     background-size: 40px 40px;
     border-top: 1px solid var(--line);
   }
-  .app-footer .app-wordmark {
-    display: flex;
-    margin: 0 0 clamp(28px, 4vw, 48px) -0.04em;
-    font: var(--wordmark-weight) clamp(56px, 19vw, 300px)/0.8 var(--wordmark-font);
-    letter-spacing: -0.06em;
-    text-transform: var(--wordmark-case);
-    color: var(--text);
-    overflow: hidden;
-    padding-bottom: .06em;
-  }
-  .app-wordmark span { display: inline-block; }
-  .app-wordmark span:hover { color: var(--accent); transition: color .2s; }
+  .app-footer-logo { display: flex; align-items: flex-end; gap: clamp(14px, 2.5vw, 36px); margin-bottom: clamp(40px, 6vw, 72px); color: var(--text); }
+  .app-footer-logo .app-mark { height: clamp(64px, 14vw, 190px); width: auto; flex: none; }
+  .app-footer-logo .app-wordmark { width: min(100%, 980px); height: auto; overflow: visible; }
   .app-footer-grid { display: grid; gap: 32px; }
   @media (min-width: 900px) { .app-footer-grid { grid-template-columns: 4fr 3fr 3fr 3fr; } }
-  .app-footer h2 { margin: 0 0 14px; font: 600 14px/1 var(--font-label); letter-spacing: .06em; text-transform: var(--label-case); color: var(--accent-text); }
-  .app-footer ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 9px; }
-  .app-footer li, .app-footer p { margin: 0; color: var(--weak); font-size: 15px; }
+  .app-footer h2 { margin: 0 0 16px; font: 800 12px/1 var(--font-title); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+  .app-footer ul { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+  .app-footer li, .app-footer p { margin: 0; color: var(--secondary); font-size: 15px; }
+  .app-footer a { transition: color .3s; }
   .app-footer a:hover { color: var(--text); }
-  .app-footer-motto { color: var(--text) !important; font: 500 18px/1.4 var(--font-display) !important; margin-bottom: 8px !important; }
-  .app-footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--weak); font: 400 13px/1.4 var(--font-label); }
+  .app-footer .app-footer-motto { margin-bottom: 8px; color: var(--text); font: italic 400 19px/1.4 var(--font-text); }
+  .app-footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--dim); font-size: 13px; }
 
   /* ── Motion: the starting state of the reveals, only when the animations run ──────── */
 
@@ -460,10 +378,7 @@
 
 <header class="app-header" id="header">
   <div class="app-wrap">
-    <a class="app-logo" href="#" aria-label="Sylent, accueil">
-      <svg viewBox="0 0 190 417" aria-hidden="true"><g fill="currentColor"><rect x="-77" y="-38" width="154" height="76" transform="translate(79 83) rotate(-49.5)"/><rect x="-77" y="-38" width="154" height="76" transform="translate(94 208) rotate(-49.5)"/><rect x="-77" y="-38" width="154" height="76" transform="translate(109 333) rotate(-49.5)"/></g></svg>
-      <span>SYLENT</span>
-    </a>
+    <a class="app-logo" href="#" aria-label="Sylent, accueil" data-logo></a>
     <nav class="app-nav" aria-label="Navigation principale">
       <a href="#formations">Formations</a><a href="#">Articles</a><a href="#a-propos">À propos</a><a href="#contact">Contact</a>
     </nav>
@@ -473,10 +388,10 @@
 </header>
 
 <div class="app-menu" id="menu" aria-hidden="true">
-  <a class="app-menu-link" href="#formations"><small>01</small>Formations</a>
-  <a class="app-menu-link" href="#"><small>02</small>Articles</a>
-  <a class="app-menu-link" href="#a-propos"><small>03</small>À propos</a>
-  <a class="app-menu-link" href="#contact"><small>04</small>Contact</a>
+  <a class="app-menu-link" href="#formations">Formations</a>
+  <a class="app-menu-link" href="#">Articles</a>
+  <a class="app-menu-link" href="#a-propos">À propos</a>
+  <a class="app-menu-link" href="#contact">Contact</a>
   <a class="app-button" href="#contact">Me contacter</a>
   <p class="app-menu-motto">«&nbsp;Une vie, mille leçons&nbsp;»</p>
 </div>
@@ -506,13 +421,16 @@
     ["Apprendre à apprendre", `Un parcours d’autodidacte${NB}: transmettre la curiosité et la méthode.`],
     ["L’expérience", "Formateur depuis 2021, plus de 900 heures de formation par an depuis 2023."],
   ];
-  const PARTNERS = ["YNOV", "IGENSIA Tech", "EPSI", "CESI", "OpenClassrooms"];
+  // Logos of the former site, made white; IGENSIA Tech has none yet.
+  const PARTNERS = [["YNOV", "ynov"], ["IGENSIA Tech", null], ["EPSI", "epsi"], ["CESI", "cesi"], ["OpenClassrooms", "openclassrooms"]];
+
+  // The mark (logo-sylent.svg of the charter) and the wordmark (Montserrat 800, -0.195 em).
+  const MARK = '<svg class="app-mark" viewBox="0 0 908 2000.3" fill="currentColor" aria-hidden="true"><rect x="8.8" y="218.2" transform="matrix(0.6503 -0.7597 0.7597 0.6503 -171.45 428.7256)" width="742.3" height="364.9"/><rect x="156.9" y="1417.3" transform="matrix(0.6503 -0.7597 0.7597 0.6503 -1030.6389 960.5798)" width="742.3" height="364.9"/><rect x="82.9" y="818.4" transform="matrix(0.6503 -0.7597 0.7597 0.6503 -601.5629 694.9067)" width="742.3" height="364.9"/></svg>';
+  const WORDMARK = '<svg class="app-wordmark" viewBox="21 -714 3064 728" fill="currentColor" aria-hidden="true"><path d="M315.5 13.8Q229.6 13.8 150.1 -7.4Q70.6 -28.6 20.7 -62.5L85.8 -209.0Q133.1 -178.5 194.7 -159.4Q256.4 -140.4 316.8 -140.4Q358.3 -140.4 382.9 -147.5Q407.5 -154.6 419.0 -167.5Q430.5 -180.3 430.5 -197.3Q430.5 -221.0 408.9 -234.9Q387.3 -248.8 352.0 -257.9Q316.7 -266.9 274.5 -275.9Q232.2 -284.9 189.6 -298.7Q147.1 -312.6 111.8 -335.1Q76.5 -357.6 54.9 -394.5Q33.3 -431.4 33.3 -487.4Q33.3 -549.6 67.6 -600.9Q101.9 -652.3 170.8 -683.0Q239.8 -713.8 343.4 -713.8Q411.6 -713.8 478.2 -698.5Q544.7 -683.2 596.6 -652.5L536.1 -506.3Q486.0 -533.2 437.0 -546.4Q388.1 -559.5 341.7 -559.5Q300.9 -559.5 276.0 -551.1Q251.0 -542.6 240.0 -528.5Q229.0 -514.5 229.0 -497.2Q229.0 -474.3 250.6 -460.7Q272.3 -447.1 307.5 -438.5Q342.8 -430.0 385.4 -421.2Q428.0 -412.4 470.2 -398.7Q512.5 -385.0 547.7 -362.6Q583.0 -340.3 604.6 -303.7Q626.3 -267.2 626.3 -212.2Q626.3 -151.0 591.8 -99.7Q557.3 -48.3 488.6 -17.2Q419.8 13.8 315.5 13.8ZM699.2 0.0V-296.1L744.5 -177.1L431.5 -700.0H641.1L866.6 -320.7H745.5L972.7 -700.0H1165.1L853.4 -177.1L897.3 -296.1V0.0ZM1020.3 0.0V-700.0H1218.4V-156.9H1552.1V0.0ZM1435.3 0.0V-700.0H1983.5V-546.5H1630.7V-153.4H1996.8V0.0ZM1616.8 -281.4V-428.8H1941.9V-281.4ZM1912.3 0.0V-700.0H2075.3L2460.7 -233.6H2383.8V-700.0H2577.8V0.0H2414.8L2029.3 -466.3H2106.3V0.0ZM2671.6 0.0V-543.0H2457.0V-700H3084.3V-543.0H2869.7V0.0Z"/></svg>';
 
   // Icons as SVG lines in the text color.
   const ICONS = {
-    arrow: '<path d="M4 12h15M13 6l6 6-6 6"/>',
     menu: '<path d="M4 8h16M4 16h16"/>',
-    close: '<path d="M6 6l12 12M18 6L6 18"/>',
     steps: '<path d="M4 19h5v-5h5V9h6"/><circle cx="20" cy="5" r="1.5"/>',
     web: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M10 13l-2 2 2 2M14 13l2 2-2 2"/>',
     chart: '<path d="M4 20V4M4 20h16"/><path d="M7 15l4-4 3 3 5-6"/>',
@@ -525,51 +443,54 @@
     building: '<path d="M4 21V5l8-2v18M12 7l8 3v11M3 21h18"/><path d="M7 8h2M7 12h2M7 16h2M15 13h2M15 17h2"/>',
     plus: '<path d="M12 5v14M5 12h14"/>',
   };
-  const icon = (name, size = 22) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]}</svg>`;
-  const LOGO = '<svg viewBox="0 0 190 417" aria-hidden="true"><g fill="currentColor"><rect x="-77" y="-38" width="154" height="76" transform="translate(79 83) rotate(-49.5)"/><rect x="-77" y="-38" width="154" height="76" transform="translate(94 208) rotate(-49.5)"/><rect x="-77" y="-38" width="154" height="76" transform="translate(109 333) rotate(-49.5)"/></g></svg>';
-  const sectionHead = (label, title, lead = "") => `
-    <div class="app-section-head app-reveal">
-      <span class="app-label">${label}</span>
-      <h2 class="app-title">${title}</h2>
-      ${lead ? `<p class="app-lead">${lead}</p>` : ""}
+  const icon = (name, size = 22) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]}</svg>`;
+  const heading = (title, ghost, id) => `
+    <div class="app-heading">
+      <span class="app-heading-ghost" aria-hidden="true">${ghost}</span>
+      <h2 class="app-heading-title" id="${id}">${title}</h2>
     </div>`;
+  const lights = spots => `<div class="app-lights" aria-hidden="true">${spots.map(([x, y]) => `<i style="left:${x}%;top:${y}%"></i>`).join("")}</div>`;
 
   const hero = `
     <section class="app-hero" id="hero" aria-labelledby="hero-title">
       <canvas class="app-hero-canvas" id="cube-canvas" aria-hidden="true"></canvas>
       <div class="app-wrap">
         <div class="app-hero-text">
-          <span class="app-label app-intro">Écoles · Organismes de formation · Entreprises</span>
           <h1 class="app-hero-title app-intro" id="hero-title">Je prends vos apprenants par la main, <span class="app-highlight">jusqu’à la maîtrise.</span></h1>
           <p class="app-hero-sub app-intro">Formateur en informatique depuis 2021${NB}: développement, bases de données, tests, Python et IA, pour les écoles, les organismes de formation et les entreprises.</p>
           <div class="app-hero-actions app-intro">
-            <a class="app-button app-magnetic" href="#contact">Me contacter ${icon("arrow", 18)}</a>
-            <a class="app-button is-ghost" href="#formations">Voir les formations</a>
+            <a class="app-button app-magnetic" href="#contact">Me contacter</a>
+            <a class="app-button is-outline" href="#formations">Voir les formations</a>
           </div>
           <p class="app-hero-motto app-intro">Une vie, mille leçons</p>
         </div>
         <div class="app-hero-visual" id="cube-area" aria-hidden="true">
-          <div class="app-badge app-intro"><strong><span class="app-count" data-to="900">900</span>+ h</strong><span>de formation par an</span></div>
-          <span class="app-hero-hint app-intro">glisser pour tourner ↻</span>
+          <div class="app-badge app-glass app-intro"><strong><span class="app-count" data-to="900">900</span>+${NB}h</strong><span>de formation par an</span></div>
         </div>
       </div>
     </section>`;
 
   const partners = `
-    <section class="app-partners" aria-label="Partenaires">
+    <section class="app-section" aria-labelledby="partners-title">
+      ${lights([[60, 30]])}
       <div class="app-wrap">
-        <span class="app-label app-reveal">Ils me font confiance</span>
-        <ul class="app-partner-list">${PARTNERS.map(name => `<li class="app-reveal">${name}</li>`).join("")}</ul>
+        ${heading("Partenaires", "Confiance", "partners-title")}
+        <p class="app-lead app-reveal">Écoles et organismes de formation qui me confient leurs apprenants.</p>
+        <ul class="app-partner-list">${PARTNERS.map(([name, file]) => `
+          <li class="app-glass app-reveal">${file ? `<img src="assets/partners/${file}.webp" alt="${name}">` : `<span class="app-partner-name">${name}</span>`}</li>`).join("")}
+        </ul>
       </div>
     </section>`;
 
   const audiences = `
-    <section class="app-section" aria-labelledby="audiences-title">
+    <section class="app-section" aria-labelledby="audiences-title" style="padding-top:0">
+      ${lights([[-8, 40], [70, 55]])}
       <div class="app-wrap">
-        ${sectionHead("Collaborer", `<span id="audiences-title">Pour qui${NB}?</span>`, "Les mêmes exigences, que vous formiez des étudiants, des personnes en reconversion ou des salariés.")}
+        ${heading(`Pour qui${NB}?`, "Collaborer", "audiences-title")}
+        <p class="app-lead app-reveal">Les mêmes exigences, que vous formiez des étudiants, des personnes en reconversion ou des salariés.</p>
         <ul class="app-cards is-audiences">
           ${AUDIENCES.map(([title, text, glyph]) => `
-            <li class="app-card is-audience app-reveal app-tilt">
+            <li class="app-card app-glass is-audience app-reveal app-tilt">
               <span class="app-card-icon">${icon(glyph)}</span><h3>${title}</h3><p>${text}</p>
             </li>`).join("")}
         </ul>
@@ -578,23 +499,24 @@
 
   const domains = `
     <section class="app-section" id="formations" aria-labelledby="domains-title" style="padding-top:0">
+      ${lights([[10, 30], [62, 18], [40, 70]])}
       <div class="app-wrap">
-        ${sectionHead("Apprendre", `<span id="domains-title">Formations</span>`, "Sept domaines, des modules indépendants et des durées toujours adaptables, sur site ou à distance.")}
+        ${heading("Formations", "Apprendre", "domains-title")}
+        <p class="app-lead app-reveal">Sept domaines, des modules indépendants et des durées toujours adaptables, sur site ou à distance.</p>
         <ul class="app-cards is-domains">
           ${DOMAINS.map(([title, text, modules, glyph, isNew]) => `
-            <li class="app-card app-reveal app-tilt">
-              <a class="app-card-cover" href="#" aria-label="${title}${NB}: voir les modules"></a>
+            <li class="app-card app-glass app-reveal app-tilt">
               <span class="app-card-icon">${icon(glyph)}</span>
               ${isNew ? '<span class="app-new">Nouveau</span>' : ""}
               <h3>${title}</h3><p>${text}</p>
               <ul class="app-chips" aria-label="Modules">${modules.map(module => `<li>${module}</li>`).join("")}</ul>
-              <span class="app-link">Voir les modules ${icon("arrow", 16)}</span>
+              <a class="app-card-more" href="#" aria-label="${title}${NB}: voir les modules">Voir les modules</a>
             </li>`).join("")}
-          <li class="app-card is-custom app-reveal">
+          <li class="app-card app-glass is-custom app-reveal">
             <span class="app-card-icon">${icon("plus")}</span>
             <h3>Un besoin sur mesure${NB}?</h3>
             <p>Décrivez vos apprenants et vos objectifs${NB}: je construis le module.</p>
-            <a class="app-link" href="#contact">Me contacter ${icon("arrow", 16)}</a>
+            <a class="app-card-more" href="#contact">Me contacter</a>
           </li>
         </ul>
       </div>
@@ -603,7 +525,7 @@
   const pedagogy = `
     <section class="app-section" aria-labelledby="pedagogy-title" style="padding-top:0">
       <div class="app-wrap">
-        ${sectionHead("Accompagner", `<span id="pedagogy-title">Ma pédagogie</span>`)}
+        ${heading("Ma pédagogie", "Accompagner", "pedagogy-title")}
         <ol class="app-steps">
           ${STEPS.map(([title, text], index) => `
             <li class="app-reveal">
@@ -616,42 +538,39 @@
     </section>`;
 
   const about = `
-    <section class="app-section app-about" id="a-propos" aria-labelledby="about-title" style="padding-top:0">
+    <section class="app-section" id="a-propos" aria-labelledby="about-title" style="padding-top:0">
       <div class="app-wrap">
-        <div class="app-portrait app-reveal">${LOGO}<span>Photo d’Aunim à venir</span></div>
-        <div class="app-reveal">
-          <span class="app-label">Qui suis-je${NB}?</span>
-          <h2 class="app-title" id="about-title">Aunim Hassan, formateur et autodidacte</h2>
-          <p class="app-lead">Autodidacte dans l’âme, je forme depuis 2021 des étudiants, des personnes en reconversion et des salariés, avec une conviction${NB}: on n’arrête jamais d’apprendre.</p>
-          <div class="app-figures">
-            <div><strong><span class="app-count" data-from="2000" data-to="2021">2021</span></strong><span>formateur depuis</span></div>
-            <div><strong><span class="app-count" data-to="900">900</span>+ h</strong><span>de formation par an</span></div>
-            <div><strong><span class="app-count" data-to="5">5</span></strong><span>écoles et organismes</span></div>
+        ${heading(`Qui suis-je${NB}?`, "Transmettre", "about-title")}
+        <div class="app-about-grid">
+          <div class="app-portrait app-reveal">${MARK}<span>Photo d’Aunim à venir</span></div>
+          <div class="app-reveal">
+            <h3 class="app-about-name">Aunim Hassan, formateur et autodidacte</h3>
+            <p class="app-lead">Autodidacte dans l’âme, je forme depuis 2021 des étudiants, des personnes en reconversion et des salariés, avec une conviction${NB}: on n’arrête jamais d’apprendre.</p>
+            <div class="app-figures">
+              <div><strong><span class="app-count" data-from="2000" data-to="2021">2021</span></strong><span>formateur depuis</span></div>
+              <div><strong><span class="app-count" data-to="900">900</span>+${NB}h</strong><span>de formation par an</span></div>
+              <div><strong><span class="app-count" data-to="5">5</span></strong><span>écoles et organismes</span></div>
+            </div>
+            <a class="app-link" href="#">En savoir plus</a>
           </div>
-          <a class="app-link" href="#">En savoir plus ${icon("arrow", 16)}</a>
         </div>
       </div>
     </section>`;
 
   const cta = `
     <section class="app-cta" id="contact" aria-labelledby="cta-title">
+      <span class="app-cta-ghost" aria-hidden="true">Échanger</span>
       <div class="app-wrap">
-        <span class="app-label app-reveal">Échanger</span>
-        <h2 class="app-title app-reveal" id="cta-title">Un module à confier${NB}? Parlons de vos apprenants.<span class="app-cursor" aria-hidden="true"></span></h2>
+        <h2 class="app-reveal" id="cta-title">Un module à confier${NB}? Parlons de vos apprenants.</h2>
         <p class="app-reveal">Décrivez votre besoin${NB}: je vous réponds sous 48${NB}h ouvrées.</p>
-        <a class="app-button app-magnetic app-reveal" href="#">Me contacter ${icon("arrow", 18)}</a>
+        <a class="app-button app-magnetic app-reveal" href="#">Me contacter</a>
       </div>
-      <svg class="app-seal" id="seal" viewBox="0 0 150 150" aria-hidden="true">
-        <defs><path id="seal-path" d="M75 75m-58 0a58 58 0 1 1 116 0a58 58 0 1 1-116 0"/></defs>
-        <text><textPath href="#seal-path">Une vie · mille leçons · Une vie · mille leçons ·</textPath></text>
-        <g transform="translate(64 52) scale(.055)" fill="currentColor"><rect x="-77" y="-38" width="154" height="76" transform="translate(79 83) rotate(-49.5)"/><rect x="-77" y="-38" width="154" height="76" transform="translate(94 208) rotate(-49.5)"/><rect x="-77" y="-38" width="154" height="76" transform="translate(109 333) rotate(-49.5)"/></g>
-      </svg>
     </section>`;
 
   const footer = `
     <footer class="app-footer">
       <div class="app-wrap">
-        <p class="app-wordmark" aria-label="Sylent">${[..."Sylent"].map(letter => `<span aria-hidden="true">${letter}</span>`).join("")}</p>
+        <div class="app-footer-logo app-reveal" role="img" aria-label="Sylent">${MARK}${WORDMARK}</div>
         <div class="app-footer-grid">
           <div><p class="app-footer-motto">«${NB}Une vie, mille leçons${NB}»</p><p>Formateur en informatique, sur site ou à distance.</p></div>
           <div><h2>Navigation</h2><ul><li><a href="#formations">Formations</a></li><li><a href="#">Articles</a></li><li><a href="#a-propos">À propos</a></li><li><a href="#contact">Contact</a></li></ul></div>
@@ -663,9 +582,10 @@
     </footer>`;
 
   document.getElementById("content").innerHTML = hero + partners + audiences + domains + pedagogy + about + cta + footer;
+  document.querySelector("[data-logo]").innerHTML = MARK + WORDMARK;
   document.getElementById("burger").innerHTML = icon("menu", 24);
   document.documentElement.classList.add("is-js");
-  // If the animation libraries don't load, show everything rather than a blank page.
+  // If the animations don't start (a library that doesn't load), show everything.
   setTimeout(() => { if (!window.sylentIntro) document.documentElement.classList.remove("is-js"); }, 4000);
 </script>
 
@@ -678,8 +598,8 @@
 
   const root = document.documentElement;
   const motion = root.dataset.motion === "on";
+  const shot = location.search.includes("shot");
   const css = name => getComputedStyle(root).getPropertyValue(name).trim();
-  const theme = root.dataset.theme;
   gsap.registerPlugin(ScrollTrigger, SplitText);
 
   // ── Header: solid once the page scrolls, hidden while scrolling down ──────────────────
@@ -701,7 +621,7 @@
     menu.setAttribute("aria-hidden", String(!open));
     burger.setAttribute("aria-expanded", String(open));
     burger.setAttribute("aria-label", open ? "Fermer le menu" : "Ouvrir le menu");
-    burger.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="${open ? "M6 6l12 12M18 6L6 18" : "M4 8h16M4 16h16"}"/></svg>`;
+    burger.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="${open ? "M6 6l12 12M18 6L6 18" : "M4 8h16M4 16h16"}"/></svg>`;
     document.body.style.overflow = open ? "hidden" : "";
     if (open && motion) gsap.fromTo(menu.querySelectorAll(".app-menu-link, .app-button"), { y: 40, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.06, duration: 0.7, delay: 0.2, ease: "expo.out" });
   }
@@ -711,12 +631,12 @@
 
   // ── The cube: one quality or one figure on each face ───────────────────────────────
   const FACES = [
-    ["01 · le sens", "Pourquoi ?"],
-    ["par an depuis 2023", "900+ h"],
-    ["pas à pas", "Patience"],
-    ["formateur depuis", "2021"],
-    ["en toute sérénité", "Bienveillance"],
-    ["écoles et organismes", "5"],
+    ["Le sens", "Pourquoi ?"],
+    ["Par an depuis 2023", "900+ h"],
+    ["Pas à pas", "Patience"],
+    ["Formateur depuis", "2021"],
+    ["En toute sérénité", "Bienveillance"],
+    ["Écoles et organismes", "5"],
   ];
   const canvas = document.getElementById("cube-canvas");
   const area = document.getElementById("cube-area");
@@ -724,119 +644,58 @@
   let renderer;
   try {
     // Without motion, one frame is drawn: keep it, so that it survives the compositing.
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: !motion || location.search.includes("shot") });
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: !motion || shot });
   } catch {
     canvas.remove();
   }
 
   if (renderer) {
-    await document.fonts.ready;
+    const family = css("--font-title");
+    await Promise.all([document.fonts.load(`800 120px ${family}`), document.fonts.load(`700 24px ${family}`)]);
     renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
     camera.position.set(0, 0, 14);
 
-    const accent = new THREE.Color(css("--accent"));
-    const colors = { bg: css("--card"), text: css("--text"), weak: css("--weak"), accent: css("--accent"), line: css("--line") };
-
-    function faceTexture([small, big], index) {
+    function faceTexture([small, big]) {
       const size = 512;
       const paint = document.createElement("canvas");
       paint.width = paint.height = size;
       const g = paint.getContext("2d");
-      g.fillStyle = colors.bg;
+      g.fillStyle = "#111111";
       g.fillRect(0, 0, size, size);
-      if (theme === "console") {
-        g.strokeStyle = "rgba(61, 220, 132, 0.08)";
-        for (let x = 0; x <= size; x += 32) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, size); g.stroke(); g.beginPath(); g.moveTo(0, x); g.lineTo(size, x); g.stroke(); }
-      } else {
-        g.strokeStyle = colors.line;
-        g.lineWidth = 3;
-        g.strokeRect(22, 22, size - 44, size - 44);
+      g.strokeStyle = "rgba(255, 255, 255, 0.06)";
+      for (let x = 0; x <= size; x += 32) {
+        g.beginPath(); g.moveTo(x, 0); g.lineTo(x, size); g.stroke();
+        g.beginPath(); g.moveTo(0, x); g.lineTo(size, x); g.stroke();
       }
-      g.fillStyle = colors.accent;
-      g.font = `500 26px ${css("--font-label")}`;
+      g.fillStyle = "#a3a3a3";
+      g.font = `700 24px ${family}`;
+      g.letterSpacing = "4px";
       g.textBaseline = "top";
-      g.fillText((theme === "console" ? "// " : "") + small, 48, 52);
-      g.fillStyle = theme === "console" ? colors.text : colors.text;
-      let fontSize = 150;
-      const family = css("--font-display");
-      const weight = theme === "console" ? 700 : 500;
-      const style = theme === "atelier" && index % 2 === 0 ? "italic " : "";
-      do { g.font = `${style}${weight} ${fontSize}px ${family}`; fontSize -= 4; } while (g.measureText(big).width > size - 96);
+      g.fillText(small.toUpperCase(), 48, 52);
+      g.letterSpacing = "-4px";
+      g.fillStyle = "#ffffff";
+      let fontSize = 160;
+      do { g.font = `800 ${fontSize}px ${family}`; fontSize -= 4; } while (g.measureText(big).width > size - 96);
       g.textBaseline = "alphabetic";
-      g.fillText(big, 48, size - 64);
-      g.fillStyle = colors.accent;
-      g.fillRect(48, size - 44, 64, 6);
+      g.fillText(big, 44, size - 70);
+      g.fillRect(48, size - 50, 72, 8);
       const texture = new THREE.CanvasTexture(paint);
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
       return texture;
     }
 
+    const white = new THREE.Color("#ffffff");
     const geometry = new THREE.BoxGeometry(2, 2, 2);
-    const materials = FACES.map((face, index) => theme === "console"
-      ? new THREE.MeshBasicMaterial({ map: faceTexture(face, index), transparent: true, opacity: 0.94 })
-      : new THREE.MeshStandardMaterial({ map: faceTexture(face, index), roughness: 0.62, metalness: 0 }));
-    const cube = new THREE.Mesh(geometry, materials);
+    const cube = new THREE.Mesh(geometry, FACES.map(face => new THREE.MeshBasicMaterial({ map: faceTexture(face), transparent: true, opacity: 0.95 })));
+    cube.add(new THREE.LineSegments(new THREE.EdgesGeometry(geometry), new THREE.LineBasicMaterial({ color: white, transparent: true, opacity: 0.9 })));
+    const shell = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(2.7, 2.7, 2.7)), new THREE.LineBasicMaterial({ color: white, transparent: true, opacity: 0.16 }));
     const rig = new THREE.Group();
-    rig.add(cube);
+    rig.add(cube, shell);
     scene.add(rig);
-
-    const extras = [];
-    if (theme === "console") {
-      // Glowing edges, a second wire cube around it, and a field of points waving below.
-      cube.add(new THREE.LineSegments(new THREE.EdgesGeometry(geometry), new THREE.LineBasicMaterial({ color: accent })));
-      const shell = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(2.7, 2.7, 2.7)), new THREE.LineBasicMaterial({ color: accent, transparent: true, opacity: 0.22 }));
-      rig.add(shell);
-      extras.push(time => { shell.rotation.x = -time * 0.15; shell.rotation.y = time * 0.11; });
-      const count = 38;
-      const positions = new Float32Array(count * count * 3);
-      const field = new THREE.Points(new THREE.BufferGeometry(), new THREE.PointsMaterial({ color: accent, size: 0.045, transparent: true, opacity: 0.55, depthWrite: false }));
-      field.geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-      field.position.set(0, -2.4, -1);
-      field.rotation.x = 0.08;
-      rig.add(field);
-      extras.push(time => {
-        let i = 0;
-        for (let row = 0; row < count; row++) for (let col = 0; col < count; col++) {
-          const x = (col - count / 2) * 0.28, z = (row - count / 2) * 0.28;
-          positions[i++] = x;
-          positions[i++] = Math.sin(x * 0.9 + time * 1.1) * 0.18 + Math.cos(z * 0.8 + time * 0.8) * 0.18;
-          positions[i++] = z;
-        }
-        field.geometry.attributes.position.needsUpdate = true;
-      });
-    } else {
-      // Paper in the light: a key light, a warm fill, a soft shadow and an orbit.
-      scene.add(new THREE.AmbientLight(0xffffff, 1.6));
-      const key = new THREE.DirectionalLight(0xffffff, 2.2);
-      key.position.set(-3, 5, 6);
-      scene.add(key);
-      const rim = new THREE.DirectionalLight(accent, 1.4);
-      rim.position.set(5, -2, -3);
-      scene.add(rim);
-      const shadowPaint = document.createElement("canvas");
-      shadowPaint.width = shadowPaint.height = 256;
-      const s = shadowPaint.getContext("2d");
-      const gradient = s.createRadialGradient(128, 128, 0, 128, 128, 128);
-      gradient.addColorStop(0, "rgba(23, 20, 15, 0.35)");
-      gradient.addColorStop(1, "rgba(23, 20, 15, 0)");
-      s.fillStyle = gradient;
-      s.fillRect(0, 0, 256, 256);
-      const shadow = new THREE.Mesh(new THREE.PlaneGeometry(4.2, 4.2), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(shadowPaint), transparent: true, depthWrite: false }));
-      shadow.rotation.x = -Math.PI / 2;
-      shadow.position.y = -2.3;
-      rig.add(shadow);
-      const orbit = new THREE.Mesh(new THREE.TorusGeometry(2.35, 0.012, 8, 180), new THREE.MeshBasicMaterial({ color: accent }));
-      const moon = new THREE.Mesh(new THREE.SphereGeometry(0.13, 32, 16), new THREE.MeshStandardMaterial({ color: accent, roughness: 0.4 }));
-      const tilt = new THREE.Group();
-      tilt.rotation.set(1.15, 0.2, 0.3);
-      tilt.add(orbit, moon);
-      rig.add(tilt);
-      extras.push(time => { moon.position.set(Math.cos(time * 0.7) * 2.35, Math.sin(time * 0.7) * 2.35, 0); cube.position.y = Math.sin(time * 1.2) * 0.08; });
-    }
 
     // Place the cube on the visual area of the hero, whatever the layout.
     function layout() {
@@ -881,14 +740,15 @@
         state.y += state.vy;
         state.x += state.vx;
         if (!drag) { state.vy += (0.0035 - state.vy) * 0.02; state.vx *= 0.94; }
+        shell.rotation.x = -time * 0.15;
+        shell.rotation.y = time * 0.11;
       }
       cube.rotation.x = state.x + state.tiltX + state.scroll * 0.6;
       cube.rotation.y = state.y + state.tiltY + state.scroll * 1.4;
       cube.scale.setScalar(state.scale);
-      extras.forEach(extra => extra(motion ? time : 0));
       renderer.render(scene, camera);
-      // Headless screenshots don't show WebGL: ?shot=1 copies the frame into an image.
-      if (location.search.includes("shot") && !frame.done) { frame.done = true; const copy = new Image(); copy.src = canvas.toDataURL(); copy.className = "app-hero-canvas"; canvas.after(copy); }
+      // Headless screenshots don't show WebGL: ?shot=1 copies the first frame into an image.
+      if (shot && !frame.done) { frame.done = true; const copy = new Image(); copy.src = canvas.toDataURL(); copy.className = "app-hero-canvas"; canvas.after(copy); }
     }
     if (motion) {
       renderer.setAnimationLoop(() => { if (visible) frame(); });
@@ -905,15 +765,13 @@
   if (motion) {
     window.sylentIntro = true;
     // Intro: the title rises line by line from behind a mask.
-    const split = SplitText.create(".app-hero-title", { type: "lines", mask: "lines", linesClass: "app-line" });
+    const split = SplitText.create(".app-hero-title", { type: "lines", mask: "lines" });
     gsap.set(".app-intro", { visibility: "visible" });
     gsap.timeline({ defaults: { ease: "expo.out", duration: 1.1 } })
       .from(header, { yPercent: -100, duration: 0.9 })
-      .from(".app-hero-text .app-label", { y: 16, autoAlpha: 0 }, "-=0.6")
-      .from(split.lines, { yPercent: 110, stagger: 0.09, duration: 1.2 }, "<0.1")
+      .from(split.lines, { yPercent: 110, stagger: 0.09, duration: 1.2 }, "-=0.5")
       .from([".app-hero-sub", ".app-hero-actions", ".app-hero-motto"], { y: 28, autoAlpha: 0, stagger: 0.1 }, "-=0.8")
-      .from(".app-badge", { scale: 0.6, autoAlpha: 0, ease: "back.out(2)", duration: 0.9 }, "-=0.6")
-      .from(".app-hero-hint", { autoAlpha: 0, duration: 0.6 }, "-=0.3");
+      .from(".app-badge", { scale: 0.7, autoAlpha: 0, ease: "back.out(2)", duration: 0.9 }, "-=0.6");
 
     // Reveals on scroll, in small batches.
     ScrollTrigger.batch(".app-reveal", {
@@ -921,10 +779,14 @@
       onEnter: batch => gsap.to(batch, { opacity: 1, y: 0, stagger: 0.08, duration: 1, ease: "power3.out", overwrite: true }),
     });
 
-    // The section titles rise word by word.
-    document.querySelectorAll(".app-section-head .app-title, .app-cta .app-title").forEach(title => {
-      SplitText.create(title, { type: "words", mask: "words", onSplit: self => gsap.from(self.words, { yPercent: 100, stagger: 0.04, duration: 1, ease: "expo.out", scrollTrigger: { trigger: title, start: "top 88%" } }) });
+    // Section headings, as on the former site: the title rises, the large word behind it
+    // slides as the page scrolls.
+    document.querySelectorAll(".app-heading").forEach(block => {
+      const title = block.querySelector(".app-heading-title");
+      SplitText.create(title, { type: "words", mask: "words", onSplit: self => gsap.from(self.words, { yPercent: 100, stagger: 0.05, duration: 1, ease: "expo.out", scrollTrigger: { trigger: block, start: "top 86%" } }) });
+      gsap.fromTo(block.querySelector(".app-heading-ghost"), { xPercent: 6 }, { xPercent: -4, ease: "none", scrollTrigger: { trigger: block, start: "top bottom", end: "bottom top", scrub: true } });
     });
+    gsap.fromTo(".app-cta-ghost", { xPercent: 8 }, { xPercent: -8, ease: "none", scrollTrigger: { trigger: ".app-cta", start: "top bottom", end: "bottom top", scrub: true } });
 
     // The rules of the pedagogy draw themselves as the section scrolls.
     gsap.utils.toArray(".app-step-rule").forEach((rule, index) => {
@@ -933,17 +795,9 @@
 
     // The figures count up.
     gsap.utils.toArray(".app-count").forEach(counter => {
-      const to = Number(counter.dataset.to);
-      const from = Number(counter.dataset.from || 0);
-      const value = { n: from };
-      gsap.to(value, { n: to, duration: 2, ease: "power2.out", scrollTrigger: { trigger: counter, start: "top 92%" }, onUpdate: () => { counter.textContent = Math.round(value.n); } });
+      const value = { n: Number(counter.dataset.from || 0) };
+      gsap.to(value, { n: Number(counter.dataset.to), duration: 2, ease: "power2.out", scrollTrigger: { trigger: counter, start: "top 92%" }, onUpdate: () => { counter.textContent = Math.round(value.n); } });
     });
-
-    // The wordmark of the footer rises letter by letter.
-    gsap.from(".app-wordmark span", { yPercent: 100, stagger: 0.05, duration: 1.2, ease: "expo.out", scrollTrigger: { trigger: ".app-wordmark", start: "top 95%" } });
-
-    // The seal of Atelier turns.
-    gsap.to("#seal text", { rotation: 360, svgOrigin: "75 75", duration: 30, repeat: -1, ease: "none" });
 
     // Pointer devices: the cards tilt and light up under the pointer, the main buttons are
     // magnetic.
@@ -957,8 +811,8 @@
           const x = (event.clientX - box.left) / box.width, y = (event.clientY - box.top) / box.height;
           card.style.setProperty("--mx", `${x * 100}%`);
           card.style.setProperty("--my", `${y * 100}%`);
-          rotateY((x - 0.5) * 8);
-          rotateX((0.5 - y) * 8);
+          rotateY((x - 0.5) * 7);
+          rotateX((0.5 - y) * 7);
         });
         card.addEventListener("pointerleave", () => { rotateX(0); rotateY(0); });
       });

@@ -5,10 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Home Mock-up</title>
 <!--
-  Mock-up of the home page (step 4 of roadmap.md): the layout of set 1 of docs/wireframes in two
-  styles, at phone and desktop width. The page itself is home-site.html, shown here in frames;
-  switch the style and the view with the bar at the top, or open them directly, e.g.
-  ?variant=atelier&view=desktop.
+  Mock-up of the home page (step 4 of roadmap.md): the layout of set 1 of docs/wireframes in the
+  chosen style, at phone and desktop width. The page itself is home-site.html, shown here in
+  frames; switch the view with the bar at the top, or open it directly, e.g. ?view=desktop.
 
   Serve the repository root, so that the frames load even in a sandboxed browser:
     python3 -m http.server 8766 --bind 127.0.0.1
@@ -43,27 +42,21 @@
 <main class="page-stage" id="stage"></main>
 <script>
   const VARIANTS = {
-    variant: {
-      label: "Style",
-      options: { console: "A · Console", atelier: "B · Atelier" },
-      fallback: "console",
-    },
     view: {
       label: "View",
       options: { both: "Mobile and desktop", desktop: "Desktop, full width", mobile: "Mobile" },
       fallback: "both",
     },
   };
-  const NOTES = {
-    console: "The identity of your course materials: night background, mint green, Poppins titles, a serif to read, // labels. A glowing hologram cube over a field of waving points.",
-    atelier: "A warm editorial page: paper, ink and vermilion, Fraunces titles in italics, rounded pills, paper grain. A paper cube in the light, with a soft shadow and an orbit.",
-  };
+  // Iteration 2: the Console style chosen by the owner, in white instead of green, Manrope and
+  // Roboto only, the headings of the former site. Atelier was set aside.
+  const NOTE = "Night style, iteration 2: neutral blacks and white, Manrope and Roboto, the SYLENT logo, the headings of the former site, glass cards.";
 
   const params = new URLSearchParams(location.search);
   const chosen = Object.fromEntries(Object.entries(VARIANTS).map(([key, variant]) =>
     [key, params.get(key) in variant.options ? params.get(key) : variant.fallback]));
 
-  const site = () => `home-site.html?variant=${chosen.variant}`;
+  const site = () => "home-site.html";
   const phone = () => `<div class="page-slot"><span>Mobile · 390 × 844 · scroll inside the phone</span><div class="page-phone"><iframe src="${site()}" title="Home page at phone width"></iframe></div></div>`;
   const desktop = () => `<div class="page-slot page-fit"><span>Desktop · 1280 × 800 · scaled to fit, scroll inside</span><div class="page-desktop"><iframe src="${site()}" width="1280" height="800" title="Home page at desktop width"></iframe></div></div>`;
 
@@ -72,7 +65,7 @@
       Object.entries(VARIANTS).map(([key, variant]) => `<div class="page-group"><span>${variant.label}</span>${
         Object.entries(variant.options).map(([value, label]) =>
           `<button type="button" data-variant="${key}" data-value="${value}" aria-pressed="${chosen[key] === value}">${label}</button>`).join("")}</div>`).join("") +
-      `<p>${NOTES[chosen.variant]} Sample content; photo, logos of the partners and phone number to come.</p>`;
+      `<p>${NOTE} Sample content; photo, logo of IGENSIA Tech and phone number to come.</p>`;
     const stage = document.getElementById("stage");
     stage.className = `page-stage is-${chosen.view}`;
     stage.innerHTML = chosen.view === "mobile" ? phone() : chosen.view === "desktop"
