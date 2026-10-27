@@ -251,28 +251,26 @@
   /* ── Partners ───────────────────────────────────────────────────────────────────── */
 
   /* Logos of equal visual weight: a wide logo is lower, a square one taller (height divided by
-     the square root of the proportions). On a phone they sit on the corners of a pentagon, over
-     a faint spider chart; from 760 px they line up in one row. */
-  .app-partners-map { position: relative; aspect-ratio: 1; }
-  .app-partner-web { position: absolute; inset: 0; width: 100%; height: 100%; color: rgb(255 255 255 / 0.1); }
-  .app-partner-web .app-web-data { fill: rgb(255 255 255 / 0.03); stroke: rgb(255 255 255 / 0.16); }
-  .app-partner-list { --logo-size: 50px; position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; }
-  .app-partner-list li { position: absolute; left: var(--x); top: var(--y); translate: -50% -50%; display: grid; place-items: center; }
-  .app-partner-list li:nth-child(1) { --x: 15.8%; --y: 41.9%; }
-  .app-partner-list li:nth-child(2) { --x: 84.2%; --y: 41.9%; }
-  .app-partner-list li:nth-child(3) { --x: 28.8%; --y: 82.1%; }
-  .app-partner-list li:nth-child(4) { --x: 71.2%; --y: 82.1%; }
-  .app-partner-list li:nth-child(5) { --x: 50%; --y: 17%; }
-  .app-partner-list img { display: block; max-width: none; height: calc(var(--logo-size) * var(--scale)); width: auto; opacity: .82; transition: opacity .3s; }
+     the square root of the proportions). On a phone, three logos show at a time in a reel that
+     scrolls up without end: the next one comes in at the bottom as the top one fades out. From
+     760 px they line up in one row. */
+  .app-partners-reel { --row: 88px; height: calc(var(--row) * 3); overflow: hidden; mask-image: linear-gradient(transparent, #000 24%, #000 76%, transparent); }
+  .app-partner-list { --logo-size: 56px; display: grid; grid-auto-rows: var(--row); margin: 0; padding: 0; list-style: none; animation: app-reel 14s linear infinite; }
+  @keyframes app-reel { to { transform: translateY(-50%); } }
+  .app-partner-list li { display: grid; place-items: center; }
+  .app-partner-list img { display: block; max-width: 100%; height: calc(var(--logo-size) * var(--scale)); width: auto; opacity: .82; transition: opacity .3s; }
   .app-partner-list li:hover img { opacity: 1; }
   .app-partner-name { font: 800 calc(var(--logo-size) * 0.36)/1 var(--font-title); letter-spacing: -0.04em; text-transform: uppercase; white-space: nowrap; opacity: .82; transition: opacity .3s; }
   .app-partner-list li:hover .app-partner-name { opacity: 1; }
+  /* Without motion, the five logos simply stand one under the other. */
+  html[data-motion="off"] .app-partners-reel { height: auto; mask-image: none; }
+  html[data-motion="off"] .app-partner-list { animation: none; }
+  html[data-motion="off"] .app-partner-list .is-copy { display: none; }
   @media (min-width: 760px) {
-    .app-partners-map { aspect-ratio: auto; }
-    .app-partner-web { display: none; }
-    .app-partner-list { --logo-size: 64px; position: static; display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px 24px; }
-    .app-partner-list li { position: static; translate: none; height: 110px; }
-    .app-partner-list img { max-width: 100%; }
+    .app-partners-reel { height: auto; overflow: visible; mask-image: none; }
+    .app-partner-list { --logo-size: 64px; grid-template-columns: repeat(5, 1fr); grid-auto-rows: auto; gap: 12px 24px; animation: none; }
+    .app-partner-list li { height: 110px; }
+    .app-partner-list .is-copy { display: none; }
   }
 
   /* ── Cards: audiences and domains ────────────────────────────────────────────────── */
@@ -507,29 +505,13 @@
       </div>
     </section>`;
 
-  // A faint spider chart for the phone layout: concentric pentagons, spokes and an uneven shape.
-  // It stops short of the corners where the logos stand (radius 36 % of the square), so that no
-  // line crosses a logo.
-  function spiderWeb() {
-    const corner = (fraction, index) => {
-      const angle = index * 2 * Math.PI / 5;
-      return `${(50 + 26 * fraction * Math.sin(angle)).toFixed(1)},${(53 - 26 * fraction * Math.cos(angle)).toFixed(1)}`;
-    };
-    const pentagon = fraction => [0, 1, 2, 3, 4].map(index => corner(fraction, index)).join(" ");
-    const rings = [1, 0.75, 0.5, 0.25].map(fraction => `<polygon points="${pentagon(fraction)}"/>`).join("");
-    const spokes = [0, 1, 2, 3, 4].map(index => `<line x1="50" y1="53" x2="${corner(1, index).split(",")[0]}" y2="${corner(1, index).split(",")[1]}"/>`).join("");
-    const data = [0.82, 0.64, 0.9, 0.7, 0.58].map((fraction, index) => corner(fraction, index)).join(" ");
-    return `<svg class="app-partner-web" viewBox="0 0 100 100" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke">${rings}${spokes}</g><polygon class="app-web-data" points="${data}" stroke-width="1" vector-effect="non-scaling-stroke"/></svg>`;
-  }
-
   const partners = `
     <section class="app-section" aria-labelledby="partners-title">
       <div class="app-wrap">
         ${heading("Partenaires", "Confiance", "partners-title")}
-        <div class="app-partners-map">
-          ${spiderWeb()}
-          <ul class="app-partner-list">${PARTNERS.map(([name, file, scale]) => `
-            <li class="app-reveal">${file ? `<img src="assets/partners/${file}.svg" alt="${name}" style="--scale: ${scale}">` : `<span class="app-partner-name">${name}</span>`}</li>`).join("")}
+        <div class="app-partners-reel app-reveal">
+          <ul class="app-partner-list">${[false, true].map(copy => PARTNERS.map(([name, file, scale]) => `
+            <li${copy ? ' class="is-copy" aria-hidden="true"' : ""}>${file ? `<img src="assets/partners/${file}.svg" alt="${copy ? "" : name}" style="--scale: ${scale}">` : `<span class="app-partner-name">${name}</span>`}</li>`).join("")).join("")}
           </ul>
         </div>
       </div>
