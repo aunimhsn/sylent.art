@@ -42,6 +42,11 @@
 <main class="page-stage" id="stage"></main>
 <script>
   const VARIANTS = {
+    text: {
+      label: "Text font",
+      options: { roboto: "Roboto", "open-sans": "Open Sans" },
+      fallback: "roboto",
+    },
     view: {
       label: "View",
       options: { both: "Mobile and desktop", desktop: "Desktop, full width", mobile: "Mobile" },
@@ -50,13 +55,13 @@
   };
   // Iteration 2: the Console style chosen by the owner, in white instead of green, Manrope and
   // Roboto only, the headings of the former site. Atelier was set aside.
-  const NOTE = "Night style, iteration 2: neutral blacks and white, Manrope and Roboto, the SYLENT logo, the headings of the former site, glass cards.";
+  const NOTE = "Night style, iteration 3: neutral blacks and white, Manrope for the titles, Roboto or Open Sans for the text, the SYLENT logo, the headings of the former site.";
 
   const params = new URLSearchParams(location.search);
   const chosen = Object.fromEntries(Object.entries(VARIANTS).map(([key, variant]) =>
     [key, params.get(key) in variant.options ? params.get(key) : variant.fallback]));
 
-  const site = () => "home-site.html";
+  const site = () => `home-site.html?text=${chosen.text}`;
   const phone = () => `<div class="page-slot"><span>Mobile · 390 × 844 · scroll inside the phone</span><div class="page-phone"><iframe src="${site()}" title="Home page at phone width"></iframe></div></div>`;
   const desktop = () => `<div class="page-slot page-fit"><span>Desktop · 1280 × 800 · scaled to fit, scroll inside</span><div class="page-desktop"><iframe src="${site()}" width="1280" height="800" title="Home page at desktop width"></iframe></div></div>`;
 

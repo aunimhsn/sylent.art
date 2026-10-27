@@ -28,10 +28,12 @@
   const query = new URLSearchParams(location.search);
   const reduced = query.get("motion") === "off" || matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.documentElement.dataset.motion = reduced ? "off" : "on";
+  // Open decision: the font of the text (?text=roboto|open-sans).
+  document.documentElement.dataset.text = query.get("text") === "open-sans" ? "open-sans" : "roboto";
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Roboto:ital,wght@0,400;0,500;1,400&display=block">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Roboto:ital,wght@0,400;0,500;1,400&family=Open+Sans:ital,wght@0,400;0,500;1,400&display=block">
 <style>
   /* ── Style: tokens only ──────────────────────────────────────────────────────────── */
 
@@ -54,7 +56,6 @@
     --accent: #ffffff;
     --on-accent: #0a0a0a;
     --ghost-word: rgb(255 255 255 / 0.055);
-    --highlight: linear-gradient(100deg, #ffffff 30%, #8f8f8f 100%);
     --glass: rgb(255 255 255 / 0.035);
     --glass-hover: rgb(255 255 255 / 0.06);
     --glass-line: rgb(255 255 255 / 0.09);
@@ -63,11 +64,14 @@
     --grid-line: rgb(255 255 255 / 0.05);
     --glow: rgb(255 255 255 / 0.10);
     --header-bg: rgb(10 10 10 / 0.72);
+    --highlight: #a3a3a3;
 
     --radius-button: 0;
     --radius-card: 10px;
     --radius-chip: 999px;
   }
+
+  :root[data-text="open-sans"] { --font-text: "Open Sans", system-ui, sans-serif; }
 
   /* ── Base ──────────────────────────────────────────────────────────────────────── */
 
@@ -94,7 +98,7 @@
   .app-skip:focus { top: 12px; }
   .app-wrap { width: min(100% - 2 * var(--gutter), var(--width)); margin-inline: auto; }
   .app-lead { margin: 0; max-width: 58ch; color: var(--secondary); font-size: 18px; text-wrap: pretty; }
-  .app-highlight { background: var(--highlight); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .app-highlight { color: var(--highlight); }
   .app-section { position: relative; padding-block: clamp(80px, 11vw, 140px); }
 
   /* The logo: the mark and the wordmark, in the proportions of the charter (gap one third of
@@ -157,7 +161,7 @@
     -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
   }
   /* Soft white lights behind a group of glass cards, so that the glass has something to blur. */
-  .app-lights { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+  .app-lights { position: absolute; inset: 0; pointer-events: none; }
   .app-lights i { position: absolute; width: 38vw; height: 38vw; max-width: 520px; max-height: 520px; border-radius: 50%; background: radial-gradient(circle, rgb(255 255 255 / .09), transparent 65%); }
 
   /* ── Header ─────────────────────────────────────────────────────────────────────── */
@@ -218,7 +222,7 @@
     position: absolute;
     inset: 0;
     background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: 56px 56px;
+    background-size: 32px 32px;
     mask-image: radial-gradient(80% 70% at 70% 40%, #000 30%, transparent 75%);
   }
   .app-hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
@@ -236,28 +240,24 @@
   .app-hero-motto::before { content: ""; width: 40px; height: 1px; background: currentColor; }
   .app-hero-visual { position: relative; height: 380px; cursor: grab; touch-action: pan-y; }
   .app-hero-visual:active { cursor: grabbing; }
-  .app-badge { position: absolute; left: 0; bottom: 12px; z-index: 2; padding: 16px 20px; box-shadow: 0 24px 60px -24px rgb(0 0 0 / .8); }
-  .app-badge strong { display: block; font: 800 32px/1 var(--font-title); letter-spacing: -0.04em; }
-  .app-badge > span { color: var(--secondary); font-size: 14px; }
   @media (min-width: 900px) {
     .app-hero { min-height: min(100svh, 880px); display: grid; align-items: center; padding-bottom: 72px; }
     .app-hero .app-wrap { grid-template-columns: 7fr 5fr; align-items: center; }
     .app-hero-visual { height: 540px; }
-    .app-badge { left: -48px; bottom: 64px; }
   }
 
   /* ── Partners ───────────────────────────────────────────────────────────────────── */
 
-  .app-partner-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 0; padding: 0; list-style: none; }
-  .app-partner-list li { display: grid; place-items: center; height: 104px; padding: 20px; transition: background-color .35s, border-color .35s; }
-  .app-partner-list li:hover { background-color: var(--glass-hover); border-color: rgb(255 255 255 / .2); }
+  .app-partner-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px 24px; margin: 0; padding: 0; list-style: none; }
+  .app-partner-list li { display: grid; place-items: center; height: 88px; }
   .app-partner-list img { max-width: 100%; max-height: 46px; width: auto; height: auto; opacity: .82; transition: opacity .3s; }
   .app-partner-list li:hover img { opacity: 1; }
   .app-partner-list li:last-child { grid-column: 1 / -1; }
-  .app-partner-name { font: 800 21px/1 var(--font-title); letter-spacing: -0.04em; text-transform: uppercase; opacity: .82; }
+  .app-partner-name { font: 800 21px/1 var(--font-title); letter-spacing: -0.04em; text-transform: uppercase; opacity: .82; transition: opacity .3s; }
+  .app-partner-list li:hover .app-partner-name { opacity: 1; }
   @media (min-width: 760px) {
     .app-partner-list { grid-template-columns: repeat(5, 1fr); }
-    .app-partner-list li { height: 120px; }
+    .app-partner-list li { height: 100px; }
     .app-partner-list li:last-child { grid-column: auto; }
   }
 
@@ -303,8 +303,7 @@
   .app-card.is-custom h3 { font-size: 24px; }
   .app-card.is-custom p { margin-bottom: 18px; }
   .app-card.is-custom .app-card-more { background: transparent; color: var(--text); border-top: 1px dashed var(--glass-line); }
-  .app-card.is-audience { flex-direction: row; flex-wrap: wrap; align-items: center; column-gap: 16px; }
-  .app-card.is-audience p { flex-basis: 100%; }
+
 
   /* ── Pedagogy ───────────────────────────────────────────────────────────────────── */
 
@@ -411,9 +410,9 @@
     ["Gestion de projet", "S’initier à l’agilité avec Scrum.", ["Scrum"], "board"],
   ];
   const AUDIENCES = [
-    ["Écoles", "Un intervenant pour un module, une classe ou un programme entier.", "school"],
-    ["Organismes de formation", "Un formateur sur un domaine, pour les sessions de vos clients.", "people"],
-    ["Entreprises", "Former vos équipes techniques, directement ou via un organisme.", "building"],
+    ["Écoles", "Un intervenant pour un module, une classe ou un programme entier."],
+    ["Organismes de formation", "Un formateur sur un domaine, pour les sessions de vos clients."],
+    ["Entreprises", "Former vos équipes techniques, directement ou via un organisme."],
   ];
   const STEPS = [
     ["Définir un pourquoi", `Pourquoi cette notion, pourquoi ce module, pourquoi ensemble${NB}: on commence toujours par le sens.`],
@@ -438,9 +437,6 @@
     branch: '<circle cx="6" cy="5" r="2"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="9" r="2"/><path d="M6 7v10M18 11c0 4-6 3-11 6.5"/>',
     spark: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/>',
     board: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16M15 4v16M5.5 8h1.5M11 8h2M11 11h2M17 8h1.5"/>',
-    school: '<path d="M3 9l9-5 9 5-9 5z"/><path d="M7 11.5V16c0 1.5 2.2 3 5 3s5-1.5 5-3v-4.5M21 9v6"/>',
-    people: '<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.2c2.9.4 5 2.7 5 5.8"/>',
-    building: '<path d="M4 21V5l8-2v18M12 7l8 3v11M3 21h18"/><path d="M7 8h2M7 12h2M7 16h2M15 13h2M15 17h2"/>',
     plus: '<path d="M12 5v14M5 12h14"/>',
   };
   const icon = (name, size = 22) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]}</svg>`;
@@ -464,9 +460,7 @@
           </div>
           <p class="app-hero-motto app-intro">Une vie, mille leçons</p>
         </div>
-        <div class="app-hero-visual" id="cube-area" aria-hidden="true">
-          <div class="app-badge app-glass app-intro"><strong><span class="app-count" data-to="900">900</span>+${NB}h</strong><span>de formation par an</span></div>
-        </div>
+        <div class="app-hero-visual" id="cube-area" aria-hidden="true"></div>
       </div>
     </section>`;
 
@@ -475,9 +469,8 @@
       ${lights([[60, 30]])}
       <div class="app-wrap">
         ${heading("Partenaires", "Confiance", "partners-title")}
-        <p class="app-lead app-reveal">Écoles et organismes de formation qui me confient leurs apprenants.</p>
         <ul class="app-partner-list">${PARTNERS.map(([name, file]) => `
-          <li class="app-glass app-reveal">${file ? `<img src="assets/partners/${file}.webp" alt="${name}">` : `<span class="app-partner-name">${name}</span>`}</li>`).join("")}
+          <li class="app-reveal">${file ? `<img src="assets/partners/${file}.webp" alt="${name}">` : `<span class="app-partner-name">${name}</span>`}</li>`).join("")}
         </ul>
       </div>
     </section>`;
@@ -487,11 +480,10 @@
       ${lights([[-8, 40], [70, 55]])}
       <div class="app-wrap">
         ${heading(`Pour qui${NB}?`, "Collaborer", "audiences-title")}
-        <p class="app-lead app-reveal">Les mêmes exigences, que vous formiez des étudiants, des personnes en reconversion ou des salariés.</p>
         <ul class="app-cards is-audiences">
-          ${AUDIENCES.map(([title, text, glyph]) => `
+          ${AUDIENCES.map(([title, text]) => `
             <li class="app-card app-glass is-audience app-reveal app-tilt">
-              <span class="app-card-icon">${icon(glyph)}</span><h3>${title}</h3><p>${text}</p>
+              <h3>${title}</h3><p>${text}</p>
             </li>`).join("")}
         </ul>
       </div>
@@ -770,8 +762,7 @@
     gsap.timeline({ defaults: { ease: "expo.out", duration: 1.1 } })
       .from(header, { yPercent: -100, duration: 0.9 })
       .from(split.lines, { yPercent: 110, stagger: 0.09, duration: 1.2 }, "-=0.5")
-      .from([".app-hero-sub", ".app-hero-actions", ".app-hero-motto"], { y: 28, autoAlpha: 0, stagger: 0.1 }, "-=0.8")
-      .from(".app-badge", { scale: 0.7, autoAlpha: 0, ease: "back.out(2)", duration: 0.9 }, "-=0.6");
+      .from([".app-hero-sub", ".app-hero-actions", ".app-hero-motto"], { y: 28, autoAlpha: 0, stagger: 0.1 }, "-=0.8");
 
     // Reveals on scroll, in small batches.
     ScrollTrigger.batch(".app-reveal", {
