@@ -36,7 +36,7 @@ const current = page => page === currentPage ? ' aria-current="page"' : "";
 // The call to action and the footer, which a page places at its end.
 const siteCta = () => `
   <section class="app-cta" aria-labelledby="cta-title">
-    <span class="app-cta-ghost" aria-hidden="true">Échanger</span>
+    <span class="app-cta-ghost" aria-hidden="true">Echanger</span>
     <div class="app-wrap">
       <h2 class="app-reveal" id="cta-title">Un module à confier${NB}?<br>Parlons de vos apprenants.</h2>
       <a class="app-button app-magnetic app-reveal" href="${PAGES.contact}">Me contacter</a>
