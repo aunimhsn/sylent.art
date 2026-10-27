@@ -343,8 +343,8 @@
   .app-cta { position: relative; overflow: hidden; padding-block: clamp(90px, 12vw, 160px); background: var(--bg-alt); border-top: 1px solid var(--line); text-align: center; }
   .app-cta .app-wrap { position: relative; display: grid; justify-items: center; }
   .app-cta-ghost { position: absolute; left: 50%; top: 50%; translate: -50% -58%; font: 800 clamp(80px, 19vw, 280px)/0.8 var(--font-title); letter-spacing: -0.06em; text-transform: uppercase; color: var(--ghost-word); white-space: nowrap; pointer-events: none; }
-  .app-cta h2 { position: relative; max-width: 16ch; margin: 0; font: var(--title-weight) clamp(38px, 6vw, 76px)/1 var(--font-title); letter-spacing: var(--title-tracking); text-wrap: balance; }
-  .app-cta p { position: relative; margin: 22px 0 34px; color: var(--secondary); }
+  .app-cta h2 { position: relative; margin: 0; font: var(--title-weight) clamp(38px, 6vw, 76px)/1 var(--font-title); letter-spacing: var(--title-tracking); text-wrap: balance; }
+  .app-cta .app-button { margin-top: 44px; }
 
   /* ── Footer ─────────────────────────────────────────────────────────────────────── */
 
@@ -542,8 +542,7 @@
     <section class="app-cta" id="contact" aria-labelledby="cta-title">
       <span class="app-cta-ghost" aria-hidden="true">Échanger</span>
       <div class="app-wrap">
-        <h2 class="app-reveal" id="cta-title">Un module à confier${NB}? Parlons de vos apprenants.</h2>
-        <p class="app-reveal">Décrivez votre besoin${NB}: je vous réponds sous 48${NB}h ouvrées.</p>
+        <h2 class="app-reveal" id="cta-title">Un module à confier${NB}?<br>Parlons de vos apprenants.</h2>
         <a class="app-button app-magnetic app-reveal" href="#">Me contacter</a>
       </div>
     </section>`;

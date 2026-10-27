@@ -58,7 +58,7 @@ Proofs:
 - The main action, repeated on every page, is the **contact form**.
 - Fields, all required: name, e-mail, organization, type of organization (école, organisme de formation, entreprise, autre), training wanted (the list of domains, plus « autre »), message.
 - The form is sent through **Formspree** (see [docs/external-services.md](docs/external-services.md)). Spam is filtered by Formspree and by a hidden honeypot field; no reCAPTCHA, which would add Google cookies.
-- After sending, the visitor stays on the page and sees a confirmation: « Merci, je vous réponds sous 48 h ouvrées. »
+- After sending, the visitor stays on the page and sees a confirmation: « Merci, votre message est bien envoyé. Je reviens vers vous rapidement. » The site promises no response time for now: the owner may add one once the site is live.
 - If the sending fails, the visitor sees an error message with the e-mail address, and the text typed is kept.
 - The form works with the keyboard, each field has a label, and the errors are announced next to the field concerned.
 - A plain e-mail link stays available as a fallback.
