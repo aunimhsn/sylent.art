@@ -42,6 +42,11 @@
 <main class="page-stage" id="stage"></main>
 <script>
   const VARIANTS = {
+    text: {
+      label: "Text font",
+      options: { "alegreya-sans": "Alegreya Sans", "roboto-condensed": "Roboto Condensed" },
+      fallback: "alegreya-sans",
+    },
     weight: {
       label: "Text weight",
       options: { 500: "Medium 500", 700: "Bold 700" },
@@ -55,13 +60,13 @@
   };
   // Iteration 2: the Console style chosen by the owner, in white instead of green, Manrope and
   // Roboto only, the headings of the former site. Atelier was set aside.
-  const NOTE = "Night style, iteration 4: neutral blacks and white, Manrope for the titles, Alegreya Sans for the text (no semibold: medium or bold), the SYLENT logo, the headings of the former site.";
+  const NOTE = "Night style, iteration 4: neutral blacks and white, Manrope for the titles, Alegreya Sans or Roboto Condensed for the text, medium or bold, the SYLENT logo, the headings of the former site.";
 
   const params = new URLSearchParams(location.search);
   const chosen = Object.fromEntries(Object.entries(VARIANTS).map(([key, variant]) =>
     [key, params.get(key) in variant.options ? params.get(key) : variant.fallback]));
 
-  const site = () => `home-site.html?weight=${chosen.weight}`;
+  const site = () => `home-site.html?text=${chosen.text}&weight=${chosen.weight}`;
   const phone = () => `<div class="page-slot"><span>Mobile · 390 × 844 · scroll inside the phone</span><div class="page-phone"><iframe src="${site()}" title="Home page at phone width"></iframe></div></div>`;
   const desktop = () => `<div class="page-slot page-fit"><span>Desktop · 1280 × 800 · scaled to fit, scroll inside</span><div class="page-desktop"><iframe src="${site()}" width="1280" height="800" title="Home page at desktop width"></iframe></div></div>`;
 

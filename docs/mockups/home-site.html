@@ -18,7 +18,7 @@
   the site loads no third font) follow the charter of sylent-slides. The section headings take
   up the principle of the former site: a title over a large faded word (Partenaires over
   Confiance).
-  Fonts: Manrope (titles, interface) and Alegreya Sans (text), from Google Fonts here, self-hosted by
+  Fonts: Manrope (titles, interface) and Alegreya Sans or Roboto Condensed (text), from Google Fonts here, self-hosted by
   the site. Three.js and GSAP come from jsDelivr here; the site will bundle them.
   The texts are sample content close to specs.md; the phone number and the photo are
   placeholders, and the logo of IGENSIA Tech is missing.
@@ -28,12 +28,14 @@
   const query = new URLSearchParams(location.search);
   const reduced = query.get("motion") === "off" || matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.documentElement.dataset.motion = reduced ? "off" : "on";
-  // Open decision: the weight of the text, Alegreya Sans having no semibold (?weight=500|700).
+  // Open decisions: the font of the text (?text=alegreya-sans|roboto-condensed) and its weight,
+  // Alegreya Sans having no semibold (?weight=500|700).
+  document.documentElement.dataset.text = query.get("text") === "roboto-condensed" ? "roboto-condensed" : "alegreya-sans";
   document.documentElement.dataset.weight = query.get("weight") === "700" ? "700" : "500";
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Alegreya+Sans:ital,wght@0,500;0,700;1,500;1,700&display=block">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Alegreya+Sans:ital,wght@0,500;0,700;1,500;1,700&family=Roboto+Condensed:ital,wght@0,500;0,700;1,500;1,700&display=block">
 <style>
   /* ── Style: tokens only ──────────────────────────────────────────────────────────── */
 
@@ -73,6 +75,7 @@
   }
 
   :root[data-weight="700"] { --text-weight: 700; }
+  :root[data-text="roboto-condensed"] { --font-text: "Roboto Condensed", system-ui, sans-serif; }
 
   /* ── Base ──────────────────────────────────────────────────────────────────────── */
 
