@@ -10,9 +10,10 @@
   width by home.html (?page=contact). The parts shared by every page are in shared/.
   Layout: set 1 of docs/wireframes (contact.excalidraw): the form, and the other ways to reach
   the trainer beside it. The fields are neumorphic: pressed into the page.
-  The form is not sent anywhere here: it simulates Formspree. Its states can be opened directly
-  with ?state=errors|sending|sent|failed, and ?formation=<slug> preselects a domain, as the
-  button of an offer page will.
+  Two fields only, e-mail and message, to keep getting in touch easy. The form is not sent
+  anywhere here: it simulates Formspree. Its states can be opened directly with
+  ?state=errors|sending|sent|failed, and ?formation=<slug> shows the domain chosen on an offer
+  page above the fields, as the button of an offer page will.
 -->
 <script src="shared/head.js"></script>
 <script>
@@ -46,9 +47,7 @@
     --light: #1a1a1a;
     --pressed: inset var(--depth) var(--depth) calc(var(--depth) * 2 + 1px) var(--shade), inset calc(-1 * var(--depth)) calc(-1 * var(--depth)) calc(var(--depth) * 2 + 1px) var(--light);
   }
-  .app-form-grid { display: grid; gap: 24px 20px; }
-  @media (min-width: 640px) { .app-form-grid { grid-template-columns: 1fr 1fr; } }
-  .app-field.is-wide { grid-column: 1 / -1; }
+  .app-form-grid { display: grid; gap: 24px; }
   .app-field label { display: block; margin-bottom: 10px; font: 600 14px/1.2 var(--font-title); color: var(--secondary); }
   .app-input {
     display: block;
@@ -66,15 +65,11 @@
   .app-input::placeholder { color: var(--dim); }
   .app-input:focus { outline: none; box-shadow: var(--pressed), 0 0 0 1px rgb(255 255 255 / .55); }
   textarea.app-input { min-height: 190px; resize: none; }
-  select.app-input {
-    padding-right: 48px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23a3a3a3' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 18px center;
-    cursor: pointer;
-  }
-  select.app-input:invalid { color: var(--dim); }
-  select.app-input option { background: var(--surface); color: var(--text); }
+  /* The domain chosen on an offer page, above the fields. */
+  .app-topic { display: inline-flex; align-items: center; gap: 12px; margin: 0 0 26px; padding: 10px 10px 10px 16px; border-radius: var(--field-radius); box-shadow: var(--pressed); color: var(--secondary); }
+  .app-topic strong { color: var(--text); font-weight: inherit; }
+  .app-topic button { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; background: none; color: var(--secondary); cursor: pointer; transition: color .25s; }
+  .app-topic button:hover { color: var(--text); }
   /* A field to fill: an orange edge, and the message just under it. */
   .app-field.is-invalid .app-input { box-shadow: var(--pressed), 0 0 0 1px var(--signal); }
   .app-error { margin: 9px 0 0; color: #f07a4a; font-size: 15px; }
@@ -110,17 +105,16 @@
 
 <script>
   // ── Content ───────────────────────────────────────────────────────────────────────
-  const TYPES = ["École", "Organisme de formation", "Entreprise", "Autre"];
-  const OFFERS = [
-    ["initiation-a-la-programmation", "Initiation à la programmation"],
-    ["developpement-web", "Développement web"],
-    ["python-et-donnees", "Python et données"],
-    ["bases-de-donnees", "Bases de données"],
-    ["methodologie-et-tests", "Méthodologie et tests"],
-    ["ia-pour-le-developpement", "IA pour le développement"],
-    ["gestion-de-projet", "Gestion de projet"],
-    ["autre", "Autre"],
-  ];
+  // The domains, to name the one chosen on an offer page (?formation=<slug>).
+  const OFFERS = {
+    "initiation-a-la-programmation": "Initiation à la programmation",
+    "developpement-web": "Développement web",
+    "python-et-donnees": "Python et données",
+    "bases-de-donnees": "Bases de données",
+    "methodologie-et-tests": "Méthodologie et tests",
+    "ia-pour-le-developpement": "IA pour le développement",
+    "gestion-de-projet": "Gestion de projet",
+  };
   const WAYS = [
     ["E-mail", "aunim.hassan@gmail.com", "mailto:aunim.hassan@gmail.com"],
     ["Téléphone", `06${NB}13${NB}44${NB}94${NB}24`, "tel:+33613449424"],
@@ -128,12 +122,8 @@
     ["GitHub", "github.com/aunimhsn", "https://github.com/aunimhsn"],
   ];
   const MESSAGES = {
-    name: "Indiquez votre nom.",
     email: "Indiquez votre adresse e-mail.",
     emailFormat: "Cette adresse e-mail ne semble pas valide.",
-    organization: "Indiquez votre organisation.",
-    type: "Choisissez le type d’organisation.",
-    offer: `Choisissez une formation, ou «${NB}Autre${NB}».`,
     message: "Écrivez quelques mots sur votre besoin.",
   };
 
@@ -143,26 +133,17 @@
       ${field}
       <p class="app-error" id="${id}-error" aria-live="polite"></p>
     </div>`;
-  const select = (id, label, options) => input(id, label, `
-    <select class="app-input" id="${id}" name="${id}" required aria-describedby="${id}-error">
-      <option value="" disabled selected>Choisir…</option>
-      ${options.map(([value, text]) => `<option value="${value}">${text}</option>`).join("")}
-    </select>`);
-
   const form = `
     <form class="app-form app-reveal" id="contact-form" novalidate>
+      <div id="form-topic"></div>
       <div class="app-form-grid">
-        ${input("name", "Nom", `<input class="app-input" id="name" name="name" autocomplete="name" placeholder="Camille Martin" required aria-describedby="name-error">`)}
         ${input("email", "E-mail", `<input class="app-input" id="email" name="email" type="email" autocomplete="email" placeholder="camille.martin@ecole.fr" required aria-describedby="email-error">`)}
-        ${input("organization", "Organisation", `<input class="app-input" id="organization" name="organization" autocomplete="organization" placeholder="École du numérique" required aria-describedby="organization-error">`)}
-        ${select("type", "Type d’organisation", TYPES.map(type => [type, type]))}
-        ${select("offer", "Formation souhaitée", OFFERS).replace('class="app-field"', 'class="app-field is-wide"')}
-        ${input("message", "Message", `<textarea class="app-input" id="message" name="message" placeholder="Nous cherchons un intervenant pour…" required aria-describedby="message-error"></textarea>`, true)}
+        ${input("message", "Message", `<textarea class="app-input" id="message" name="message" placeholder="Votre organisation, vos apprenants, la formation souhaitée, les dates envisagées…" required aria-describedby="message-error"></textarea>`)}
       </div>
       <div class="app-trap" aria-hidden="true"><label for="website">Ne pas remplir</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
       <div id="form-alert"></div>
       <div class="app-form-end">
-        <p>Tous les champs sont obligatoires.</p>
+        <p>Les deux champs sont obligatoires.</p>
         <button class="app-button app-magnetic" type="submit" id="send">Envoyer</button>
       </div>
     </form>`;
@@ -187,7 +168,7 @@
   const contactForm = document.getElementById("contact-form");
   const alertBox = document.getElementById("form-alert");
   const sendButton = document.getElementById("send");
-  const fields = ["name", "email", "organization", "type", "offer", "message"];
+  const fields = ["email", "message"];
 
   function check(id) {
     const element = document.getElementById(id);
@@ -242,16 +223,25 @@
     }, 1400);
   });
 
-  // A domain chosen on an offer page arrives preselected.
-  const preset = query.get("formation");
-  if (OFFERS.some(([value]) => value === preset)) document.getElementById("offer").value = preset;
+  // A domain chosen on an offer page shows above the fields, and is sent with the message unless
+  // the visitor removes it.
+  const topic = query.get("formation");
+  if (OFFERS[topic]) {
+    document.getElementById("form-topic").innerHTML = `
+      <p class="app-topic"><span>À propos de${NB}: <strong>${OFFERS[topic]}</strong></span>
+        <button type="button" aria-label="Retirer ce domaine">${icon("close", 16)}</button>
+        <input type="hidden" name="formation" value="${OFFERS[topic]}"></p>`;
+    document.querySelector(".app-topic button").addEventListener("click", () => {
+      document.getElementById("form-topic").innerHTML = "";
+      document.getElementById("message").focus();
+    });
+  }
 
   // The states of the form, to review them without filling it (?state=…).
-  const SAMPLE = { name: "Camille Martin", email: "camille.martin@ecole.fr", organization: "École du numérique", type: "École", offer: "developpement-web", message: "Nous cherchons un intervenant pour un module de deux jours en développement web, pour une classe de bachelor, en mars." };
+  const SAMPLE = { email: "camille.martin@ecole.fr", message: "Bonjour,\n\nNous cherchons un intervenant pour un module de deux jours en développement web, pour une classe de bachelor, en mars.\n\nCamille Martin\nÉcole du numérique" };
   const state = query.get("state");
   if (["sending", "sent", "failed"].includes(state)) Object.entries(SAMPLE).forEach(([id, value]) => { document.getElementById(id).value = value; });
   if (state === "errors") {
-    document.getElementById("name").value = "Camille Martin";
     document.getElementById("email").value = "camille.martin@";
     fields.forEach(check);
   }

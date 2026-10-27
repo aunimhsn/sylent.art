@@ -56,7 +56,8 @@ Proofs:
 ## Conversion
 
 - The main action, repeated on every page, is the **contact form**.
-- Fields, all required: name, e-mail, organization, type of organization (école, organisme de formation, entreprise, autre), training wanted (the list of domains, plus « autre »), message.
+- Two fields, both required: e-mail and message, so that getting in touch costs as little as possible. The name usually comes in the signature of the message, and the organization in the e-mail address or the answer. The example text of the message suggests what to write: the organization, the learners, the training wanted, the dates.
+- When the visitor comes from an offer page, the domain is shown above the fields (« À propos de : Développement web »), can be removed, and is sent with the message.
 - The form is sent through **Formspree** (see [docs/external-services.md](docs/external-services.md)). Spam is filtered by Formspree and by a hidden honeypot field; no reCAPTCHA, which would add Google cookies.
 - After sending, the visitor stays on the page and sees a confirmation: « Merci, votre message est bien envoyé. Je reviens vers vous rapidement. » The site promises no response time for now: the owner may add one once the site is live.
 - If the sending fails, the visitor sees an error message with the e-mail address, and the text typed is kept.
@@ -107,7 +108,7 @@ Each offer page shows:
 - the objectives;
 - the modules, each with an indicative duration (« 2 jours, adaptable ») and a summary of its program. The modules are independent: a client takes one or several, in any order, so the site never presents them as a sequence to follow (« Voir les modules », not « Voir le programme », and no module numbers);
 - the formats (on-site or remote) and the note that the program and exercises are adapted to the group;
-- a call to action to the contact form, with the domain preselected in the form;
+- a call to action to the contact form, which then shows the domain above its fields;
 - links to the related domains.
 
 **IA pour le développement** has not been taught yet: its page says honestly that it is a new offer (e.g. a « Nouveau » label), centered on method and good practices, to help employees use AI tools to be more productive and more satisfied in their daily work.
