@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Home Mock-up</title>
+<!--
+  Mock-up of the home page (step 4 of roadmap.md): the layout of set 1 of docs/wireframes in two
+  styles, at phone and desktop width. The page itself is home-site.html, shown here in frames;
+  switch the style and the view with the bar at the top, or open them directly, e.g.
+  ?variant=atelier&view=desktop.
+
+  Serve the repository root, so that the frames load even in a sandboxed browser:
+    python3 -m http.server 8766 --bind 127.0.0.1
+  then open http://127.0.0.1:8766/docs/mockups/home.html
+-->
+<style>
+  /* The page around the frames: neutral, so that it doesn't compete with the styles. */
+  body { margin: 0; background: #1f2226; color: #e9ecef; font: 14px/1.4 system-ui, sans-serif; }
+  .page-bar { position: sticky; top: 0; z-index: 10; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 22px; padding: 10px 16px; background: #15171a; border-bottom: 1px solid #33383e; }
+  .page-bar strong { font-size: 14px; letter-spacing: .02em; }
+  .page-group { display: flex; align-items: center; gap: 4px; }
+  .page-group > span { margin-right: 6px; color: #adb5bd; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+  .page-group button { padding: 5px 11px; border: 1px solid #3a3f45; border-radius: 4px; background: #24272b; color: #dee2e6; font: inherit; cursor: pointer; }
+  .page-group button[aria-pressed="true"] { background: #e9ecef; color: #15171a; border-color: #e9ecef; }
+  .page-bar p { flex-basis: 100%; margin: 0; color: #adb5bd; }
+  .page-stage { display: flex; gap: 32px; align-items: flex-start; justify-content: center; padding: 24px 16px 40px; }
+  .page-slot > span { display: block; margin-bottom: 8px; color: #adb5bd; font-size: 12px; }
+  .page-phone { padding: 12px; border-radius: 44px; background: #0c0d0f; box-shadow: 0 0 0 1px #3a3f45, 0 30px 80px #0008; }
+  .page-phone iframe { display: block; width: 390px; height: 844px; border: 0; border-radius: 32px; background: #fff; }
+  .page-desktop { overflow: hidden; border-radius: 10px; box-shadow: 0 0 0 1px #3a3f45, 0 30px 80px #0008; }
+  .page-desktop iframe { display: block; border: 0; background: #fff; transform-origin: 0 0; }
+  .page-stage.is-desktop { padding: 0; }
+  .page-stage.is-desktop .page-slot { width: 100%; }
+  .page-stage.is-desktop .page-slot > span { display: none; }
+  .page-stage.is-desktop .page-desktop { border-radius: 0; box-shadow: none; }
+  .page-warning { margin: 0; padding: 10px 16px; background: #8a6a10; color: #fff; }
+</style>
+</head>
+<body>
+<p class="page-warning" id="file-warning" hidden>Opened as a file: serve the repository root (see the comment at the top of this page) so that the frames load.</p>
+<div class="page-bar" id="bar"></div>
+<main class="page-stage" id="stage"></main>
+<script>
+  const VARIANTS = {
+    variant: {
+      label: "Style",
+      options: { console: "A · Console", atelier: "B · Atelier" },
+      fallback: "console",
+    },
+    view: {
+      label: "View",
+      options: { both: "Mobile and desktop", desktop: "Desktop, full width", mobile: "Mobile" },
+      fallback: "both",
+    },
+  };
+  const NOTES = {
+    console: "The identity of your course materials: night background, mint green, Poppins titles, a serif to read, // labels. A glowing hologram cube over a field of waving points.",
+    atelier: "A warm editorial page: paper, ink and vermilion, Fraunces titles in italics, rounded pills, paper grain. A paper cube in the light, with a soft shadow and an orbit.",
+  };
+
+  const params = new URLSearchParams(location.search);
+  const chosen = Object.fromEntries(Object.entries(VARIANTS).map(([key, variant]) =>
+    [key, params.get(key) in variant.options ? params.get(key) : variant.fallback]));
+
+  const site = () => `home-site.html?variant=${chosen.variant}`;
+  const phone = () => `<div class="page-slot"><span>Mobile · 390 × 844 · scroll inside the phone</span><div class="page-phone"><iframe src="${site()}" title="Home page at phone width"></iframe></div></div>`;
+  const desktop = () => `<div class="page-slot page-fit"><span>Desktop · 1280 × 800 · scaled to fit, scroll inside</span><div class="page-desktop"><iframe src="${site()}" width="1280" height="800" title="Home page at desktop width"></iframe></div></div>`;
+
+  function render() {
+    document.getElementById("bar").innerHTML = `<strong>sylent.art · home</strong>` +
+      Object.entries(VARIANTS).map(([key, variant]) => `<div class="page-group"><span>${variant.label}</span>${
+        Object.entries(variant.options).map(([value, label]) =>
+          `<button type="button" data-variant="${key}" data-value="${value}" aria-pressed="${chosen[key] === value}">${label}</button>`).join("")}</div>`).join("") +
+      `<p>${NOTES[chosen.variant]} Sample content; photo, logos of the partners and phone number to come.</p>`;
+    const stage = document.getElementById("stage");
+    stage.className = `page-stage is-${chosen.view}`;
+    stage.innerHTML = chosen.view === "mobile" ? phone() : chosen.view === "desktop"
+      ? `<div class="page-slot"><div class="page-desktop"><iframe src="${site()}" title="Home page at full width"></iframe></div></div>`
+      : phone() + desktop();
+    fit();
+  }
+
+  // The desktop frame keeps 1280 px of layout and is scaled down to the room left.
+  function fit() {
+    const frame = document.querySelector(".page-desktop iframe");
+    if (!frame) return;
+    const holder = frame.parentElement;
+    if (chosen.view === "desktop") {
+      const height = innerHeight - document.getElementById("bar").offsetHeight;
+      Object.assign(frame.style, { width: "100%", height: `${height}px`, transform: "none" });
+      holder.style.width = holder.style.height = "";
+      return;
+    }
+    const room = document.getElementById("stage").clientWidth - 32 - (chosen.view === "both" ? 414 + 32 : 0);
+    const scale = Math.min(1, room / 1280);
+    const height = Math.max(600, Math.min(800, (innerHeight - 140) / scale));
+    Object.assign(frame.style, { width: "1280px", height: `${height}px`, transform: `scale(${scale})` });
+    holder.style.width = `${1280 * scale}px`;
+    holder.style.height = `${height * scale}px`;
+  }
+
+  document.getElementById("bar").addEventListener("click", event => {
+    const { variant, value } = event.target.dataset;
+    if (!variant) return;
+    chosen[variant] = value;
+    history.replaceState(null, "", "?" + new URLSearchParams(chosen));
+    render();
+  });
+  addEventListener("resize", fit);
+  document.getElementById("file-warning").hidden = location.protocol !== "file:";
+  render();
+</script>
+</body>
+</html>
