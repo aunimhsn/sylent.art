@@ -18,7 +18,7 @@
   the site loads no third font) follow the charter of sylent-slides. The section headings take
   up the principle of the former site: a title over a large faded word (Partenaires over
   Confiance).
-  Fonts: Manrope (titles, interface) and Roboto (text), from Google Fonts here, self-hosted by
+  Fonts: Manrope (titles, interface) and Alegreya Sans (text), from Google Fonts here, self-hosted by
   the site. Three.js and GSAP come from jsDelivr here; the site will bundle them.
   The texts are sample content close to specs.md; the phone number and the photo are
   placeholders, and the logo of IGENSIA Tech is missing.
@@ -28,13 +28,12 @@
   const query = new URLSearchParams(location.search);
   const reduced = query.get("motion") === "off" || matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.documentElement.dataset.motion = reduced ? "off" : "on";
-  // Open decision: the font of the text (?text=roboto|open-sans|google-sans|alegreya-sans).
-  const texts = ["roboto", "open-sans", "google-sans", "alegreya-sans"];
-  document.documentElement.dataset.text = texts.includes(query.get("text")) ? query.get("text") : "roboto";
+  // Open decision: the weight of the text, Alegreya Sans having no semibold (?weight=500|700).
+  document.documentElement.dataset.weight = query.get("weight") === "700" ? "700" : "500";
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Roboto:ital,wght@0,400;0,500;1,400&family=Open+Sans:ital,wght@0,400;0,500;1,400&family=Google+Sans:ital,wght@0,400;0,500;1,400&family=Alegreya+Sans:ital,wght@0,400;0,500;1,400&display=block">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Alegreya+Sans:ital,wght@0,500;0,700;1,500;1,700&display=block">
 <style>
   /* ── Style: tokens only ──────────────────────────────────────────────────────────── */
 
@@ -42,7 +41,8 @@
      glass cards. */
   :root[data-theme="night"] {
     --font-title: "Manrope", system-ui, sans-serif;
-    --font-text: "Roboto", system-ui, sans-serif;
+    --font-text: "Alegreya Sans", system-ui, sans-serif;
+    --text-weight: 500;
     --title-weight: 800;
     --title-tracking: -0.045em;
 
@@ -72,9 +72,7 @@
     --radius-chip: 999px;
   }
 
-  :root[data-text="open-sans"] { --font-text: "Open Sans", system-ui, sans-serif; }
-  :root[data-text="google-sans"] { --font-text: "Google Sans", system-ui, sans-serif; }
-  :root[data-text="alegreya-sans"] { --font-text: "Alegreya Sans", system-ui, sans-serif; }
+  :root[data-weight="700"] { --text-weight: 700; }
 
   /* ── Base ──────────────────────────────────────────────────────────────────────── */
 
@@ -90,7 +88,7 @@
     margin: 0;
     background: var(--bg);
     color: var(--text);
-    font: 400 17px/1.6 var(--font-text);
+    font: var(--text-weight) 17px/1.6 var(--font-text);
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
@@ -209,7 +207,7 @@
   .app-menu.is-open { visibility: visible; clip-path: circle(150% at calc(100% - 40px) 38px); transition: clip-path .7s cubic-bezier(.7,0,.2,1); }
   .app-menu-link { padding: 16px 0; border-bottom: 1px solid var(--line); font: 800 40px/1.05 var(--font-title); letter-spacing: var(--title-tracking); text-transform: uppercase; }
   .app-menu .app-button { align-self: stretch; margin-top: 32px; }
-  .app-menu-motto { margin-top: auto; color: var(--dim); font: italic 400 15px/1.4 var(--font-text); }
+  .app-menu-motto { margin-top: auto; color: var(--dim); font: italic var(--text-weight) 15px/1.4 var(--font-text); }
   .app-header.is-menu { background: transparent; border-color: transparent; backdrop-filter: none; z-index: 46; }
 
   /* ── Hero ──────────────────────────────────────────────────────────────────────── */
@@ -239,7 +237,7 @@
   }
   .app-hero-sub { margin: 28px 0 0; max-width: 52ch; color: var(--secondary); font-size: clamp(17px, 1.5vw, 19px); text-wrap: pretty; }
   .app-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
-  .app-hero-motto { display: flex; align-items: center; gap: 14px; margin: 40px 0 0; color: var(--dim); font: italic 400 16px/1 var(--font-text); }
+  .app-hero-motto { display: flex; align-items: center; gap: 14px; margin: 40px 0 0; color: var(--dim); font: italic var(--text-weight) 16px/1 var(--font-text); }
   .app-hero-motto::before { content: ""; width: 40px; height: 1px; background: currentColor; }
   .app-hero-visual { position: relative; height: 380px; cursor: grab; touch-action: pan-y; }
   .app-hero-visual:active { cursor: grabbing; }
@@ -325,7 +323,7 @@
   @media (min-width: 900px) { .app-about-grid { grid-template-columns: 5fr 7fr; gap: 72px; } }
   .app-portrait { position: relative; aspect-ratio: 4 / 5; overflow: hidden; color: var(--text); background: repeating-linear-gradient(-49.5deg, transparent 0 22px, var(--grid-line) 22px 23px), radial-gradient(70% 70% at 30% 20%, rgb(255 255 255 / .07), transparent 70%), var(--panel); }
   .app-portrait .app-mark { position: absolute; left: 50%; top: 50%; height: 34%; width: auto; transform: translate(-50%, -50%); opacity: .9; }
-  .app-portrait span { position: absolute; left: 18px; bottom: 16px; color: var(--dim); font: italic 400 13px/1 var(--font-text); }
+  .app-portrait span { position: absolute; left: 18px; bottom: 16px; color: var(--dim); font: italic var(--text-weight) 13px/1 var(--font-text); }
   .app-about-name { margin: 0; font: 800 clamp(30px, 3.6vw, 46px)/1.05 var(--font-title); letter-spacing: var(--title-tracking); }
   .app-about-grid .app-lead { margin-top: 18px; }
   .app-figures { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 32px 0; padding: 24px 0; border-block: 1px solid var(--line); }
@@ -365,7 +363,7 @@
   .app-footer li, .app-footer p { margin: 0; color: var(--secondary); font-size: 15px; }
   .app-footer a { transition: color .3s; }
   .app-footer a:hover { color: var(--text); }
-  .app-footer .app-footer-motto { margin-bottom: 8px; color: var(--text); font: italic 400 19px/1.4 var(--font-text); }
+  .app-footer .app-footer-motto { margin-bottom: 8px; color: var(--text); font: italic var(--text-weight) 19px/1.4 var(--font-text); }
   .app-footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--dim); font-size: 13px; }
 
   /* ── Motion: the starting state of the reveals, only when the animations run ──────── */
