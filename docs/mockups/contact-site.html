@@ -58,17 +58,17 @@
     appearance: none;
   }
   .app-input::placeholder { color: var(--dim); }
-  /* No outline on focus: the gray caret shows where to type, and the label of the field lights
+  /* No outline on focus: the white caret shows where to type, and the label of the field lights
      up. The orange stays for the errors, which are only a message under the field. */
-  .app-input { caret-color: var(--secondary); }
+  .app-input { caret-color: var(--text); }
   /* A thicker caret, drawn by the script since browsers only let the caret change color. The
      native caret is hidden only while the script runs it (.has-caret), and comes back for touch
      screens, the text being composed (accents, other alphabets) and the forced colors of high
      contrast modes. */
   .app-field { position: relative; }
   .has-caret .app-input { caret-color: transparent; }
-  .has-caret .app-input.is-composing { caret-color: var(--secondary); }
-  .app-caret { position: absolute; z-index: 1; width: 3px; border-radius: 1px; background: var(--secondary); pointer-events: none; }
+  .has-caret .app-input.is-composing { caret-color: var(--text); }
+  .app-caret { position: absolute; z-index: 1; width: 3px; border-radius: 1px; background: var(--text); pointer-events: none; }
   .app-caret[hidden] { display: none; }
   .app-caret.is-blinking { animation: app-caret-blink 1.06s steps(1) infinite; }
   @keyframes app-caret-blink { 50% { opacity: 0; } }
