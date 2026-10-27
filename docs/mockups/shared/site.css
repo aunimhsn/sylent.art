@@ -245,17 +245,14 @@ html:not(.is-js) .app-intro { visibility: visible !important; }
 
 /* ── Contact links: the email copies itself, the phone calls only on touch screens ───────── */
 
-/* The badge that confirms the copy of the email address: it fades in while rising a little,
-   then fades out. */
+/* The word that confirms the copy of the email address, in the signal orange: it fades in while
+   rising a little, then fades out. */
 .app-copied {
   position: absolute;
   z-index: 60;
-  padding: 6px 10px;
-  border-radius: 2px;
-  background: var(--accent);
-  color: var(--on-accent);
-  font: 700 12px/1 var(--font-title);
-  letter-spacing: .02em;
+  color: var(--signal);
+  font: var(--text-weight) 15px/1 var(--font-text);
+  white-space: nowrap;
   pointer-events: none;
   animation: app-copied 1.6s ease forwards;
 }

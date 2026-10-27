@@ -116,7 +116,7 @@ backToTop.addEventListener("click", () => {
   document.querySelector(".app-logo").focus({ preventScroll: true });
 });
 
-// Contact links. A click on an email address copies it, with a small « Copiée » badge, since
+// Contact links. A click on an email address copies it, with a small orange « Copiée », since
 // many visitors have no mail application set up on their computer; a screen reader hears it too.
 // A phone number is a link only on touch screens, where it opens the phone application.
 const announcer = document.createElement("p");
@@ -144,7 +144,7 @@ document.addEventListener("click", async event => {
   await copyText(link.href.replace("mailto:", ""));
   const box = link.getBoundingClientRect();
   const badge = Object.assign(document.createElement("span"), { className: "app-copied", textContent: "Copiée" });
-  Object.assign(badge.style, { left: `${box.left + box.width / 2 + scrollX}px`, top: `${box.top + scrollY - 34}px` });
+  Object.assign(badge.style, { left: `${box.left + box.width / 2 + scrollX}px`, top: `${box.top + scrollY - 22}px` });
   badge.addEventListener("animationend", () => badge.remove());
   document.body.appendChild(badge);
   announcer.textContent = "";
