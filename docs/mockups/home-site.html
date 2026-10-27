@@ -29,8 +29,6 @@
   const query = new URLSearchParams(location.search);
   const reduced = query.get("motion") === "off" || matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.documentElement.dataset.motion = reduced ? "off" : "on";
-  // Open decision: the color of the "Nouveau" badge (?new=white|orange).
-  document.documentElement.dataset.new = query.get("new") === "orange" ? "orange" : "white";
   // ?debug=1 shows the script errors in a red band at the top of the page.
   if (query.has("debug")) { const show = text => document.body.insertAdjacentHTML("afterbegin", `<pre style="position:fixed;z-index:999;top:0;left:0;right:0;white-space:pre-wrap;background:#c00;color:#fff;font:14px monospace">${text}</pre>`); addEventListener("error", e => show(e.message + " " + e.filename + ":" + e.lineno)); addEventListener("unhandledrejection", e => show("rejection " + (e.reason && e.reason.stack || e.reason))); }
 </script>
@@ -59,8 +57,9 @@
     --line-strong: #404040;
     --accent: #ffffff;
     --on-accent: #0a0a0a;
-    --new-bg: #ffffff;
-    --new-text: #0a0a0a;
+    --signal: #ff6a00;
+    --new-bg: var(--signal);
+    --new-text: #ffffff;
     --ghost-word: #181818;
     --glass: rgb(255 255 255 / 0.035);
     --glass-hover: rgb(255 255 255 / 0.06);
@@ -76,8 +75,6 @@
     --radius-card: 0;
     --radius-chip: 999px;
   }
-
-  :root[data-new="orange"] { --new-bg: #ff6a00; --new-text: #0a0a0a; }
 
   /* ── Base ──────────────────────────────────────────────────────────────────────── */
 
