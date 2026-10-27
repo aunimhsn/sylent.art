@@ -699,10 +699,11 @@
     layout();
 
     // Rotation: a slow idle turn. With a mouse over the hero, the pointer steers it: still on
-    // the cube, turning toward the side of the pointer elsewhere, faster the farther it is, up
-    // to a limit. A drag spins it with inertia, and the scroll turns it a little more.
+    // the cube, turning toward the pointer elsewhere (left, right, up, down), faster the farther
+    // it is, up to a limit, so that every face can be seen. A drag spins it with inertia, and
+    // the scroll turns it a little more.
     const IDLE = 0.0035, FASTEST = 0.03;
-    const state = { x: -0.45, y: 0.65, vx: 0, vy: IDLE, target: IDLE, tiltX: 0, scroll: 0, scale: motion ? 0 : 1 };
+    const state = { x: -0.45, y: 0.65, vx: 0, vy: IDLE, targetX: 0, targetY: IDLE, scroll: 0, scale: motion ? 0 : 1 };
     let drag = null;
     area.addEventListener("pointerdown", event => { drag = { x: event.clientX, y: event.clientY }; area.setPointerCapture(event.pointerId); });
     area.addEventListener("pointermove", event => {
@@ -716,15 +717,18 @@
       if (event.pointerType !== "mouse") return;
       const box = hero.getBoundingClientRect();
       const spot = area.getBoundingClientRect();
-      const center = spot.left + spot.width / 2;
       const still = Math.min(spot.width, spot.height) * 0.28;
-      const offset = event.clientX - center;
-      const room = (offset > 0 ? box.right - center : center - box.left) - still;
-      const reach = Math.min(1, Math.max(0, Math.abs(offset) - still) / (room * 0.7));
-      state.target = Math.sign(offset) * reach * FASTEST;
-      state.tiltX = ((event.clientY - box.top) / box.height - 0.5) * 0.4;
+      // The speed on one axis: zero within `still` of the center, the fastest at 70 % of the way
+      // to the edge of the hero, on each side.
+      const speed = (pointer, center, start, end) => {
+        const offset = pointer - center;
+        const room = (offset > 0 ? end - center : center - start) - still;
+        return Math.sign(offset) * Math.min(1, Math.max(0, Math.abs(offset) - still) / (room * 0.7)) * FASTEST;
+      };
+      state.targetY = speed(event.clientX, spot.left + spot.width / 2, box.left, box.right);
+      state.targetX = speed(event.clientY, spot.top + spot.height / 2, box.top, box.bottom);
     });
-    hero.addEventListener("pointerleave", () => { state.target = IDLE; state.tiltX = 0; });
+    hero.addEventListener("pointerleave", () => { state.targetY = IDLE; state.targetX = 0; });
 
     let visible = true;
     new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; }).observe(hero);
@@ -734,11 +738,11 @@
       if (motion) {
         state.y += state.vy;
         state.x += state.vx;
-        if (!drag) { state.vy += (state.target - state.vy) * 0.05; state.vx *= 0.94; }
+        if (!drag) { state.vy += (state.targetY - state.vy) * 0.05; state.vx += (state.targetX - state.vx) * 0.05; }
         shell.rotation.x = -time * 0.15;
         shell.rotation.y = time * 0.11;
       }
-      cube.rotation.x = state.x + state.tiltX + state.scroll * 0.6;
+      cube.rotation.x = state.x + state.scroll * 0.6;
       cube.rotation.y = state.y + state.scroll * 1.4;
       cube.scale.setScalar(state.scale);
       renderer.render(scene, camera);
