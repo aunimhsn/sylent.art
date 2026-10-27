@@ -61,6 +61,12 @@
       fallback: "direct",
       only: "contact",
     },
+    focus: {
+      label: "Focus and errors",
+      options: { line: "Inner line", glow: "Inner glow", deeper: "Pressed deeper" },
+      fallback: "line",
+      only: "contact",
+    },
     view: {
       label: "View",
       options: { both: "Mobile and desktop", desktop: "Desktop, full width", mobile: "Mobile" },
@@ -76,7 +82,7 @@
   const chosen = Object.fromEntries(Object.entries(VARIANTS).map(([key, variant]) =>
     [key, params.get(key) in variant.options ? params.get(key) : variant.fallback]));
 
-  const site = () => FILES[chosen.page] + (chosen.page === "contact" ? `?${chosen.state !== "empty" ? `state=${chosen.state}&` : ""}${chosen.arrival === "offer" ? "formation=developpement-web" : ""}` : "");
+  const site = () => FILES[chosen.page] + (chosen.page === "contact" ? `?focus=${chosen.focus}${chosen.state !== "empty" ? `&state=${chosen.state}` : ""}${chosen.arrival === "offer" ? "&formation=developpement-web" : ""}` : "");
   const phone = () => `<div class="page-slot"><span>Mobile · 390 × 844 · scroll inside the phone</span><div class="page-phone"><iframe src="${site()}" title="Page at phone width"></iframe></div></div>`;
   const desktop = () => `<div class="page-slot page-fit"><span>Desktop · 1280 × 800 · scaled to fit, scroll inside</span><div class="page-desktop"><iframe src="${site()}" width="1280" height="800" title="Page at desktop width"></iframe></div></div>`;
 
