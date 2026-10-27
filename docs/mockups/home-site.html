@@ -141,13 +141,11 @@
     font: 700 15px/1 var(--font-title);
     letter-spacing: 0.01em;
     cursor: pointer;
-    transition: box-shadow .35s, background-color .3s, border-color .3s, color .3s;
+    transition: background-color .3s, border-color .3s, color .3s;
     will-change: transform;
   }
-  .app-button:hover { box-shadow: 0 14px 40px -12px rgb(255 255 255 / .35); }
-  .app-header .app-button:hover, .app-hero .app-button:hover { box-shadow: none; }
   .app-button.is-outline { background: transparent; color: var(--text); border-color: var(--line-strong); }
-  .app-button.is-outline:hover { border-color: var(--text); box-shadow: none; }
+  .app-button.is-outline:hover { border-color: var(--text); }
   .app-link { font: 700 15px/1.2 var(--font-title); border-bottom: 1px solid var(--line-strong); padding-bottom: 4px; transition: border-color .3s; }
   .app-link:hover { border-color: var(--text); }
 
