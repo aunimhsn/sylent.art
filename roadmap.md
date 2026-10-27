@@ -14,7 +14,7 @@ Read only by the steps that need them:
 
 - [x] **0. Project setup** (#1): conventions, process, folders, Claude Code setup, first draft of `specs.md`.
 - [x] **1. Specifications** (#2): audiences, value proposition, offers by domain, form, URLs, legal information; Formspree and GoatCounter chosen.
-- [ ] **2. Technical choices**: choose the static site generator, the formatter, the linter and the link check; write them with their reasons and commands in `docs/technical-choices.md`.
+- [x] **2. Technical choices** (#3): Astro, native CSS with tokens, Prettier, ESLint, Stylelint, linkinator.
 - [ ] **3. Wireframes**: one Excalidraw wireframe per page type (home, course list, course, article, about, contact), approved by the owner.
 - [ ] **4. Mock-up**: 3 or 4 styles compared on the approved wireframes, then iterated until the owner approves one.
 - [ ] **5. Design system**: tokens in `docs/design-system.md`, entry in `design-journal.md`.
