@@ -77,7 +77,6 @@
   /* Robots fill every field: this one is out of sight and out of the keyboard path. */
   .app-trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
   .app-form-end { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px; margin-top: 32px; }
-  .app-form-end p { margin: 0; color: var(--dim); font-size: 15px; }
   .app-button:disabled { cursor: progress; opacity: .7; }
   .app-alert { margin: 28px 0 0; padding: 16px 20px; border-left: 3px solid var(--signal); background: rgb(211 69 14 / 0.08); color: var(--text); }
   .app-alert a { border-bottom: 1px solid currentColor; }
@@ -143,7 +142,6 @@
       <div class="app-trap" aria-hidden="true"><label for="website">Ne pas remplir</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
       <div id="form-alert"></div>
       <div class="app-form-end">
-        <p>Les deux champs sont obligatoires.</p>
         <button class="app-button app-magnetic" type="submit" id="send">Envoyer</button>
       </div>
     </form>`;
