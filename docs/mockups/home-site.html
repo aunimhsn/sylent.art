@@ -371,6 +371,33 @@
   .app-footer .app-footer-motto { margin-bottom: 8px; color: var(--text); font: italic var(--text-weight) 19px/1.4 var(--font-text); }
   .app-footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--dim); font-size: 13px; }
 
+  /* ── Back to the top: a small square in the bottom right corner, once the hero is passed ── */
+
+  .app-top {
+    position: fixed;
+    right: clamp(16px, 2.5vw, 32px);
+    bottom: clamp(16px, 2.5vw, 32px);
+    z-index: 35;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: 1px solid var(--line-strong);
+    background: rgb(10 10 10 / 0.7);
+    backdrop-filter: blur(10px);
+    color: var(--text);
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(12px);
+    transition: opacity .3s, transform .3s, visibility .3s, background-color .25s, color .25s, border-color .25s;
+  }
+  .app-top.is-visible { opacity: 1; visibility: visible; transform: none; }
+  .app-top:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .app-top svg { transition: transform .3s; }
+  .app-top:hover svg { transform: translateY(-2px); }
+
   /* ── Motion: the starting state of the reveals, only when the animations run ──────── */
 
   html[data-motion="on"].is-js .app-reveal { opacity: 0; transform: translateY(36px); }
@@ -402,6 +429,8 @@
 </div>
 
 <main id="content"></main>
+
+<button class="app-top" type="button" id="back-to-top" aria-label="Revenir en haut de la page"></button>
 
 <script>
   // ── Content: sample data close to specs.md ──────────────────────────────────────────
@@ -437,6 +466,7 @@
   // Icons as SVG lines in the text color.
   const ICONS = {
     menu: '<path d="M4 8h16M4 16h16"/>',
+    up: '<path d="M12 19V5M6 11l6-6 6 6"/>',
   };
   const icon = (name, size = 22) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]}</svg>`;
   const heading = (title, ghost, id) => `
@@ -565,6 +595,16 @@
   document.getElementById("content").innerHTML = hero + partners + audiences + domains + pedagogy + about + cta + footer;
   document.querySelector("[data-logo]").innerHTML = MARK + WORDMARK;
   document.getElementById("burger").innerHTML = icon("menu", 24);
+
+  // Back to the top: shown once the hero is passed; the focus goes back to the logo, for the
+  // keyboard.
+  const backToTop = document.getElementById("back-to-top");
+  backToTop.innerHTML = icon("up", 20);
+  addEventListener("scroll", () => backToTop.classList.toggle("is-visible", scrollY > innerHeight * 0.8), { passive: true });
+  backToTop.addEventListener("click", () => {
+    scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
+    document.querySelector(".app-logo").focus({ preventScroll: true });
+  });
   document.documentElement.classList.add("is-js");
   // If the animations don't start (a library that doesn't load), show everything.
   setTimeout(() => { if (!window.sylentIntro) document.documentElement.classList.remove("is-js"); }, 4000);
