@@ -16,6 +16,10 @@
   page above the fields, as the button of an offer page will.
 -->
 <script src="shared/head.js"></script>
+<script>
+  // Open decision: the gray of the fields (?field=030303|040404|050505|060606|070707|080808).
+  if (/^0[3-8]0[3-8]0[3-8]$/.test(query.get("field") || "")) document.documentElement.style.setProperty("--field-bg", `#${query.get("field")}`);
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Anaheim:wght@500&display=block">
@@ -49,7 +53,9 @@
   /* ── Form: flat fields, a gray darker than the page ─────────────────────────────── */
 
   /* No panel: the fields sit on the page itself, aligned with the text above. */
-  .app-form { --surface: #030303; --field-radius: 2px; }
+  .app-form { --surface: var(--field-bg); --field-radius: 2px; }
+  /* The gray of the fields: an open decision (?field=030303…080808). */
+  :root { --field-bg: #040404; }
   .app-form-grid { display: grid; gap: 24px; }
   .app-field label { display: block; margin-bottom: 10px; font: 600 14px/1.2 var(--font-title); color: var(--secondary); transition: color .3s; }
   .app-field:focus-within label { color: var(--text); }
