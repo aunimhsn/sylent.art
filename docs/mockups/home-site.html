@@ -254,7 +254,8 @@
      the square root of the proportions). On a phone, three logos show at a time in a reel that
      scrolls up without end: the next one comes in at the bottom as the top one fades out. From
      760 px they line up in one row. */
-  .app-partners-reel { --row: 88px; height: calc(var(--row) * 3); overflow: hidden; mask-image: linear-gradient(transparent, #000 24%, #000 76%, transparent); }
+  .app-partners-reel { --row: 88px; height: calc(var(--row) * 3); overflow: hidden; mask-image: linear-gradient(transparent, #000 12%, #000 88%, transparent); }
+  .app-partner-list li { transform-origin: 50% 100%; will-change: transform, opacity; }
   .app-partner-list { --logo-size: 56px; display: grid; grid-auto-rows: var(--row); margin: 0; padding: 0; list-style: none; animation: app-reel 14s linear infinite; }
   @keyframes app-reel { to { transform: translateY(-50%); } }
   .app-partner-list li { display: grid; place-items: center; }
@@ -610,6 +611,40 @@
   document.getElementById("content").innerHTML = hero + partners + audiences + domains + pedagogy + about + cta + footer;
   document.querySelector("[data-logo]").innerHTML = MARK + WORDMARK;
   document.getElementById("burger").innerHTML = icon("menu", 24);
+
+  // The reel of partners on a phone, driven frame by frame so that each logo has its own depth:
+  // it comes in at the bottom, and near the top it moves away toward the back (smaller, tilted
+  // back, fading) before it disappears. The CSS animation stays as a fallback.
+  const reel = document.querySelector(".app-partners-reel");
+  const reelList = reel.querySelector(".app-partner-list");
+  const reelItems = [...reelList.children];
+  const phone = matchMedia("(max-width: 759px)");
+  let reelOffset = 0, reelTime = performance.now(), reelSeen = true;
+  new IntersectionObserver(([entry]) => { reelSeen = entry.isIntersecting; }).observe(reel);
+  function spinReel(now) {
+    requestAnimationFrame(spinReel);
+    const step = now - reelTime;
+    reelTime = now;
+    if (!phone.matches || reduced) {
+      reelList.style.animation = reelList.style.transform = "";
+      reelItems.forEach(item => { item.style.transform = item.style.opacity = ""; });
+      return;
+    }
+    if (!reelSeen) return;
+    const row = reelItems[0].offsetHeight;
+    const height = reel.clientHeight;
+    reelOffset = (reelOffset + step * row / 2800) % (row * reelItems.length / 2);
+    reelList.style.animation = "none";
+    reelList.style.transform = `translateY(${-reelOffset}px)`;
+    reelItems.forEach((item, index) => {
+      const place = (index * row + row / 2 - reelOffset) / height; // 0 at the top, 1 at the bottom
+      const away = Math.min(1, Math.max(0, (0.42 - place) / 0.42));
+      const coming = Math.min(1, Math.max(0, (place - 0.62) / 0.38));
+      item.style.transform = `perspective(500px) translateZ(${-away * 320}px) rotateX(${away * 38}deg) scale(${1 - coming * 0.12})`;
+      item.style.opacity = String(Math.max(0, 1 - away * 1.1 - coming));
+    });
+  }
+  requestAnimationFrame(spinReel);
 
   // Back to the top: shown once the hero is passed; the focus goes back to the logo, for the
   // keyboard.
