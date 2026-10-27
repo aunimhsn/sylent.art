@@ -55,7 +55,7 @@
     --line-strong: #404040;
     --accent: #ffffff;
     --on-accent: #0a0a0a;
-    --ghost-word: rgb(255 255 255 / 0.055);
+    --ghost-word: #181818;
     --glass: rgb(255 255 255 / 0.035);
     --glass-hover: rgb(255 255 255 / 0.06);
     --glass-line: rgb(255 255 255 / 0.09);
@@ -157,9 +157,6 @@
     backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
     -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
   }
-  /* Soft white lights behind a group of glass cards, so that the glass has something to blur. */
-  .app-lights { position: absolute; inset: 0; pointer-events: none; }
-  .app-lights i { position: absolute; width: 38vw; height: 38vw; max-width: 520px; max-height: 520px; border-radius: 50%; background: radial-gradient(circle, rgb(255 255 255 / .09), transparent 65%); }
 
   /* ── Header ─────────────────────────────────────────────────────────────────────── */
 
@@ -263,7 +260,6 @@
 
   .app-cards { position: relative; display: grid; gap: 16px; margin: 0; padding: 0; list-style: none; }
   @media (min-width: 640px) { .app-cards.is-domains { grid-template-columns: repeat(2, 1fr); } }
-  @media (min-width: 900px) { .app-cards.is-audiences { grid-template-columns: repeat(3, 1fr); } }
   @media (min-width: 1100px) { .app-cards.is-domains { grid-template-columns: repeat(4, 1fr); } }
   .app-card {
     --mx: 50%;
@@ -303,6 +299,13 @@
   .app-card.is-custom .app-card-more { background: transparent; color: var(--text); border-top: 1px dashed var(--glass-line); }
 
 
+  /* Audiences: plain columns under a rule. */
+  .app-audiences { display: grid; gap: 36px; margin: 0; padding: 0; list-style: none; }
+  @media (min-width: 900px) { .app-audiences { grid-template-columns: repeat(3, 1fr); gap: 32px; } }
+  .app-audiences li { padding-top: 22px; border-top: 1px solid var(--line); }
+  .app-audiences h3 { margin: 0; font: 700 22px/1.2 var(--font-title); letter-spacing: -0.025em; }
+  .app-audiences p { margin: 10px 0 0; color: var(--secondary); }
+
   /* ── Pedagogy ───────────────────────────────────────────────────────────────────── */
 
   .app-steps { display: grid; gap: 44px; margin: 0; padding: 0; list-style: none; }
@@ -330,10 +333,6 @@
   /* ── Call to action ─────────────────────────────────────────────────────────────── */
 
   .app-cta { position: relative; overflow: hidden; padding-block: clamp(90px, 12vw, 160px); background: var(--bg-alt); border-top: 1px solid var(--line); text-align: center; }
-  .app-cta::before { content: ""; position: absolute; inset: -50%; background: conic-gradient(from var(--angle, 0deg) at 50% 50%, transparent 0 70%, var(--glow) 80%, transparent 90%); animation: app-spin 16s linear infinite; }
-  @property --angle { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
-  @keyframes app-spin { to { --angle: 360deg; } }
-  html[data-motion="off"] .app-cta::before { animation: none; }
   .app-cta .app-wrap { position: relative; display: grid; justify-items: center; }
   .app-cta-ghost { position: absolute; left: 50%; top: 50%; translate: -50% -58%; font: 800 clamp(80px, 19vw, 280px)/0.8 var(--font-title); letter-spacing: -0.06em; text-transform: uppercase; color: var(--ghost-word); white-space: nowrap; pointer-events: none; }
   .app-cta h2 { position: relative; max-width: 16ch; margin: 0; font: var(--title-weight) clamp(38px, 6vw, 76px)/1 var(--font-title); letter-spacing: var(--title-tracking); text-wrap: balance; }
@@ -443,7 +442,6 @@
       <span class="app-heading-ghost" aria-hidden="true">${ghost}</span>
       <h2 class="app-heading-title" id="${id}">${title}</h2>
     </div>`;
-  const lights = spots => `<div class="app-lights" aria-hidden="true">${spots.map(([x, y]) => `<i style="left:${x}%;top:${y}%"></i>`).join("")}</div>`;
 
   const hero = `
     <section class="app-hero" id="hero" aria-labelledby="hero-title">
@@ -464,7 +462,6 @@
 
   const partners = `
     <section class="app-section" aria-labelledby="partners-title">
-      ${lights([[60, 30]])}
       <div class="app-wrap">
         ${heading("Partenaires", "Confiance", "partners-title")}
         <ul class="app-partner-list">${PARTNERS.map(([name, file]) => `
@@ -475,21 +472,17 @@
 
   const audiences = `
     <section class="app-section" aria-labelledby="audiences-title" style="padding-top:0">
-      ${lights([[-8, 40], [70, 55]])}
       <div class="app-wrap">
         ${heading(`Pour qui${NB}?`, "Collaborer", "audiences-title")}
-        <ul class="app-cards is-audiences">
+        <ul class="app-audiences">
           ${AUDIENCES.map(([title, text]) => `
-            <li class="app-card app-glass is-audience app-reveal app-tilt">
-              <h3>${title}</h3><p>${text}</p>
-            </li>`).join("")}
+            <li class="app-reveal"><h3>${title}</h3><p>${text}</p></li>`).join("")}
         </ul>
       </div>
     </section>`;
 
   const domains = `
     <section class="app-section" id="formations" aria-labelledby="domains-title" style="padding-top:0">
-      ${lights([[10, 30], [62, 18], [40, 70]])}
       <div class="app-wrap">
         ${heading("Formations", "Apprendre", "domains-title")}
         <p class="app-lead app-reveal">Sept domaines, des modules indépendants et des durées toujours adaptables, sur site ou à distance.</p>
