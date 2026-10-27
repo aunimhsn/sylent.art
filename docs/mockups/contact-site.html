@@ -16,10 +16,6 @@
   page above the fields, as the button of an offer page will.
 -->
 <script src="shared/head.js"></script>
-<script>
-  // Open decision: the color of the caret (?caret=orange|white).
-  if (query.get("caret") === "white") document.documentElement.dataset.caret = "white";
-</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Anaheim:wght@500&display=block">
@@ -62,20 +58,17 @@
     appearance: none;
   }
   .app-input::placeholder { color: var(--dim); }
-  /* No outline on focus: the caret, in the signal orange, shows where to type, and the label of
-     the field lights up. An error glows softly orange inside the field. */
-  .app-input { caret-color: var(--caret); }
+  /* No outline on focus: the gray caret shows where to type, and the label of the field lights
+     up. The orange stays for the errors, which are only a message under the field. */
+  .app-input { caret-color: var(--secondary); }
   .app-input:focus { outline: none; }
-  :root { --caret: var(--signal); --error-mark: inset 0 0 16px rgb(211 69 14 / .45); }
-  :root[data-caret="white"] { --caret: var(--text); }
   textarea.app-input { min-height: 190px; resize: none; }
   /* The domain chosen on an offer page, above the fields. */
   .app-topic { display: inline-flex; align-items: center; gap: 12px; margin: 0 0 26px; padding: 10px 10px 10px 16px; border-radius: var(--field-radius); box-shadow: var(--pressed); color: var(--secondary); }
   .app-topic strong { color: var(--text); font-weight: inherit; }
   .app-topic button { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; background: none; color: var(--secondary); cursor: pointer; transition: color .25s; }
   .app-topic button:hover { color: var(--text); }
-  /* A field to fill: an orange edge, and the message just under it. */
-  .app-field.is-invalid .app-input { box-shadow: var(--pressed), var(--error-mark); }
+  /* A field to fill: the message just under it, in orange. */
   .app-error { margin: 9px 0 0; color: #f07a4a; font-size: 15px; }
   .app-error:empty { display: none; }
   /* Robots fill every field: this one is out of sight and out of the keyboard path. */
