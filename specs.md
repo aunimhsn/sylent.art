@@ -70,14 +70,16 @@ Proofs:
 | Home | `/` | State the promise, the audiences, the domains, the differentiators, the proofs (partners, figure) and lead to the contact form. |
 | Offer list | `/courses` | Present the domains, each with a short summary and its modules. |
 | Offer page | `/courses/<domain>` | Detail one domain (see [Training offers](#training-offers)). |
-| Article list | `/articles` | List the articles, newest first. |
-| Article page | `/articles/<slug>` | Show one article, with a call to action at the end. |
+| Article list | `/articles` | List the articles, newest first. After the first release. |
+| Article page | `/articles/<slug>` | Show one article, with a call to action at the end. After the first release. |
 | About | `/about` | Present the trainer: photo, background, approach, references, NDA. |
 | Contact | `/contact` | The contact form and the other ways to reach the trainer. |
 | Legal notice and privacy policy | `/policy` | The legal information and how the form and audience data are handled. |
 | Not found | `404.html` | A page « Page introuvable » with links to the home page and the offers. |
 
 Every page has a header with the navigation (Formations, Articles, À propos, Contact) and a visible « Me contacter » call to action, and a footer with the contact details, the legal page and the signature.
+
+**First release**: the articles are left out, to meet the deadline of the old server (see `roadmap.md`). The navigation has no « Articles » link until they come back, and their former URLs redirect to the home page (see [URLs and redirects](#urls-and-redirects)).
 
 The former « Créations » section (photography, artwork), the user accounts and any back-office are out of scope.
 
@@ -118,7 +120,7 @@ The paths of the former site are kept when the page still exists, so the existin
 
 - `/`, `/courses`, `/articles`, `/about`, `/contact`, `/policy`: the same paths.
 - `/courses/1` to `/courses/12`: redirect to the page of the domain that now contains the course (see the table above).
-- `/articles/1` and `/articles/2`: redirect to the same articles at their new readable URL.
+- `/articles/1` and `/articles/2`: redirect to the same articles at their new readable URL. In the first release, without articles, `/articles`, `/articles/1` and `/articles/2` redirect to the home page.
 - `/creations`, `/register`, `/login`: no redirect; they show the not-found page.
 
 GitHub Pages has no server-side redirects: a redirect is a static page with a canonical link and an immediate redirection. Changing a public URL is a breaking change.
@@ -127,7 +129,7 @@ GitHub Pages has no server-side redirects: a redirect is a static page with a ca
 
 - The site content is in French, with French typography, in content files: never hard-coded in the layout or the components, so that a translation can be added later.
 - The content of the former site is the starting point; it is rewritten for the new audiences.
-- The two former articles (« Découverte d'Alpine JS », « Découverte de Tailwind CSS ») are kept.
+- The two former articles (« Découverte d'Alpine JS », « Découverte de Tailwind CSS ») are kept for a later release, rewritten or replaced by new ones.
 - The partners are shown by their logo, with their name as alternative text.
 
 ## Contact details and legal information

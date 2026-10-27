@@ -28,7 +28,8 @@ const heading = (title, ghost, id, level = 2) => `
 
 // The pages of the mock-up, and the links of the navigation.
 const PAGES = { home: "home-site.html", contact: "contact-site.html" };
-const NAVIGATION = [["Formations", `${PAGES.home}#formations`, "courses"], ["Articles", "#", "articles"], ["À propos", "#", "about"], ["Contact", PAGES.contact, "contact"]];
+// The articles are left out of the first release.
+const NAVIGATION = [["Formations", `${PAGES.home}#formations`, "courses"], ["À propos", "#", "about"], ["Contact", PAGES.contact, "contact"]];
 const currentPage = document.body.dataset.page;
 const current = page => page === currentPage ? ' aria-current="page"' : "";
 
