@@ -132,7 +132,7 @@ GitHub Pages has no server-side redirects: a redirect is a static page with a ca
 
 ## Contact details and legal information
 
-- Public contact: the e-mail address aunim.hassan@gmail.com, the phone number, LinkedIn and GitHub (`aunimhsn`). The phone number and the LinkedIn URL are given by the owner during step 10.
+- Public contact: the e-mail address aunim.hassan@gmail.com, the phone number 06 13 44 94 24, LinkedIn (https://www.linkedin.com/in/aunimhsn/) and GitHub (https://github.com/aunimhsn).
 - Not shown: Instagram, YouTube, Twitch (Twitch may be added later, once the owner streams).
 - Legal notice: name (Aunim Hassan), status (micro-entreprise), SIRET, e-mail, phone, NDA followed by « Cet enregistrement ne vaut pas agrément de l'État », and the host (GitHub). **The home address is never shown**, for the owner's safety; see the accepted risk in [docs/external-services.md](docs/external-services.md).
 - The Qualiopi certification is never mentioned: the trainer doesn't have it and works through schools and training organizations.
@@ -152,7 +152,7 @@ GitHub Pages has no server-side redirects: a redirect is a static page with a ca
 
 ## To provide during the build
 
-- The phone number, the LinkedIn URL, the SIRET and the NDA (step 10).
+- The SIRET and the NDA (step 10).
 - The final grouping and texts of the domains: levels, prerequisites, objectives, programs, durations (step 8).
 - A recent photo for the about page, or the photo of the former site (step 10).
 - The partner logos, in good quality, including the new IGENSIA Tech logo (step 7).
