@@ -29,6 +29,8 @@
   const query = new URLSearchParams(location.search);
   const reduced = query.get("motion") === "off" || matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.documentElement.dataset.motion = reduced ? "off" : "on";
+  // Open decision: the color of the "Nouveau" badge (?new=white|orange).
+  document.documentElement.dataset.new = query.get("new") === "orange" ? "orange" : "white";
   // ?debug=1 shows the script errors in a red band at the top of the page.
   if (query.has("debug")) { const show = text => document.body.insertAdjacentHTML("afterbegin", `<pre style="position:fixed;z-index:999;top:0;left:0;right:0;white-space:pre-wrap;background:#c00;color:#fff;font:14px monospace">${text}</pre>`); addEventListener("error", e => show(e.message + " " + e.filename + ":" + e.lineno)); addEventListener("unhandledrejection", e => show("rejection " + (e.reason && e.reason.stack || e.reason))); }
 </script>
@@ -57,6 +59,8 @@
     --line-strong: #404040;
     --accent: #ffffff;
     --on-accent: #0a0a0a;
+    --new-bg: #ffffff;
+    --new-text: #0a0a0a;
     --ghost-word: #181818;
     --glass: rgb(255 255 255 / 0.035);
     --glass-hover: rgb(255 255 255 / 0.06);
@@ -69,9 +73,11 @@
     --highlight: #a3a3a3;
 
     --radius-button: 0;
-    --radius-card: 10px;
+    --radius-card: 4px;
     --radius-chip: 999px;
   }
+
+  :root[data-new="orange"] { --new-bg: #ff6a00; --new-text: #0a0a0a; }
 
   /* ── Base ──────────────────────────────────────────────────────────────────────── */
 
@@ -291,7 +297,7 @@
     border-bottom: 1px solid rgb(255 255 255 / .06);
   }
   .app-cover canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .app-new { position: absolute; left: 16px; top: 16px; padding: 6px 10px; background: var(--accent); color: var(--on-accent); font: 800 11px/1 var(--font-title); letter-spacing: .1em; text-transform: uppercase; }
+  .app-new { position: absolute; left: 16px; top: 16px; padding: 6px 10px; background: var(--new-bg); color: var(--new-text); font: 800 11px/1 var(--font-title); letter-spacing: .1em; text-transform: uppercase; }
   /* "Voir les modules": a white band across the bottom of the card; the whole card is the link. */
   .app-card-more {
     display: block;
@@ -416,8 +422,8 @@
     ["Gestion de projet", "S’initier à l’agilité avec Scrum.", "board"],
   ];
   const AUDIENCES = [
-    ["Écoles", "Un intervenant pour un module, une classe ou un programme entier."],
-    ["Organismes de formation", "Un formateur sur un domaine, pour les sessions de vos clients."],
+    ["Écoles", "Un intervenant passionné qui saura donner l’envie d’apprendre."],
+    ["Organismes de formation", "Un formateur expert dans son domaine, pour les sessions de vos clients."],
     ["Entreprises", "Former vos équipes techniques, directement ou via un organisme."],
   ];
   const STEPS = [
