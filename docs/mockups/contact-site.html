@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="fr" data-theme="night">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact · Sylent</title>
+<meta name="description" content="Un module, une classe, une équipe à former ? Décrivez votre besoin à Aunim Hassan, formateur en informatique.">
+<!--
+  The contact page of sylent.art (mock-up, step 4 of roadmap.md), shown at phone and desktop
+  width by home.html (?page=contact). The parts shared by every page are in shared/.
+  Layout: set 1 of docs/wireframes (contact.excalidraw): the form, and the other ways to reach
+  the trainer beside it. The fields are neumorphic: pressed into a slightly raised surface.
+  The form is not sent anywhere here: it simulates Formspree. Its states can be opened directly
+  with ?state=errors|sending|sent|failed, and ?formation=<slug> preselects a domain, as the
+  button of an offer page will.
+-->
+<script src="shared/head.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Anaheim:wght@500&display=block">
+<link rel="stylesheet" href="shared/site.css">
+<style>
+  /* ── Page ──────────────────────────────────────────────────────────────────────── */
+
+  /* Room at the bottom for the wordmark of the footer, which straddles its top edge. */
+  .app-contact { padding: calc(var(--header-height) + clamp(48px, 7vw, 96px)) 0 clamp(150px, 17vw, 230px); }
+  .app-contact .app-lead { margin-bottom: clamp(40px, 5vw, 64px); }
+  .app-contact-grid { display: grid; gap: 56px; }
+  @media (min-width: 960px) { .app-contact-grid { grid-template-columns: 7fr 4fr; gap: 72px; align-items: start; } }
+
+  /* ── Form: neumorphic, the fields pressed into a raised surface ────────────────── */
+
+  .app-form {
+    --surface: #121212;
+    --shade: #050505;
+    --light: #1d1d1d;
+    padding: clamp(22px, 4vw, 44px);
+    background: var(--surface);
+    box-shadow: 12px 12px 32px var(--shade), -10px -10px 28px var(--light);
+  }
+  .app-form-grid { display: grid; gap: 24px 20px; }
+  @media (min-width: 640px) { .app-form-grid { grid-template-columns: 1fr 1fr; } }
+  .app-field.is-wide { grid-column: 1 / -1; }
+  .app-field label { display: block; margin-bottom: 10px; font: 600 14px/1.2 var(--font-title); color: var(--secondary); }
+  .app-input {
+    display: block;
+    width: 100%;
+    padding: 15px 18px;
+    border: 0;
+    border-radius: 0;
+    background: var(--surface);
+    color: var(--text);
+    font: var(--text-weight) 17px/1.4 var(--font-text);
+    box-shadow: inset 5px 5px 11px var(--shade), inset -5px -5px 11px var(--light);
+    transition: box-shadow .3s;
+    appearance: none;
+  }
+  .app-input::placeholder { color: var(--dim); }
+  .app-input:focus { outline: none; box-shadow: inset 5px 5px 11px var(--shade), inset -5px -5px 11px var(--light), 0 0 0 1px rgb(255 255 255 / .55); }
+  textarea.app-input { min-height: 190px; resize: vertical; }
+  select.app-input {
+    padding-right: 48px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23a3a3a3' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 18px center;
+    cursor: pointer;
+  }
+  select.app-input:invalid { color: var(--dim); }
+  select.app-input option { background: var(--surface); color: var(--text); }
+  /* A field to fill: an orange edge, and the message just under it. */
+  .app-field.is-invalid .app-input { box-shadow: inset 5px 5px 11px var(--shade), inset -5px -5px 11px var(--light), 0 0 0 1px var(--signal); }
+  .app-error { margin: 9px 0 0; color: #f07a4a; font-size: 15px; }
+  .app-error:empty { display: none; }
+  /* Robots fill every field: this one is out of sight and out of the keyboard path. */
+  .app-trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .app-form-end { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px; margin-top: 32px; }
+  .app-form-end p { margin: 0; color: var(--dim); font-size: 15px; }
+  .app-button:disabled { cursor: progress; opacity: .7; }
+  .app-alert { margin: 28px 0 0; padding: 16px 20px; border-left: 3px solid var(--signal); background: rgb(211 69 14 / 0.08); color: var(--text); }
+  .app-alert a { border-bottom: 1px solid currentColor; }
+  .app-sent { display: grid; justify-items: start; gap: 18px; padding: clamp(8px, 3vw, 24px) 0; }
+  .app-sent-mark { display: grid; place-items: center; width: 64px; height: 64px; background: var(--surface); box-shadow: inset 5px 5px 11px var(--shade), inset -5px -5px 11px var(--light); color: var(--text); }
+  .app-sent h2 { margin: 0; font: var(--title-weight) clamp(28px, 3.4vw, 40px)/1.1 var(--font-title); letter-spacing: var(--title-tracking); }
+  .app-sent p { margin: 0; color: var(--secondary); font-size: 18px; }
+  .app-sent .app-link { margin-top: 10px; background: none; border-width: 0 0 1px; color: var(--text); cursor: pointer; padding: 0 0 4px; }
+
+  /* ── Other ways to reach the trainer ───────────────────────────────────────────── */
+
+  .app-ways h2 { margin: 0 0 18px; font: 800 13px/1 var(--font-title); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+  .app-ways ul { margin: 0; padding: 0; list-style: none; }
+  .app-ways li { padding: 18px 0; border-top: 1px solid var(--line); }
+  .app-ways li:last-child { border-bottom: 1px solid var(--line); }
+  .app-ways span { display: block; margin-bottom: 6px; color: var(--dim); font-size: 15px; }
+  .app-ways a { font: 700 clamp(17px, 1.6vw, 20px)/1.3 var(--font-title); letter-spacing: -0.02em; overflow-wrap: anywhere; transition: color .3s; }
+  .app-ways a:hover { color: var(--signal); }
+</style>
+</head>
+<body data-page="contact">
+<script src="shared/site.js"></script>
+
+<main id="content"></main>
+
+<script>
+  // ── Content ───────────────────────────────────────────────────────────────────────
+  const TYPES = ["École", "Organisme de formation", "Entreprise", "Autre"];
+  const OFFERS = [
+    ["initiation-a-la-programmation", "Initiation à la programmation"],
+    ["developpement-web", "Développement web"],
+    ["python-et-donnees", "Python et données"],
+    ["bases-de-donnees", "Bases de données"],
+    ["methodologie-et-tests", "Méthodologie et tests"],
+    ["ia-pour-le-developpement", "IA pour le développement"],
+    ["gestion-de-projet", "Gestion de projet"],
+    ["autre", "Autre"],
+  ];
+  const WAYS = [
+    ["E-mail", "aunim.hassan@gmail.com", "mailto:aunim.hassan@gmail.com"],
+    ["Téléphone", `06${NB}13${NB}44${NB}94${NB}24`, "tel:+33613449424"],
+    ["LinkedIn", "linkedin.com/in/aunimhsn", "https://www.linkedin.com/in/aunimhsn/"],
+    ["GitHub", "github.com/aunimhsn", "https://github.com/aunimhsn"],
+  ];
+  const MESSAGES = {
+    name: "Indiquez votre nom.",
+    email: "Indiquez votre adresse e-mail.",
+    emailFormat: "Cette adresse e-mail ne semble pas valide.",
+    organization: "Indiquez votre organisation.",
+    type: "Choisissez le type d’organisation.",
+    offer: `Choisissez une formation, ou «${NB}Autre${NB}».`,
+    message: "Écrivez quelques mots sur votre besoin.",
+  };
+
+  const input = (id, label, field, wide = false) => `
+    <div class="app-field${wide ? " is-wide" : ""}" data-field="${id}">
+      <label for="${id}">${label}</label>
+      ${field}
+      <p class="app-error" id="${id}-error" aria-live="polite"></p>
+    </div>`;
+  const select = (id, label, options) => input(id, label, `
+    <select class="app-input" id="${id}" name="${id}" required aria-describedby="${id}-error">
+      <option value="" disabled selected>Choisir…</option>
+      ${options.map(([value, text]) => `<option value="${value}">${text}</option>`).join("")}
+    </select>`);
+
+  const form = `
+    <form class="app-form app-reveal" id="contact-form" novalidate>
+      <div class="app-form-grid">
+        ${input("name", "Nom", `<input class="app-input" id="name" name="name" autocomplete="name" placeholder="Camille Martin" required aria-describedby="name-error">`)}
+        ${input("email", "E-mail", `<input class="app-input" id="email" name="email" type="email" autocomplete="email" placeholder="camille.martin@ecole.fr" required aria-describedby="email-error">`)}
+        ${input("organization", "Organisation", `<input class="app-input" id="organization" name="organization" autocomplete="organization" placeholder="École du numérique" required aria-describedby="organization-error">`)}
+        ${select("type", "Type d’organisation", TYPES.map(type => [type, type]))}
+        ${select("offer", "Formation souhaitée", OFFERS).replace('class="app-field"', 'class="app-field is-wide"')}
+        ${input("message", "Message", `<textarea class="app-input" id="message" name="message" placeholder="Nous cherchons un intervenant pour…" required aria-describedby="message-error"></textarea>`, true)}
+      </div>
+      <div class="app-trap" aria-hidden="true"><label for="website">Ne pas remplir</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
+      <div id="form-alert"></div>
+      <div class="app-form-end">
+        <p>Tous les champs sont obligatoires.</p>
+        <button class="app-button app-magnetic" type="submit" id="send">Envoyer</button>
+      </div>
+    </form>`;
+
+  const ways = `
+    <aside class="app-ways app-reveal" aria-labelledby="ways-title">
+      <h2 id="ways-title">Autres moyens</h2>
+      <ul>${WAYS.map(([label, value, href]) => `<li><span>${label}</span><a href="${href}">${value}</a></li>`).join("")}</ul>
+    </aside>`;
+
+  document.getElementById("content").innerHTML = `
+    <section class="app-contact" aria-labelledby="contact-title">
+      <div class="app-wrap">
+        ${heading("Contact", "Échanger", "contact-title", 1)}
+        <p class="app-lead app-reveal">Un module, une classe, une équipe à former${NB}? Décrivez votre besoin.</p>
+        <div class="app-contact-grid">${form}${ways}</div>
+      </div>
+    </section>
+    ${siteFooter()}`;
+
+  // ── Behavior: the checks next to each field, the sending, and its outcome ──────────────
+  const contactForm = document.getElementById("contact-form");
+  const alertBox = document.getElementById("form-alert");
+  const sendButton = document.getElementById("send");
+  const fields = ["name", "email", "organization", "type", "offer", "message"];
+
+  function check(id) {
+    const element = document.getElementById(id);
+    const value = element.value.trim();
+    let message = value ? "" : MESSAGES[id];
+    if (id === "email" && value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) message = MESSAGES.emailFormat;
+    element.closest(".app-field").classList.toggle("is-invalid", Boolean(message));
+    element.setAttribute("aria-invalid", String(Boolean(message)));
+    document.getElementById(`${id}-error`).textContent = message;
+    return !message;
+  }
+  // A field is checked when the visitor leaves it, then again as they correct it.
+  fields.forEach(id => {
+    const element = document.getElementById(id);
+    element.addEventListener("blur", () => check(id));
+    element.addEventListener("input", () => { if (element.closest(".app-field").classList.contains("is-invalid")) check(id); });
+    element.addEventListener("change", () => { if (element.closest(".app-field").classList.contains("is-invalid")) check(id); });
+  });
+
+  function showSending(sending) {
+    sendButton.disabled = sending;
+    sendButton.textContent = sending ? "Envoi en cours…" : "Envoyer";
+  }
+  function showFailed() {
+    alertBox.innerHTML = `<p class="app-alert" role="alert">L’envoi n’a pas abouti. Votre message est conservé${NB}: réessayez dans un instant, ou écrivez-moi directement à <a href="mailto:aunim.hassan@gmail.com">aunim.hassan@gmail.com</a>.</p>`;
+  }
+  function showSent() {
+    contactForm.innerHTML = `
+      <div class="app-sent" role="status">
+        <span class="app-sent-mark"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+        <h2>Merci, votre message est bien envoyé.</h2>
+        <p>Je reviens vers vous rapidement.</p>
+        <button class="app-link" type="button" onclick="location.search = ''">Envoyer un autre message</button>
+      </div>`;
+  }
+
+  contactForm.addEventListener("submit", event => {
+    event.preventDefault();
+    alertBox.innerHTML = "";
+    const valid = fields.map(check).every(Boolean);
+    if (!valid) {
+      document.getElementById(fields.find(id => document.getElementById(id).getAttribute("aria-invalid") === "true")).focus();
+      return;
+    }
+    if (document.getElementById("website").value) return; // a robot
+    // The site will send the form to Formspree with fetch; here the answer is simulated.
+    showSending(true);
+    setTimeout(() => {
+      showSending(false);
+      if (query.get("fail") === "1") showFailed();
+      else showSent();
+    }, 1400);
+  });
+
+  // A domain chosen on an offer page arrives preselected.
+  const preset = query.get("formation");
+  if (OFFERS.some(([value]) => value === preset)) document.getElementById("offer").value = preset;
+
+  // The states of the form, to review them without filling it (?state=…).
+  const SAMPLE = { name: "Camille Martin", email: "camille.martin@ecole.fr", organization: "École du numérique", type: "École", offer: "developpement-web", message: "Nous cherchons un intervenant pour un module de deux jours en développement web, pour une classe de bachelor, en mars." };
+  const state = query.get("state");
+  if (["sending", "sent", "failed"].includes(state)) Object.entries(SAMPLE).forEach(([id, value]) => { document.getElementById(id).value = value; });
+  if (state === "errors") {
+    document.getElementById("name").value = "Camille Martin";
+    document.getElementById("email").value = "camille.martin@";
+    fields.forEach(check);
+  }
+  if (state === "sending") showSending(true);
+  if (state === "sent") showSent();
+  if (state === "failed") showFailed();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="shared/motion.js"></script>
+</body>
+</html>

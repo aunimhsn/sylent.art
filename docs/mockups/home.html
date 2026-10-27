@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Home Mock-up</title>
 <!--
-  Mock-up of the home page (step 4 of roadmap.md): the layout of set 1 of docs/wireframes in the
+  Mock-up of the pages (step 4 of roadmap.md): the layout of set 1 of docs/wireframes in the
   chosen style, at phone and desktop width. The page itself is home-site.html, shown here in
   frames; switch the view with the bar at the top, or open it directly, e.g. ?view=desktop.
 
@@ -42,6 +42,18 @@
 <main class="page-stage" id="stage"></main>
 <script>
   const VARIANTS = {
+    page: {
+      label: "Page",
+      options: { home: "Home", contact: "Contact" },
+      fallback: "home",
+    },
+    // The states of the contact form (only for the contact page).
+    state: {
+      label: "Form",
+      options: { empty: "Empty", errors: "Errors", sending: "Sending", sent: "Sent", failed: "Failed" },
+      fallback: "empty",
+      only: "contact",
+    },
     view: {
       label: "View",
       options: { both: "Mobile and desktop", desktop: "Desktop, full width", mobile: "Mobile" },
@@ -50,26 +62,27 @@
   };
   // The Console style chosen by the owner, in white instead of green, with Manrope for the titles
   // and Anaheim medium for the text, and the headings of the former site. Atelier was set aside.
-  const NOTE = "Night style, iteration 4: neutral blacks and white, Manrope for the titles, Anaheim medium for the text, the SYLENT logo, the headings of the former site.";
+  const NOTE = "Night style: neutral blacks and white, Manrope for the titles, Anaheim medium for the text, the SYLENT logo, the headings of the former site.";
+  const FILES = { home: "home-site.html", contact: "contact-site.html" };
 
   const params = new URLSearchParams(location.search);
   const chosen = Object.fromEntries(Object.entries(VARIANTS).map(([key, variant]) =>
     [key, params.get(key) in variant.options ? params.get(key) : variant.fallback]));
 
-  const site = () => "home-site.html";
-  const phone = () => `<div class="page-slot"><span>Mobile · 390 × 844 · scroll inside the phone</span><div class="page-phone"><iframe src="${site()}" title="Home page at phone width"></iframe></div></div>`;
-  const desktop = () => `<div class="page-slot page-fit"><span>Desktop · 1280 × 800 · scaled to fit, scroll inside</span><div class="page-desktop"><iframe src="${site()}" width="1280" height="800" title="Home page at desktop width"></iframe></div></div>`;
+  const site = () => FILES[chosen.page] + (chosen.page === "contact" && chosen.state !== "empty" ? `?state=${chosen.state}` : "");
+  const phone = () => `<div class="page-slot"><span>Mobile · 390 × 844 · scroll inside the phone</span><div class="page-phone"><iframe src="${site()}" title="Page at phone width"></iframe></div></div>`;
+  const desktop = () => `<div class="page-slot page-fit"><span>Desktop · 1280 × 800 · scaled to fit, scroll inside</span><div class="page-desktop"><iframe src="${site()}" width="1280" height="800" title="Page at desktop width"></iframe></div></div>`;
 
   function render() {
-    document.getElementById("bar").innerHTML = `<strong>sylent.art · home</strong>` +
-      Object.entries(VARIANTS).map(([key, variant]) => `<div class="page-group"><span>${variant.label}</span>${
+    document.getElementById("bar").innerHTML = `<strong>sylent.art · mock-up</strong>` +
+      Object.entries(VARIANTS).filter(([, variant]) => !variant.only || variant.only === chosen.page).map(([key, variant]) => `<div class="page-group"><span>${variant.label}</span>${
         Object.entries(variant.options).map(([value, label]) =>
           `<button type="button" data-variant="${key}" data-value="${value}" aria-pressed="${chosen[key] === value}">${label}</button>`).join("")}</div>`).join("") +
-      `<p>${NOTE} Sample content; photo, logo of IGENSIA Tech and phone number to come.</p>`;
+      `<p>${NOTE} Sample content; photo and logo of IGENSIA Tech to come.</p>`;
     const stage = document.getElementById("stage");
     stage.className = `page-stage is-${chosen.view}`;
     stage.innerHTML = chosen.view === "mobile" ? phone() : chosen.view === "desktop"
-      ? `<div class="page-slot"><div class="page-desktop"><iframe src="${site()}" title="Home page at full width"></iframe></div></div>`
+      ? `<div class="page-slot"><div class="page-desktop"><iframe src="${site()}" title="Page at full width"></iframe></div></div>`
       : phone() + desktop();
     fit();
   }

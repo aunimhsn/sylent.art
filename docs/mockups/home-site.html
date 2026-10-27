@@ -7,7 +7,8 @@
 <meta name="description" content="Formateur en informatique depuis 2021 : développement, bases de données, tests, Python et IA, pour les écoles, les organismes de formation et les entreprises.">
 <!--
   The home page of sylent.art (mock-up, step 4 of roadmap.md), shown at phone and desktop width
-  by home.html; open it alone to see it at the width of the window.
+  by home.html; open it alone to see it at the width of the window. The parts shared by every
+  page (style, header, menu, footer, shared animations) are in shared/.
   ?motion=off shows the page without animations, as for a visitor who asked their system to
   reduce motion; ?shot=1 copies the 3D scene into an image, since headless screenshots don't
   show WebGL.
@@ -24,193 +25,12 @@
   The texts are sample content close to specs.md; the photo is still to come and the logo of
   IGENSIA Tech is missing.
 -->
-<script>
-  // The motion is chosen before the first paint, so that nothing flashes.
-  const query = new URLSearchParams(location.search);
-  const reduced = query.get("motion") === "off" || matchMedia("(prefers-reduced-motion: reduce)").matches;
-  document.documentElement.dataset.motion = reduced ? "off" : "on";
-  // ?debug=1 shows the script errors in a red band at the top of the page.
-  if (query.has("debug")) { const show = text => document.body.insertAdjacentHTML("afterbegin", `<pre style="position:fixed;z-index:999;top:0;left:0;right:0;white-space:pre-wrap;background:#c00;color:#fff;font:14px monospace">${text}</pre>`); addEventListener("error", e => show(e.message + " " + e.filename + ":" + e.lineno)); addEventListener("unhandledrejection", e => show("rejection " + (e.reason && e.reason.stack || e.reason))); }
-</script>
+<script src="shared/head.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Anaheim:wght@500&display=block">
+<link rel="stylesheet" href="shared/site.css">
 <style>
-  /* ── Style: tokens only ──────────────────────────────────────────────────────────── */
-
-  /* Night: neutral blacks without a blue tint, white as the only accent, sharp buttons,
-     glass cards. */
-  :root[data-theme="night"] {
-    --font-title: "Manrope", system-ui, sans-serif;
-    --font-text: "Anaheim", system-ui, sans-serif;
-    --text-weight: 500;
-    --title-weight: 800;
-    --title-tracking: -0.045em;
-
-    --bg: #0a0a0a;
-    --bg-alt: #0d0d0d;
-    --panel: #171717;
-    --text: #ffffff;
-    --secondary: #a3a3a3;
-    --dim: #737373;
-    --line: #262626;
-    --line-strong: #404040;
-    --accent: #ffffff;
-    --on-accent: #0a0a0a;
-    --signal: #d3450e;
-    --new-bg: var(--signal);
-    --new-text: #ffffff;
-    --ghost-word: #181818;
-    --glass: rgb(255 255 255 / 0.035);
-    --glass-hover: rgb(255 255 255 / 0.06);
-    --glass-line: rgb(255 255 255 / 0.09);
-    --glass-blur: 14px;
-    --spot: rgb(255 255 255 / 0.09);
-    --grid-line: rgb(255 255 255 / 0.05);
-    --glow: rgb(255 255 255 / 0.10);
-    --header-bg: rgb(10 10 10 / 0.72);
-    --highlight: #a3a3a3;
-
-    --radius-button: 0;
-    --radius-card: 0;
-    --radius-chip: 999px;
-  }
-
-  /* ── Base ──────────────────────────────────────────────────────────────────────── */
-
-  :root {
-    --gutter: clamp(20px, 5vw, 80px);
-    --width: 1200px;
-    --header-height: 76px;
-  }
-  *, *::before, *::after { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  html[data-motion="off"] { scroll-behavior: auto; }
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    font: var(--text-weight) 17px/1.6 var(--font-text);
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
-  }
-  a { color: inherit; text-decoration: none; }
-  img, svg, canvas { display: block; }
-  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-  .app-skip { position: absolute; left: 12px; top: -60px; z-index: 50; padding: 10px 14px; background: var(--accent); color: var(--on-accent); }
-  .app-skip:focus { top: 12px; }
-  .app-wrap { width: min(100% - 2 * var(--gutter), var(--width)); margin-inline: auto; }
-  /* The motto, after a short rule: in the hero, the footer and the mobile menu. */
-  .app-motto { display: flex; align-items: center; gap: 14px; margin: 0; color: var(--dim); font: var(--text-weight) 16px/1 var(--font-text); }
-  .app-motto::before { content: ""; width: 40px; height: 1px; background: currentColor; }
-  .app-lead { margin: 0; max-width: 58ch; color: var(--secondary); font-size: 18px; text-wrap: pretty; }
-  .app-highlight { color: var(--highlight); }
-  .app-section { position: relative; padding-block: clamp(80px, 11vw, 140px); }
-
-  /* The logo: the mark and the wordmark, in the proportions of the charter (gap one third of
-     the mark, letters half of it). */
-  .app-logo { --logo-height: 34px; display: flex; align-items: center; gap: calc(var(--logo-height) / 3); color: var(--text); }
-  .app-logo .app-mark { height: var(--logo-height); width: auto; }
-  .app-logo .app-wordmark { height: calc(var(--logo-height) * 0.5 * 0.728); width: auto; }
-
-  /* Section heading, after the former site: a title over a large faded word. */
-  .app-heading { position: relative; margin-bottom: clamp(36px, 5vw, 64px); padding-top: clamp(14px, 2.2vw, 30px); }
-  .app-heading-ghost {
-    display: block;
-    margin-left: 0.12em;
-    font: 800 clamp(58px, 13vw, 176px)/0.8 var(--font-title);
-    letter-spacing: -0.06em;
-    text-transform: uppercase;
-    color: var(--ghost-word);
-    white-space: nowrap;
-    user-select: none;
-  }
-  .app-heading-title {
-    position: absolute;
-    top: 0;
-    left: 0;
-    margin: 0;
-    font: var(--title-weight) clamp(32px, 5.4vw, 68px)/1 var(--font-title);
-    letter-spacing: var(--title-tracking);
-    text-transform: uppercase;
-  }
-  .app-heading + .app-lead { margin-top: calc(-1 * clamp(12px, 2vw, 32px)); margin-bottom: clamp(36px, 5vw, 56px); }
-
-  /* Buttons: white and sharp, or outlined. */
-  .app-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px 26px;
-    border: 1px solid var(--accent);
-    border-radius: var(--radius-button);
-    background: var(--accent);
-    color: var(--on-accent);
-    font: 700 15px/1 var(--font-title);
-    letter-spacing: 0.01em;
-    cursor: pointer;
-    transition: background-color .3s, border-color .3s, color .3s;
-    will-change: transform;
-  }
-  .app-button.is-outline { background: transparent; color: var(--text); border-color: var(--line-strong); }
-  .app-button.is-outline:hover { border-color: var(--text); }
-  .app-link { font: 700 15px/1.2 var(--font-title); border-bottom: 1px solid var(--line-strong); padding-bottom: 4px; transition: border-color .3s; }
-  .app-link:hover { border-color: var(--text); }
-
-  /* Glass: a translucent panel that blurs what lies behind it. */
-  .app-glass {
-    border: 1px solid var(--glass-line);
-    border-radius: var(--radius-card);
-    background-color: var(--glass);
-    backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
-  }
-
-  /* ── Header ─────────────────────────────────────────────────────────────────────── */
-
-  .app-header {
-    position: fixed;
-    inset: 0 0 auto;
-    z-index: 40;
-    height: var(--header-height);
-    border-bottom: 1px solid transparent;
-    transition: background-color .35s, border-color .35s, transform .45s cubic-bezier(.2,.7,.2,1);
-  }
-  .app-header.is-scrolled { background: var(--header-bg); border-color: var(--line); backdrop-filter: blur(16px) saturate(1.3); }
-  .app-header.is-hidden { transform: translateY(-100%); }
-  .app-header .app-wrap { display: flex; align-items: center; height: 100%; gap: 28px; }
-  .app-nav { display: none; margin-left: auto; gap: 32px; }
-  .app-nav a { position: relative; font: 600 15px/1 var(--font-title); color: var(--secondary); transition: color .3s; }
-  .app-nav a:hover { color: var(--text); }
-  .app-nav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -8px; height: 2px; background: var(--text); transform: scaleX(0); transform-origin: right; transition: transform .35s cubic-bezier(.2,.7,.2,1); }
-  .app-nav a:hover::after { transform: scaleX(1); transform-origin: left; }
-  .app-header .app-button { margin-left: auto; padding: 12px 18px; font-size: 14px; }
-  .app-burger { display: grid; place-items: center; width: 44px; height: 44px; margin-right: -10px; border: 0; background: none; color: var(--text); cursor: pointer; }
-  @media (min-width: 900px) {
-    .app-nav { display: flex; }
-    .app-header .app-button { margin-left: 0; }
-    .app-burger { display: none; }
-  }
-
-  /* Mobile menu */
-  .app-menu {
-    position: fixed;
-    inset: 0;
-    z-index: 45;
-    display: flex;
-    flex-direction: column;
-    padding: calc(var(--header-height) + 24px) var(--gutter) 32px;
-    background: var(--bg);
-    visibility: hidden;
-    clip-path: circle(0 at calc(100% - 40px) 38px);
-    transition: clip-path .7s cubic-bezier(.7,0,.2,1), visibility 0s .7s;
-  }
-  .app-menu.is-open { visibility: visible; clip-path: circle(150% at calc(100% - 40px) 38px); transition: clip-path .7s cubic-bezier(.7,0,.2,1); }
-  .app-menu-link { padding: 16px 0; border-bottom: 1px solid var(--line); font: 800 40px/1.05 var(--font-title); letter-spacing: var(--title-tracking); text-transform: uppercase; }
-  .app-menu .app-button { align-self: stretch; margin-top: 32px; }
-  .app-menu .app-motto { margin-top: auto; }
-  .app-header.is-menu { background: transparent; border-color: transparent; backdrop-filter: none; z-index: 46; }
-
   /* ── Hero ──────────────────────────────────────────────────────────────────────── */
 
   .app-hero {
@@ -351,103 +171,15 @@
   .app-figures strong { display: block; font: 800 clamp(28px, 4vw, 44px)/1 var(--font-title); letter-spacing: -0.05em; }
   .app-figures div > span { display: block; margin-top: 8px; color: var(--secondary); font-size: 14px; line-height: 1.35; }
 
-  /* ── Call to action ─────────────────────────────────────────────────────────────── */
-
-  .app-cta { position: relative; overflow: hidden; padding-block: clamp(90px, 12vw, 160px) clamp(130px, 16vw, 220px); background: var(--bg-alt); border-top: 1px solid var(--line); text-align: center; }
-  .app-cta .app-wrap { position: relative; display: grid; justify-items: center; }
-  .app-cta-ghost { position: absolute; left: 50%; top: 50%; translate: -50% -58%; font: 800 clamp(80px, 19vw, 280px)/0.8 var(--font-title); letter-spacing: -0.06em; text-transform: uppercase; color: var(--ghost-word); white-space: nowrap; pointer-events: none; }
-  .app-cta h2 { position: relative; margin: 0; font: var(--title-weight) clamp(38px, 6vw, 76px)/1 var(--font-title); letter-spacing: var(--title-tracking); text-wrap: balance; }
-  .app-cta .app-button { margin-top: 44px; }
-
-  /* ── Footer ─────────────────────────────────────────────────────────────────────── */
-
-  .app-footer {
-    --wordmark-width: clamp(220px, 38vw, 490px);
-    position: relative;
-    /* Room for the lower half of the wordmark, which straddles the top edge. */
-    padding: calc(var(--wordmark-width) * 0.119 + clamp(40px, 6vw, 72px)) 0 28px;
-    background-color: var(--bg);
-    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: 40px 40px;
-    border-top: 1px solid var(--line);
-  }
-  /* The wordmark straddles the edge between the call to action and the footer. */
-  .app-footer-logo { position: absolute; top: 0; left: max(var(--gutter), calc((100% - var(--width)) / 2)); z-index: 2; width: var(--wordmark-width); translate: 0 -50%; color: var(--text); }
-  .app-footer-logo .app-wordmark { display: block; width: 100%; height: auto; }
-  .app-footer-grid { display: grid; gap: 32px; }
-  @media (min-width: 900px) { .app-footer-grid { grid-template-columns: 4fr 3fr 3fr 3fr; } }
-  .app-footer h2 { margin: 0 0 16px; font: 800 12px/1 var(--font-title); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
-  .app-footer ul { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
-  .app-footer li, .app-footer p { margin: 0; color: var(--secondary); font-size: 15px; }
-  .app-footer a { transition: color .3s; }
-  .app-footer a:hover { color: var(--signal); }
-  .app-footer .app-motto { margin-bottom: 14px; color: var(--dim); }
-  .app-footer .app-footer-bottom { margin-top: 56px; color: var(--dim); font-size: 13px; }
-
-  /* ── Back to the top: a small square in the bottom right corner, once the hero is passed ── */
-
-  .app-top {
-    position: fixed;
-    right: clamp(16px, 2.5vw, 32px);
-    bottom: clamp(16px, 2.5vw, 32px);
-    z-index: 35;
-    display: grid;
-    place-items: center;
-    width: 48px;
-    height: 48px;
-    padding: 0;
-    border: 1px solid var(--line-strong);
-    background: rgb(10 10 10 / 0.7);
-    backdrop-filter: blur(10px);
-    color: var(--text);
-    cursor: pointer;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(12px);
-    transition: opacity .3s, transform .3s, visibility .3s, background-color .25s, color .25s, border-color .25s;
-  }
-  .app-top.is-visible { opacity: 1; visibility: visible; transform: none; }
-  .app-top:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
-  .app-top svg { transition: transform .3s; }
-  .app-top:hover svg { transform: translateY(-2px); }
-
-  /* ── Motion: the starting state of the reveals, only when the animations run ──────── */
-
-  html[data-motion="on"].is-js .app-reveal { opacity: 0; transform: translateY(36px); }
-  html[data-motion="on"].is-js .app-intro { visibility: hidden; }
-  html:not(.is-js) .app-intro { visibility: visible !important; }
 </style>
 </head>
-<body>
-<a class="app-skip" href="#content">Aller au contenu</a>
-
-<header class="app-header" id="header">
-  <div class="app-wrap">
-    <a class="app-logo" href="#" aria-label="Sylent, accueil" data-logo></a>
-    <nav class="app-nav" aria-label="Navigation principale">
-      <a href="#formations">Formations</a><a href="#">Articles</a><a href="#a-propos">À propos</a><a href="#contact">Contact</a>
-    </nav>
-    <a class="app-button app-magnetic" href="#contact">Me contacter</a>
-    <button class="app-burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Ouvrir le menu" id="burger"></button>
-  </div>
-</header>
-
-<div class="app-menu" id="menu" aria-hidden="true">
-  <a class="app-menu-link" href="#formations">Formations</a>
-  <a class="app-menu-link" href="#">Articles</a>
-  <a class="app-menu-link" href="#a-propos">À propos</a>
-  <a class="app-menu-link" href="#contact">Contact</a>
-  <a class="app-button" href="#contact">Me contacter</a>
-  <p class="app-motto">Une vie, mille leçons</p>
-</div>
+<body data-page="home">
+<script src="shared/site.js"></script>
 
 <main id="content"></main>
 
-<button class="app-top" type="button" id="back-to-top" aria-label="Revenir en haut de la page"></button>
-
 <script>
   // ── Content: sample data close to specs.md ──────────────────────────────────────────
-  const NB = " ";
   const DOMAINS = [
     // Title, summary, 3D scene of the cover, new offer.
     ["Initiation à la programmation", "Les bases de la logique et de l’algorithmique, en douceur.", "steps"],
@@ -472,22 +204,6 @@
   // Logos of the former site, traced into white SVG; IGENSIA Tech has none yet. The scale is
   // 1 / √(width / height) of each logo, for an equal visual weight.
   const PARTNERS = [["YNOV", "ynov", 0.638], ["IGENSIA Tech", null], ["EPSI", "epsi", 0.8], ["CESI", "cesi", 1], ["OpenClassrooms", "openclassrooms", 0.277]];
-
-  // The mark (logo-sylent.svg of the charter) and the wordmark (Montserrat 800, -0.195 em).
-  const MARK = '<svg class="app-mark" viewBox="0 0 908 2000.3" fill="currentColor" aria-hidden="true"><rect x="8.8" y="218.2" transform="matrix(0.6503 -0.7597 0.7597 0.6503 -171.45 428.7256)" width="742.3" height="364.9"/><rect x="156.9" y="1417.3" transform="matrix(0.6503 -0.7597 0.7597 0.6503 -1030.6389 960.5798)" width="742.3" height="364.9"/><rect x="82.9" y="818.4" transform="matrix(0.6503 -0.7597 0.7597 0.6503 -601.5629 694.9067)" width="742.3" height="364.9"/></svg>';
-  const WORDMARK = '<svg class="app-wordmark" viewBox="21 -714 3064 728" fill="currentColor" aria-hidden="true"><path d="M315.5 13.8Q229.6 13.8 150.1 -7.4Q70.6 -28.6 20.7 -62.5L85.8 -209.0Q133.1 -178.5 194.7 -159.4Q256.4 -140.4 316.8 -140.4Q358.3 -140.4 382.9 -147.5Q407.5 -154.6 419.0 -167.5Q430.5 -180.3 430.5 -197.3Q430.5 -221.0 408.9 -234.9Q387.3 -248.8 352.0 -257.9Q316.7 -266.9 274.5 -275.9Q232.2 -284.9 189.6 -298.7Q147.1 -312.6 111.8 -335.1Q76.5 -357.6 54.9 -394.5Q33.3 -431.4 33.3 -487.4Q33.3 -549.6 67.6 -600.9Q101.9 -652.3 170.8 -683.0Q239.8 -713.8 343.4 -713.8Q411.6 -713.8 478.2 -698.5Q544.7 -683.2 596.6 -652.5L536.1 -506.3Q486.0 -533.2 437.0 -546.4Q388.1 -559.5 341.7 -559.5Q300.9 -559.5 276.0 -551.1Q251.0 -542.6 240.0 -528.5Q229.0 -514.5 229.0 -497.2Q229.0 -474.3 250.6 -460.7Q272.3 -447.1 307.5 -438.5Q342.8 -430.0 385.4 -421.2Q428.0 -412.4 470.2 -398.7Q512.5 -385.0 547.7 -362.6Q583.0 -340.3 604.6 -303.7Q626.3 -267.2 626.3 -212.2Q626.3 -151.0 591.8 -99.7Q557.3 -48.3 488.6 -17.2Q419.8 13.8 315.5 13.8ZM699.2 0.0V-296.1L744.5 -177.1L431.5 -700.0H641.1L866.6 -320.7H745.5L972.7 -700.0H1165.1L853.4 -177.1L897.3 -296.1V0.0ZM1020.3 0.0V-700.0H1218.4V-156.9H1552.1V0.0ZM1435.3 0.0V-700.0H1983.5V-546.5H1630.7V-153.4H1996.8V0.0ZM1616.8 -281.4V-428.8H1941.9V-281.4ZM1912.3 0.0V-700.0H2075.3L2460.7 -233.6H2383.8V-700.0H2577.8V0.0H2414.8L2029.3 -466.3H2106.3V0.0ZM2671.6 0.0V-543.0H2457.0V-700H3084.3V-543.0H2869.7V0.0Z"/></svg>';
-
-  // Icons as SVG lines in the text color.
-  const ICONS = {
-    menu: '<path d="M4 8h16M4 16h16"/>',
-    up: '<path d="M6 15l6-6 6 6"/>',
-  };
-  const icon = (name, size = 22) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]}</svg>`;
-  const heading = (title, ghost, id) => `
-    <div class="app-heading">
-      <span class="app-heading-ghost" aria-hidden="true">${ghost}</span>
-      <h2 class="app-heading-title" id="${id}">${title}</h2>
-    </div>`;
 
   const hero = `
     <section class="app-hero" id="hero" aria-labelledby="hero-title">
@@ -585,32 +301,7 @@
       </div>
     </section>`;
 
-  const cta = `
-    <section class="app-cta" id="contact" aria-labelledby="cta-title">
-      <span class="app-cta-ghost" aria-hidden="true">Échanger</span>
-      <div class="app-wrap">
-        <h2 class="app-reveal" id="cta-title">Un module à confier${NB}?<br>Parlons de vos apprenants.</h2>
-        <a class="app-button app-magnetic app-reveal" href="#">Me contacter</a>
-      </div>
-    </section>`;
-
-  const footer = `
-    <footer class="app-footer">
-      <div class="app-footer-logo" role="img" aria-label="Sylent">${WORDMARK}</div>
-      <div class="app-wrap">
-        <div class="app-footer-grid">
-          <div><p class="app-motto">Une vie, mille leçons</p><p>Formateur en informatique, sur site ou à distance.</p></div>
-          <div><h2>Navigation</h2><ul><li><a href="#formations">Formations</a></li><li><a href="#">Articles</a></li><li><a href="#a-propos">À propos</a></li><li><a href="#contact">Contact</a></li></ul></div>
-          <div><h2>Contact</h2><ul><li><a href="mailto:aunim.hassan@gmail.com">aunim.hassan@gmail.com</a></li><li><a href="tel:+33613449424">06${NB}13${NB}44${NB}94${NB}24</a></li><li><a href="https://www.linkedin.com/in/aunimhsn/">linkedin.com/in/aunimhsn</a></li><li><a href="https://github.com/aunimhsn">github.com/aunimhsn</a></li></ul></div>
-          <div><h2>Informations</h2><ul><li><a href="#">Mentions légales</a></li><li><a href="#">Confidentialité</a></li><li>NDA${NB}: à fournir</li></ul></div>
-        </div>
-        <p class="app-footer-bottom">© 2026 Aunim Hassan · Micro-entreprise</p>
-      </div>
-    </footer>`;
-
-  document.getElementById("content").innerHTML = hero + partners + audiences + domains + pedagogy + about + cta + footer;
-  document.querySelector("[data-logo]").innerHTML = MARK + WORDMARK;
-  document.getElementById("burger").innerHTML = icon("menu", 24);
+  document.getElementById("content").innerHTML = hero + partners + audiences + domains + pedagogy + about + siteCta() + siteFooter();
 
   // The reel of partners on a phone, driven frame by frame so that each logo has its own depth:
   // it comes in at the bottom, and near the top it moves away toward the back (smaller, tilted
@@ -646,23 +337,14 @@
   }
   requestAnimationFrame(spinReel);
 
-  // Back to the top: shown once the hero is passed; the focus goes back to the logo, for the
-  // keyboard.
-  const backToTop = document.getElementById("back-to-top");
-  backToTop.innerHTML = icon("up", 20);
-  addEventListener("scroll", () => backToTop.classList.toggle("is-visible", scrollY > innerHeight * 0.8), { passive: true });
-  backToTop.addEventListener("click", () => {
-    scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
-    document.querySelector(".app-logo").focus({ preventScroll: true });
-  });
-  document.documentElement.classList.add("is-js");
-  // If the animations don't start (a library that doesn't load), show everything.
-  setTimeout(() => { if (!window.sylentIntro) document.documentElement.classList.remove("is-js"); }, 4000);
+  // If the hero doesn't start its intro (a library that doesn't load), show it anyway.
+  setTimeout(() => { if (!window.sylentHero) document.querySelectorAll(".app-intro").forEach(element => { element.style.visibility = "visible"; }); }, 4000);
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="shared/motion.js"></script>
 <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }</script>
 <script type="module">
   import * as THREE from "three";
@@ -673,32 +355,7 @@
   const css = name => getComputedStyle(root).getPropertyValue(name).trim();
   gsap.registerPlugin(ScrollTrigger, SplitText);
 
-  // ── Header: solid once the page scrolls, hidden while scrolling down ──────────────────
   const header = document.getElementById("header");
-  let lastY = 0;
-  addEventListener("scroll", () => {
-    const y = scrollY;
-    header.classList.toggle("is-scrolled", y > 20);
-    if (!header.classList.contains("is-menu")) header.classList.toggle("is-hidden", y > 400 && y > lastY);
-    lastY = y;
-  }, { passive: true });
-
-  // ── Mobile menu ───────────────────────────────────────────────────────────────────
-  const menu = document.getElementById("menu");
-  const burger = document.getElementById("burger");
-  function toggleMenu(open = !menu.classList.contains("is-open")) {
-    menu.classList.toggle("is-open", open);
-    header.classList.toggle("is-menu", open);
-    menu.setAttribute("aria-hidden", String(!open));
-    burger.setAttribute("aria-expanded", String(open));
-    burger.setAttribute("aria-label", open ? "Fermer le menu" : "Ouvrir le menu");
-    burger.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="${open ? "M6 6l12 12M18 6L6 18" : "M4 8h16M4 16h16"}"/></svg>`;
-    document.body.style.overflow = open ? "hidden" : "";
-    if (open && motion) gsap.fromTo(menu.querySelectorAll(".app-menu-link, .app-button"), { y: 40, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.06, duration: 0.7, delay: 0.2, ease: "expo.out" });
-  }
-  burger.addEventListener("click", () => toggleMenu());
-  menu.addEventListener("click", event => { if (event.target.closest("a")) toggleMenu(false); });
-  addEventListener("keydown", event => { if (event.key === "Escape" && menu.classList.contains("is-open")) { toggleMenu(false); burger.focus(); } });
 
   // ── The cube: one quality or one figure on each face ───────────────────────────────
   const FACES = [
@@ -1131,7 +788,7 @@
 
   // ── Animations ────────────────────────────────────────────────────────────────────
   if (motion) {
-    window.sylentIntro = true;
+    window.sylentHero = true;
     // Intro: the title rises line by line from behind a mask.
     const split = SplitText.create(".app-hero-title", { type: "lines", mask: "lines" });
     gsap.set(".app-intro", { visibility: "visible" });
@@ -1139,21 +796,6 @@
       .from(header, { yPercent: -100, duration: 0.9 })
       .from(split.lines, { yPercent: 110, stagger: 0.09, duration: 1.2 }, "-=0.5")
       .from([".app-hero-sub", ".app-hero-actions", ".app-hero-motto"], { y: 28, autoAlpha: 0, stagger: 0.1 }, "-=0.8");
-
-    // Reveals on scroll, in small batches.
-    ScrollTrigger.batch(".app-reveal", {
-      start: "top 88%",
-      onEnter: batch => gsap.to(batch, { opacity: 1, y: 0, stagger: 0.08, duration: 1, ease: "power3.out", overwrite: true }),
-    });
-
-    // Section headings, as on the former site: the title rises, the large word behind it
-    // slides as the page scrolls.
-    document.querySelectorAll(".app-heading").forEach(block => {
-      const title = block.querySelector(".app-heading-title");
-      SplitText.create(title, { type: "words", mask: "words", onSplit: self => gsap.from(self.words, { yPercent: 100, stagger: 0.05, duration: 1, ease: "expo.out", scrollTrigger: { trigger: block, start: "top 86%" } }) });
-      gsap.fromTo(block.querySelector(".app-heading-ghost"), { xPercent: 6 }, { xPercent: -4, ease: "none", scrollTrigger: { trigger: block, start: "top bottom", end: "bottom top", scrub: true } });
-    });
-    gsap.fromTo(".app-cta-ghost", { xPercent: 8 }, { xPercent: -8, ease: "none", scrollTrigger: { trigger: ".app-cta", start: "top bottom", end: "bottom top", scrub: true } });
 
     // The rules of the pedagogy draw themselves as the section scrolls.
     gsap.utils.toArray(".app-step-rule").forEach((rule, index) => {
@@ -1166,8 +808,7 @@
       gsap.to(value, { n: Number(counter.dataset.to), duration: 2, ease: "power2.out", scrollTrigger: { trigger: counter, start: "top 92%" }, onUpdate: () => { counter.textContent = Math.round(value.n); } });
     });
 
-    // Pointer devices: the cards tilt and light up under the pointer, the main buttons are
-    // magnetic.
+    // Pointer devices: the cards tilt and light up under the pointer.
     if (matchMedia("(hover: hover)").matches) {
       document.querySelectorAll(".app-tilt").forEach(card => {
         const rotateX = gsap.quickTo(card, "rotationX", { duration: 0.6, ease: "power3" });
@@ -1182,16 +823,6 @@
           rotateX((0.5 - y) * 7);
         });
         card.addEventListener("pointerleave", () => { rotateX(0); rotateY(0); });
-      });
-      document.querySelectorAll(".app-magnetic").forEach(button => {
-        const moveX = gsap.quickTo(button, "x", { duration: 0.5, ease: "power3" });
-        const moveY = gsap.quickTo(button, "y", { duration: 0.5, ease: "power3" });
-        button.addEventListener("pointermove", event => {
-          const box = button.getBoundingClientRect();
-          moveX((event.clientX - box.left - box.width / 2) * 0.3);
-          moveY((event.clientY - box.top - box.height / 2) * 0.4);
-        });
-        button.addEventListener("pointerleave", () => { moveX(0); moveY(0); });
       });
     }
   } else {
