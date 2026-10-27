@@ -1,12 +1,12 @@
 # Specifications
 
-Status: first draft (2026-10-27). The sections marked « To specify » are completed in step 1 of `roadmap.md`.
+Status: settled with the owner on 2026-10-27 (step 1 of `roadmap.md`). The French texts quoted here are drafts of the content: they are polished when the content is written, without changing their meaning.
 
 ## Goal
 
-`sylent.art` is the website of Sylent (Aunim Hassan), a freelance trainer in software development since late 2021. The redesign replaces the former Laravel site with a static site on GitHub Pages.
+`sylent.art` is the website of Sylent (Aunim Hassan), a freelance trainer in computing since late 2021. The redesign replaces the former Laravel site with a static site on GitHub Pages.
 
-The former site is dated and unclear about its added value and its audience: its headline (« Apprenez de nouvelles choses ») and its copy address beginners who want to learn programming, while those who hire the trainer are schools, training organizations and companies. The new site must state who the offer is for and what it brings, and turn visits into contact requests.
+The former site is dated and unclear about its added value and its audience: its headline (« Apprenez de nouvelles choses ») and its copy address beginners who want to learn programming, while those who hire the trainer are schools, training organizations and, through them, companies. The new site must state who the offer is for and what it brings, and turn visits into contact requests.
 
 Success: a visitor who decides on a training mission understands within a few seconds what Sylent teaches, for whom, in which formats, why to trust Sylent, and how to get in touch.
 
@@ -14,74 +14,112 @@ Success: a visitor who decides on a training mission understands within a few se
 
 Primary audiences, those who sign or approve a mission:
 
-1. **Schools and training organizations**: pedagogical managers and program coordinators (e.g. EPSI, YNOV, IPI, CESI, OpenClassrooms) looking for a speaker for a module, a class or a whole program.
-2. **Companies**: technical managers or HR who want to train their development teams (in-company training).
+1. **Schools**: pedagogical managers and program coordinators looking for a speaker for a module, a class or a whole program.
+2. **Training organizations**: they sell training to companies and look for a trainer on a domain.
+3. **Companies**: technical managers or HR who want to train their teams, directly or through a training organization.
 
-Secondary audience: the learners (students, career changers) who read the articles or look up their trainer. The site doesn't sell to them directly.
+The wording of the site never addresses schools only: it speaks of « vos apprenants », which fits the three audiences.
 
-To specify: what each audience needs to find before contacting (formats, levels, durations, references, rates or not, availability, administrative details such as a training organization number or the Qualiopi certification).
+Secondary audience: the learners (students, career changers, employees) who read the articles or look up their trainer. The site doesn't sell to them directly.
+
+What the primary audiences must find before getting in touch:
+
+- **The domains** taught, with indicative durations per module, always marked as adaptable. Pedagogical teams look for a speaker on a domain more than on a technology.
+- **The levels and the prerequisites** of each domain.
+- **The formats**: on-site or remote. The site doesn't detail the geographic zone (on-site around Toulouse and in Occitanie, remote across France for short modules): it is discussed at the first contact.
+- **The references**: the current partners and the volume of teaching.
+- **The administrative details**: the status (micro-entreprise), the SIRET and the training organization activity declaration number (NDA), so that a training organization can contract.
+- **No rates**: they depend on the request, the level of the learners and the location. The site shows no price and no « sur devis » mention; the call to action is enough.
 
 ## Value proposition
 
-To specify with the owner:
+- **Headline** of the home page: « Je prends vos apprenants par la main, jusqu'à la maîtrise. » It reassures (step by step guidance) and shows ambition (mastery).
+- **Subtitle**: the domains taught and the audiences, e.g. « Formateur en informatique depuis 2021 : développement, bases de données, tests, Python et IA, pour les écoles, les organismes de formation et les entreprises. »
+- **Signature**: « Une vie, mille leçons », the motto of the former site: one doesn't stop learning and being curious as an adult. It appears on the home page or in the footer, and on the about page.
 
-- the one-line promise shown in the home page headline;
-- the 3 or 4 differentiators (e.g. field experience as a developer, hands-on teaching, exercises adapted to the level of the group, years of experience and number of schools);
-- the proofs: partner logos, figures (years, hours taught, learners trained), testimonials of schools or learners if the owner can publish them.
+Differentiators, centered on pedagogy and the human side (the trainer is not presented as a « field developer »):
+
+1. **Making the complex clear**: popularizing complex concepts with analogies and metaphors.
+2. **Step-by-step guidance**: patience and empathy, from a point A to a point B, « en toute sérénité ».
+3. **Learning to learn**: a self-taught profile in computing, who passes on curiosity and the method to keep learning.
+4. **Experience**: teaching since 2021, more than 900 training hours per year since 2023, with five schools and training organizations.
+
+Rejected as slogans, because they are expected of any trainer: « savoir-faire et savoir-être », « il n'y a pas de questions bêtes ».
+
+Proofs:
+
+- **Partners** (current clients only, named without their city): YNOV, IGENSIA Tech (formerly IPI), EPSI, CESI, OpenClassrooms (mentoring). AN 21, shown on the former site, is removed.
+- **Figure**: « plus de 900 heures de formation par an depuis 2023 », from the yearly bilan pédagogique et financier.
+- **Testimonials**: none at launch. The owner collects them after the launch (LinkedIn recommendations, feedback from schools and learners, with their consent to publish); a testimonials section is added once there are at least three.
+- No invented proof or figure.
 
 ## Conversion
 
 - The main action, repeated on every page, is the **contact form**.
-- The form asks for: name, e-mail, organization, type of organization (school or training organization, company, other), subject or training wanted, message. The fields are to be confirmed.
-- The site has no server: the form goes through a third-party form service, chosen and documented in step 1 (limits, terms of use, personal data, spam protection).
-- After sending, the visitor sees a confirmation and knows when to expect an answer.
+- Fields, all required: name, e-mail, organization, type of organization (école, organisme de formation, entreprise, autre), training wanted (the list of domains, plus « autre »), message.
+- The form is sent through **Formspree** (see [docs/external-services.md](docs/external-services.md)). Spam is filtered by Formspree and by a hidden honeypot field; no reCAPTCHA, which would add Google cookies.
+- After sending, the visitor stays on the page and sees a confirmation: « Merci, je vous réponds sous 48 h ouvrées. »
+- If the sending fails, the visitor sees an error message with the e-mail address, and the text typed is kept.
+- The form works with the keyboard, each field has a label, and the errors are announced next to the field concerned.
 - A plain e-mail link stays available as a fallback.
 
 ## Pages
 
-| Page | Purpose |
-|---|---|
-| Home | State the promise, the audiences, the offers, the proofs (partners) and lead to the contact form. |
-| Offer list | Present the training offers grouped by domain or path. |
-| Offer page | Detail one offer: audience, prerequisites, objectives, program, duration, formats, related offers, call to action. |
-| Article list | List the articles. |
-| Article page | Show one article, with a call to action at the end. |
-| About | Present the trainer: background, approach, references. |
-| Contact | The contact form and the other ways to reach the trainer. |
-| Legal notice and privacy policy | The legal information of a professional site and how the form data is handled. |
+| Page | URL | Purpose |
+|---|---|---|
+| Home | `/` | State the promise, the audiences, the domains, the differentiators, the proofs (partners, figure) and lead to the contact form. |
+| Offer list | `/courses` | Present the domains, each with a short summary and its modules. |
+| Offer page | `/courses/<domain>` | Detail one domain (see [Training offers](#training-offers)). |
+| Article list | `/articles` | List the articles, newest first. |
+| Article page | `/articles/<slug>` | Show one article, with a call to action at the end. |
+| About | `/about` | Present the trainer: photo, background, approach, references, NDA. |
+| Contact | `/contact` | The contact form and the other ways to reach the trainer. |
+| Legal notice and privacy policy | `/policy` | The legal information and how the form and audience data are handled. |
+| Not found | `404.html` | A page « Page introuvable » with links to the home page and the offers. |
+
+Every page has a header with the navigation (Formations, Articles, À propos, Contact) and a visible « Me contacter » call to action, and a footer with the contact details, the legal page and the signature.
 
 The former « Créations » section (photography, artwork), the user accounts and any back-office are out of scope.
 
 ## Training offers
 
-The 12 former courses, organized by technology, are restructured into offers. To specify in step 1: the grouping (domain, path or level), the fields of each offer, and which former courses are merged, kept or dropped.
+One page per **domain**. Pedagogical teams look for a speaker on a domain, and the technology matters less and less. The domains below are a first grouping, refined with the owner when the content is written.
 
-Former courses (duration announced on the former site):
-
-| Id | Course | Category on the former site | Duration |
+| Domain | Slug | Modules | Former courses |
 |---|---|---|---|
-| 1 | HTML 5 | Fondamentaux | 1 day |
-| 2 | CSS 3 | Fondamentaux | 2 days |
-| 3 | JavaScript | Fondamentaux | 3 days |
-| 4 | PHP | Fondamentaux | 3 days |
-| 5 | MySQL | Découverte du modèle relationnel | 3 days |
-| 6 | Python | Fondamentaux | 3 days |
-| 7 | Robomind | Découverte de la programmation | 1 day |
-| 8 | Cypress | Framework de tests JavaScript | 2 days |
-| 9 | Vue JS | Framework frontend JavaScript | 4 days |
-| 10 | Alpine JS | Librairie frontend JavaScript | 2 days |
-| 11 | Laravel | Framework backend PHP | 4 days |
-| 12 | Django | Framework backend Python | 3 days |
+| Initiation à la programmation | `initiation-a-la-programmation` | Algorithmique, Robomind | 7 |
+| Développement web | `developpement-web` | HTML, CSS, JavaScript, PHP, Vue, Alpine, Laravel | 1, 2, 3, 4, 9, 10, 11 |
+| Python et données | `python-et-donnees` | Python, Django, initiation au machine learning | 6, 12 |
+| Conception et bases de données | `conception-et-bases-de-donnees` | Merise, UML, MySQL, PostgreSQL | 5 |
+| Méthodologie et tests | `methodologie-et-tests` | Git et GitHub, Cypress, intégration continue (GitHub Actions), déploiement continu (Vercel, Render) | 8 |
+| IA pour le développement | `ia-pour-le-developpement` | Claude Code, prompt engineering, intégrer l'IA avec méthode et rigueur | — |
+| Gestion de projet | `gestion-de-projet` | Initiation à l'agilité avec Scrum | — |
+
+All the former courses are kept, as modules of their domain.
+
+Each offer page shows:
+
+- the title and a summary of the domain;
+- the audience and the level (e.g. « Étudiants, développeurs, chefs de projet technique »);
+- the prerequisites;
+- the objectives;
+- the modules, each with an indicative duration (« 2 jours, adaptable ») and a summary of its program;
+- the formats (on-site or remote) and the note that the program and exercises are adapted to the group;
+- a call to action to the contact form, with the domain preselected in the form;
+- links to the related domains.
+
+**IA pour le développement** has not been taught yet: its page says honestly that it is a new offer (e.g. a « Nouveau » label), centered on method and good practices, to help employees use AI tools to be more productive and more satisfied in their daily work.
+
+Each offer is a content file in the repository, named after its slug, which lists the ids of the former courses it contains (e.g. `former-ids: [1, 2, 3, 4, 9, 10, 11]`). The redirects are generated from these lists.
 
 ## URLs and redirects
 
-The former URLs keep working, as a page or a redirect, so the existing links and the search ranking are not lost:
+The paths of the former site are kept when the page still exists, so the existing links and the search ranking are not lost:
 
-- `/courses/1` to `/courses/12`: the page of the offer that now contains the course;
-- `/articles/1` and `/articles/2`: the same articles;
-- `/about`, `/contact`, `/policy`: the matching pages;
-- `/courses` and `/articles`: the lists;
-- `/creations`, `/register`, `/login`: redirect to the home page.
+- `/`, `/courses`, `/articles`, `/about`, `/contact`, `/policy`: the same paths.
+- `/courses/1` to `/courses/12`: redirect to the page of the domain that now contains the course (see the table above).
+- `/articles/1` and `/articles/2`: redirect to the same articles at their new readable URL.
+- `/creations`, `/register`, `/login`: no redirect; they show the not-found page.
 
 GitHub Pages has no server-side redirects: a redirect is a static page with a canonical link and an immediate redirection. Changing a public URL is a breaking change.
 
@@ -90,7 +128,19 @@ GitHub Pages has no server-side redirects: a redirect is a static page with a ca
 - The site content is in French, with French typography, in content files: never hard-coded in the layout or the components, so that a translation can be added later.
 - The content of the former site is the starting point; it is rewritten for the new audiences.
 - The two former articles (« Découverte d'Alpine JS », « Découverte de Tailwind CSS ») are kept.
-- The partners shown on the former site are kept: AN 21, EPSI, YNOV, IPI, CESI, OpenClassrooms.
+- The partners are shown by their logo, with their name as alternative text.
+
+## Contact details and legal information
+
+- Public contact: the e-mail address aunim.hassan@gmail.com, the phone number, LinkedIn and GitHub (`aunimhsn`). The phone number and the LinkedIn URL are given by the owner during step 10.
+- Not shown: Instagram, YouTube, Twitch (Twitch may be added later, once the owner streams).
+- Legal notice: name (Aunim Hassan), status (micro-entreprise), SIRET, e-mail, phone, NDA followed by « Cet enregistrement ne vaut pas agrément de l'État », and the host (GitHub). **The home address is never shown**, for the owner's safety; see the accepted risk in [docs/external-services.md](docs/external-services.md).
+- The Qualiopi certification is never mentioned: the trainer doesn't have it and works through schools and training organizations.
+- Privacy policy: the data of the form (fields, sending to Formspree, transfer to the United States, use limited to answering, retention), the audience measurement (GoatCounter, without cookies), the visitor's rights and how to exercise them by e-mail.
+
+## Audience measurement
+
+- **GoatCounter**: page views, referrers, browsers, screen sizes and countries, as aggregated counts. No cookie and no data stored in the visitor's browser, so no consent banner; it is described in the privacy policy.
 
 ## Constraints
 
@@ -100,11 +150,9 @@ GitHub Pages has no server-side redirects: a redirect is a static page with a ca
 - Images have an `alt` text and are served in a light format (e.g. WebP) at the size they are shown.
 - No secret and no personal data other than the public contact details in the public repository.
 
-## Open questions
+## To provide during the build
 
-- Value proposition, differentiators and proofs (see above).
-- Grouping of the offers and fields of an offer page.
-- Form service, and whether to add analytics (and which one, respecting privacy).
-- Administrative details to show (company status, SIRET, training organization number, Qualiopi).
-- Whether to show rates or a « sur devis » mention.
-- Which public contact details and social links to keep (GitHub, YouTube, Twitch, Instagram, LinkedIn).
+- The phone number, the LinkedIn URL, the SIRET and the NDA (step 10).
+- The final grouping and texts of the domains: levels, prerequisites, objectives, programs, durations (step 8).
+- A recent photo for the about page, or the photo of the former site (step 10).
+- The partner logos, in good quality, including the new IGENSIA Tech logo (step 7).

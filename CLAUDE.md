@@ -8,7 +8,7 @@
 ## Project
 
 - `sylent.art` is the website of Sylent (Aunim Hassan), a freelance trainer in software development. It replaces a former Laravel site with a static site hosted on GitHub Pages, at the custom domain `sylent.art`.
-- The site is focused on training only: the training courses, the articles, the trusted partners (schools and training organizations such as EPSI, YNOV, IPI, CESI, OpenClassrooms), an about page and a way to get in touch.
+- The site is focused on training only: the training courses, the articles, the trusted partners (schools and training organizations such as YNOV, IGENSIA Tech, EPSI, CESI, OpenClassrooms), an about page and a way to get in touch.
 - Out of scope: the former "Créations" section (photography and artwork), user accounts (sign-up, login) and any back-end or back-office. Everything must work without a server.
 - Keep the URLs of the former site (`/courses/<id>`, `/articles/<id>`, `/about`, `/contact`, `/policy`), or provide a redirect for each one, so the existing links and search ranking are not lost.
 - The `CNAME` file at the root of the published site contains `sylent.art`. Never remove it.
