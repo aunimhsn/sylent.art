@@ -698,97 +698,63 @@
     new ResizeObserver(layout).observe(hero);
     layout();
 
-    // Rotation, an open decision (?cube=steer|near|follow|present). In every mode the cube turns
-    // slowly on its own, a drag spins it with inertia, and the scroll turns it a little more.
-    // - steer: with a mouse over the hero, the pointer sets the speed: still on the cube,
-    //   turning toward the pointer elsewhere, faster the farther it is, up to a limit;
-    // - near: the same, only around the cube (its column), so that the text stays calm;
-    // - follow: the position of the pointer sets the orientation (right shows the right face);
-    // - present: the cube shows its faces one after the other, squarely, and waits under the
-    //   pointer.
-    const MODES = ["steer", "near", "follow", "present"];
-    const mode = MODES.includes(new URLSearchParams(location.search).get("cube")) ? new URLSearchParams(location.search).get("cube") : "present";
-    const IDLE = 0.0035, FASTEST = 0.03;
-    const state = { x: -0.45, y: 0.65, vx: 0, vy: IDLE, targetX: 0, targetY: IDLE, scroll: 0, scale: motion ? 0 : 1 };
-    let drag = null, hover = false, follow = null;
-    area.addEventListener("pointerdown", event => { drag = { x: event.clientX, y: event.clientY }; area.setPointerCapture(event.pointerId); });
-    area.addEventListener("pointermove", event => {
-      if (!drag) return;
-      const dx = (event.clientX - drag.x) * 0.0035, dy = (event.clientY - drag.y) * 0.0035;
-      if (mode === "present") {
-        presented.premultiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(dy * 2.5, dx * 2.5, 0)));
-        nextFace = clock.getElapsedTime() + 2.5;
-      } else {
-        state.vy = dx;
-        state.vx = dy;
-      }
-      drag = { x: event.clientX, y: event.clientY };
-    });
-    area.addEventListener("pointerup", () => { drag = null; });
-    area.addEventListener("pointerenter", () => { hover = true; });
-    area.addEventListener("pointerleave", () => { hover = false; });
-    hero.addEventListener("pointermove", event => {
-      if (event.pointerType !== "mouse") return;
-      const box = hero.getBoundingClientRect();
-      const spot = area.getBoundingClientRect();
-      const centerX = spot.left + spot.width / 2, centerY = spot.top + spot.height / 2;
-      if (mode === "follow") {
-        // From -1 to 1 between the cube and each edge of the hero.
-        const across = (pointer, center, start, finish) => Math.max(-1, Math.min(1, (pointer - center) / ((pointer > center ? finish : start) - center) * Math.sign(pointer - center || 1)));
-        const nx = across(event.clientX, centerX, box.left, box.right), ny = across(event.clientY, centerY, box.top, box.bottom);
-        // The first move sets a base, so that the cube doesn't jump when the pointer comes in.
-        if (!follow) follow = { y: state.y - nx * Math.PI, x: state.x - ny * Math.PI / 2 };
-        follow.targetY = follow.y + nx * Math.PI;
-        follow.targetX = follow.x + ny * Math.PI / 2;
-        return;
-      }
-      if (mode !== "steer" && mode !== "near") return;
-      if (mode === "near" && event.clientX < spot.left - 40) { state.targetY = IDLE; state.targetX = 0; return; }
-      const still = Math.min(spot.width, spot.height) * 0.28;
-      // The speed on one axis: zero within `still` of the center, the fastest at 70 % of the way
-      // to the edge of the hero, on each side.
-      const speed = (pointer, center, start, finish) => {
-        const offset = pointer - center;
-        const room = (offset > 0 ? finish - center : center - start) - still;
-        return Math.sign(offset) * Math.min(1, Math.max(0, Math.abs(offset) - still) / (room * 0.7)) * FASTEST;
-      };
-      state.targetY = speed(event.clientX, centerX, box.left, box.right);
-      state.targetX = speed(event.clientY, centerY, box.top, box.bottom);
-    });
-    hero.addEventListener("pointerleave", () => { state.targetY = IDLE; state.targetX = 0; follow = null; });
-
-    // Present: the orientation that shows each face squarely, seen a little from above and from
-    // the side, in the order of the messages.
+    // Rotation: the cube presents its faces one after the other, squarely, in the order of the
+    // messages. Under the mouse it follows the pointer (to the right it shows its right face, at
+    // the edges its back, top and bottom), and resumes from the nearest face when the mouse
+    // leaves. A drag spins it, and the scroll turns it a little more.
+    const state = { scroll: 0, scale: motion ? 0 : 1 };
     const lean = new THREE.Quaternion().setFromEuler(new THREE.Euler(0.28, -0.42, 0));
     const FACE_TURNS = [[0, -Math.PI / 2], [Math.PI / 2, 0], [0, 0], [0, Math.PI / 2], [-Math.PI / 2, 0], [0, Math.PI]];
     const faceViews = FACE_TURNS.map(([x, y]) => lean.clone().multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(x, y, 0))));
     let face = 0, nextFace = 3.2;
     const presented = faceViews[0].clone();
+    const followed = new THREE.Quaternion();
+    let drag = null, follow = null;
+    const clock = new THREE.Clock();
+    // The pointer from -1 to 1 across the area of the cube.
+    const across = event => {
+      const spot = area.getBoundingClientRect();
+      return [(event.clientX - spot.left) / spot.width * 2 - 1, (event.clientY - spot.top) / spot.height * 2 - 1];
+    };
+    area.addEventListener("pointerdown", event => { drag = { x: event.clientX, y: event.clientY }; follow = null; area.setPointerCapture(event.pointerId); });
+    area.addEventListener("pointermove", event => {
+      if (drag) {
+        const turn = new THREE.Euler((event.clientY - drag.y) * 0.009, (event.clientX - drag.x) * 0.009, 0);
+        presented.premultiply(new THREE.Quaternion().setFromEuler(turn));
+        drag = { x: event.clientX, y: event.clientY };
+        return;
+      }
+      if (event.pointerType !== "mouse") return;
+      const [nx, ny] = across(event);
+      // The first move sets the start, so that the cube doesn't jump when the pointer comes in.
+      if (!follow) follow = { x: nx, y: ny, base: presented.clone() };
+      const turn = new THREE.Euler((ny - follow.y) * Math.PI / 2, (nx - follow.x) * Math.PI, 0);
+      followed.setFromEuler(turn).multiply(follow.base);
+    });
+    area.addEventListener("pointerup", () => { drag = null; nextFace = clock.getElapsedTime() + 2.5; });
+    area.addEventListener("pointerleave", () => {
+      follow = null;
+      // Resume from the face that is nearest to what the visitor is looking at.
+      face = faceViews.reduce((best, view, index) => Math.abs(view.dot(presented)) > Math.abs(faceViews[best].dot(presented)) ? index : best, 0);
+      nextFace = clock.getElapsedTime() + 2;
+    });
     const scrollTurn = new THREE.Quaternion();
 
     let visible = true;
     new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; }).observe(hero);
-    const clock = new THREE.Clock();
     function frame() {
       const time = clock.getElapsedTime();
       if (motion) {
-        if (mode === "present") {
-          if (!hover && !drag && time >= nextFace) { face = (face + 1) % faceViews.length; nextFace = time + 3.2; }
-          if (!drag) presented.slerp(faceViews[face], 0.06);
-        } else if (mode === "follow" && follow && follow.targetY !== undefined && !drag) {
-          state.y += (follow.targetY - state.y) * 0.08;
-          state.x += (follow.targetX - state.x) * 0.08;
-        } else {
-          state.y += state.vy;
-          state.x += state.vx;
-          if (!drag) { state.vy += (state.targetY - state.vy) * 0.05; state.vx += (state.targetX - state.vx) * 0.05; }
+        if (follow) presented.slerp(followed, 0.1);
+        else if (!drag) {
+          if (time >= nextFace) { face = (face + 1) % faceViews.length; nextFace = time + 3.2; }
+          presented.slerp(faceViews[face], 0.06);
         }
         shell.rotation.x = -time * 0.15;
         shell.rotation.y = time * 0.11;
       }
       scrollTurn.setFromEuler(new THREE.Euler(state.scroll * 0.6, state.scroll * 1.4, 0));
-      if (mode === "present") cube.quaternion.copy(scrollTurn).multiply(presented);
-      else cube.quaternion.copy(scrollTurn).multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(state.x, state.y, 0)));
+      cube.quaternion.copy(scrollTurn).multiply(presented);
       cube.scale.setScalar(state.scale);
       renderer.render(scene, camera);
       // Headless screenshots don't show WebGL: ?shot=1 copies the first frame into an image.
