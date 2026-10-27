@@ -63,6 +63,7 @@ Two folders are the exchange area between the owner and Claude Code. They are ig
 - Never commit or push directly to `main`.
 - For each task, create a dedicated branch from `main`, commit and push only on that branch.
 - Every change must go through a pull request targeting `main`.
+- Merge pull requests with **Squash and merge** only, so that each pull request becomes one commit on `main`, titled in Conventional Commits. The repository allows only squash merging and deletes the branch once merged; check these settings on every new repository (`gh repo edit --enable-squash-merge --enable-merge-commit=false --enable-rebase-merge=false --delete-branch-on-merge`).
 - Name branches `<type>/<short-description>` in kebab-case, using the commit types below (e.g. `feat/course-pages`, `fix/contact-link`).
 - Never switch branches in the main project directory while the owner may be testing a branch there (for example with the local development server): it would change the site they see. Work on any other branch in a separate Git worktree outside the project (`git worktree add <directory> -b <branch> origin/main`), and remove it with `git worktree remove <directory>` once the work is pushed.
 
