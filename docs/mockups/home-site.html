@@ -340,7 +340,7 @@
 
   /* ── Call to action ─────────────────────────────────────────────────────────────── */
 
-  .app-cta { position: relative; overflow: hidden; padding-block: clamp(90px, 12vw, 160px); background: var(--bg-alt); border-top: 1px solid var(--line); text-align: center; }
+  .app-cta { position: relative; overflow: hidden; padding-block: clamp(90px, 12vw, 160px) clamp(130px, 16vw, 220px); background: var(--bg-alt); border-top: 1px solid var(--line); text-align: center; }
   .app-cta .app-wrap { position: relative; display: grid; justify-items: center; }
   .app-cta-ghost { position: absolute; left: 50%; top: 50%; translate: -50% -58%; font: 800 clamp(80px, 19vw, 280px)/0.8 var(--font-title); letter-spacing: -0.06em; text-transform: uppercase; color: var(--ghost-word); white-space: nowrap; pointer-events: none; }
   .app-cta h2 { position: relative; margin: 0; font: var(--title-weight) clamp(38px, 6vw, 76px)/1 var(--font-title); letter-spacing: var(--title-tracking); text-wrap: balance; }
@@ -349,17 +349,18 @@
   /* ── Footer ─────────────────────────────────────────────────────────────────────── */
 
   .app-footer {
+    --wordmark-width: clamp(220px, 38vw, 490px);
     position: relative;
-    overflow: hidden;
-    padding: clamp(56px, 8vw, 96px) 0 28px;
+    /* Room for the lower half of the wordmark, which straddles the top edge. */
+    padding: calc(var(--wordmark-width) * 0.119 + clamp(40px, 6vw, 72px)) 0 28px;
     background-color: var(--bg);
     background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
     background-size: 40px 40px;
     border-top: 1px solid var(--line);
   }
-  .app-footer-logo { display: flex; align-items: flex-end; gap: clamp(14px, 2.5vw, 36px); margin-bottom: clamp(40px, 6vw, 72px); color: var(--text); }
-  .app-footer-logo .app-mark { height: clamp(64px, 14vw, 190px); width: auto; flex: none; }
-  .app-footer-logo .app-wordmark { width: min(100%, 980px); height: auto; overflow: visible; }
+  /* The wordmark straddles the edge between the call to action and the footer. */
+  .app-footer-logo { position: absolute; top: 0; left: max(var(--gutter), calc((100% - var(--width)) / 2)); z-index: 2; width: var(--wordmark-width); translate: 0 -50%; color: var(--text); }
+  .app-footer-logo .app-wordmark { display: block; width: 100%; height: auto; }
   .app-footer-grid { display: grid; gap: 32px; }
   @media (min-width: 900px) { .app-footer-grid { grid-template-columns: 4fr 3fr 3fr 3fr; } }
   .app-footer h2 { margin: 0 0 16px; font: 800 12px/1 var(--font-title); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
@@ -549,8 +550,8 @@
 
   const footer = `
     <footer class="app-footer">
+      <div class="app-footer-logo" role="img" aria-label="Sylent">${WORDMARK}</div>
       <div class="app-wrap">
-        <div class="app-footer-logo app-reveal" role="img" aria-label="Sylent">${MARK}${WORDMARK}</div>
         <div class="app-footer-grid">
           <div><p class="app-footer-motto">«${NB}Une vie, mille leçons${NB}»</p><p>Formateur en informatique, sur site ou à distance.</p></div>
           <div><h2>Navigation</h2><ul><li><a href="#formations">Formations</a></li><li><a href="#">Articles</a></li><li><a href="#a-propos">À propos</a></li><li><a href="#contact">Contact</a></li></ul></div>
