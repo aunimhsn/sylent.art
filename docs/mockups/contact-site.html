@@ -96,6 +96,17 @@
   }
   .app-input:focus { outline: none; }
   textarea.app-input { min-height: 190px; resize: none; }
+  /* A discreet scrollbar in the message: a thin gray bar on no track, lighter under the pointer.
+     Chrome, Edge and Safari take the ::-webkit-scrollbar rules, which allow the finest drawing;
+     Firefox takes the standard properties. */
+  textarea.app-input::-webkit-scrollbar { width: 10px; }
+  textarea.app-input::-webkit-scrollbar-track { background: transparent; }
+  textarea.app-input::-webkit-scrollbar-thumb { border: 3px solid transparent; border-radius: 2px; background: var(--line-strong) padding-box; }
+  textarea.app-input::-webkit-scrollbar-thumb:hover { background-color: var(--secondary); }
+  textarea.app-input::-webkit-scrollbar-corner { background: transparent; }
+  @supports (-moz-appearance: none) {
+    textarea.app-input { scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
+  }
   /* The domain chosen on an offer page, above the fields. */
   .app-topic { display: inline-flex; align-items: center; gap: 12px; margin: 0 0 26px; padding: 10px 10px 10px 16px; border-radius: var(--field-radius); box-shadow: var(--pressed); color: var(--secondary); }
   .app-topic strong { color: var(--text); font-weight: inherit; }
