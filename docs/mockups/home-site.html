@@ -100,6 +100,9 @@
   .app-skip { position: absolute; left: 12px; top: -60px; z-index: 50; padding: 10px 14px; background: var(--accent); color: var(--on-accent); }
   .app-skip:focus { top: 12px; }
   .app-wrap { width: min(100% - 2 * var(--gutter), var(--width)); margin-inline: auto; }
+  /* The motto, after a short rule: in the hero, the footer and the mobile menu. */
+  .app-motto { display: flex; align-items: center; gap: 14px; margin: 0; color: var(--dim); font: var(--text-weight) 16px/1 var(--font-text); }
+  .app-motto::before { content: ""; width: 40px; height: 1px; background: currentColor; }
   .app-lead { margin: 0; max-width: 58ch; color: var(--secondary); font-size: 18px; text-wrap: pretty; }
   .app-highlight { color: var(--highlight); }
   .app-section { position: relative; padding-block: clamp(80px, 11vw, 140px); }
@@ -205,7 +208,7 @@
   .app-menu.is-open { visibility: visible; clip-path: circle(150% at calc(100% - 40px) 38px); transition: clip-path .7s cubic-bezier(.7,0,.2,1); }
   .app-menu-link { padding: 16px 0; border-bottom: 1px solid var(--line); font: 800 40px/1.05 var(--font-title); letter-spacing: var(--title-tracking); text-transform: uppercase; }
   .app-menu .app-button { align-self: stretch; margin-top: 32px; }
-  .app-menu-motto { margin-top: auto; color: var(--dim); font: italic var(--text-weight) 15px/1.4 var(--font-text); }
+  .app-menu .app-motto { margin-top: auto; }
   .app-header.is-menu { background: transparent; border-color: transparent; backdrop-filter: none; z-index: 46; }
 
   /* ── Hero ──────────────────────────────────────────────────────────────────────── */
@@ -236,8 +239,7 @@
   .app-hero-sub { margin: 28px 0 0; max-width: 52ch; color: var(--secondary); font-size: clamp(17px, 1.5vw, 19px); text-wrap: pretty; }
   .app-hero-sub strong { color: var(--text); font-weight: inherit; }
   .app-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
-  .app-hero-motto { display: flex; align-items: center; gap: 14px; margin: 40px 0 0; color: var(--dim); font: italic var(--text-weight) 16px/1 var(--font-text); }
-  .app-hero-motto::before { content: ""; width: 40px; height: 1px; background: currentColor; }
+  .app-hero-motto { margin-top: 40px; }
   .app-hero-visual { position: relative; height: 380px; cursor: grab; touch-action: pan-y; }
   .app-hero-visual:active { cursor: grabbing; }
   @media (min-width: 900px) {
@@ -367,9 +369,9 @@
   .app-footer ul { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
   .app-footer li, .app-footer p { margin: 0; color: var(--secondary); font-size: 15px; }
   .app-footer a { transition: color .3s; }
-  .app-footer a:hover { color: var(--text); }
-  .app-footer .app-footer-motto { margin-bottom: 8px; color: var(--text); font: italic var(--text-weight) 19px/1.4 var(--font-text); }
-  .app-footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--dim); font-size: 13px; }
+  .app-footer a:hover { color: var(--signal); }
+  .app-footer .app-motto { margin-bottom: 14px; color: var(--dim); }
+  .app-footer .app-footer-bottom { margin-top: 56px; color: var(--dim); font-size: 13px; }
 
   /* ── Back to the top: a small square in the bottom right corner, once the hero is passed ── */
 
@@ -425,7 +427,7 @@
   <a class="app-menu-link" href="#a-propos">À propos</a>
   <a class="app-menu-link" href="#contact">Contact</a>
   <a class="app-button" href="#contact">Me contacter</a>
-  <p class="app-menu-motto">«&nbsp;Une vie, mille leçons&nbsp;»</p>
+  <p class="app-motto">Une vie, mille leçons</p>
 </div>
 
 <main id="content"></main>
@@ -486,7 +488,7 @@
             <a class="app-button app-magnetic" href="#contact">Me contacter</a>
             <a class="app-button is-outline" href="#formations">Voir les formations</a>
           </div>
-          <p class="app-hero-motto app-intro">Une vie, mille leçons</p>
+          <p class="app-motto app-hero-motto app-intro">Une vie, mille leçons</p>
         </div>
         <div class="app-hero-visual" id="cube-area" aria-hidden="true"></div>
       </div>
@@ -583,12 +585,12 @@
       <div class="app-footer-logo" role="img" aria-label="Sylent">${WORDMARK}</div>
       <div class="app-wrap">
         <div class="app-footer-grid">
-          <div><p class="app-footer-motto">«${NB}Une vie, mille leçons${NB}»</p><p>Formateur en informatique, sur site ou à distance.</p></div>
+          <div><p class="app-motto">Une vie, mille leçons</p><p>Formateur en informatique, sur site ou à distance.</p></div>
           <div><h2>Navigation</h2><ul><li><a href="#formations">Formations</a></li><li><a href="#">Articles</a></li><li><a href="#a-propos">À propos</a></li><li><a href="#contact">Contact</a></li></ul></div>
           <div><h2>Contact</h2><ul><li><a href="#">aunim.hassan@gmail.com</a></li><li>06 00 00 00 00</li><li><a href="#">LinkedIn</a></li><li><a href="#">GitHub</a></li></ul></div>
           <div><h2>Informations</h2><ul><li><a href="#">Mentions légales</a></li><li><a href="#">Confidentialité</a></li><li>NDA${NB}: à fournir</li></ul></div>
         </div>
-        <div class="app-footer-bottom"><span>© 2026 Aunim Hassan · Micro-entreprise</span><span>Fait main à Toulouse</span></div>
+        <p class="app-footer-bottom">© 2026 Aunim Hassan · Micro-entreprise</p>
       </div>
     </footer>`;
 
