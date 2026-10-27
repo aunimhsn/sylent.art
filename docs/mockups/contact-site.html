@@ -61,6 +61,22 @@
   /* No outline on focus: the gray caret shows where to type, and the label of the field lights
      up. The orange stays for the errors, which are only a message under the field. */
   .app-input { caret-color: var(--secondary); }
+  /* A thicker caret, drawn by the script since browsers only let the caret change color. The
+     native caret is hidden only while the script runs it (.has-caret), and comes back for touch
+     screens, the text being composed (accents, other alphabets) and the forced colors of high
+     contrast modes. */
+  .app-field { position: relative; }
+  .has-caret .app-input { caret-color: transparent; }
+  .has-caret .app-input.is-composing { caret-color: var(--secondary); }
+  .app-caret { position: absolute; z-index: 1; width: 3px; border-radius: 1px; background: var(--secondary); pointer-events: none; }
+  .app-caret[hidden] { display: none; }
+  .app-caret.is-blinking { animation: app-caret-blink 1.06s steps(1) infinite; }
+  @keyframes app-caret-blink { 50% { opacity: 0; } }
+  html[data-motion="off"] .app-caret.is-blinking { animation: none; }
+  @media (forced-colors: active) {
+    .has-caret .app-input { caret-color: auto; }
+    .app-caret { display: none; }
+  }
   .app-input:focus { outline: none; }
   textarea.app-input { min-height: 190px; resize: none; }
   /* The domain chosen on an offer page, above the fields. */
@@ -133,7 +149,7 @@
     <form class="app-form app-reveal" id="contact-form" novalidate>
       <div id="form-topic"></div>
       <div class="app-form-grid">
-        ${input("email", "Email", `<input class="app-input" id="email" name="email" type="email" autocomplete="email" placeholder="camille.martin@ecole.fr" required aria-describedby="email-error">`)}
+        ${input("email", "Email", `<input class="app-input" id="email" name="email" type="text" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="camille.martin@ecole.fr" required aria-describedby="email-error">`)}
         ${input("message", "Message", `<textarea class="app-input" id="message" name="message" placeholder="Votre organisation, vos apprenants, la formation souhaitée, les dates envisagées…" required aria-describedby="message-error"></textarea>`)}
       </div>
       <div class="app-trap" aria-hidden="true"><label for="website">Ne pas remplir</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
@@ -231,6 +247,76 @@
       document.getElementById("message").focus();
     });
   }
+
+  // ── The thicker caret ─────────────────────────────────────────────────────────────
+  // A hidden copy of the field, with the same font, size, padding and wrapping, holds the text
+  // up to the caret followed by a marker: the position of the marker is the position of the
+  // caret. It is placed again on every event that can move it, since browsers don't all report
+  // the moves of the caret inside a field (selectionchange is recent there).
+  // The email field is a text field with an email keyboard (inputmode), since an email field
+  // doesn't give the position of the caret; the address is checked by the form.
+  (function thickCaret() {
+    if (!matchMedia("(pointer: fine)").matches || !("selectionStart" in HTMLInputElement.prototype)) return;
+    const COPIED = ["boxSizing", "width", "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth",
+      "paddingTop", "paddingRight", "paddingBottom", "paddingLeft", "fontStyle", "fontVariant", "fontWeight",
+      "fontStretch", "fontSize", "fontSizeAdjust", "lineHeight", "fontFamily", "fontKerning", "fontFeatureSettings",
+      "textAlign", "textTransform", "textIndent", "letterSpacing", "wordSpacing", "tabSize"];
+    const mirror = document.createElement("div");
+    mirror.setAttribute("aria-hidden", "true");
+    Object.assign(mirror.style, { position: "absolute", top: "0", left: "-9999px", visibility: "hidden", overflow: "hidden" });
+    document.body.appendChild(mirror);
+
+    function caretPoint(field) {
+      const style = getComputedStyle(field);
+      const single = field.nodeName === "INPUT";
+      COPIED.forEach(property => { mirror.style[property] = style[property]; });
+      mirror.style.whiteSpace = single ? "pre" : "pre-wrap";
+      mirror.style.overflowWrap = single ? "normal" : "break-word";
+      mirror.style.overflowY = !single && field.scrollHeight > field.clientHeight ? "scroll" : "hidden";
+      mirror.style.height = single ? "auto" : style.height;
+      mirror.textContent = field.value.slice(0, field.selectionEnd);
+      const marker = document.createElement("span");
+      marker.textContent = field.value.slice(field.selectionEnd) || ".";
+      mirror.appendChild(marker);
+      const lineHeight = parseFloat(style.lineHeight) || parseFloat(style.fontSize) * 1.2;
+      return { top: marker.offsetTop, left: marker.offsetLeft, lineHeight };
+    }
+
+    document.documentElement.classList.add("has-caret");
+    document.querySelectorAll(".app-input").forEach(field => {
+      const caret = document.createElement("span");
+      caret.className = "app-caret";
+      caret.hidden = true;
+      caret.setAttribute("aria-hidden", "true");
+      field.after(caret);
+      let frame = 0;
+
+      function place() {
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(() => {
+          const collapsed = field.selectionStart === field.selectionEnd;
+          if (document.activeElement !== field || !collapsed || field.classList.contains("is-composing")) { caret.hidden = true; return; }
+          const point = caretPoint(field);
+          const height = point.lineHeight * 0.92;
+          const top = point.top - field.scrollTop + (point.lineHeight - height) / 2;
+          const left = point.left - field.scrollLeft;
+          // Out of the visible part of the field (scrolled away): nothing to draw.
+          caret.hidden = top < 0 || top + height > field.clientHeight + 1 || left > field.clientWidth;
+          Object.assign(caret.style, { top: `${field.offsetTop + top}px`, left: `${field.offsetLeft + left - 1}px`, height: `${height}px` });
+          // Solid while it moves, then blinking, as a native caret.
+          caret.classList.remove("is-blinking");
+          void caret.offsetWidth;
+          caret.classList.add("is-blinking");
+        });
+      }
+      ["focus", "blur", "input", "keydown", "keyup", "click", "mousedown", "mouseup", "select", "scroll", "selectionchange"]
+        .forEach(type => field.addEventListener(type, place));
+      document.addEventListener("selectionchange", () => { if (document.activeElement === field) place(); });
+      addEventListener("resize", place);
+      field.addEventListener("compositionstart", () => { field.classList.add("is-composing"); place(); });
+      field.addEventListener("compositionend", () => { field.classList.remove("is-composing"); place(); });
+    });
+  })();
 
   // The states of the form, to review them without filling it (?state=…).
   const SAMPLE = { email: "camille.martin@ecole.fr", message: "Bonjour,\n\nNous cherchons un intervenant pour un module de deux jours en développement web, pour une classe de bachelor, en mars.\n\nCamille Martin\nÉcole du numérique" };
