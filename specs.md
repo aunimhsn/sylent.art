@@ -34,7 +34,7 @@ What the primary audiences must find before getting in touch:
 ## Value proposition
 
 - **Headline** of the home page: « Je prends vos apprenants par la main, jusqu'à la maîtrise. » It reassures (step by step guidance) and shows ambition (mastery).
-- **Subtitle**: the domains taught and the audiences, e.g. « Formateur en informatique depuis 2021 : développement, bases de données, tests, Python et IA, pour les écoles, les organismes de formation et les entreprises. »
+- **Subtitle**: the trainer's name and the audiences, « Aunim Hassan, formateur en informatique depuis 2021, pour les écoles, les organismes de formation et les entreprises. » A person is hired, not a catalog: the domains are left to the offers just below, and stay in the meta description.
 - **Signature**: « Une vie, mille leçons », the motto of the former site: one doesn't stop learning and being curious as an adult. It appears on the home page or in the footer, and on the about page.
 
 Differentiators, centered on pedagogy and the human side (the trainer is not presented as a « field developer »):
