@@ -11,7 +11,7 @@ Read only by the steps that need them:
 
 ## Steps
 
-- [x] **0. Project setup**: conventions, process, folders, Claude Code setup, first draft of `specs.md`.
+- [x] **0. Project setup** (#1): conventions, process, folders, Claude Code setup, first draft of `specs.md`.
 - [ ] **1. Specifications**: settle the open questions of `specs.md` (value proposition, audiences' needs, offer grouping, page contents, form fields, legal pages); choose the form service and record the limits of GitHub Pages and of the form service in `docs/`.
 - [ ] **2. Technical choices**: choose the static site generator, the formatter, the linter and the link check; write them with their reasons and commands in `docs/technical-choices.md`.
 - [ ] **3. Wireframes**: one Excalidraw wireframe per page type (home, course list, course, article, about, contact), approved by the owner.
