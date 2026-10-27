@@ -120,14 +120,14 @@
     "gestion-de-projet": "Gestion de projet",
   };
   const WAYS = [
-    ["E-mail", "aunim.hassan@gmail.com", "mailto:aunim.hassan@gmail.com"],
+    ["Email", "aunim.hassan@gmail.com", "mailto:aunim.hassan@gmail.com"],
     ["Téléphone", `06${NB}13${NB}44${NB}94${NB}24`, "tel:+33613449424"],
     ["LinkedIn", "linkedin.com/in/aunimhsn", "https://www.linkedin.com/in/aunimhsn/"],
     ["GitHub", "github.com/aunimhsn", "https://github.com/aunimhsn"],
   ];
   const MESSAGES = {
-    email: "Indiquez votre adresse e-mail.",
-    emailFormat: "Cette adresse e-mail ne semble pas valide.",
+    email: "Indiquez votre adresse email.",
+    emailFormat: "Cette adresse email ne semble pas valide.",
     message: "Écrivez quelques mots sur votre besoin.",
   };
 
@@ -141,7 +141,7 @@
     <form class="app-form app-reveal" id="contact-form" novalidate>
       <div id="form-topic"></div>
       <div class="app-form-grid">
-        ${input("email", "E-mail", `<input class="app-input" id="email" name="email" type="email" autocomplete="email" placeholder="camille.martin@ecole.fr" required aria-describedby="email-error">`)}
+        ${input("email", "Email", `<input class="app-input" id="email" name="email" type="email" autocomplete="email" placeholder="camille.martin@ecole.fr" required aria-describedby="email-error">`)}
         ${input("message", "Message", `<textarea class="app-input" id="message" name="message" placeholder="Votre organisation, vos apprenants, la formation souhaitée, les dates envisagées…" required aria-describedby="message-error"></textarea>`)}
       </div>
       <div class="app-trap" aria-hidden="true"><label for="website">Ne pas remplir</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
