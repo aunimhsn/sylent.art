@@ -41,7 +41,13 @@
 <div class="page-bar" id="bar"></div>
 <main class="page-stage" id="stage"></main>
 <script>
+  // The contrast of white text on each orange: 4.5:1 is the minimum for small text (WCAG AA).
   const VARIANTS = {
+    orange: {
+      label: "Orange",
+      options: { ff6a00: "#FF6A00 · 2.9", e85d04: "#E85D04 · 3.5", d9480f: "#D9480F · 4.3", cc4400: "#CC4400 · 4.8 ✓", c2410c: "#C2410C · 5.2 ✓", b83e00: "#B83E00 · 5.6 ✓" },
+      fallback: "ff6a00",
+    },
     view: {
       label: "View",
       options: { both: "Mobile and desktop", desktop: "Desktop, full width", mobile: "Mobile" },
@@ -56,7 +62,7 @@
   const chosen = Object.fromEntries(Object.entries(VARIANTS).map(([key, variant]) =>
     [key, params.get(key) in variant.options ? params.get(key) : variant.fallback]));
 
-  const site = () => "home-site.html";
+  const site = () => `home-site.html?orange=${chosen.orange}`;
   const phone = () => `<div class="page-slot"><span>Mobile · 390 × 844 · scroll inside the phone</span><div class="page-phone"><iframe src="${site()}" title="Home page at phone width"></iframe></div></div>`;
   const desktop = () => `<div class="page-slot page-fit"><span>Desktop · 1280 × 800 · scaled to fit, scroll inside</span><div class="page-desktop"><iframe src="${site()}" width="1280" height="800" title="Home page at desktop width"></iframe></div></div>`;
 

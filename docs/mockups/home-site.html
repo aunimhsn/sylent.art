@@ -29,6 +29,10 @@
   const query = new URLSearchParams(location.search);
   const reduced = query.get("motion") === "off" || matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.documentElement.dataset.motion = reduced ? "off" : "on";
+  // Open decision: the orange of the signal color, under white text (?orange=ff6a00|…).
+  const oranges = ["ff6a00", "e85d04", "d9480f", "cc4400", "c2410c", "b83e00"];
+  const orange = oranges.includes(query.get("orange")) ? query.get("orange") : "ff6a00";
+  document.documentElement.style.setProperty("--signal", `#${orange}`);
   // ?debug=1 shows the script errors in a red band at the top of the page.
   if (query.has("debug")) { const show = text => document.body.insertAdjacentHTML("afterbegin", `<pre style="position:fixed;z-index:999;top:0;left:0;right:0;white-space:pre-wrap;background:#c00;color:#fff;font:14px monospace">${text}</pre>`); addEventListener("error", e => show(e.message + " " + e.filename + ":" + e.lineno)); addEventListener("unhandledrejection", e => show("rejection " + (e.reason && e.reason.stack || e.reason))); }
 </script>
