@@ -72,7 +72,7 @@ Proofs:
 | Offer page | `/courses/<domain>` | Detail one domain (see [Training offers](#training-offers)). |
 | Article list | `/articles` | List the articles, newest first. After the first release. |
 | Article page | `/articles/<slug>` | Show one article, with a call to action at the end. After the first release. |
-| About | `/about` | Present the trainer: photo, background, approach, references, NDA. |
+| About | `/about` | Present the trainer: background, approach, references, NDA. No photo in the first release. |
 | Contact | `/contact` | The contact form and the other ways to reach the trainer. |
 | Legal notice and privacy policy | `/policy` | The legal information and how the form and audience data are handled. |
 | Not found | `404.html` | A page « Oups, perdu dans l’espace », as on the former site (« Page introuvable » at phone width), with links to the home page and the offers. |
@@ -156,5 +156,4 @@ GitHub Pages has no server-side redirects: a redirect is a static page with a ca
 ## To provide during the build
 
 - The final grouping and texts of the domains: levels, prerequisites, objectives, programs, durations (step 8).
-- A recent photo for the about page, or the photo of the former site (step 10).
 - The partner logos, in good quality, including the new IGENSIA Tech logo (step 7).

@@ -23,7 +23,7 @@ Read only by the steps that need them:
 - [ ] **7. Layout and home page**: shared layout (header, navigation, footer, calls to action) and home page.
 - [ ] **8. Offers**: offer list and one page per domain, redirects of `/courses/<id>` generated from the offers' former ids. Refine the domains with the owner first.
 - [ ] **9. Articles** (after the launch): article list and the two former articles at readable URLs, redirects of `/articles/1` and `/articles/2` to them. Until then, the first release redirects `/articles`, `/articles/1` and `/articles/2` to the home page and has no « Articles » link.
-- [ ] **10. About and contact**: about page, contact form (Formspree), legal notice and privacy policy (`/policy`). Ask the owner for the photo (SIRET and NDA in `specs.md`). Decide with the owner whether the « Qui suis-je ? » block of the home page stays there or moves to the about page.
+- [ ] **10. About and contact**: about page, contact form (Formspree), legal notice and privacy policy (`/policy`). SIRET and NDA in `specs.md`. Decide with the owner whether the « Qui suis-je ? » block of the home page stays there or moves to the about page.
 - [ ] **11. Launch**: 404 page, GoatCounter, sitemap, final checks on `github.io`, DNS records described for the owner.
 - [ ] **12. Testimonials**: once the owner has collected at least three (LinkedIn recommendations, feedback from schools and learners, with consent to publish), add a testimonials section.
 
