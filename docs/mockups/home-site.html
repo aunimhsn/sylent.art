@@ -129,7 +129,7 @@
   .app-cycle-label.is-on { fill: var(--text); }
   .app-cycle-share { fill: var(--text); font: 200 76px var(--font-title); letter-spacing: -0.04em; text-anchor: middle; }
   .app-cycle-phase { fill: var(--secondary); font: 700 19px var(--font-title); text-anchor: middle; }
-  /* The 3D cycles (shared/covers.js): a square scene without the frame of a cover. Above the
+  /* The 3D cycles (shared/covers.js): a square scene without the frame of a cover. Under the
      runner, the name of the phase it goes through, in the style of the « Copiée » of the email
      address: it fades in while rising a little when the phase starts, follows the runner, and
      fades out as the phase ends. Each phase lasts its share of the 10 s of a turn. */
@@ -142,22 +142,22 @@
   .app-cycle-scene[data-phase="1"] .app-cycle-tag:nth-of-type(2) { display: block; animation-duration: 5s; }
   .app-cycle-scene[data-phase="2"] .app-cycle-tag:nth-of-type(3) { display: block; animation-duration: 3s; }
   @keyframes app-cycle-tag {
-    0% { opacity: 0; transform: translate(-50%, calc(-100% - 8px)); }
-    15% { opacity: 1; transform: translate(-50%, calc(-100% - 14px)); }
-    85% { opacity: 1; transform: translate(-50%, calc(-100% - 16px)); }
-    100% { opacity: 0; transform: translate(-50%, calc(-100% - 22px)); }
+    0% { opacity: 0; transform: translate(-50%, 22px); }
+    15% { opacity: 1; transform: translate(-50%, 16px); }
+    85% { opacity: 1; transform: translate(-50%, 14px); }
+    100% { opacity: 0; transform: translate(-50%, 8px); }
   }
-  html[data-motion="off"] .app-cycle-tag { animation: none; transform: translate(-50%, calc(-100% - 14px)); }
-  /* Each turn is a session: when one starts, « Séance suivante » under the runner, in the style
+  html[data-motion="off"] .app-cycle-tag { animation: none; transform: translate(-50%, 16px); }
+  /* Each turn is a session: when one starts, « Séance suivante » above the runner, in the style
      of the phase. */
   .app-cycle-next { position: absolute; left: var(--anchor-x, 50%); top: var(--anchor-y, 50%); display: none; color: var(--signal-text); font: var(--text-weight) 15px/1 var(--font-text); white-space: nowrap; pointer-events: none; }
   .app-cycle-scene[data-lap="0"] .app-cycle-next[data-lap="0"],
   .app-cycle-scene[data-lap="1"] .app-cycle-next[data-lap="1"] { display: block; animation: app-cycle-next 1.8s ease forwards; }
   @keyframes app-cycle-next {
-    0% { opacity: 0; transform: translate(-50%, 12px); }
-    18% { opacity: 1; transform: translate(-50%, 18px); }
-    72% { opacity: 1; transform: translate(-50%, 20px); }
-    100% { opacity: 0; transform: translate(-50%, 26px); }
+    0% { opacity: 0; transform: translate(-50%, calc(-100% - 8px)); }
+    18% { opacity: 1; transform: translate(-50%, calc(-100% - 14px)); }
+    72% { opacity: 1; transform: translate(-50%, calc(-100% - 17px)); }
+    100% { opacity: 0; transform: translate(-50%, calc(-100% - 24px)); }
   }
 
   /* ── About ──────────────────────────────────────────────────────────────────────── */
