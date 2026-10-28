@@ -48,45 +48,46 @@ const external = (href, label) => `<a href="${href}" target="_blank" rel="noopen
 
 // The domains of the offers (specs.md, Training offers): the slug of their page, the title, the
 // summary, the 3D scene of their cover (shared/covers.js), whether the offer is new, and their
-// modules: title, indicative duration in days, summary and scene. Sample content until step 8.
+// modules: title, indicative duration in days, summary (a short sentence that says what the
+// module is for, not a list of notions) and scene. Sample content until step 8.
 const DOMAINS = [
   { slug: "initiation-a-la-programmation", title: "Initiation à la programmation", summary: "Les bases de la logique et de l’algorithmique, en douceur.", scene: "steps", modules: [
-    ["Algorithmique", 3, "Variables, conditions, boucles et fonctions, en pseudo-code.", "flowchart"],
+    ["Algorithmique", 3, "Apprendre à résoudre un problème pas à pas, avant tout langage.", "flowchart"],
     ["Robomind", 1, "Programmer un robot virtuel pour découvrir la logique en jouant.", "steps"],
   ] },
   { slug: "developpement-web", title: "Développement web", summary: `Du HTML aux frameworks${NB}: construire des sites et des applications web.`, scene: "web", modules: [
-    ["HTML 5", 1, "Balises, sémantique, formulaires, tableaux et médias.", "markup"],
-    ["CSS 3", 2, "Sélecteurs, modèle de boîte, Flexbox, Grid et responsive.", "layout"],
-    ["JavaScript", 3, "Variables, fonctions, DOM, événements et fetch.", "event"],
-    ["PHP", 3, "Syntaxe, formulaires, sessions et PDO.", "server"],
-    ["Vue", 2, "Composants, réactivité et routage.", "tree"],
-    ["Alpine", 1, "Des directives et des composants légers, dans le HTML.", "peaks"],
-    ["Laravel", 4, "Routes, contrôleurs, Eloquent, Blade et authentification.", "mvc"],
+    ["HTML 5", 1, "Écrire des pages web bien structurées, lisibles par tous.", "markup"],
+    ["CSS 3", 2, "Mettre en forme une page et l’adapter à tous les écrans.", "layout"],
+    ["JavaScript", 3, "Rendre une page interactive et la faire dialoguer avec un serveur.", "event"],
+    ["PHP", 3, "Construire un site dynamique, relié à une base de données.", "server"],
+    ["Vue", 2, "Construire une interface réactive à partir de composants.", "tree"],
+    ["Alpine", 1, "Ajouter de l’interactivité à une page, sans quitter le HTML.", "peaks"],
+    ["Laravel", 4, "Développer une application web complète avec un framework PHP.", "mvc"],
   ] },
   { slug: "python-et-donnees", title: "Python et données", summary: "Programmer en Python, du script au machine learning.", scene: "chart", modules: [
-    ["Python", 3, "Syntaxe, structures de données, fonctions, modules et fichiers.", "snake"],
-    ["Django", 3, "Modèles, vues, gabarits, formulaires et administration.", "form"],
-    ["Machine learning", 2, "Préparer des données, entraîner et évaluer un modèle.", "fit"],
+    ["Python", 3, "Apprendre à programmer avec un langage simple et polyvalent.", "snake"],
+    ["Django", 3, "Développer une application web complète avec un framework Python.", "form"],
+    ["Machine learning", 2, "Entraîner un premier modèle qui apprend à partir des données.", "fit"],
   ] },
   { slug: "bases-de-donnees", title: "Bases de données", summary: "Modéliser, concevoir et interroger des données.", scene: "database", modules: [
-    ["Merise", 2, "Dictionnaire de données, MCD, MLD et MPD.", "entities"],
-    ["UML", 2, "Cas d’utilisation, diagrammes de classes et de séquence.", "classes"],
-    ["MySQL", 2, "Tables, requêtes, jointures et index.", "table"],
-    ["PostgreSQL", 2, "Types avancés, vues, transactions et droits.", "join"],
+    ["Merise", 2, "Modéliser les données d’un projet avant de créer la base.", "entities"],
+    ["UML", 2, "Représenter un logiciel en diagrammes pour mieux le concevoir.", "classes"],
+    ["MySQL", 2, "Créer une base de données et l’interroger avec le langage SQL.", "table"],
+    ["PostgreSQL", 2, "Aller plus loin en SQL avec une base robuste et complète.", "join"],
   ] },
   { slug: "methodologie-et-tests", title: "Méthodologie et tests", summary: "Versionner, tester et livrer avec méthode.", scene: "branch", modules: [
-    ["Git et GitHub", 2, "Commits, branches, fusions, pull requests et revue de code.", "branch"],
-    ["Cypress", 2, "Des tests de bout en bout, fiables et lisibles.", "checks"],
-    ["Intégration continue", 1, `GitHub Actions${NB}: les tests et les vérifications à chaque pull request.`, "pipeline"],
-    ["Déploiement continu", 1, `Vercel et Render${NB}: mettre en ligne à chaque fusion.`, "deploy"],
+    ["Git et GitHub", 2, "Versionner son code et travailler à plusieurs sur un projet.", "branch"],
+    ["Cypress", 2, "Tester une application comme le ferait un utilisateur.", "checks"],
+    ["Intégration continue", 1, "Vérifier automatiquement le code à chaque modification.", "pipeline"],
+    ["Déploiement continu", 1, "Mettre en ligne automatiquement chaque nouvelle version.", "deploy"],
   ] },
   { slug: "ia-pour-le-developpement", title: "IA pour le développement", summary: "Utiliser l’IA avec méthode et rigueur, au quotidien.", scene: "network", isNew: true, modules: [
-    ["Claude Code", 2, `Un assistant de code en ligne de commande${NB}: contexte, instructions, relecture.`, "terminal"],
-    ["Prompt engineering", 1, `Formuler, découper, itérer${NB}: obtenir des réponses utiles et fiables.`, "chat"],
-    ["Intégrer l’IA avec méthode", 1, "Règles d’équipe, sécurité des données, relecture et mesure des gains.", "orbit"],
+    ["Claude Code", 2, "Programmer avec un assistant d’IA, en gardant la main sur le code.", "terminal"],
+    ["Prompt engineering", 1, "Formuler ses demandes pour obtenir des réponses utiles et fiables.", "chat"],
+    ["Intégrer l’IA avec méthode", 1, "Adopter l’IA en équipe, avec des règles claires et sûres.", "orbit"],
   ] },
   { slug: "gestion-de-projet", title: "Gestion de projet", summary: "S’initier à l’agilité avec Scrum.", scene: "board", modules: [
-    ["Initiation à l’agilité avec Scrum", 2, "Valeurs, rôles, événements et artefacts, sur un projet fil rouge.", "sprint"],
+    ["Initiation à l’agilité avec Scrum", 2, "Découvrir l’agilité en menant un projet fil rouge avec Scrum.", "sprint"],
   ] },
 ];
 
