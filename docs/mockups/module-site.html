@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr" data-theme="night">
+<html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,7 +23,7 @@
 <style>
   /* ── Hero: the text of the module, over the grid ───────────────────────────────── */
 
-  .app-module-hero { position: relative; padding: calc(var(--header-height) + clamp(36px, 5vw, 72px)) 0 clamp(48px, 6vw, 80px); }
+  .app-module-hero { position: relative; padding: calc(var(--header-height) + var(--space-fluid-2)) 0 var(--space-fluid-3); }
   .app-module-hero::before,
   .app-module-hero > .app-grid-fluid {
     content: "";
@@ -35,64 +35,64 @@
   /* The orange fluid of the grid (site.js) lies in a layer at the same place, with the same mask. */
   .app-module-hero::before {
     background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: 32px 32px;
+    background-size: var(--grid-step) var(--grid-step);
   }
   .app-module-hero .app-wrap { position: relative; }
-  .app-module-text { max-width: 640px; }
+  .app-module-text { max-width: var(--width-text); }
 
-  .app-crumbs ol { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 0 0 32px; padding: 0; list-style: none; color: var(--dim); font: 600 14px/1.3 var(--font-title); }
-  .app-crumbs li + li::before { content: "/"; margin-right: 10px; color: var(--line-strong); }
-  .app-crumbs a { transition: color .3s; }
+  .app-crumbs ol { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-3); margin: 0 0 var(--space-8); padding: 0; list-style: none; color: var(--dim); font: 600 var(--size-caption)/1.3 var(--font-title); }
+  .app-crumbs li + li::before { content: "/"; margin-right: var(--space-3); color: var(--line-strong); }
+  .app-crumbs a { transition: color var(--duration-fast); }
   .app-crumbs a:hover { color: var(--text); }
   .app-crumbs [aria-current] { color: var(--secondary); }
 
-  .app-module-domain { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin: 0; color: var(--dim); font: 800 13px/1.3 var(--font-title); letter-spacing: .14em; text-transform: uppercase; }
+  .app-module-domain { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-4); margin: 0; color: var(--dim); font: 800 var(--size-label)/1.3 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; }
   .app-module-domain .app-new { position: static; }
-  .app-module-title { margin: 16px 0 0; font: var(--title-weight) clamp(44px, 6.8vw, 92px)/0.98 var(--font-title); letter-spacing: var(--title-tracking); text-wrap: balance; }
-  .app-module-lead { margin: 28px 0 0; max-width: 62ch; color: var(--secondary); font-size: clamp(17px, 1.5vw, 19px); text-wrap: pretty; }
-  .app-module-lead + .app-module-lead { margin-top: 14px; }
-  .app-module-note { margin: 24px 0 0; max-width: 52ch; padding: 12px 18px; font-size: 16px; }
-  .app-module-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+  .app-module-title { margin: var(--space-4) 0 0; font: var(--title-weight) var(--size-display)/0.98 var(--font-title); letter-spacing: var(--tracking-title); text-wrap: balance; }
+  .app-module-lead { margin: var(--space-7) 0 0; max-width: var(--measure); color: var(--secondary); font-size: var(--size-intro); text-wrap: pretty; }
+  .app-module-lead + .app-module-lead { margin-top: var(--space-4); }
+  .app-module-note { margin: var(--space-6) 0 0; max-width: var(--measure-narrow); padding: var(--space-3) var(--space-4); font-size: var(--size-text-small); }
+  .app-module-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-9); }
 
   /* ── Key facts: plain columns under a rule ──────────────────────────────────────── */
 
-  .app-facts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px 24px; margin: 0; }
+  .app-facts { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-7) var(--space-6); margin: 0; }
   @media (min-width: 900px) { .app-facts { grid-template-columns: repeat(4, 1fr); } }
-  .app-facts div { padding-top: 18px; border-top: 1px solid var(--line); }
-  .app-facts dt { color: var(--dim); font: 800 12px/1.3 var(--font-title); letter-spacing: .14em; text-transform: uppercase; }
-  .app-facts dd { margin: 10px 0 0; font: 700 18px/1.35 var(--font-title); letter-spacing: -0.02em; }
+  .app-facts div { padding-top: var(--space-5); border-top: 1px solid var(--line); }
+  .app-facts dt { color: var(--dim); font: 800 var(--size-label)/1.3 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; }
+  .app-facts dd { margin: var(--space-3) 0 0; font: 700 var(--size-title-small)/1.35 var(--font-title); letter-spacing: var(--tracking-card); }
 
   /* ── Body: prerequisites, objectives and program, beside the card to organize ─────── */
 
-  .app-module-body { display: grid; gap: 56px; padding-block: clamp(64px, 8vw, 112px); }
-  @media (min-width: 960px) { .app-module-body { grid-template-columns: 8fr 4fr; gap: 72px; align-items: start; } }
-  .app-module-main > section + section { margin-top: clamp(48px, 6vw, 80px); }
-  .app-module-main h2 { margin: 0 0 22px; font: var(--title-weight) clamp(28px, 3vw, 36px)/1.1 var(--font-title); letter-spacing: var(--title-tracking); }
-  .app-module-main > section > p { margin: 0; max-width: 60ch; color: var(--secondary); font-size: 18px; }
+  .app-module-body { display: grid; gap: var(--space-14); padding-block: var(--space-fluid-3); }
+  @media (min-width: 900px) { .app-module-body { grid-template-columns: 8fr 4fr; gap: var(--space-18); align-items: start; } }
+  .app-module-main > section + section { margin-top: var(--space-fluid-3); }
+  .app-module-main h2 { margin: 0 0 var(--space-6); font: var(--title-weight) var(--size-h2)/1.1 var(--font-title); letter-spacing: var(--tracking-title); }
+  .app-module-main > section > p { margin: 0; max-width: var(--measure); color: var(--secondary); font-size: var(--size-lead); }
 
-  .app-objectives { display: grid; gap: 14px; margin: 0; padding: 0; list-style: none; }
-  .app-objectives li { display: flex; align-items: flex-start; gap: 16px; font-size: 18px; }
-  .app-objectives svg { flex: none; margin-top: 2px; padding: 4px; border: 1px solid var(--line-strong); box-sizing: content-box; }
+  .app-objectives { display: grid; gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
+  .app-objectives li { display: flex; align-items: flex-start; gap: var(--space-4); font-size: var(--size-lead); }
+  .app-objectives svg { flex: none; margin-top: 2px; padding: var(--space-1); border: 1px solid var(--line-strong); box-sizing: content-box; }
 
   /* The parts of the program, without numbers: they are not an order, the practice comes when it
      is needed. Their rule draws itself as the page scrolls. */
   .app-program { margin: 0; padding: 0; list-style: none; }
-  .app-program li { position: relative; display: grid; gap: 6px; padding: 26px 0; }
+  .app-program li { position: relative; display: grid; gap: var(--space-2); padding: var(--space-6) 0; }
   .app-program li::before { content: ""; position: absolute; inset: 0 0 auto; height: 1px; background: var(--line); }
   .app-program li::after { content: ""; position: absolute; inset: 0 0 auto; height: 1px; background: var(--text); transform: scaleX(var(--progress, 1)); transform-origin: left; }
-  .app-program h3 { margin: 0; font: 700 21px/1.25 var(--font-title); letter-spacing: -0.025em; }
-  .app-program p { margin: 0; color: var(--secondary); font-size: 16.5px; }
-  .app-program-end { margin: 8px 0 0; padding-top: 22px; border-top: 1px solid var(--line); color: var(--dim); font-size: 16px; }
+  .app-program h3 { margin: 0; font: 700 var(--size-card-title)/1.25 var(--font-title); letter-spacing: var(--tracking-card); }
+  .app-program p { margin: 0; color: var(--secondary); font-size: var(--size-text-small); }
+  .app-program-end { margin: var(--space-2) 0 0; padding-top: var(--space-6); border-top: 1px solid var(--line); color: var(--dim); font-size: var(--size-text-small); }
 
   /* The card to organize the module: it follows the scroll on a computer; on a phone the header
      button and the call to action at the end are enough. */
   .app-organize { display: none; }
-  @media (min-width: 960px) {
-    .app-organize { position: sticky; top: calc(var(--header-height) + 24px); display: grid; gap: 14px; padding: 28px 26px; }
+  @media (min-width: 900px) {
+    .app-organize { position: sticky; top: calc(var(--header-height) + var(--space-6)); display: grid; gap: var(--space-3); padding: var(--card-padding-block) var(--card-padding-inline); }
   }
-  .app-organize h2 { margin: 0; font: 700 21px/1.2 var(--font-title); letter-spacing: -0.025em; }
-  .app-organize p { margin: 0; color: var(--secondary); font-size: 15.5px; }
-  .app-organize .app-button { margin-top: 8px; }
+  .app-organize h2 { margin: 0; font: 700 var(--size-card-title)/1.2 var(--font-title); letter-spacing: var(--tracking-card); }
+  .app-organize p { margin: 0; color: var(--secondary); font-size: var(--size-text-small); }
+  .app-organize .app-button { margin-top: var(--space-2); }
 </style>
 </head>
 <body data-page="courses">

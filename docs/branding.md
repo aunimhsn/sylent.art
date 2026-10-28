@@ -1,9 +1,11 @@
 # Branding
 
-The visual identity of sylent.art and every design decision taken with the owner during the mock-up (step 4 of [roadmap.md](../roadmap.md)). The build (steps 6 to 11) implements exactly these tokens and rules, in one place, so that a color or a size changes in one file.
+The visual identity of sylent.art and its design system: every design decision taken with the owner during the mock-up (step 4 of [roadmap.md](../roadmap.md)) and the design tokens written from it (step 5). The build (steps 6 to 11) implements exactly these tokens and rules, in one place, so that a color or a size changes in one file.
+
+A **design token** is a named value that the components use instead of a raw value: a button writes `padding: var(--space-4) var(--space-7)`, not `16px 28px`, so that the spacing of every button changes in one line. The tokens are the CSS variables of `:root` in `docs/mockups/shared/site.css`; the build copies them into one stylesheet.
 
 - **Reference**: the mock-up in [docs/mockups/](mockups/) (`python3 docs/mockups/serve.py 8781`, then http://127.0.0.1:8781/docs/mockups/home.html). The wireframes only fixed the first layout; where this file and the mock-up disagree, the mock-up wins and this file is fixed.
-- **Status**: home, contact and offer list decided on 2026-10-27 and 2026-10-28; the offer page, the about page and the legal page are still to be designed.
+- **Status**: every page of the first release decided on 2026-10-27 and 2026-10-28; the tokens written on 2026-10-28, and the mock-up rewritten to use them only.
 - **Content rules** (audiences, wording, French typography, no rates) are in [specs.md](../specs.md); this file covers the look and the behavior only.
 
 ## Principles
@@ -23,7 +25,7 @@ The visual identity of sylent.art and every design decision taken with the owner
 
 ## Colors
 
-Tokens of `:root[data-theme="night"]` (`docs/mockups/shared/site.css`). Contrasts are measured on `--bg`.
+Contrasts are measured on `--bg`.
 
 | Token | Value | Use | Contrast |
 |---|---|---|---|
@@ -46,8 +48,14 @@ Tokens of `:root[data-theme="night"]` (`docs/mockups/shared/site.css`). Contrast
 | `--glass-line` | white at 9 % | Glass border | |
 | `--spot` | white at 9 % | The light that follows the pointer on a card | |
 | `--grid-line` | white at 5 % | The lines of the grid textures | |
+| `--glass-blur` | 14 px | Blur behind the glass | |
 | `--header-bg` | `#0a0a0a` at 72 % | Header once the page scrolls, with a 16 px blur | |
-| Field fill | `#050505` | Contact fields, a gray darker than the page (chosen among six) | |
+| `--top-bg` | `#0a0a0a` at 70 % | Back-to-top square, with a 10 px blur | |
+| `--field-bg` | `#050505` | Contact fields, a gray darker than the page (chosen among six) | |
+| `--cover-bg` / `--cover-grid` / `--cover-line` | `#101010` / white at 3.5 % / white at 6 % | The animated covers: background, its 24 px grid, its bottom rule | |
+| `--signal-tint` | `--signal` at 8 % | Background of a note with an orange left border | |
+| `--mark-bg` | `#000000` | The square of the sent check | |
+| `--glow` | white at 10 % | The faint light behind the hero cube | |
 
 The orange went through `#ff6a00`, then `#d9480f` (chosen by eye), then `#d3450e`, which looks the same and gives its white text the 4.5:1 of WCAG AA. As text on black it reaches only 4.36:1, hence `--signal-text` for small text.
 
@@ -55,33 +63,92 @@ On 2026-10-28 three redder colors were compared, for fear of looking like the br
 
 ## Typography
 
-- **Titles and interface**: Manrope (SIL Open Font License), weights 200 to 800; titles in 800 with a letter spacing of -0.045 em.
-- **Text**: Anaheim medium (500, SIL Open Font License), chosen after comparing Roboto, Open Sans, Google Sans, Alegreya Sans, Roboto Condensed and Anaheim. Anaheim has no italic: the browser slants it.
-- **Numerals of the pedagogy**: Bodoni Moda 400 (SIL Open Font License), for the Roman numerals I to IV of the steps (home and about pages), chosen after comparing Manrope, Cinzel, Cormorant Garamond, Instrument Serif and Fraunces: its strong contrast answers the thin and bold Manrope. The one exception to the two fonts: only its letters I, V and X are loaded (`text=IVX` on Google Fonts, a subset of a few kilobytes once self-hosted).
+- **Titles and interface**: Manrope (SIL Open Font License), weights 600, 700 and 800 (`--font-title`); titles in 800 (`--title-weight`).
+- **Text**: Anaheim medium (500, SIL Open Font License, `--font-text`, `--text-weight`), chosen after comparing Roboto, Open Sans, Google Sans, Alegreya Sans, Roboto Condensed and Anaheim. Anaheim has no italic: the browser slants it.
+- **Numerals of the pedagogy**: Bodoni Moda 400 (SIL Open Font License, `--font-numeral`), for the Roman numerals I to IV of the steps (home and about pages), chosen after comparing Manrope, Cinzel, Cormorant Garamond, Instrument Serif and Fraunces: its strong contrast answers the thin and bold Manrope. The one exception to the two fonts: only its letters I, V and X are loaded (`text=IVX` on Google Fonts, a subset of a few kilobytes once self-hosted).
 - The fonts are self-hosted by the site (Google Fonts in the mock-up only), loaded with `font-display: block`.
 
-| Role | Font | Size / line height | Notes |
-|---|---|---|---|
-| Hero headline | Manrope 800 | `clamp(44px, 6.8vw, 92px)` / 0.98 | Balanced lines; its end in `--highlight` |
-| Section title | Manrope 800 | `clamp(32px, 5.4vw, 68px)` / 1 | Uppercase, over its faded word, without accents: the mask of its animation would cut them (« DANS LE MEME DOMAINE »); its accessible name keeps them |
-| Faded word | Manrope 800 | `clamp(58px, 13vw, 176px)` / 0.8 | Uppercase, -0.06 em, `--ghost-word` |
-| Call to action | Manrope 800 | `clamp(38px, 6vw, 76px)` / 1 | Two lines, balanced |
-| Lead | Anaheim 500 | 18 px | `--secondary`, at most 58 characters wide |
-| Body | Anaheim 500 | 17 px / 1.6 | |
-| Card title | Manrope 700 | 21 px / 1.2 | -0.025 em |
-| Step numeral | Bodoni Moda 400 | 64 px / 1 | Roman numerals I to IV, decorative (`aria-hidden`) |
-| Card text | Anaheim 500 | 15.5 px / 1.55 | `--secondary` |
-| Domain of a module | Manrope 600 | 14 px | `--dim`, just under the module name |
-| Navigation | Manrope 600 | 15 px | `--secondary`, white on hover |
-| Mobile menu | Manrope 800 | 40 px | Uppercase |
-| Button | Manrope 700 | 15 px (14 px in the header) | |
-| Small heading (footer, « Autres moyens ») | Manrope 800 | 12–13 px | Uppercase, 0.14 em; white in the footer, above its gray links, `--dim` elsewhere |
-| Badge « Nouveau » | Manrope 800 | 11 px | Uppercase, 0.1 em |
+- **Letter spacing**: `--tracking-title` -0.045 em (titles, figures, mobile menu), `--tracking-ghost` -0.06 em (faded words), `--tracking-card` -0.025 em (card titles and other small titles), `--tracking-label` 0.14 em (uppercase labels and the badge).
+- **Sizes**: one token per role, below. The large titles grow with the window (`clamp(min, vw, max)`); the text sizes are fixed. Line heights go with the role.
+
+| Role | Token | Font | Size / line height | Notes |
+|---|---|---|---|---|
+| Hero headline, module and about titles | `--size-display` | Manrope 800 | `clamp(44px, 6.8vw, 92px)` / 0.98 | Balanced lines; the end of the hero headline in `--highlight` |
+| Section title | `--size-section` | Manrope 800 | `clamp(32px, 5.4vw, 68px)` / 1 | Uppercase, over its faded word, without accents: the mask of its animation would cut them (« DANS LE MEME DOMAINE »); its accessible name keeps them |
+| Section title of a text page | `--size-section-long` | Manrope 800 | `clamp(27px, 5.4vw, 68px)` / 1 | « CONFIDENTIALITE » holds on one line on a phone |
+| Faded word | `--size-ghost` | Manrope 800 | `clamp(58px, 13vw, 176px)` / 0.8 | Uppercase, `--tracking-ghost`, `--ghost-word` |
+| Faded word of the call to action | `--size-cta-ghost` | Manrope 800 | `clamp(80px, 19vw, 280px)` / 0.8 | |
+| Faded « 404 » | `--size-ghost-404` | Manrope 800 | `clamp(150px, 34vw, 420px)` / 0.8 | -0.04 em |
+| Call to action | `--size-cta` | Manrope 800 | `clamp(38px, 6vw, 76px)` / 1 | Two lines, balanced |
+| Title of a part (module, text pages, sent message) | `--size-h2` | Manrope 800 | `clamp(28px, 3vw, 36px)` / 1.1 | |
+| Name (« Qui suis-je ? » of the home page) | `--size-name` | Manrope 800 | `clamp(30px, 3.6vw, 46px)` / 1.05 | |
+| Figure | `--size-figure` | Manrope 800 | `clamp(28px, 4vw, 44px)` / 1 | Home page |
+| Large figure | `--size-figure-large` | Manrope 800 | `clamp(36px, 6vw, 72px)` / 1 | About page |
+| Mobile menu | `--size-menu` | Manrope 800 | 40 px / 1.05 | Uppercase |
+| Step numeral | `--size-numeral` / `--size-numeral-compact` | Bodoni Moda 400 | 64 px / 1, 52 px beside the cycle | Roman numerals I to IV, decorative (`aria-hidden`) |
+| Role (about page) | `--size-role` | Manrope 700 | `clamp(19px, 1.8vw, 24px)` / 1.3 | |
+| Intro | `--size-intro` | Anaheim 500 | `clamp(17px, 1.5vw, 19px)` / 1.6 | The text under a hero title, `--secondary` |
+| Contact link | `--size-link-large` | Manrope 700 | `clamp(17px, 1.6vw, 20px)` / 1.3 | « Autres moyens » of the contact page |
+| Card title | `--size-card-title` | Manrope 700 | 21 px / 1.2 | Also the steps, the audiences, the parts of the program, the glass panels |
+| Lead | `--size-lead` | Anaheim 500 | 18 px / 1.6 | `--secondary`, at most `--measure` wide; also the objectives |
+| Small title | `--size-title-small` | Manrope 700 | 18 px / 1.25–1.35 | Key facts of a module, the cards of the privacy policy |
+| Body | `--size-body` | Anaheim 500 | 17 px / 1.6 | Also the fields |
+| Small text | `--size-text-small` | Anaheim 500 | 16 px / 1.55 | Card text, steps, notes, the motto |
+| Interface | `--size-ui` | Manrope 600–700 | 15 px / 1 | Buttons, navigation, footer links, table of contents; in Anaheim for « Copiée » and the errors |
+| Caption | `--size-caption` | Manrope 600 | 14 px / 1.3 | Domain of a module, breadcrumb, field labels, figure captions, header button, copyright |
+| Label | `--size-label` | Manrope 800 | 12 px / 1–1.6 | Uppercase, `--tracking-label`: footer headings, « Autres moyens », key facts, the domain of a module page, the badge « Nouveau »; white in the footer, `--dim` elsewhere |
+
+## Spacing
+
+Every margin, padding and gap is a multiple of 4 px, named `--space-N` for N × 4 px: the eye reads the repeated steps as one rhythm. Only the values in use have a token.
+
+| Token | Value | Typical use |
+|---|---|---|
+| `--space-1` | 4 px | Under a link, between a label and its value |
+| `--space-2` | 8 px | Between a field and its label or its error, list items of the text pages |
+| `--space-3` | 12 px | Between a title and its text, between buttons, footer links |
+| `--space-4` | 16 px | Inside buttons and fields, between cards, paragraphs |
+| `--space-5` | 20 px | Above a column under a rule, under the text of a card |
+| `--space-6` | 24 px | Between the fields, inside the small cards, between the program parts |
+| `--space-7` | 28 px | Inside the cards (top and bottom), the sides of a button |
+| `--space-8` | 32 px | Between columns, above a part of a text page |
+| `--space-9` | 36 px | Above the actions of a hero |
+| `--space-10` | 40 px | Above the motto, the rule of the motto |
+| `--space-11` | 44 px | Between the steps, above the button of the call to action |
+| `--space-12` | 48 px | Between the blocks of a text page |
+| `--space-14` | 56 px | Between a page body and its side column on a phone, above the copyright |
+| `--space-18` | 72 px | Between a page body and its side column on a computer |
+
+Between sections, the spacing grows with the window:
+
+| Token | Value | Use |
+|---|---|---|
+| `--space-fluid-1` | `clamp(12px, 2vw, 32px)` | Room above a section title, the pull of a lead under its heading |
+| `--space-fluid-2` | `clamp(36px, 5vw, 64px)` | Under a section heading, above the hero of a module or the about page |
+| `--space-fluid-3` | `clamp(48px, 7vw, 96px)` | Above the content of a page under the header, under a hero, between the parts of a module |
+| `--space-section` | `clamp(80px, 11vw, 140px)` | Between the sections, above the call to action |
+| `--space-wordmark` | `clamp(150px, 17vw, 230px)` | Under the last block, room for the wordmark of the footer |
+
+The cards share `--card-padding-block` (`--space-7`) and `--card-padding-inline` (`--space-6`), so that their cover and their white band, which run to the edges, follow the padding.
 
 ## Layout and shapes
 
-- Content width 1200 px, side gutter `clamp(20px, 5vw, 80px)`; header 76 px high; sections `clamp(80px, 11vw, 140px)` apart.
-- Corners: 0 for buttons and cards, 2 px for the fields, round chips (`999px`).
+| Token | Value | Use |
+|---|---|---|
+| `--width` | 1200 px | Content width |
+| `--width-narrow` | 760 px | « Qui suis-je ? » of the home page, the administrative panel |
+| `--width-text` | 640 px | The text of a module hero |
+| `--gutter` | `clamp(20px, 5vw, 80px)` | Side margin |
+| `--header-height` | 76 px | Header, and the offset of everything placed under it |
+| `--measure` / `--measure-narrow` / `--measure-long` | 62 / 52 / 68 characters | Longest line of a lead, of the hero text and notes, of the text pages |
+| `--grid-step` / `--grid-step-footer` / `--grid-step-cover` | 32 / 40 / 24 px | Cells of the grid textures: page tops, footer, covers |
+| `--radius-button` / `--radius-card` / `--radius-field` | 0 / 0 / 2 px | Corners: sharp everywhere except the fields |
+
+- **Breakpoints** (`min-width`; CSS variables can't be used in a media query, so they are written as such in the build):
+  - **640 px**: two columns (domains, modules, steps); the custom card turns into a band with its button on the right.
+  - **760 px**: the partners in one row, the three essentials of the privacy policy side by side.
+  - **900 px**: the computer layout: navigation instead of the burger, hero in two columns, audiences and key facts in a row, footer in four columns, side columns (table of contents, « Organiser ce module », other ways to get in touch).
+  - **1100 px**: four columns of domains and steps, the cycle of a lesson beside the steps.
 - Every page works at 390 px wide; the mock-up shows each page at 390 × 844 and 1280 × 800.
 
 ## Components
@@ -119,6 +186,9 @@ On 2026-10-28 three redder colors were compared, for fear of looking like the br
 
 GSAP (ScrollTrigger, SplitText) and Three.js; the site bundles them.
 
+- **Tokens**: `--duration-fast` 0.3 s for every hover (colors, borders, the band of a card); `--duration-slow` 0.45 s for the header that hides; `--duration-menu` 0.7 s for the circle of the mobile menu. Easings: `--ease-out` `cubic-bezier(.2,.7,.2,1)` (header, underline of the navigation), `--ease-in-out` `cubic-bezier(.7,0,.2,1)` (mobile menu). The scripted animations (GSAP, Three.js) keep their own timings, described below.
+- **Layers** (`z-index`): `--z-top` 35 (back to top), `--z-header` 40, `--z-menu` 45 (the header goes one above it while the menu is open), `--z-skip` 50 (skip link), `--z-copied` 60 (« Copiée »).
+
 - **Reveals**: blocks rise 36 px and fade in, in small batches, as they enter the screen.
 - **Headings**: the words of a title rise from behind a mask; the faded word slides slowly with the scroll.
 - **Hero**: the headline rises line by line, then the text, the buttons and the motto.
@@ -149,6 +219,16 @@ Where `--signal` appears, and nowhere else:
 - the spiral of the cycle of a lesson: its runner and trail, the session under way, and the name of the phase with its count (`--signal-text`).
 
 Never for: the focus, the fields, the errors' fields, the buttons, large surfaces.
+
+## Tone of the texts
+
+The content rules (audiences, French typography, no rates) are in [specs.md](../specs.md); the tone, as written in the mock-up:
+
+- **« vous »** for the visitor, **« je »** for the trainer: a person speaks, not a company (« Je prends vos apprenants par la main », « Décrivez votre besoin »).
+- **Short**: one idea per sentence; a card says in one sentence what a domain or a module is for; a lead holds in two or three lines.
+- **Calls to action**: a verb and its object, in the first person when it leads to the trainer (« Me contacter », « Voir les formations », « Voir le détail », « Voir le programme »), never « Cliquez ici » nor « En savoir plus ».
+- **Form errors**: under the field, a sentence that says what to do, not what went wrong (« Indiquez votre adresse email. », « Écrivez quelques mots sur votre besoin. »); a wrong format says it plainly (« Cette adresse email n’est pas valide. »). A failure of the sending keeps the message and gives the email address (« L’envoi n’a pas abouti. Votre message est conservé : réessayez dans un instant, ou écrivez-moi directement à… »).
+- **No promise** the trainer can't keep: no response time, no rates.
 
 ## Icons and images
 

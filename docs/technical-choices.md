@@ -35,9 +35,10 @@ The technical choices of the [roadmap](../roadmap.md), with their reasons and th
 
 ## Styles
 
-- **Design tokens** are the named values of the visual design: `--color-accent: #1f4e79`, `--space-4: 16px`, `--font-size-title: 2rem`. They are chosen in step 5 and written in `docs/design-system.md`.
-- In native CSS, they are CSS custom properties declared once in `src/styles/tokens.css`, and every component uses them (`color: var(--color-accent)`). Changing the main color then means changing one line.
-- This matches the mock-up of step 4: each style of the mock-up only sets these variables. The chosen style becomes `tokens.css` as is, and the CSS of the mock-up's components can be copied into the Astro components without translation.
+- **Design tokens** are the named values of the visual design: `--signal: #d3450e`, `--space-4: 16px`, `--size-card-title: 21px`. They were written in step 5, in [docs/branding.md](branding.md).
+- In native CSS, they are CSS custom properties declared once in `src/styles/tokens.css`, and every component uses them (`color: var(--signal)`). Changing the main color then means changing one line.
+- This matches the mock-up: its components use only these variables. The `:root` block of `docs/mockups/shared/site.css` becomes `tokens.css` as is, and the CSS of the mock-up's components can be copied into the Astro components without translation.
+- The **breakpoints** (640, 760, 900 and 1100 px) can't be CSS variables, since a media query doesn't read them: they are written as numbers in the media queries, and listed in [docs/branding.md](branding.md#layout-and-shapes).
 - Component styles live in the `<style>` block of each Astro component, which Astro scopes to that component: a class name in one component cannot break another.
 - **Tailwind CSS** (liked by the owner for quick changes) is not used for now. If the project moves to it later, Tailwind 4 declares its theme with CSS variables (`@theme`), so the same tokens carry over; record that change here.
 

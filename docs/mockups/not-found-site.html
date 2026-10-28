@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr" data-theme="night">
+<html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="shared/site.css">
 <style>
   /* Room at the bottom for the wordmark of the footer, which straddles its top edge. */
-  .app-lost { position: relative; display: grid; align-items: center; min-height: min(100svh, 860px); padding: calc(var(--header-height) + 48px) 0 clamp(150px, 17vw, 230px); box-sizing: border-box; }
+  .app-lost { position: relative; display: grid; align-items: center; min-height: min(100svh, 860px); padding: calc(var(--header-height) + var(--space-12)) 0 var(--space-wordmark); box-sizing: border-box; }
   .app-lost::before,
   .app-lost > .app-grid-fluid {
     content: "";
@@ -30,11 +30,11 @@
   }
   .app-lost::before {
     background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: 32px 32px;
+    background-size: var(--grid-step) var(--grid-step);
   }
   .app-lost .app-wrap { position: relative; }
   /* The faded number, larger than the other faded words: it is the whole message. */
-  .app-lost .app-heading-ghost { font-size: clamp(150px, 34vw, 420px); letter-spacing: -0.04em; }
+  .app-lost .app-heading-ghost { font-size: var(--size-ghost-404); letter-spacing: -0.04em; }
   .app-lost .app-heading-title { top: auto; bottom: 18%; }
   .app-lost .app-lead { margin-top: 0; }
   /* The title of the former site, « Oups, perdu dans l’espace », from 640 px; a phone has room
@@ -42,7 +42,7 @@
      line after its first sentence from 640 px too: on a phone, that sentence already wraps. */
   .app-lost-wide { display: none; }
   @media (min-width: 640px) { span.app-lost-wide { display: inline; } br.app-lost-wide { display: initial; } .app-lost-narrow { display: none; } }
-  .app-lost-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+  .app-lost-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-9); }
 </style>
 </head>
 <body data-page="not-found">

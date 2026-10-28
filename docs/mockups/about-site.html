@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr" data-theme="night">
+<html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,7 +23,7 @@
 <style>
   /* ── Hero: the name and the background, on the left, over the grid ─────────────── */
 
-  .app-about-hero { position: relative; padding: calc(var(--header-height) + clamp(36px, 5vw, 72px)) 0 clamp(56px, 7vw, 96px); }
+  .app-about-hero { position: relative; padding: calc(var(--header-height) + var(--space-fluid-2)) 0 var(--space-fluid-3); }
   .app-about-hero::before,
   .app-about-hero > .app-grid-fluid {
     content: "";
@@ -35,27 +35,27 @@
   /* The orange fluid of the grid (site.js) lies in a layer at the same place, with the same mask. */
   .app-about-hero::before {
     background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: 32px 32px;
+    background-size: var(--grid-step) var(--grid-step);
   }
   .app-about-hero .app-wrap { position: relative; }
-  .app-about-title { margin: 0; font: var(--title-weight) clamp(44px, 6.8vw, 92px)/0.98 var(--font-title); letter-spacing: var(--title-tracking); }
-  .app-about-role { margin: 20px 0 0; font: 700 clamp(19px, 1.8vw, 24px)/1.3 var(--font-title); letter-spacing: -0.02em; }
-  .app-about-story { margin: 24px 0 0; max-width: 60ch; color: var(--secondary); font-size: clamp(17px, 1.5vw, 19px); text-wrap: pretty; }
-  .app-about-story + .app-about-story { margin-top: 14px; }
+  .app-about-title { margin: 0; font: var(--title-weight) var(--size-display)/0.98 var(--font-title); letter-spacing: var(--tracking-title); }
+  .app-about-role { margin: var(--space-5) 0 0; font: 700 var(--size-role)/1.3 var(--font-title); letter-spacing: var(--tracking-card); }
+  .app-about-story { margin: var(--space-6) 0 0; max-width: var(--measure); color: var(--secondary); font-size: var(--size-intro); text-wrap: pretty; }
+  .app-about-story + .app-about-story { margin-top: var(--space-4); }
 
   /* ── Figures, larger than on the home page: they open the page ───────────────────── */
 
   .app-about-figures .app-figures { margin: 0; }
-  .app-about-figures .app-figures strong { font-size: clamp(36px, 6vw, 72px); }
-  .app-about-figures .app-figures div > span { font-size: clamp(14px, 1.3vw, 16px); }
+  .app-about-figures .app-figures strong { font-size: var(--size-figure-large); }
+  .app-about-figures .app-figures div > span { font-size: clamp(var(--size-caption), 1.3vw, var(--size-text-small)); }
 
   /* ── Administrative information: a glass panel ──────────────────────────────────── */
 
-  .app-admin { display: grid; gap: 10px; max-width: 760px; margin-inline: auto; padding: 28px 26px; }
-  .app-admin h2 { margin: 0 0 4px; font: 700 21px/1.2 var(--font-title); letter-spacing: -0.025em; }
-  .app-admin p { margin: 0; color: var(--secondary); font-size: 16px; }
+  .app-admin { display: grid; gap: var(--space-3); max-width: var(--width-narrow); margin-inline: auto; padding: var(--card-padding-block) var(--card-padding-inline); }
+  .app-admin h2 { margin: 0 0 var(--space-1); font: 700 var(--size-card-title)/1.2 var(--font-title); letter-spacing: var(--tracking-card); }
+  .app-admin p { margin: 0; color: var(--secondary); font-size: var(--size-text-small); }
   .app-admin strong { color: var(--text); font-weight: inherit; }
-  .app-admin .app-link { justify-self: start; margin-top: 10px; }
+  .app-admin .app-link { justify-self: start; margin-top: var(--space-2); }
 </style>
 </head>
 <body data-page="about">

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr" data-theme="night">
+<html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,8 +13,9 @@
   reduce motion; ?shot=1 copies the 3D scene into an image, since headless screenshots don't
   show WebGL.
 
-  Layout: set 1 of the wireframes of step 3, in the Git history (home.excalidraw). The style only sets tokens (CSS variables
-  under :root[data-theme="…"]); the components use nothing else.
+  Layout: set 1 of the wireframes of step 3, in the Git history (home.excalidraw). The design tokens (CSS variables
+  of :root in shared/site.css, listed in docs/branding.md) set every color, size and font;
+  the components use nothing else.
   Brand: the mark and the SYLENT wordmark (Montserrat 800, -0.195 em, drawn as a path so that
   the site loads no third font) follow the charter of sylent-slides. The section headings take
   up the principle of the former site: a title over a large faded word (Partenaires over
@@ -37,7 +38,7 @@
   .app-hero {
     position: relative;
     overflow: hidden;
-    padding: calc(var(--header-height) + 40px) 0 56px;
+    padding: calc(var(--header-height) + var(--space-10)) 0 var(--space-14);
     background: radial-gradient(55% 50% at 78% 45%, var(--glow), transparent 70%), var(--bg);
   }
   .app-hero::before,
@@ -51,25 +52,25 @@
      under the cube. */
   .app-hero::before {
     background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: 32px 32px;
+    background-size: var(--grid-step) var(--grid-step);
   }
   .app-hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .app-hero .app-wrap { position: relative; display: grid; gap: 8px; }
+  .app-hero .app-wrap { position: relative; display: grid; gap: var(--space-2); }
   .app-hero-text { position: relative; z-index: 2; }
   .app-hero-title {
     margin: 0;
-    font: var(--title-weight) clamp(44px, 6.8vw, 92px)/0.98 var(--font-title);
-    letter-spacing: var(--title-tracking);
+    font: var(--title-weight) var(--size-display)/0.98 var(--font-title);
+    letter-spacing: var(--tracking-title);
     text-wrap: balance;
   }
-  .app-hero-sub { margin: 28px 0 0; max-width: 52ch; color: var(--secondary); font-size: clamp(17px, 1.5vw, 19px); text-wrap: pretty; }
+  .app-hero-sub { margin: var(--space-7) 0 0; max-width: var(--measure-narrow); color: var(--secondary); font-size: var(--size-intro); text-wrap: pretty; }
   .app-hero-sub strong { color: var(--text); font-weight: inherit; }
-  .app-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
-  .app-hero-motto { margin-top: 40px; }
+  .app-hero-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-9); }
+  .app-hero-motto { margin-top: var(--space-10); }
   .app-hero-visual { position: relative; height: 380px; cursor: grab; touch-action: pan-y; }
   .app-hero-visual:active { cursor: grabbing; }
   @media (min-width: 900px) {
-    .app-hero { min-height: min(100svh, 880px); display: grid; align-items: center; padding-bottom: 72px; }
+    .app-hero { min-height: min(100svh, 880px); display: grid; align-items: center; padding-bottom: var(--space-18); }
     .app-hero .app-wrap { grid-template-columns: 7fr 5fr; align-items: center; }
     .app-hero-visual { height: 540px; }
   }
@@ -77,17 +78,17 @@
   /* ── Audiences ──────────────────────────────────────────────────────────────────── */
 
   /* Audiences: plain columns under a rule. */
-  .app-audiences { display: grid; gap: 36px; margin: 0; padding: 0; list-style: none; }
-  @media (min-width: 900px) { .app-audiences { grid-template-columns: repeat(3, 1fr); gap: 32px; } }
-  .app-audiences li { padding-top: 22px; border-top: 1px solid var(--line); }
-  .app-audiences h3 { margin: 0; font: 700 22px/1.2 var(--font-title); letter-spacing: -0.025em; }
-  .app-audiences p { margin: 10px 0 0; color: var(--secondary); }
+  .app-audiences { display: grid; gap: var(--space-9); margin: 0; padding: 0; list-style: none; }
+  @media (min-width: 900px) { .app-audiences { grid-template-columns: repeat(3, 1fr); gap: var(--space-8); } }
+  .app-audiences li { padding-top: var(--space-5); border-top: 1px solid var(--line); }
+  .app-audiences h3 { margin: 0; font: 700 var(--size-card-title)/1.2 var(--font-title); letter-spacing: var(--tracking-card); }
+  .app-audiences p { margin: var(--space-3) 0 0; color: var(--secondary); }
 
   /* ── The domain cards flip under the pointer, to show their modules ──────────────── */
 
   /* The back covers the card above its white band, which stays in place on both sides and keeps
      growing a little under the pointer. */
-  .app-card-back { position: absolute; inset: 0 0 56px; display: flex; flex-direction: column; padding: 22px 26px; visibility: hidden; }
+  .app-card-back { position: absolute; inset: 0 0 var(--space-14); display: flex; flex-direction: column; padding: var(--space-6) var(--card-padding-inline); visibility: hidden; }
   .app-card.is-flipped > :not(.app-card-back, .app-card-more) { visibility: hidden; }
   .app-card.is-flipped .app-card-back { visibility: visible; }
   /* The card turns half a turn: its back side and the text of its band are mirrored back, so that
@@ -95,14 +96,14 @@
   .app-card.is-flipped .app-card-back, .app-card.is-flipped .app-card-more span { transform: scaleX(-1); }
   .app-card-more span { display: inline-block; }
   /* The hover is decided by the place of the card, not by its turning box (see the script). */
-  .app-card.is-hovered .app-card-more { padding-block: 19px; }
+  .app-card.is-hovered .app-card-more { padding-block: var(--space-5); }
   /* The modules scroll up without end, as the partners on a phone, over the whole height of the
      back, so that the reel is centered above the band. */
   .app-back-reel { position: relative; flex: 1; overflow: hidden; mask-image: linear-gradient(transparent, #000 16%, #000 84%, transparent); }
   .app-back-list { margin: 0; padding: 0; list-style: none; will-change: transform; }
   .app-back-list li { display: flex; flex-direction: column; justify-content: center; height: 66px; transform-origin: 50% 100%; will-change: transform, opacity; }
-  .app-back-list strong { font: 700 20px/1.2 var(--font-title); letter-spacing: -0.025em; }
-  .app-back-list span { overflow: hidden; color: var(--secondary); font-size: 14px; line-height: 1.4; white-space: nowrap; text-overflow: ellipsis; }
+  .app-back-list strong { font: 700 var(--size-card-title)/1.2 var(--font-title); letter-spacing: var(--tracking-card); }
+  .app-back-list span { overflow: hidden; color: var(--secondary); font-size: var(--size-caption); line-height: 1.4; white-space: nowrap; text-overflow: ellipsis; }
   /* One or two modules: simply listed, without the reel and its fades. */
   .app-card-back.is-still .app-back-reel { display: flex; flex-direction: column; justify-content: center; mask-image: none; }
   .app-card-back.is-still .app-back-list span { white-space: normal; }
@@ -112,12 +113,12 @@
   /* The cycle of a lesson (theory 20 %, practice 50 %, correction 30 %, then again) as a 3D spiral
      that climbs a step at each turn (shared/covers.js). On a phone, after the steps; from
      1100 px, on the right of the steps, two by two. */
-  .app-pedagogy { display: grid; gap: 56px; }
+  .app-pedagogy { display: grid; gap: var(--space-14); }
   .app-cycle { order: 2; }
   @media (min-width: 1100px) {
     .app-pedagogy { grid-template-columns: 1fr 1fr; align-items: center; }
-    .app-pedagogy .app-steps { grid-template-columns: repeat(2, 1fr); gap: 48px 40px; }
-    .app-pedagogy .app-step-number { font-size: 52px; }
+    .app-pedagogy .app-steps { grid-template-columns: repeat(2, 1fr); gap: var(--space-12) var(--space-10); }
+    .app-pedagogy .app-step-number { font-size: var(--size-numeral-compact); }
   }
   /* A square scene without the frame of a cover. Under the runner, the name of the phase it goes
      through, in the style of the « Copiée » of the email address, and beside it the share of the
@@ -135,7 +136,7 @@
     top: var(--anchor-y, 50%);
     display: none;
     color: var(--signal-text);
-    font: var(--text-weight) 15px/1 var(--font-text);
+    font: var(--text-weight) var(--size-ui)/1 var(--font-text);
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
     pointer-events: none;
@@ -148,7 +149,7 @@
   .app-cycle-scene[data-phase="2"] .app-cycle-tag[data-phase="2"] { display: block; }
   /* Each turn is a session: when one starts, « Séance suivante » above the runner, in the style
      of the phase but in white. */
-  .app-cycle-next { position: absolute; left: var(--anchor-x, 50%); top: var(--anchor-y, 50%); display: none; color: var(--text); font: var(--text-weight) 15px/1 var(--font-text); white-space: nowrap; pointer-events: none; }
+  .app-cycle-next { position: absolute; left: var(--anchor-x, 50%); top: var(--anchor-y, 50%); display: none; color: var(--text); font: var(--text-weight) var(--size-ui)/1 var(--font-text); white-space: nowrap; pointer-events: none; }
   .app-cycle-scene[data-lap="0"] .app-cycle-next[data-lap="0"],
   .app-cycle-scene[data-lap="1"] .app-cycle-next[data-lap="1"] { display: block; animation: app-cycle-next 1.4s linear forwards; }
   /* It comes out of the runner and flies away upward at one steady, brisk pace, from its first
@@ -163,9 +164,9 @@
   /* ── About ──────────────────────────────────────────────────────────────────────── */
 
   /* No photo in the first release: the text alone, aligned left. */
-  .app-about-grid { max-width: 760px; }
-  .app-about-name { margin: 0; font: 800 clamp(30px, 3.6vw, 46px)/1.05 var(--font-title); letter-spacing: var(--title-tracking); }
-  .app-about-grid .app-lead { margin-top: 18px; }
+  .app-about-grid { max-width: var(--width-narrow); }
+  .app-about-name { margin: 0; font: var(--title-weight) var(--size-name)/1.05 var(--font-title); letter-spacing: var(--tracking-title); }
+  .app-about-grid .app-lead { margin-top: var(--space-5); }
 
 </style>
 </head>

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr" data-theme="night">
+<html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,10 +23,10 @@
   /* ── Page ──────────────────────────────────────────────────────────────────────── */
 
   /* Room at the bottom for the wordmark of the footer, which straddles its top edge. */
-  .app-contact { padding: calc(var(--header-height) + clamp(48px, 7vw, 96px)) 0 clamp(150px, 17vw, 230px); }
+  .app-contact { padding: calc(var(--header-height) + var(--space-fluid-3)) 0 var(--space-wordmark); }
   /* Texture: the grid of the hero of the home page, from the top of the page; it fades out
      just before the first field of the form. */
-  .app-contact-head { position: relative; padding-bottom: clamp(40px, 5vw, 64px); }
+  .app-contact-head { position: relative; padding-bottom: var(--space-fluid-2); }
   .app-contact-head .app-lead { margin-bottom: 0; }
   .app-contact-head::before,
   .app-contact-head > .app-grid-fluid {
@@ -36,7 +36,7 @@
     left: 50%;
     width: 100vw;
     translate: -50% 0;
-    top: calc(-1 * (var(--header-height) + clamp(48px, 7vw, 96px)));
+    top: calc(-1 * (var(--header-height) + var(--space-fluid-3)));
     bottom: -34px;
     mask-image: linear-gradient(#000 35%, transparent);
     pointer-events: none;
@@ -44,27 +44,26 @@
   /* The orange fluid of the grid (site.js) lies in a layer at the same place, with the same mask. */
   .app-contact-head::before {
     background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: 32px 32px;
+    background-size: var(--grid-step) var(--grid-step);
   }
-  .app-contact-grid { display: grid; gap: 56px; }
-  @media (min-width: 960px) { .app-contact-grid { grid-template-columns: 7fr 4fr; gap: 72px; align-items: start; } }
+  .app-contact-grid { display: grid; gap: var(--space-14); }
+  @media (min-width: 900px) { .app-contact-grid { grid-template-columns: 7fr 4fr; gap: var(--space-18); align-items: start; } }
 
   /* ── Form: flat fields, a gray darker than the page ─────────────────────────────── */
 
   /* No panel: the fields sit on the page itself, aligned with the text above. */
-  .app-form { --surface: #050505; --field-radius: 2px; }
-  .app-form-grid { display: grid; gap: 24px; }
-  .app-field label { display: block; margin-bottom: 10px; font: 600 14px/1.2 var(--font-title); color: var(--secondary); transition: color .3s; }
+  .app-form-grid { display: grid; gap: var(--space-6); }
+  .app-field label { display: block; margin-bottom: var(--space-2); font: 600 var(--size-caption)/1.2 var(--font-title); color: var(--secondary); transition: color var(--duration-fast); }
   .app-field:focus-within label { color: var(--text); }
   .app-input {
     display: block;
     width: 100%;
-    padding: 15px 18px;
+    padding: var(--space-4);
     border: 0;
-    border-radius: var(--field-radius);
-    background: var(--surface);
+    border-radius: var(--radius-field);
+    background: var(--field-bg);
     color: var(--text);
-    font: var(--text-weight) 17px/1.4 var(--font-text);
+    font: var(--text-weight) var(--size-body)/1.4 var(--font-text);
     appearance: none;
   }
   .app-input::placeholder { color: var(--dim); }
@@ -103,28 +102,28 @@
     textarea.app-input.is-scrolling { scrollbar-color: var(--text) transparent; }
   }
   /* A field to fill: the message just under it, in the signal color for text. */
-  .app-error { margin: 9px 0 0; color: var(--signal-text); font-size: 15px; }
+  .app-error { margin: var(--space-2) 0 0; color: var(--signal-text); font-size: var(--size-ui); }
   .app-error:empty { display: none; }
   /* Robots fill every field: this one is out of sight and out of the keyboard path. */
   .app-trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
-  .app-form-end { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px; margin-top: 32px; }
+  .app-form-end { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4); margin-top: var(--space-8); }
   .app-button:disabled { cursor: progress; opacity: .7; }
-  .app-alert { margin: 28px 0 0; padding: 16px 20px; }
+  .app-alert { margin: var(--space-7) 0 0; padding: var(--space-4) var(--space-5); }
   .app-alert a { font-weight: 700; }
-  .app-sent { display: grid; justify-items: start; gap: 18px; padding: clamp(8px, 3vw, 24px) 0; }
-  .app-sent-mark { display: grid; place-items: center; width: 64px; height: 64px; border: 1px solid var(--signal); border-radius: 0; background: #000000; color: var(--text); }
-  .app-sent h2 { margin: 0; font: var(--title-weight) clamp(28px, 3.4vw, 40px)/1.1 var(--font-title); letter-spacing: var(--title-tracking); }
-  .app-sent p { margin: 0; color: var(--secondary); font-size: 18px; }
-  .app-sent .app-link { margin-top: 10px; background: none; border-width: 0 0 1px; color: var(--text); cursor: pointer; padding: 0 0 4px; }
+  .app-sent { display: grid; justify-items: start; gap: var(--space-5); padding: clamp(var(--space-2), 3vw, var(--space-6)) 0; }
+  .app-sent-mark { display: grid; place-items: center; width: 64px; height: 64px; border: 1px solid var(--signal); border-radius: 0; background: var(--mark-bg); color: var(--text); }
+  .app-sent h2 { margin: 0; font: var(--title-weight) var(--size-h2)/1.1 var(--font-title); letter-spacing: var(--tracking-title); }
+  .app-sent p { margin: 0; color: var(--secondary); font-size: var(--size-lead); }
+  .app-sent .app-link { margin-top: var(--space-3); background: none; border-width: 0 0 1px; color: var(--text); cursor: pointer; padding: 0 0 var(--space-1); }
 
   /* ── Other ways to reach the trainer ───────────────────────────────────────────── */
 
-  .app-ways h2 { margin: 0 0 18px; font: 800 13px/1 var(--font-title); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+  .app-ways h2 { margin: 0 0 var(--space-4); font: 800 var(--size-label)/1 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--dim); }
   .app-ways ul { margin: 0; padding: 0; list-style: none; }
-  .app-ways li { padding: 18px 0; border-top: 1px solid var(--line); }
+  .app-ways li { padding: var(--space-5) 0; border-top: 1px solid var(--line); }
   .app-ways li:last-child { border-bottom: 1px solid var(--line); }
-  .app-ways span { display: block; margin-bottom: 6px; color: var(--dim); font-size: 15px; }
-  .app-ways a { font: 700 clamp(17px, 1.6vw, 20px)/1.3 var(--font-title); letter-spacing: -0.02em; overflow-wrap: anywhere; transition: color .3s; }
+  .app-ways span { display: block; margin-bottom: var(--space-2); color: var(--dim); font-size: var(--size-ui); }
+  .app-ways a { font: 700 var(--size-link-large)/1.3 var(--font-title); letter-spacing: var(--tracking-card); overflow-wrap: anywhere; transition: color var(--duration-fast); }
   .app-ways a:hover { color: var(--signal-text); }
 </style>
 </head>
