@@ -210,7 +210,8 @@
       <a class="app-button" href="${PAGES.contact}">Me contacter</a>
     </aside>`;
 
-  // The other modules of the same domain, when it has some. The large word behind the heading is
+  // The other modules of the same domain, when it has some, then the card of a module built for the
+  // request, as at the end of the domains of the home page. The large word behind the heading is
   // still to choose (?ghost=…, a tab of home.html).
   const GHOSTS = { combiner: "Combiner", completer: "Completer", explorer: "Explorer", composer: "Composer" };
   const others = domain.modules.filter(other => other !== module);
@@ -218,7 +219,7 @@
     <section class="app-section" aria-labelledby="related-title" style="padding-top:0">
       <div class="app-wrap">
         ${heading("Dans le même domaine", GHOSTS[query.get("ghost")] || GHOSTS.combiner, "related-title")}
-        <ul class="app-cards is-domains">${others.map(other => moduleCard(domain, other)).join("")}</ul>
+        <ul class="app-cards is-domains">${others.map(other => moduleCard(domain, other)).join("")}${customCard()}</ul>
       </div>
     </section>` : "";
 
