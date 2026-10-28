@@ -10,8 +10,8 @@
   desktop width by home.html (?page=module); ?module=<slug> opens another module (the slugs come
   from slugOf in shared/site.js). The parts shared by every page are in shared/.
   Layout, in the style of the home page: a hero with the grid and its fluid, and the text on the
-  left; the key facts under a rule; the prerequisites, the objectives and the program, numbered as the pedagogy of the home
-  page, beside a card that follows the scroll on a computer; the other modules of the domain.
+  left; the key facts under a rule; the prerequisites, the objectives and the program, beside a
+  card that follows the scroll on a computer; the other modules of the domain.
   Sample content: JavaScript (after its page on the former site) and Claude Code have a program;
   the other modules show theirs as to come.
 -->
@@ -74,14 +74,12 @@
   .app-objectives li { display: flex; align-items: flex-start; gap: 16px; font-size: 18px; }
   .app-objectives svg { flex: none; margin-top: 2px; padding: 4px; border: 1px solid var(--line-strong); box-sizing: content-box; }
 
-  /* The parts of the program, numbered as the pedagogy of the home page; their rule draws itself
-     as the page scrolls. */
+  /* The parts of the program, without numbers: they are not an order, the practice comes when it
+     is needed. Their rule draws itself as the page scrolls. */
   .app-program { margin: 0; padding: 0; list-style: none; }
-  .app-program li { position: relative; display: grid; grid-template-columns: 64px 1fr; gap: 4px 20px; padding: 26px 0; }
-  @media (min-width: 640px) { .app-program li { grid-template-columns: 96px 1fr; } }
+  .app-program li { position: relative; display: grid; gap: 6px; padding: 26px 0; }
   .app-program li::before { content: ""; position: absolute; inset: 0 0 auto; height: 1px; background: var(--line); }
   .app-program li::after { content: ""; position: absolute; inset: 0 0 auto; height: 1px; background: var(--text); transform: scaleX(var(--progress, 1)); transform-origin: left; }
-  .app-program-number { grid-row: span 2; font: 200 clamp(40px, 4.4vw, 56px)/0.9 var(--font-title); letter-spacing: -0.05em; }
   .app-program h3 { margin: 0; font: 700 21px/1.25 var(--font-title); letter-spacing: -0.025em; }
   .app-program p { margin: 0; color: var(--secondary); font-size: 16.5px; }
   .app-program-end { margin: 8px 0 0; padding-top: 22px; border-top: 1px solid var(--line); color: var(--dim); font-size: 16px; }
@@ -193,9 +191,9 @@
     </section>
     <section id="programme" aria-labelledby="program-title">
       <h2 class="app-reveal" id="program-title">Programme</h2>
-      <ol class="app-program">${program.parts.map(([part, text], index) => `
-        <li class="app-reveal"><span class="app-program-number" aria-hidden="true">0${index + 1}</span><h3>${part}</h3><p>${text}</p></li>`).join("")}
-      </ol>
+      <ul class="app-program">${program.parts.map(([part, text]) => `
+        <li class="app-reveal"><h3>${part}</h3><p>${text}</p></li>`).join("")}
+      </ul>
       <p class="app-program-end app-reveal">Des explications courtes, puis de la pratique${NB}: les exercices et le projet sont adaptés au niveau du groupe.</p>
     </section>` : `
     <section id="programme" class="app-reveal" aria-labelledby="program-title">
