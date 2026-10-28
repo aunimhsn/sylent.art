@@ -8,7 +8,7 @@ scene: checks
 formerId: 8
 audience: "Étudiants, testeurs, développeurs, chefs de projet technique"
 level: "Intermédiaire"
-prerequisites: "Connaître les bases du JavaScript."
+prerequisites: "Les bases de JavaScript."
 objectives:
   - "Installer Cypress dans un projet existant"
   - "Cibler les éléments d’une page et simuler les actions d’un utilisateur"

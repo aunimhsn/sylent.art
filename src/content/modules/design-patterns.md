@@ -23,7 +23,7 @@ program:
   - title: "L’architecture MVC"
     text: "Séparer les données, l’affichage et la logique d’une application."
   - title: "Travaux pratiques"
-    text: "En Python ou en PHP, un exercice court par pattern, parmi d’autres exercices."
+    text: "En Python ou en PHP, un exercice court par pattern."
 ---
 
 Les mêmes problèmes de conception reviennent d’un projet à l’autre, et des solutions éprouvées existent pour chacun : les design patterns. Les connaître, c’est gagner du temps, lire plus facilement le code des frameworks et partager un vocabulaire commun avec son équipe. Ce module présente les patterns les plus utiles au quotidien, en Python ou en PHP, sans en faire une fin en soi.

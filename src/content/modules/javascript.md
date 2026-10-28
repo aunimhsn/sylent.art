@@ -8,7 +8,7 @@ scene: event
 formerId: 3
 audience: "Étudiants, webmasters, développeurs, chefs de projet technique"
 level: "Débutant"
-prerequisites: "Connaître les bases du HTML et du CSS. Aucune connaissance en programmation."
+prerequisites: "Les bases du HTML et du CSS. Aucune connaissance en programmation."
 objectives:
   - "Écrire un programme lisible : variables, conditions, boucles et fonctions"
   - "Manipuler les tableaux et les objets, et les transformer avec map, filter et reduce"

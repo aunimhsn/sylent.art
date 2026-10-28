@@ -2,7 +2,7 @@
 title: "PostgreSQL"
 domain: bases-de-donnees
 order: 3
-days: 2
+days: 3
 summary: "Apprendre SQL avec une base de données robuste et complète."
 scene: join
 audience: "Étudiants, administrateurs de bases de données, développeurs, chefs de projet technique"

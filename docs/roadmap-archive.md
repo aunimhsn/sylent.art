@@ -7,8 +7,8 @@ The detail of the steps of [roadmap.md](../roadmap.md) once their pull request i
 Written on 2026-10-28 with the owner, module by module, then aligned on the course material of the private `sylent-courses` repository (chapters and exercise names only):
 
 - The presentation, audience, level, prerequisites, objectives and program of the 14 modules still without content; the first drafts of the former courses reviewed against their lessons (Algorithmique, Merise, MySQL, JavaScript, Python, POO, SOLID, Git et GitHub, Scrum).
-- The modules stay independent: MySQL and PostgreSQL both start from the basics, since a client asks for one or the other. MySQL lasts 3 days, as on the former site; Vue and Alpine keep 2 days and 1 day.
-- `audience`, `level`, `prerequisites`, `objectives` and `program` required in `src/content.config.ts`; `toSpecify` and `programToCome` dropped from `src/content/courses.json`.
+- The modules stay independent: MySQL and PostgreSQL both start from the basics, since a client asks for one or the other. Both last 3 days, as MySQL on the former site; Vue and Alpine keep 2 days and 1 day.
+- `audience`, `level`, `prerequisites`, `objectives` and `program` required, and never empty, in `src/content.config.ts`; `toSpecify` and `programToCome` dropped from `src/content/courses.json`.
 
 ## 8a. Offer pages (#10)
 

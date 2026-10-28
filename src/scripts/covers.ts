@@ -35,7 +35,7 @@ const motion = document.documentElement.dataset.motion === "on";
 // ── The scenes of the domains and of the cycle of a lesson ────────────────────────────
 const SCENES: Record<SceneName, () => Scene> = {
   ...MODULE_SCENES,
-  // Initiation: a little robot finds its way on a grid, step by step, as in Robomind.
+  // Initiation: a little robot finds its way on a grid, step by step, as in RoboMind.
   steps() {
     const scene = new THREE.Scene();
     scene.add(new THREE.GridHelper(6, 6, gray(0.31), gray(0.11)));

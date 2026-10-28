@@ -174,5 +174,4 @@ GitHub Pages has no server-side redirects: a redirect is a static page with a ca
 
 ## To provide during the build
 
-- The final grouping and texts of the domains: levels, prerequisites, objectives, programs, durations (step 8).
 - The partner logos, in good quality, including the new IGENSIA Tech logo (step 7).

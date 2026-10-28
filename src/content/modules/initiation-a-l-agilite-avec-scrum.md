@@ -25,7 +25,7 @@ program:
   - title: "Les événements"
     text: "Le sprint, sa planification, la mêlée quotidienne, la revue et la rétrospective."
   - title: "Suivre l’avancement"
-    text: "La vélocité, le burn down chart, et un tableau de suivi sur Trello ou GitHub Projects."
+    text: "La vélocité, le burndown chart, et un tableau de suivi sur Trello ou GitHub Projects."
   - title: "Kanban"
     text: "Une autre façon d’organiser le flux du travail, et ce qui fait échouer l’agilité."
   - title: "Travaux pratiques"

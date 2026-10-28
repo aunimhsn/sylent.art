@@ -8,7 +8,7 @@ scene: mvc
 formerId: 11
 audience: "Étudiants, développeurs, chefs de projet technique"
 level: "Intermédiaire"
-prerequisites: "Connaître les bases du PHP et du SQL. La programmation orientée objet est un plus."
+prerequisites: "Les bases de PHP et de SQL. La programmation orientée objet est un plus."
 objectives:
   - "Comprendre l’architecture MVC d’une application"
   - "Créer les routes, les contrôleurs et les vues"

@@ -8,7 +8,7 @@ scene: server
 formerId: 4
 audience: "Étudiants, webmasters, développeurs, chefs de projet technique"
 level: "Débutant"
-prerequisites: "Connaître les bases du HTML. Une première expérience de la programmation est un plus."
+prerequisites: "Les bases du HTML. Une première expérience de la programmation est un plus."
 objectives:
   - "Écrire un programme lisible : variables, conditions, boucles et fonctions"
   - "Traiter les données d’un formulaire"

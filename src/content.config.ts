@@ -6,6 +6,9 @@ import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 import { SCENE_NAMES } from "./lib/scenes";
 
+// A text shown on a page: an empty one would leave an empty fact or bullet.
+const text = z.string().trim().min(1);
+
 // The domains of the offers (specs.md, Training offers), one file per domain named after its
 // slug. They group the modules on the home page and the offer list; no domain pages yet.
 const domains = defineCollection({
@@ -45,12 +48,12 @@ const modules = defineCollection({
     /** The id of the course of the former site, whose URL (/courses/<id>) redirects here. */
     formerId: z.number().int().positive().optional(),
     /** Who the module is for, e.g. « Étudiants, développeurs, chefs de projet technique ». */
-    audience: z.string(),
-    level: z.string(),
-    prerequisites: z.string(),
-    objectives: z.array(z.string()).min(1),
+    audience: text,
+    level: text,
+    prerequisites: text,
+    objectives: z.array(text).min(1),
     /** The parts of the program, without numbers: they are not an order. */
-    program: z.array(z.object({ title: z.string(), text: z.string() })).min(1),
+    program: z.array(z.object({ title: text, text })).min(1),
   }),
 });
 
