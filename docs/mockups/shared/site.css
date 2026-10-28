@@ -182,6 +182,8 @@ img, svg, canvas { display: block; }
 }
 .app-card-more::after { content: ""; position: absolute; inset: 0; }
 .app-card:hover .app-card-more { padding-block: 19px; }
+/* The custom card after the modules: a card without glass, its scene alone on the background. */
+.app-card.is-plain, .app-card.is-plain:hover { background: none; }
 /* The custom card after the domains: a band across its own row, without glass. Its text sits in a
    dashed frame, open on the side of the white button, that turns white under the pointer; the
    arrow of the button moves forward instead of the button growing. From two columns the button is
