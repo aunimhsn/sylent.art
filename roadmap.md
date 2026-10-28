@@ -16,8 +16,8 @@ Read only by the steps that need them:
 - [x] **0. Project setup** (#1): conventions, process, folders, Claude Code setup, first draft of `specs.md`.
 - [x] **1. Specifications** (#2): audiences, value proposition, offers by domain, form, URLs, legal information; Formspree and GoatCounter chosen.
 - [x] **2. Technical choices** (#3): Astro, native CSS with tokens, Prettier, ESLint, Stylelint, linkinator.
-- [ ] **3. Wireframes**: one Excalidraw wireframe per page type (home, course list, course, article, about, contact), approved by the owner. Done on branch `docs/wireframes`, not merged yet: set 1 kept (`docs/wireframes/1/`) and every page approved on 2026-10-28; sets 2 and 3 removed.
-- [ ] **4. Mock-up**: 3 or 4 styles compared on the approved wireframes, then iterated until the owner approves one. In progress on branch `docs/mockups` (built on `docs/wireframes`): Night style chosen; home, course list, module, about, contact, legal notice, privacy policy and not-found pages done (`docs/mockups/home.html`, served by `python3 docs/mockups/serve.py 8781`). URLs of the modules and of the legal pages settled in `specs.md`. Next: the code review; the articles wait until after the launch.
+- [x] **3. Wireframes** (#4): one Excalidraw wireframe per page type, set 1 kept and approved.
+- [x] **4. Mock-up** (#5): Night style, every page of the first release in `docs/mockups/` (`python3 docs/mockups/serve.py 8781`), the reference of the build; decisions in `docs/branding.md`; wireframes removed.
 - [ ] **5. Design system**: complete the tokens in `docs/branding.md` (started during step 4) once the mock-up is approved, entry in `design-journal.md`.
 - [ ] **6. Project and deployment**: project skeleton, checks, CI (`ci.yml`) and deployment to GitHub Pages (`deploy.yml`), `CNAME`.
 - [ ] **7. Layout and home page**: shared layout (header, navigation, footer, calls to action) and home page.

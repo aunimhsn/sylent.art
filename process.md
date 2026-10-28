@@ -75,7 +75,7 @@ The `html-mockups` skill carries out this phase, from a starting page with the s
 3. The owner picks a style, or mixes two; iterate on it alone, one change at a time (e.g. the main color, then the logo, then the font).
    - **Each open decision gets its own group of tabs** on the page, so that the owner compares on screen; once decided, the tab is removed and the choice is kept.
    - **Pixel alignments are tuned by eye on the owner's real screen**, with a tab of offsets: the display scale differs from the headless screenshots, which only give the direction.
-   - From then on, **the mock-up is the reference** of the interface; the wireframe only fixed the first layout.
+   - From then on, **the mock-up is the reference** of the interface; the wireframe only fixed the first layout, and is removed with the pull request of the mock-up (the Git history keeps it).
 4. Use web fonts whose license allows self-hosting (e.g. SIL Open Font License). Preload the font files, so that the page, and its screenshots, only finish loading once the fonts are there.
 5. Serve the repository root so that the page reaches the images of the repository, even in a sandboxed browser (Flatpak, Snap) that only receives the HTML file:
 
