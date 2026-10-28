@@ -355,41 +355,48 @@ if (coverRenderer) {
     // names its runner, which the name of the phase follows. The cycle starts mid-practice, so
     // that a still scene shows the practice.
 
-    // Spiral: the cycle climbs a step at each turn. The turns below are done (white), the turn of
-    // the runner lights up in the signal color behind it, the turns above are still to come.
+    // Spiral: the cycle climbs a step at each turn, and the spiral stays in place. The runner goes
+    // up three turns, one session each: behind it the turns done in white and the turn under way
+    // in the signal color, above it the turns to come, faint. At the top, everything fades out
+    // and the climb starts again from the bottom.
     spiral() {
       const scene = new THREE.Scene();
       const group = new THREE.Group();
       scene.add(group);
-      const radius = 1.35, pitch = 0.62, steps = 160;
-      const at = u => v(Math.cos(Math.PI / 2 - u * Math.PI * 2) * radius, u * pitch, -Math.sin(Math.PI / 2 - u * Math.PI * 2) * radius);
-      const turn = k => Array.from({ length: steps + 1 }, (_, i) => at(k + i / steps));
-      // Five turns around the one of the runner; the group slides down one step per turn, so that
-      // the loop has no seam.
-      [-2, -1, 1, 2].forEach(k => group.add(polyline(turn(k), k < 0 ? 0.75 : 0.18)));
-      group.add(polyline(turn(0), 0.18));
-      const lit = accent(polyline(turn(0)));
-      group.add(lit);
-      // A small mark where each phase starts, on every turn.
-      for (let k = -2; k <= 2; k++) [0, 0.2, 0.7].forEach(start => { const mark = dot(0.035, k < 0 ? 0.8 : 0.35); mark.position.copy(at(k + start)); group.add(mark); });
+      const radius = 1.35, pitch = 0.62, turns = 3, steps = 160;
+      const at = u => v(Math.cos(Math.PI / 2 - u * Math.PI * 2) * radius, (u - turns / 2) * pitch, -Math.sin(Math.PI / 2 - u * Math.PI * 2) * radius);
+      const path = Array.from({ length: turns * steps + 1 }, (_, i) => at(i / steps));
+      const faint = polyline(path, 0.18), done = polyline(path, 0.75), lit = accent(polyline(path));
+      group.add(faint, done, lit);
+      // A small mark where each phase starts, on every turn; it brightens once passed.
+      const marks = [];
+      for (let k = 0; k < turns; k++) [0, 0.2, 0.7].forEach(start => { const mark = dot(0.035, 0.35); mark.position.copy(at(k + start)); group.add(mark); marks.push([mark, k + start]); });
       const runner = accent(dot(0.06));
       group.add(runner);
       const wake = trail(group, 8, 0.04, 3);
+      const fading = [faint, done, lit, runner].map(object => [object.material, object.material.opacity]);
       let lastLap;
-      return { scene, camera: view(5.4, 3.0, 7.0, [0, 0, 0]), anchor: runner, data: {}, update(t) {
-        const lap = Math.floor(t * 0.1 + 0.32);
-        const u = (t * 0.1 + 0.32) % 1;
-        // Each turn is a session. A new one starts: its tag shows once (two tags take turns, so
-        // that it plays again).
-        if (lastLap !== undefined && lap !== lastLap) this.data.lap = String(lap % 2);
-        lastLap = lap;
+      return { scene, camera: view(4.4, 2.5, 5.7, [0, 0, 0]), anchor: runner, data: {}, update(t) {
+        // In turns: three turns of climb, then a short fade; a still scene stands mid-practice
+        // on the middle turn.
+        const time = (t * 0.1 + 1.32) % (turns + 0.15);
+        const climb = Math.min(time, turns - 1e-6);
+        const lap = Math.floor(climb), u = climb - lap;
         this.phase = u < 0.2 ? 0 : u < 0.7 ? 1 : 2;
         // The share of the turn done in this phase, in percent: up to 20, 50 or 30.
         this.count = (u - [0, 0.2, 0.7][this.phase]) * 100;
-        lit.geometry.setDrawRange(0, Math.max(2, Math.round(u * steps) + 1));
-        runner.position.copy(at(u));
-        wake(runner.position);
-        group.position.y = -u * pitch;
+        // Each turn is a session. A new one starts: its tag shows once (two tags take turns, so
+        // that it plays again).
+        if (lastLap !== undefined && lap > lastLap) this.data.lap = String(lap % 2);
+        lastLap = lap;
+        done.geometry.setDrawRange(0, lap * steps + 1);
+        lit.geometry.setDrawRange(lap * steps, Math.max(2, Math.round(u * steps) + 1));
+        runner.position.copy(at(climb));
+        wake(runner.position, time < turns);
+        // At the top, everything fades out before the climb starts again.
+        const fade = 1 - Math.min(1, Math.max(0, (time - turns) / 0.12));
+        fading.forEach(([material, opacity]) => { material.opacity = opacity * fade; });
+        marks.forEach(([mark, place]) => { mark.material.opacity = (climb >= place ? 0.8 : 0.35) * fade; });
         group.rotation.y = Math.sin(t * 0.25) * 0.15;
       } };
     },
