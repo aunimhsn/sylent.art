@@ -18,7 +18,7 @@
   --panel: #171717;
   --text: #ffffff;
   --secondary: #a3a3a3;
-  --dim: #858585; /* 5:1 on the backgrounds, for small text */
+  --dim: #858585; /* 5.4:1 on the background, 4.76:1 at least on glass, for small text */
   --line: #262626;
   --line-strong: #404040;
   --accent: #ffffff;
@@ -135,7 +135,7 @@ img, svg, canvas { display: block; }
 
 /* ── Cards of the domains, with their 3D cover (shared/covers.js) ─────────────────── */
 
-.app-cards { position: relative; display: grid; gap: 16px; margin: 0; padding: 0; list-style: none; }
+.app-cards { --cards-gap: 16px; position: relative; display: grid; gap: var(--cards-gap); margin: 0; padding: 0; list-style: none; }
 @media (min-width: 640px) { .app-cards.is-domains { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1100px) { .app-cards.is-domains { grid-template-columns: repeat(4, 1fr); } }
 .app-card {
@@ -201,7 +201,7 @@ img, svg, canvas { display: block; }
 @media (min-width: 640px) {
   .app-card.is-band { display: grid; grid-template-columns: subgrid; column-gap: normal; }
   /* The frame runs over the gap of the grid, up to the button. */
-  .app-card.is-band .app-card-text { grid-column: 1 / -2; margin-right: -16px; border-bottom-width: 1px; border-right-width: 0; }
+  .app-card.is-band .app-card-text { grid-column: 1 / -2; margin-right: calc(-1 * var(--cards-gap)); border-bottom-width: 1px; border-right-width: 0; }
   .app-card.is-band .app-card-more { grid-column: -2 / -1; display: flex; align-items: center; justify-content: center; }
   .app-card.is-band .app-card-more svg { display: block; flex: none; }
 }
@@ -251,6 +251,10 @@ html[data-motion="off"] .app-partner-list .is-copy { display: none; }
 .app-figures strong { display: block; font: 800 clamp(28px, 4vw, 44px)/1 var(--font-title); letter-spacing: -0.05em; }
 .app-figures div > span { display: block; margin-top: 8px; color: var(--secondary); font-size: 14px; line-height: 1.35; }
 
+/* A note that stands out: a left border in the signal color on a light tint of it (the note of a
+   new module, the failure of the contact form). */
+.app-note { border-left: 3px solid var(--signal); background: color-mix(in srgb, var(--signal) 8%, transparent); color: var(--text); }
+
 /* ── Text pages: legal notice and privacy policy (docPage in site.js) ─────────────── */
 
 /* Room at the bottom for the wordmark of the footer, which straddles its top edge. */
@@ -285,7 +289,7 @@ html[data-motion="off"] .app-partner-list .is-copy { display: none; }
 .app-doc-toc ol { margin: 0; padding: 0; list-style: none; border-left: 1px solid var(--line); }
 .app-doc-toc a { display: block; margin-left: -1px; padding: 9px 0 9px 18px; border-left: 1px solid transparent; color: var(--dim); font: 600 15px/1.35 var(--font-title); transition: color .3s, border-color .3s; }
 .app-doc-toc a:hover { color: var(--text); }
-.app-doc-toc a[aria-current] { border-left-color: var(--signal); color: var(--text); }
+.app-doc-toc a[aria-current="location"] { border-left-color: var(--signal); color: var(--text); }
 .app-doc-section { padding-top: 32px; border-top: 1px solid var(--line); scroll-margin-top: calc(var(--header-height) + 24px); }
 .app-doc-section + .app-doc-section { margin-top: clamp(48px, 5vw, 64px); }
 .app-doc-section h2 { margin: 0 0 22px; font: var(--title-weight) clamp(24px, 2.6vw, 32px)/1.15 var(--font-title); letter-spacing: var(--title-tracking); }
@@ -296,7 +300,7 @@ html[data-motion="off"] .app-partner-list .is-copy { display: none; }
 .app-doc-section strong { color: var(--text); font-weight: inherit; }
 /* Links in white among the gray text, orange under the pointer as on the contact page. */
 .app-doc-section a { color: var(--text); transition: color .3s; }
-.app-doc-section a:hover { color: var(--signal); }
+.app-doc-section a:hover { color: var(--signal-text); }
 /* Facts as a label over its value, under thin rules. */
 .app-doc-facts { margin: 0 0 14px; }
 .app-doc-facts div { display: grid; gap: 4px; padding: 14px 0; border-bottom: 1px solid var(--line); }
@@ -308,8 +312,6 @@ html[data-motion="off"] .app-partner-list .is-copy { display: none; }
 .app-doc-section .app-doc-cards li { display: grid; align-content: start; gap: 8px; margin: 0; padding: 22px 22px 24px; }
 .app-doc-cards h3 { margin: 0; font: 700 18px/1.25 var(--font-title); letter-spacing: -0.02em; }
 .app-doc-section .app-doc-cards p { margin: 0; font-size: 15.5px; line-height: 1.55; }
-/* A detail still to provide (SIRET, NDA). */
-.app-pending { color: var(--dim); font-style: italic; }
 
 /* ── Header ─────────────────────────────────────────────────────────────────────── */
 
@@ -376,7 +378,6 @@ html[data-motion="off"] .app-partner-list .is-copy { display: none; }
   background-size: 40px 40px;
   /* No border: the first line of the grid is the top edge, as thin as the other lines. */
 }
-/* The wordmark straddles the edge between the call to action and the footer. */
 /* The orange fluid that runs along the grid of the footer under the pointer (drawn by site.js),
    between the grid and the content. A page top places its own layer (.app-grid-fluid) over its
    grid. */
@@ -384,6 +385,7 @@ html[data-motion="off"] .app-partner-list .is-copy { display: none; }
 .app-fluid canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 .app-footer-fluid { position: absolute; inset: 0; }
 .app-footer > .app-wrap { position: relative; }
+/* The wordmark straddles the edge between the call to action and the footer. */
 .app-footer-logo { position: absolute; top: 0; left: max(var(--gutter), calc((100% - var(--width)) / 2)); z-index: 2; width: var(--wordmark-width); translate: 0 -50%; color: var(--text); }
 .app-footer-logo .app-wordmark { display: block; width: 100%; height: auto; }
 .app-footer-grid { display: grid; gap: 32px; }
@@ -393,7 +395,7 @@ html[data-motion="off"] .app-partner-list .is-copy { display: none; }
 .app-footer ul { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
 .app-footer li, .app-footer p { margin: 0; color: var(--secondary); font-size: 15px; }
 .app-footer a { transition: color .3s; }
-.app-footer a:hover { color: var(--signal); }
+.app-footer a:hover { color: var(--signal-text); }
 .app-footer .app-motto { margin-bottom: 14px; color: var(--dim); }
 .app-footer .app-footer-bottom { margin-top: 56px; color: var(--dim); font-size: 13px; }
 

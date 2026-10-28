@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sylent · Formateur en informatique</title>
-<meta name="description" content="Formateur en informatique depuis 2021 : développement, bases de données, tests, Python et IA, pour les écoles, les organismes de formation et les entreprises.">
+<meta name="description" content="Formateur en informatique depuis 2021 : développement, bases de données, tests, Python et IA, pour les écoles, les organismes de formation et les entreprises.">
 <!--
   The home page of sylent.art (mock-up, step 4 of roadmap.md), shown at phone and desktop width
   by home.html; open it alone to see it at the width of the window. The parts shared by every
@@ -22,8 +22,7 @@
   Fonts: Manrope (titles, interface) and Anaheim medium (text; it has no italic, so the browser
   slants it), from Google Fonts here, self-hosted by
   the site. Three.js and GSAP come from jsDelivr here; the site will bundle them.
-  The texts are sample content close to specs.md; the photo is still to come and the logo of
-  IGENSIA Tech is missing.
+  The texts are sample content close to specs.md; the logo of IGENSIA Tech is missing.
 -->
 <script src="shared/head.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -121,25 +120,32 @@
     .app-pedagogy .app-step-number { font-size: 52px; }
   }
   /* A square scene without the frame of a cover. Under the runner, the name of the phase it goes
-     through, in the style of the « Copiée » of the email address: it fades in while rising a little when the phase starts, follows the runner, and
-     fades out as the phase ends. Each phase lasts its share of the 10 s of a turn. */
+     through, in the style of the « Copiée » of the email address, and beside it the share of the
+     turn done in the phase, counting up to 20, 50 or 30 %. The scene drives everything: the
+     phase (data-phase), how far it has gone (--phase-progress, from 0 to 1), from which the name
+     fades in while rising a little and fades out at the end, and the count (--count, shown by a
+     CSS counter). */
   .app-cycle .app-cycle-scene { aspect-ratio: 1; width: min(100%, 560px); margin: 0 auto; border: 0; background: none; }
   /* The spiral fades out toward the bottom and in toward the top: it climbs without end. */
   .app-cycle-scene canvas { mask-image: linear-gradient(transparent 4%, #000 34%, #000 66%, transparent 96%); }
-  .app-cycle-tag { position: absolute; left: var(--anchor-x, 50%); top: var(--anchor-y, 50%); display: none; color: var(--signal-text); font: var(--text-weight) 15px/1 var(--font-text); font-variant-numeric: tabular-nums; white-space: nowrap; pointer-events: none; animation: app-cycle-tag ease both; }
-  /* Beside the name, the share of the turn done in the phase, counting up to 20, 50 or 30 % (a
-     CSS counter shows the number that covers.js gives in --count). */
-  .app-cycle-tag::after { content: "\00a0" counter(cycle-count) "\00a0%"; counter-reset: cycle-count var(--count, 0); }
-  .app-cycle-scene[data-phase="0"] .app-cycle-tag:nth-of-type(1) { display: block; animation-duration: 2s; }
-  .app-cycle-scene[data-phase="1"] .app-cycle-tag:nth-of-type(2) { display: block; animation-duration: 5s; }
-  .app-cycle-scene[data-phase="2"] .app-cycle-tag:nth-of-type(3) { display: block; animation-duration: 3s; }
-  @keyframes app-cycle-tag {
-    0% { opacity: 0; transform: translate(-50%, 22px); }
-    15% { opacity: 1; transform: translate(-50%, 16px); }
-    85% { opacity: 1; transform: translate(-50%, 14px); }
-    100% { opacity: 0; transform: translate(-50%, 8px); }
+  .app-cycle-tag {
+    --p: var(--phase-progress, 0.5);
+    position: absolute;
+    left: var(--anchor-x, 50%);
+    top: var(--anchor-y, 50%);
+    display: none;
+    color: var(--signal-text);
+    font: var(--text-weight) 15px/1 var(--font-text);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: clamp(0, min(var(--p), 1 - var(--p)) / 0.15, 1);
+    transform: translate(-50%, calc(22px - var(--p) * 14px));
   }
-  html[data-motion="off"] .app-cycle-tag { animation: none; transform: translate(-50%, 16px); }
+  .app-cycle-tag::after { content: "\00a0" counter(cycle-count) "\00a0%"; counter-reset: cycle-count var(--count, 0); }
+  .app-cycle-scene[data-phase="0"] .app-cycle-tag[data-phase="0"],
+  .app-cycle-scene[data-phase="1"] .app-cycle-tag[data-phase="1"],
+  .app-cycle-scene[data-phase="2"] .app-cycle-tag[data-phase="2"] { display: block; }
   /* Each turn is a session: when one starts, « Séance suivante » above the runner, in the style
      of the phase but in white. */
   .app-cycle-next { position: absolute; left: var(--anchor-x, 50%); top: var(--anchor-y, 50%); display: none; color: var(--text); font: var(--text-weight) 15px/1 var(--font-text); white-space: nowrap; pointer-events: none; }
@@ -156,7 +162,7 @@
 
   /* ── About ──────────────────────────────────────────────────────────────────────── */
 
-  /* No photo for now: the text alone, aligned left. */
+  /* No photo in the first release: the text alone, aligned left. */
   .app-about-grid { max-width: 760px; }
   .app-about-name { margin: 0; font: 800 clamp(30px, 3.6vw, 46px)/1.05 var(--font-title); letter-spacing: var(--title-tracking); }
   .app-about-grid .app-lead { margin-top: 18px; }
@@ -184,7 +190,7 @@
           <h1 class="app-hero-title app-intro" id="hero-title">Je prends vos apprenants par la main, <span class="app-highlight">jusqu’à la maîtrise.</span></h1>
           <p class="app-hero-sub app-intro"><strong>Aunim Hassan</strong>, formateur en informatique depuis 2021, pour les écoles, les organismes de formation et les entreprises.</p>
           <div class="app-hero-actions app-intro">
-            <a class="app-button app-magnetic" href="#contact">Me contacter</a>
+            <a class="app-button app-magnetic" href="${PAGES.contact}">Me contacter</a>
             <a class="app-button is-outline" href="#formations">Voir les formations</a>
           </div>
           <p class="app-motto app-hero-motto app-intro">Une vie, mille leçons</p>
@@ -227,7 +233,7 @@
   const CYCLE = [["Théorie", 0.2], ["Pratique", 0.5], ["Correction", 0.3]];
   const cycleFigure = () => `
     <div class="app-cycle">
-      <div class="app-cover app-cycle-scene" data-scene="spiral" aria-hidden="true"><canvas></canvas>${CYCLE.map(([phase]) => `<span class="app-cycle-tag">${phase}</span>`).join("")}<span class="app-cycle-next" data-lap="0">Séance suivante</span><span class="app-cycle-next" data-lap="1">Séance suivante</span></div>
+      <div class="app-cover app-cycle-scene" data-scene="spiral" aria-hidden="true"><canvas></canvas>${CYCLE.map(([phase], index) => `<span class="app-cycle-tag" data-phase="${index}">${phase}</span>`).join("")}<span class="app-cycle-next" data-lap="0">Séance suivante</span><span class="app-cycle-next" data-lap="1">Séance suivante</span></div>
       <p class="app-hidden">Le cycle d’une séance${NB}: 20${NB}% de théorie, 50${NB}% de pratique, 30${NB}% de correction, puis on recommence.</p>
     </div>`;
 

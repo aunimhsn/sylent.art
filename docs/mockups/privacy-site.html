@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Confidentialité · Sylent</title>
-<meta name="description" content="Comment sylent.art traite vos données : le formulaire de contact, la mesure d’audience sans cookie et vos droits.">
+<meta name="description" content="Comment sylent.art traite vos données : le formulaire de contact, la mesure d’audience sans cookie et vos droits.">
 <!--
   The privacy policy of sylent.art (mock-up, step 4 of roadmap.md), shown at phone and desktop
   width by home.html (?page=privacy). No wireframe: a text page (docPage in shared/site.js), shared
@@ -24,7 +24,6 @@
 
 <script>
   // ── Content ───────────────────────────────────────────────────────────────────────
-  const facts = rows => `<dl class="app-doc-facts">${rows.map(([label, value]) => `<div><dt>${label}</dt><dd>${value}</dd></div>`).join("")}</dl>`;
   const SECTIONS = [
     ["essentiel", "L’essentiel", `
       <ul class="app-doc-cards">
@@ -35,7 +34,7 @@
     ["responsable", "Responsable du traitement", `
       <p>Aunim Hassan, formateur indépendant, joignable à <a href="mailto:aunim.hassan@gmail.com">aunim.hassan@gmail.com</a>.</p>`],
     ["formulaire", "Le formulaire de contact", `
-      ${facts([
+      ${docFacts([
         ["Données", "Votre adresse email et votre message"],
         ["Finalité", "Répondre à votre demande et, le cas échéant, préparer une formation"],
         ["Base légale", "Les mesures précontractuelles prises à votre demande"],

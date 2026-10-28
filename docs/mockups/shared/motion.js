@@ -27,7 +27,12 @@
     gsap.fromTo(band.querySelector(".app-cta-ghost"), { xPercent: 8 }, { xPercent: -8, ease: "none", scrollTrigger: { trigger: band, start: "top bottom", end: "bottom top", scrub: true } });
   });
 
-  // The rules of the pedagogy draw themselves as the section scrolls.
+  // A rule marked data-draw (the parts of a module program) draws itself as it scrolls into view.
+  gsap.utils.toArray("[data-draw]").forEach(part => {
+    gsap.fromTo(part, { "--progress": 0 }, { "--progress": 1, ease: "none", scrollTrigger: { trigger: part, start: "top 92%", end: "top 62%", scrub: true } });
+  });
+
+  // The rules of the pedagogy draw themselves as the section scrolls, one after the other.
   gsap.utils.toArray(".app-step-rule").forEach((rule, index) => {
     gsap.fromTo(rule, { "--progress": 0 }, { "--progress": 1, ease: "none", scrollTrigger: { trigger: rule.closest(".app-steps"), start: `top ${80 - index * 6}%`, end: `top ${40 - index * 6}%`, scrub: true } });
   });

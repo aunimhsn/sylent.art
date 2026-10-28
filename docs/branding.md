@@ -105,13 +105,13 @@ On 2026-10-28 three redder colors were compared, for fear of looking like the br
 - **Back to top**: a 48 px square with a chevron, bottom right, once the first screen is passed; it brings the focus back to the logo.
 - **Contact form**: two fields only (email, message), flat, filled with `#050505`, 2 px corners, no panel. No focus ring: a thick white caret (3 px, drawn by the script, native caret on touch screens, while composing and in forced colors) and the label lighting up show the focus. Errors are only a message under the field, in `--signal-text`; the fields themselves don't change. The scrollbar of the message is a thin white bar, square, shown only while scrolling. A failure is a note with an orange left border and the email address in bold, without a final period. A sent message shows a white check in an orange outlined square on black.
 - **About page**: a hero over the grid, everything on the left, without portrait, small capitals or motto: the name as large as a module title, the role and two paragraphs of background; the three figures of the home page, larger (up to 72 px), which count up; « Pédagogie » over « Accompagner » with the four steps of the home page; « Partenaires » over « Confiance » with the logos, as on the home page; a glass panel « Informations administratives » (status, SIRET, NDA, the sentence on the agrément, a link to the legal notice); the call to action. The figures, the steps and the partners are shared with the home page (`shared/site.js`).
-- **Text pages** (legal notice, privacy policy): a section heading over the grid of the hero (Mentions légales / Informer, Confidentialité / Proteger), a lead and the date of the last update; then sections under thin rules, without numbers, beside a table of contents that follows the scroll on a computer, where the section being read is marked by a short `--signal` line (hidden on a phone). The essentials of the privacy policy as three small glass cards (a title and a sentence), one under the other on a phone, side by side from 760 px. Facts as a label (small capitals, `--dim`) over its value, under rules; a detail still to provide in `--dim` italics; links in white without underline, `--signal` under the pointer.
+- **Text pages** (legal notice, privacy policy): a section heading over the grid of the hero (Mentions légales / Informer, Confidentialité / Proteger), a lead and the date of the last update; then sections under thin rules, without numbers, beside a table of contents that follows the scroll on a computer, where the section being read is marked by a short `--signal` line (hidden on a phone). The essentials of the privacy policy as three small glass cards (a title and a sentence), one under the other on a phone, side by side from 760 px. Facts as a label (small capitals, `--dim`) over its value, under rules; links in white without underline, `--signal-text` under the pointer.
 - **Not-found page**: the grid and its fluid over the window, a heading whose faded word is « 404 », larger than the others (`clamp(150px, 34vw, 420px)`), the title « Oups, perdu dans l’espace » (as on the former site; « Page introuvable » below 640 px, for lack of room) over its lower part, two short sentences, on two lines from 640 px and two buttons, « Retour à l'accueil » (white) and « Voir les formations » (outline).
 - **Contact details**: a click on the email address copies it and shows the word « Copiée » in orange, rising then fading (a screen reader hears « Adresse email copiée »); the phone number is a link only on touch screens; LinkedIn and GitHub open in a new tab, announced « [nouvel onglet] ».
 
 ## Textures
 
-- **Grid**: 1 px lines in `--grid-line`, every 32 px at the top of the pages (the hero of the home page, the top of the contact and offer list pages), every 40 px in the footer. At the top of the pages it fades out with a mask (radial in the hero, downward elsewhere), before the first content block.
+- **Grid**: 1 px lines in `--grid-line`, every 32 px at the top of the pages (the hero of the home page, the top of the offer list, module, about, contact, legal notice, privacy policy and not-found pages), every 40 px in the footer. At the top of the pages it fades out with a mask (radial in the hero, downward elsewhere), before the first content block.
 - **Orange fluid**: under the pointer, an orange fluid runs along the lines of each grid. Each crossing holds some energy: the pointer pours it into the crossings around it, more as it moves faster, the energy spreads to the neighbors and fades. On the page tops the fluid lies under the same mask as the grid, so it fades out with it.
 - No gradients, no colored lights behind the sections, no turning glows.
 
@@ -140,11 +140,13 @@ Every domain and every module has a small Three.js scene across the top of its c
 Where `--signal` appears, and nowhere else:
 
 - the « Nouveau » badge;
-- the hover of the footer links and of the contact links;
+- the hover of the footer links, the contact links and the links of the text pages (`--signal-text`);
 - the word « Copiée » and the errors under a field (`--signal-text`);
-- the left border of the failure note and the outline of the sent check;
+- the left border of a note (the failure of the form, a module of a new domain) and the outline of the sent check;
+- the line that marks the section being read in the table of contents of the text pages;
 - the fluid of the grids;
-- the touches of the covers and the edges of the shell around the hero cube.
+- the touches of the covers and the edges of the shell around the hero cube;
+- the spiral of the cycle of a lesson: its runner and trail, the session under way, and the name of the phase with its count (`--signal-text`).
 
 Never for: the focus, the fields, the errors' fields, the buttons, large surfaces.
 
@@ -152,7 +154,7 @@ Never for: the focus, the fields, the errors' fields, the buttons, large surface
 
 - **Icons**: SVG lines, 1.6 px stroke, round caps, in the text color (menu, close, chevrons, check); never text symbols.
 - **Partner logos**: white SVG traced from the logos of the former site ([docs/mockups/assets/NOTICE.md](mockups/assets/NOTICE.md)); IGENSIA Tech still to be provided.
-- **Photo** of the trainer: to be chosen by the owner (the one of the former site doesn't fit).
+- **Photo** of the trainer: none in the first release (`specs.md`).
 - Images in a light format (WebP) at their displayed size, each with an `alt` text.
 
 ## Accessibility
@@ -161,10 +163,6 @@ Never for: the focus, the fields, the errors' fields, the buttons, large surface
 - Focus: a 2 px white outline, 3 px away (`:focus-visible`), except in the fields, where the caret and the label show it.
 - Every action works with the keyboard (menu, Escape, back to top, form); a skip link « Aller au contenu ».
 - Reduced motion and forced colors are respected (see [Motion](#motion) and the caret above).
-
-## Open points
-
-- The offer page, the about page, the legal page and the 404 page are still to be designed in this style.
 
 ## Set aside
 

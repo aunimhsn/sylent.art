@@ -24,7 +24,8 @@ const icon = (name, size = 22) => `<svg width="${size}" height="${size}" viewBox
 
 // Section heading, after the former site: a title over a large faded word.
 // Its title is in capitals and drops its accents, which the mask of its animation would cut (« DANS
-// LE MEME DOMAINE »); screen readers and search engines keep the real words.
+// LE MEME DOMAINE »): an exception to French typography, accepted by the owner (CLAUDE.md). Screen
+// readers keep the real words (aria-label); search engines index the visible text, without them.
 const unaccented = text => text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 const heading = (title, ghost, id, level = 2) => `
   <div class="app-heading">
@@ -57,8 +58,8 @@ const DOMAINS = [
     ["Robomind", 1, "Programmer un robot virtuel pour découvrir la logique en jouant.", "steps"],
   ] },
   { slug: "developpement-web", title: "Développement web", summary: `Du HTML aux frameworks${NB}: construire des sites et des applications web.`, scene: "web", modules: [
-    ["HTML 5", 1, "Écrire des pages web bien structurées, lisibles par tous.", "markup"],
-    ["CSS 3", 2, "Mettre en forme une page et l’adapter à tous les écrans.", "layout"],
+    ["HTML", 1, "Écrire des pages web bien structurées, lisibles par tous.", "markup"],
+    ["CSS", 2, "Mettre en forme une page et l’adapter à tous les écrans.", "layout"],
     ["JavaScript", 3, "Rendre une page interactive et la faire dialoguer avec un serveur.", "event"],
     ["PHP", 3, "Construire un site dynamique, relié à une base de données.", "server"],
     ["Vue", 2, "Construire une interface réactive à partir de composants.", "tree"],
@@ -175,23 +176,34 @@ const figureList = () => `
 function spinPartners() {
   // The reel of partners on a phone, driven frame by frame so that each logo has its own depth:
   // it comes in at the bottom, and near the top it moves away toward the back (smaller, tilted
-  // back, fading) before it disappears. The CSS animation stays as a fallback.
+  // back, fading) before it disappears. The CSS animation stays as a fallback. The loop runs only
+  // on a phone, with motion, while the reel is on screen.
+  if (reduced) return;
   const reel = document.querySelector(".app-partners-reel");
   const reelList = reel.querySelector(".app-partner-list");
   const reelItems = [...reelList.children];
   const phone = matchMedia("(max-width: 759px)");
-  let reelOffset = 0, reelTime = performance.now(), reelSeen = true;
-  new IntersectionObserver(([entry]) => { reelSeen = entry.isIntersecting; }).observe(reel);
+  let reelOffset = 0, reelTime = 0, reelSeen = false, running = false;
+  const start = () => {
+    if (running || !phone.matches || !reelSeen) return;
+    running = true;
+    reelTime = performance.now();
+    requestAnimationFrame(spinReel);
+  };
+  new IntersectionObserver(([entry]) => { reelSeen = entry.isIntersecting; start(); }).observe(reel);
+  phone.addEventListener("change", start);
   function spinReel(now) {
+    if (!phone.matches || !reelSeen) {
+      running = false;
+      if (!phone.matches) {
+        reelList.style.animation = reelList.style.transform = "";
+        reelItems.forEach(item => { item.style.transform = item.style.opacity = ""; });
+      }
+      return;
+    }
     requestAnimationFrame(spinReel);
     const step = now - reelTime;
     reelTime = now;
-    if (!phone.matches || reduced) {
-      reelList.style.animation = reelList.style.transform = "";
-      reelItems.forEach(item => { item.style.transform = item.style.opacity = ""; });
-      return;
-    }
-    if (!reelSeen) return;
     const row = reelItems[0].offsetHeight;
     const height = reel.clientHeight;
     reelOffset = (reelOffset + step * row / 2800) % (row * reelItems.length / 2);
@@ -205,7 +217,6 @@ function spinPartners() {
       item.style.opacity = String(Math.max(0, 1 - away * 1.1 - coming));
     });
   }
-  requestAnimationFrame(spinReel);
 }
 
 // A text page (legal notice, privacy policy): a heading over the grid, the date of the last update,
@@ -239,14 +250,17 @@ function followDoc() {
   const sections = links.map(link => document.querySelector(link.hash));
   const mark = () => {
     const passed = sections.filter(section => section.getBoundingClientRect().top < innerHeight / 3);
-    const current = passed.length ? passed[passed.length - 1] : sections[0];
-    links.forEach((link, index) => link.toggleAttribute("aria-current", sections[index] === current));
+    const reading = passed.length ? passed[passed.length - 1] : sections[0];
+    links.forEach((link, index) => {
+      if (sections[index] === reading) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
+    });
   };
   addEventListener("scroll", mark, { passive: true });
   mark();
 }
-// A detail still to provide, shown as such.
-const pending = text => `<span class="app-pending">${text}</span>`;
+// Facts as a label over its value, under rules (legal notice, privacy policy).
+const docFacts = rows => `<dl class="app-doc-facts">${rows.map(([label, value]) => `<div><dt>${label}</dt><dd>${value}</dd></div>`).join("")}</dl>`;
 
 const siteFooter = () => `
   <footer class="app-footer">
@@ -410,7 +424,7 @@ function gridFluid(host, CELL, className) {
     }
     if (!running) { running = true; requestAnimationFrame(step); }
   });
-  document.addEventListener("pointerleave", () => { pointer = null; });
+  document.documentElement.addEventListener("pointerleave", () => { pointer = null; });
 
   function line(x1, y1, x2, y2, a, b) {
     if (a + b < 0.02) return;
@@ -459,8 +473,8 @@ function gridFluid(host, CELL, className) {
       }
       context.globalAlpha = 1;
     }
-    // Stop once the fluid is gone, until the pointer moves again.
-    if (total > 0.01 || pointer) requestAnimationFrame(step);
+    // Stop once the fluid is gone: energy only comes with pointermove, which starts the loop again.
+    if (total > 0.01) requestAnimationFrame(step);
     else { running = false; context.clearRect(0, 0, width, height); }
   }
 }

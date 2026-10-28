@@ -90,7 +90,7 @@
       Object.entries(VARIANTS).filter(([, variant]) => !variant.only || variant.only === chosen.page).map(([key, variant]) => `<div class="page-group"><span>${variant.label}</span>${
         Object.entries(variant.options).map(([value, label]) =>
           `<button type="button" data-variant="${key}" data-value="${value}" aria-pressed="${chosen[key] === value}">${label}</button>`).join("")}</div>`).join("") +
-      `<p>${NOTE} Sample content; photo and logo of IGENSIA Tech to come.</p>`;
+      `<p>${NOTE} Sample content; logo of IGENSIA Tech to come.</p>`;
     const stage = document.getElementById("stage");
     stage.className = `page-stage is-${chosen.view}`;
     stage.innerHTML = chosen.view === "mobile" ? phone() : chosen.view === "desktop"

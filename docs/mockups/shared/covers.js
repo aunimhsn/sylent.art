@@ -69,7 +69,9 @@ if (coverRenderer) {
       return point;
     });
     const history = [];
-    return (position, visible = true) => {
+    // A scene that moves its frame under the point (the spiral) shifts the history with it.
+    return (position, visible = true, shift = null) => {
+      if (shift) history.forEach(point => point.sub(shift));
       if (history.length && history[0].distanceTo(position) > 0.5) history.length = 0;
       history.unshift(position.clone());
       if (history.length > count * spacing) history.length = count * spacing;
@@ -375,25 +377,31 @@ if (coverRenderer) {
       const runner = accent(dot(0.06));
       group.add(runner);
       const wake = trail(group, 8, 0.04, 3);
-      let lastLap;
-      return { scene, camera: view(5.4, 3.0, 7.0, [0, 0, 0]), anchor: runner, data: {}, update(t) {
+      const starts = [0, 0.2, 0.7], shares = [0.2, 0.5, 0.3];
+      let lastLap, shownLap;
+      return { scene, camera: view(5.4, 3.0, 7.0, [0, 0, 0]), anchor: runner, update(t) {
         // In turns; a still scene stands mid-practice.
         const time = t * 0.1 + 0.32;
         const lap = Math.floor(time), u = time - lap;
-        this.phase = u < 0.2 ? 0 : u < 0.7 ? 1 : 2;
-        // The share of the turn done in this phase, in percent: up to 20, 50 or 30.
-        this.count = (u - [0, 0.2, 0.7][this.phase]) * 100;
+        const phase = u < 0.2 ? 0 : u < 0.7 ? 1 : 2;
         // Each turn is a session. A new one starts: its tag shows once (two tags take turns, so
-        // that it plays again).
-        if (lastLap !== undefined && lap > lastLap) this.data.lap = String(lap % 2);
+        // that it plays again), and the trail follows the step down of the spiral.
+        const newLap = lastLap !== undefined && lap > lastLap;
+        if (newLap) shownLap = String(lap % 2);
         lastLap = lap;
         done.geometry.setDrawRange(0, below * steps + 1);
         lit.geometry.setDrawRange(below * steps, Math.max(2, Math.round(u * steps) + 1));
         marks.forEach(([mark, place]) => { mark.material.opacity = place <= u ? 0.8 : 0.35; });
         runner.position.copy(at(u));
-        wake(runner.position);
+        wake(runner.position, true, newLap ? v(0, pitch, 0) : null);
         group.position.y = -u * pitch;
         group.rotation.y = Math.sin(t * 0.25) * 0.15;
+        // What the page shows beside the scene: the phase, how far it has gone (0 to 1), and the
+        // share of the turn done in it, in whole percent (up to 20, 50 or 30). Still, the
+        // practice shows its whole share.
+        const progress = motion ? (u - starts[phase]) / shares[phase] : 0.5;
+        const count = motion ? Math.min(shares[phase] * 100, Math.floor((u - starts[phase]) * 100) + 1) : 50;
+        return { phase, progress, count, lap: shownLap };
       } };
     },
     // ── The modules of the offer list ──
@@ -1177,11 +1185,16 @@ if (coverRenderer) {
       room = [Math.max(room[0], width), Math.max(room[1], height)];
       coverRenderer.setSize(room[0], room[1], false);
     }
-    item.update(item.time);
-    // A scene may report what it shows (the phase of the cycle of a lesson), for the text beside it.
-    if (item.phase !== undefined && item.cover.dataset.phase !== String(item.phase)) item.cover.dataset.phase = item.phase;
-    if (item.count !== undefined) item.cover.style.setProperty("--count", String(Math.min(99, Math.floor(item.count + 1))));
-    Object.entries(item.data || {}).forEach(([name, value]) => { if (item.cover.dataset[name] !== value) item.cover.dataset[name] = value; });
+    // A scene may return what it shows (the cycle of a lesson), for the text beside it: its phase
+    // and new session as data attributes, how far the phase has gone and its count as properties.
+    const state = item.update(item.time);
+    if (state) {
+      const { phase, progress, count, lap } = state;
+      if (item.cover.dataset.phase !== String(phase)) item.cover.dataset.phase = phase;
+      if (lap !== undefined && item.cover.dataset.lap !== lap) item.cover.dataset.lap = lap;
+      item.cover.style.setProperty("--phase-progress", progress.toFixed(3));
+      item.cover.style.setProperty("--count", String(count));
+    }
     coverRenderer.setViewport(0, 0, width, height);
     coverRenderer.setScissor(0, 0, width, height);
     coverRenderer.setScissorTest(true);

@@ -51,7 +51,7 @@
   .app-module-title { margin: 16px 0 0; font: var(--title-weight) clamp(44px, 6.8vw, 92px)/0.98 var(--font-title); letter-spacing: var(--title-tracking); text-wrap: balance; }
   .app-module-lead { margin: 28px 0 0; max-width: 62ch; color: var(--secondary); font-size: clamp(17px, 1.5vw, 19px); text-wrap: pretty; }
   .app-module-lead + .app-module-lead { margin-top: 14px; }
-  .app-module-note { margin: 24px 0 0; max-width: 52ch; padding: 12px 18px; border-left: 3px solid var(--signal); background: color-mix(in srgb, var(--signal) 8%, transparent); color: var(--text); font-size: 16px; }
+  .app-module-note { margin: 24px 0 0; max-width: 52ch; padding: 12px 18px; font-size: 16px; }
   .app-module-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
 
   /* ── Key facts: plain columns under a rule ──────────────────────────────────────── */
@@ -162,7 +162,7 @@
           <p class="app-module-domain app-reveal">${domain.title}${domain.isNew ? '<span class="app-new">Nouveau</span>' : ""}</p>
           <h1 class="app-module-title app-reveal" id="module-title">${title}</h1>
           ${(program ? program.description : [summary]).map(paragraph => `<p class="app-module-lead app-reveal">${paragraph}</p>`).join("")}
-          ${domain.isNew ? `<p class="app-module-note app-reveal">Une offre nouvelle, centrée sur la méthode et les bonnes pratiques${NB}: utiliser les outils d’IA pour être plus efficace et plus serein au quotidien.</p>` : ""}
+          ${domain.isNew ? `<p class="app-module-note app-note app-reveal">Une offre nouvelle, centrée sur la méthode et les bonnes pratiques${NB}: utiliser les outils d’IA pour être plus efficace et plus serein au quotidien.</p>` : ""}
           <div class="app-module-actions app-reveal">
             <a class="app-button is-outline" href="#programme">Voir le programme</a>
           </div>
@@ -192,7 +192,7 @@
     <section id="programme" aria-labelledby="program-title">
       <h2 class="app-reveal" id="program-title">Programme</h2>
       <ul class="app-program">${program.parts.map(([part, text]) => `
-        <li class="app-reveal"><h3>${part}</h3><p>${text}</p></li>`).join("")}
+        <li class="app-reveal" data-draw><h3>${part}</h3><p>${text}</p></li>`).join("")}
       </ul>
       <p class="app-program-end app-reveal">Des explications courtes, puis de la pratique${NB}: les exercices et le projet sont adaptés au niveau du groupe.</p>
     </section>` : `
@@ -229,14 +229,6 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
 <script src="shared/motion.js"></script>
-<script>
-  // The rules of the program draw themselves as the page scrolls, as the pedagogy of the home page.
-  if (!reduced && window.gsap) {
-    gsap.utils.toArray(".app-program li").forEach(part => {
-      gsap.fromTo(part, { "--progress": 0 }, { "--progress": 1, ease: "none", scrollTrigger: { trigger: part, start: "top 92%", end: "top 62%", scrub: true } });
-    });
-  }
-</script>
 <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }</script>
 <script type="module" src="shared/covers.js"></script>
 </body>
