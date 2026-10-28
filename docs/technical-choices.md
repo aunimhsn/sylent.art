@@ -27,7 +27,7 @@ The technical choices of the [roadmap](../roadmap.md), with their reasons and th
 - **Images**: the `astro:assets` `<Image>` component converts the images to WebP at the size they are shown and sets their width and height, which avoids layout shifts.
 - **JavaScript**: none by default. The only scripts are the contact form (sent with `fetch` so that the visitor stays on the page; the form still posts to Formspree without JavaScript) and the GoatCounter counter.
 - **`CNAME`**: kept in `public/CNAME`, which Astro copies as is to the root of the published site.
-- **Fonts**: Astro's Fonts API (`fonts` in `astro.config.mjs`, `<Font />` in the layout) downloads Manrope, Anaheim and Bodoni Moda (SIL Open Font License) from Google Fonts at build time and serves them from the site itself, with a fallback font adjusted to their metrics so that the text doesn't move when they load. Only what the site uses is downloaded: the Latin characters, Manrope from 600 to 800, Anaheim 500, and the letters I, V and X of Bodoni Moda (about 1 KB). Manrope and Anaheim are preloaded. They replace the `public/fonts/` folder first planned: no font file to download and update by hand.
+- **Fonts**: Astro's Fonts API (`fonts` in `astro.config.mjs`, `<Font />` in the layout) downloads Manrope, Anaheim and Bodoni Moda (SIL Open Font License) from Google Fonts at build time and serves them from the site itself, with a fallback font adjusted to their metrics so that the text doesn't move when they load. Only what the site uses is downloaded: the Latin characters, Manrope from 600 to 800, Anaheim 500, and the letters I, V and X of Bodoni Moda with its optical size axis, which gives the large numerals their high contrast (under 2 KB). Manrope and Anaheim are preloaded. They replace the `public/fonts/` folder first planned: no font file to download and update by hand.
 - Rejected:
   - **Eleventy**: just as capable for a static site, but the redirects, image conversion and content validation have to be assembled from plugins and configuration by hand.
   - **Hugo**: one fast binary, but its Go template language is harder to read and to edit for the owner.
@@ -37,9 +37,10 @@ The technical choices of the [roadmap](../roadmap.md), with their reasons and th
 ## Deployment
 
 - `.github/workflows/deploy.yml` follows the [Astro guide](https://docs.astro.build/en/guides/deploy/github/): `withastro/action` installs, builds and uploads `dist/`, then `actions/deploy-pages` publishes it. In the repository's **Settings → Pages**, the source is **GitHub Actions**.
-- **Until the launch**, the owner checks the site at https://aunimhsn.github.io/sylent.art/, a project site under the `/sylent.art` base path. The workflow sets `SITE_URL` and `BASE_PATH`, read by `astro.config.mjs`; without them (development server, checks, CI) the site is built for `https://sylent.art` at the root. So every internal link and asset path must go through the base: Astro prefixes the files it builds (styles, fonts, images), and the links written in the templates start with `import.meta.env.BASE_URL`.
-- **At the launch** (step 11), once the DNS of `sylent.art` points to GitHub Pages: remove the two variables from `deploy.yml`, set the custom domain in the Pages settings and enforce HTTPS. A workflow with `actions/deploy-pages` ignores the `CNAME` file for the domain; `public/CNAME` is kept as `CLAUDE.md` asks.
-- `.github/workflows/ci.yml` runs `npm run check` on every pull request, with the Node.js version of `.nvmrc`.
+- **Until the launch**, the owner checks the site at https://aunimhsn.github.io/sylent.art/, a project site under the `/sylent.art` base path. The workflow sets `SITE_URL` and `BASE_PATH`, read by `astro.config.mjs`; without them (development server, checks, CI) the site is built for `https://sylent.art` at the root. So every internal link and asset path must go through the base: Astro prefixes the files it builds (styles, fonts, images), and the links written in the templates start with `import.meta.env.BASE_URL`. `npm run check:base` builds this preview into `dist-base/sylent.art/` and checks its links, so a link without the base fails the checks. Under a base, the layout adds `noindex`, so that search engines don't index the preview beside the former site.
+- **At the launch** (step 11), once the DNS of `sylent.art` points to GitHub Pages: remove the two variables from `deploy.yml` and the `check:base` script, set the custom domain in the Pages settings and enforce HTTPS. A workflow with `actions/deploy-pages` ignores the `CNAME` file for the domain; `public/CNAME` is kept as `CLAUDE.md` asks.
+- `.github/workflows/ci.yml` runs `npm run check` on every pull request, with the Node.js version of `.nvmrc`. A ruleset on `main` requires its `check` job to pass before a pull request is merged; the owner, as administrator, can bypass it in an emergency.
+- Only the `deploy` job may write to GitHub Pages (`pages: write`, `id-token: write`); the build job, which runs the dependencies, only reads the repository. The actions are referenced by major version, as in the guides; pinning them by commit and Dependabot are left for after the launch.
 
 ## Styles
 
@@ -61,7 +62,7 @@ The technical choices of the [roadmap](../roadmap.md), with their reasons and th
 ## Link check
 
 - **linkinator** serves the built site (`dist/`) as a static host would, so `/about` resolves to `about/index.html` as on GitHub Pages, and follows every internal link of every page. External links are skipped in the regular check, so that a slow third-party site doesn't break the CI.
-- **`scripts/check-former-urls.mjs`** checks that every former URL (`/`, `/courses`, `/courses/1` to `/courses/12`, `/articles`, `/articles/1`, `/articles/2`, `/about`, `/contact`, `/policy`) exists in `dist/`, and that each redirect points to a page that exists. The URLs whose page a later step builds are in its `pending` list, with the step: each step removes its own (the check fails if a pending URL is built), and the list is empty at the launch (step 11).
+- **`scripts/check-former-urls.mjs`** checks that every former URL (`/`, `/courses`, `/courses/1` to `/courses/12`, `/articles`, `/articles/1`, `/articles/2`, `/about`, `/contact`, `/policy`) exists in `dist/`, that each redirect points to a page that exists (a redirect whose target it can't read fails), and that the dropped URLs (`/creations`, `/register`, `/login`) are not built. The URLs whose page a later step builds are in its `pending` list, with the step: each step removes its own (the check fails if a pending URL is built), and the list is empty at the launch (step 11).
 - linkinator's options are in `linkinator.config.json`: it follows the internal links, checks the URLs of the CSS (fonts) and the anchors (`#…`), and skips every address that isn't its local server.
 - Rejected: **lychee**, faster, but a Rust binary that the owner would install apart from npm; linkinator runs from `npm ci` locally and in CI alike.
 
@@ -78,7 +79,8 @@ Run `npm ci` first. They are also in the `scripts` of `package.json`.
 | `npm run format:check` | Checks the formatting without changing files (used in CI). |
 | `npm run lint` | `astro check`, ESLint and Stylelint. |
 | `npm run check:links` | Checks the internal links and the former URLs on `dist/` (run after `npm run build`). |
-| `npm run check` | Everything run before a commit and in CI: format check, lint, build, links. |
+| `npm run check:base` | Builds the github.io preview (`/sylent.art` base) into `dist-base/` and checks its links; removed at the launch. |
+| `npm run check` | Everything run before a commit and in CI: format check, lint, build, links, links of the preview. |
 
 ## Exceptions to the naming conventions
 

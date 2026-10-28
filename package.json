@@ -15,7 +15,8 @@
     "format:check": "prettier --check .",
     "lint": "astro check && eslint . && stylelint \"**/*.{css,astro}\"",
     "check:links": "linkinator dist && node scripts/check-former-urls.mjs",
-    "check": "npm run format:check && npm run lint && npm run build && npm run check:links"
+    "check": "npm run format:check && npm run lint && npm run build && npm run check:links && npm run check:base",
+    "check:base": "SITE_URL=https://aunimhsn.github.io BASE_PATH=/sylent.art astro build --outDir dist-base/sylent.art && linkinator sylent.art/ --server-root dist-base"
   },
   "dependencies": {
     "astro": "^7.4.3"

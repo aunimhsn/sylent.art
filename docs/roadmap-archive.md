@@ -10,7 +10,8 @@ Built on 2026-10-28, as chosen in `docs/technical-choices.md` (which records the
 - Fonts through Astro's Fonts API, downloaded from Google Fonts at build time and self-hosted: Manrope 600–800, Anaheim 500, only I, V and X of Bodoni Moda; Manrope and Anaheim preloaded.
 - URLs with a final slash (`/about/`), which GitHub Pages reaches from the former `/about` by a redirect; the redirects of `/articles`, `/articles/1` and `/articles/2` to the home page.
 - Checks: Prettier (without the project documentation), `astro check`, ESLint with the strict accessibility rules (`eslint-plugin-jsx-a11y-x`, the maintained fork), Stylelint, linkinator and `scripts/check-former-urls.mjs`, whose `pending` list holds the former URLs of steps 8 and 10; all in `npm run check`, run by `ci.yml` on every pull request.
-- `deploy.yml` from the Astro guide, building for https://aunimhsn.github.io/sylent.art/ until the launch (`SITE_URL`, `BASE_PATH`).
+- `deploy.yml` from the Astro guide, building for https://aunimhsn.github.io/sylent.art/ until the launch (`SITE_URL`, `BASE_PATH`), with `noindex` and its links checked by `npm run check:base`; GitHub Pages enabled with the « GitHub Actions » source, and a ruleset requiring the CI on `main`.
+- Code review applied: Bodoni Moda with its optical size axis, the preview's links checked, a non-breaking space, a stricter former URL check (unreadable redirects, dropped URLs), Pages permissions on the deploy job only, `noindex` on the preview.
 
 ## 5. Design system (#6)
 

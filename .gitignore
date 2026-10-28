@@ -17,6 +17,7 @@ __pycache__/
 # Dependencies and build output.
 node_modules/
 /dist/
+/dist-base/
 
 # System and editor files.
 .DS_Store

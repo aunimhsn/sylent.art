@@ -1,5 +1,6 @@
 // Checks that every URL of the former site still resolves in the built site (dist/): either a
-// page, or a redirect to a page that exists. Run after `npm run build`.
+// page, or a redirect to a page that exists; and that the dropped ones show the not-found
+// page. Run after `npm run build`.
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -17,6 +18,9 @@ const formerUrls = [
   "/policy",
 ];
 
+// The former URLs that specs.md drops: no page and no redirect.
+const droppedUrls = ["/creations", "/register", "/login"];
+
 // The former URLs whose page or redirect a later step of roadmap.md builds. Remove each one
 // with its step: the list must be empty for the launch (step 11).
 const pending = new Map([
@@ -30,10 +34,16 @@ const pending = new Map([
 /** The file that GitHub Pages serves for a URL path, as written by Astro. */
 const fileOf = (path) => join(dist, path, "index.html");
 
-/** The path a redirect page of Astro leads to, or null for a regular page. */
-const redirectOf = (html) =>
-  html.match(/<meta http-equiv="refresh" content="\d+;\s*url=([^"]+)"/i)?.[1] ??
-  null;
+/**
+ * The path a redirect page leads to, or null for a regular page. Fails on a redirect whose
+ * target can't be read, rather than taking it for a page.
+ */
+const redirectOf = (html) => {
+  if (!/http-equiv=["']?refresh/i.test(html)) return null;
+  const target = html.match(/content=["']?\d+\s*;\s*url=([^"'\s>]+)/i)?.[1];
+  if (!target) throw new Error("a redirect page without a readable target");
+  return target;
+};
 
 const errors = [];
 const waiting = [];
@@ -48,13 +58,23 @@ for (const url of formerUrls) {
   if (pending.has(url)) {
     errors.push(`${url}: built, remove it from the pending list`);
   }
-  const target = redirectOf(readFileSync(file, "utf8"));
+  let target;
+  try {
+    target = redirectOf(readFileSync(file, "utf8"));
+  } catch (error) {
+    errors.push(`${url}: ${error.message}`);
+    continue;
+  }
   if (
     target !== null &&
     !existsSync(fileOf(new URL(target, "https://sylent.art").pathname))
   ) {
     errors.push(`${url}: redirects to ${target}, which doesn't exist`);
   }
+}
+
+for (const url of droppedUrls) {
+  if (existsSync(fileOf(url))) errors.push(`${url}: dropped, but built`);
 }
 
 if (waiting.length > 0) {

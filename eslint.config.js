@@ -6,7 +6,7 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default defineConfig([
-  globalIgnores(["dist/", ".astro/", "docs/mockups/"]),
+  globalIgnores(["dist/", "dist-base/", ".astro/", "docs/mockups/"]),
   js.configs.recommended,
   tseslint.configs.recommended,
   astro.configs.recommended,
