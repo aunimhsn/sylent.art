@@ -286,6 +286,49 @@ if (coverRenderer) {
         board.rotation.set(-0.1, -0.25 + Math.sin(t * 0.4) * 0.12, 0);
       } };
     },
+    // Software design: the plan of a part drawn line by line, then the part takes shape.
+    blueprint() {
+      const scene = new THREE.Scene();
+      const grid = new THREE.GridHelper(6, 12, 0x3a3a3a, 0x222222);
+      grid.position.y = -0.6;
+      scene.add(grid);
+      const group = new THREE.Group();
+      scene.add(group);
+      const shape = new THREE.BoxGeometry(1.8, 1.1, 1.1);
+      // The part, drawn before its lines, so that it hides the lines behind it once it appears.
+      const body = new THREE.Mesh(shape, new THREE.MeshBasicMaterial({ color: FILL, transparent: true, opacity: 0 }));
+      body.renderOrder = -1;
+      group.add(body);
+      const corners = new THREE.EdgesGeometry(shape).attributes.position;
+      const lines = Array.from({ length: corners.count / 2 }, (_, k) => {
+        const a = new THREE.Vector3().fromBufferAttribute(corners, 2 * k), b = new THREE.Vector3().fromBufferAttribute(corners, 2 * k + 1);
+        const line = polyline([v(0, 0), b.clone().sub(a)]);
+        line.position.copy(a);
+        group.add(line);
+        return [line, a, b];
+      });
+      const pen = accent(dot(0.06));
+      group.add(pen);
+      return { scene, camera: view(3.2, 2.4, 4.6, [0, -0.1, 0]), update(t) {
+        const cycle = (t * 0.22) % 1;
+        const drawn = clamp(cycle / 0.6) * lines.length;
+        const shown = ease(clamp((cycle - 0.6) / 0.12));
+        const out = 1 - ease(clamp((cycle - 0.92) / 0.08));
+        lines.forEach(([line], k) => {
+          const f = clamp(drawn - k);
+          line.visible = f > 0;
+          line.scale.setScalar(Math.max(0.001, f));
+          line.material.opacity = out;
+          glow(line, shown * (1 - clamp((cycle - 0.75) / 0.17)));
+        });
+        const k = Math.min(lines.length - 1, Math.floor(drawn));
+        pen.visible = cycle < 0.6;
+        pen.position.copy(lines[k][1]).lerp(lines[k][2], clamp(drawn - k));
+        body.visible = shown > 0;
+        body.material.opacity = 0.95 * shown * out;
+        group.rotation.y = 0.5 + t * 0.15;
+      } };
+    },
     // Custom: modules that come apart and fit back together.
     custom() {
       const scene = new THREE.Scene();
@@ -690,6 +733,61 @@ if (coverRenderer) {
         tokens.forEach((token, k) => token.position.copy(along(paths[k], f)));
         glow(parent.children[0], (f - 0.82) / 0.18);
         group.rotation.set(0.05, Math.sin(t * 0.4) * 0.4, 0);
+      } };
+    },
+    // Principes SOLID: one large class splits into small classes, one responsibility each, which
+    // all depend on the same interface.
+    solid() {
+      const scene = new THREE.Scene();
+      const group = new THREE.Group();
+      scene.add(group);
+      const size = 0.5, gap = 0.85;
+      const pieces = Array.from({ length: 5 }, () => { const piece = block(new THREE.BoxGeometry(size, size, size), 0.9); group.add(piece); return piece; });
+      const contract = outline(new THREE.BoxGeometry(4.0, 0.28, 0.28), 0.6);
+      contract.position.y = 1.0;
+      group.add(contract);
+      const links = pieces.map(() => { const link = polyline([v(0, 0.86), v(0, size / 2)], 0); group.add(link); return link; });
+      const token = accent(dot(0.06));
+      group.add(token);
+      return { scene, camera: view(0, 0.9, 6.0, [0, 0.4, 0]), update(t) {
+        const cycle = (t * 0.3) % 1;
+        const split = ease(clamp(cycle / 0.25)) * (1 - ease(clamp((cycle - 0.88) / 0.12)));
+        token.visible = cycle > 0.3 && cycle < 0.8;
+        token.position.set(-1.8 + 3.6 * clamp((cycle - 0.3) / 0.5), 1.0, 0.15);
+        pieces.forEach((piece, k) => {
+          piece.position.x = (k - 2) * (size + (gap - size) * split);
+          links[k].position.x = piece.position.x;
+          glow(piece, token.visible ? 1 - Math.abs(token.position.x - piece.position.x) / 0.35 : 0);
+        });
+        links.forEach(link => { link.material.opacity = 0.5 * split; });
+        group.rotation.set(0.2, Math.sin(t * 0.4) * 0.45, 0);
+      } };
+    },
+    // Design patterns: the observer, a subject that notifies the objects that listen to it.
+    observer() {
+      const scene = new THREE.Scene();
+      const group = new THREE.Group();
+      scene.add(group);
+      const subject = block(new THREE.BoxGeometry(0.8, 0.8, 0.8));
+      group.add(subject);
+      const places = [v(-1.7, 0.75), v(1.7, 0.75), v(-1.7, -0.75), v(1.7, -0.75)];
+      const listeners = places.map(place => {
+        const listener = block(new THREE.BoxGeometry(0.5, 0.5, 0.5), 0.8);
+        listener.position.copy(place);
+        group.add(listener, polyline([v(0, 0), place], 0.3));
+        return listener;
+      });
+      const pulses = places.map(() => { const pulse = accent(dot(0.06)); group.add(pulse); return pulse; });
+      return { scene, camera: view(0, 0.5, 6.4), update(t) {
+        const cycle = (t * 0.5) % 1;
+        const f = ease(clamp((cycle - 0.1) / 0.5));
+        glow(subject, 1 - cycle / 0.2);
+        pulses.forEach((pulse, k) => {
+          pulse.visible = cycle > 0.1 && cycle < 0.6;
+          pulse.position.copy(places[k]).multiplyScalar(f);
+        });
+        listeners.forEach(listener => glow(listener, cycle < 0.6 ? 0 : 1 - (cycle - 0.6) / 0.4));
+        group.rotation.set(0.15, Math.sin(t * 0.4) * 0.5, 0);
       } };
     },
     // MySQL: a query scans a table row by row and marks the rows it keeps.

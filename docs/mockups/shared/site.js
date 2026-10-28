@@ -71,9 +71,13 @@ const DOMAINS = [
   ] },
   { slug: "bases-de-donnees", title: "Bases de données", summary: "Modéliser, concevoir et interroger des données.", scene: "database", modules: [
     ["Merise", 2, "Modéliser les données d’un projet avant de créer la base.", "entities"],
-    ["UML", 2, "Représenter un logiciel en diagrammes pour mieux le concevoir.", "classes"],
     ["MySQL", 2, "Créer une base de données et l’interroger avec le langage SQL.", "table"],
     ["PostgreSQL", 2, "Aller plus loin en SQL avec une base robuste et complète.", "join"],
+  ] },
+  { slug: "conception-logicielle", title: "Conception logicielle", summary: "Penser l’architecture d’un logiciel avant de l’écrire.", scene: "blueprint", modules: [
+    ["UML", 2, "Représenter un logiciel en diagrammes pour mieux le concevoir.", "classes"],
+    ["Principes SOLID", 2, "Organiser son code objet pour qu’il reste simple à faire évoluer.", "solid"],
+    ["Design patterns", 2, "Reconnaître et appliquer des solutions éprouvées aux problèmes courants.", "observer"],
   ] },
   { slug: "methodologie-et-tests", title: "Méthodologie et tests", summary: "Versionner, tester et livrer avec méthode.", scene: "branch", modules: [
     ["Git et GitHub", 2, "Versionner son code et travailler à plusieurs sur un projet.", "branch"],

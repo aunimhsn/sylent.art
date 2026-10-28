@@ -92,7 +92,8 @@ One page per **domain**. Pedagogical teams look for a speaker on a domain, and t
 | Initiation à la programmation | `initiation-a-la-programmation` | Algorithmique, Robomind | 7 |
 | Développement web | `developpement-web` | HTML, CSS, JavaScript, PHP, Vue, Alpine, Laravel | 1, 2, 3, 4, 9, 10, 11 |
 | Python et données | `python-et-donnees` | Python, Django, machine learning | 6, 12 |
-| Bases de données | `bases-de-donnees` | Merise, UML, MySQL, PostgreSQL | 5 |
+| Bases de données | `bases-de-donnees` | Merise, MySQL, PostgreSQL | 5 |
+| Conception logicielle | `conception-logicielle` | UML, principes SOLID, design patterns | — |
 | Méthodologie et tests | `methodologie-et-tests` | Git et GitHub, Cypress, intégration continue (GitHub Actions), déploiement continu (Vercel, Render) | 8 |
 | IA pour le développement | `ia-pour-le-developpement` | Claude Code, prompt engineering, intégrer l'IA avec méthode et rigueur | — |
 | Gestion de projet | `gestion-de-projet` | Initiation à l'agilité avec Scrum | — |
