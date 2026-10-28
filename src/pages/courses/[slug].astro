@@ -59,7 +59,7 @@ const { Content } = await render(module);
   cta={page.cta}
 >
   <section
-    class="module-hero"
+    class="module-hero grid-texture"
     aria-labelledby="module-title"
     data-fluid="--grid-step"
   >
@@ -180,32 +180,16 @@ const { Content } = await render(module);
 </SiteLayout>
 
 <style>
-  /* ── Hero: the text of the module, over the grid ── */
+  /* ── Hero: the text of the module, over the grid and its orange fluid (global.css) ── */
   .module-hero {
-    position: relative;
-    padding: calc(var(--header-height) + var(--space-fluid-2)) 0
-      var(--space-fluid-3);
-  }
-
-  /* The grid, and the orange fluid that runs along it in a layer at the same place, with the
-     same mask. */
-  .module-hero::before,
-  .module-hero > :global(.fluid) {
-    content: "";
-    position: absolute;
-    inset: 0;
-    mask-image: radial-gradient(
+    --grid-mask: radial-gradient(
       80% 75% at 70% 40%,
       #000000 30%,
       transparent 75%
     );
-  }
 
-  .module-hero::before {
-    background-image:
-      linear-gradient(var(--grid-line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: var(--grid-step) var(--grid-step);
+    padding: calc(var(--header-height) + var(--space-fluid-2)) 0
+      var(--space-fluid-3);
   }
 
   .module-hero .wrap {

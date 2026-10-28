@@ -1,0 +1,89 @@
+{
+  "title": "Mentions légales · Sylent",
+  "description": "Les mentions légales du site sylent.art : éditeur, déclaration d’activité de formation et hébergeur.",
+  "heading": "Mentions légales",
+  "ghost": "Informer",
+  "lead": ["Qui édite ce site, qui l’héberge, et comment me joindre."],
+  "updated": "2026-10-28",
+  "sections": [
+    {
+      "id": "editeur",
+      "title": "Éditeur du site",
+      "facts": [
+        {
+          "label": "Nom",
+          "value": "Aunim Hassan"
+        },
+        {
+          "label": "Statut",
+          "value": "Entrepreneur individuel (micro-entreprise)"
+        },
+        {
+          "label": "SIRET",
+          "value": "{siret}"
+        },
+        {
+          "label": "Email",
+          "value": "[{email}](mailto:{email})"
+        },
+        {
+          "label": "Téléphone",
+          "value": "[{phoneLabel}](tel:{phone})"
+        }
+      ],
+      "text": ["Directeur de la publication : Aunim Hassan."]
+    },
+    {
+      "id": "formation",
+      "title": "Activité de formation",
+      "text": [
+        "Déclaration d’activité enregistrée sous le numéro {nda} auprès du préfet de la région Occitanie.",
+        "**{ndaNotice}**"
+      ]
+    },
+    {
+      "id": "hebergement",
+      "title": "Hébergement",
+      "facts": [
+        {
+          "label": "Hébergeur",
+          "value": "GitHub, Inc. (service GitHub Pages)"
+        },
+        {
+          "label": "Adresse",
+          "value": "88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis"
+        },
+        {
+          "label": "Téléphone",
+          "value": "+1 877 448 4820"
+        },
+        {
+          "label": "Site",
+          "value": "[github.com](https://github.com)"
+        }
+      ]
+    },
+    {
+      "id": "propriete",
+      "title": "Propriété intellectuelle",
+      "text": [
+        "Les textes, les illustrations et le logo de ce site sont la propriété d’Aunim Hassan. Toute reproduction, même partielle, demande une autorisation écrite préalable.",
+        "Les logos des écoles et des organismes partenaires appartiennent à leurs propriétaires respectifs."
+      ]
+    },
+    {
+      "id": "credits",
+      "title": "Crédits",
+      "text": [
+        "Polices Manrope, Anaheim et Bodoni Moda, sous licence SIL Open Font License. Scènes 3D réalisées avec Three.js, animations avec GSAP."
+      ]
+    },
+    {
+      "id": "donnees",
+      "title": "Données personnelles",
+      "text": [
+        "Le traitement des données du formulaire de contact et la mesure d’audience sont décrits dans la [politique de confidentialité](/policy/)."
+      ]
+    }
+  ]
+}

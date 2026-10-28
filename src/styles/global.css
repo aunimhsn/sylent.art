@@ -123,6 +123,29 @@ canvas {
   border-color: var(--text);
 }
 
+/* A link inside running text (the text pages, the failure of the contact form): underlined,
+   since its white alone stands out too little from the gray of the text around it (2.5:1, where
+   WCAG 1.4.1 asks 3:1 for a link shown by its color only); orange under the pointer. */
+.inline-link {
+  color: var(--text);
+  text-decoration: underline 1px var(--dim);
+  text-underline-offset: 0.25em;
+  transition:
+    color var(--duration-fast),
+    text-decoration-color var(--duration-fast);
+}
+
+.inline-link:hover {
+  color: var(--signal-text);
+  text-decoration-color: currentcolor;
+}
+
+/* Stressed text of a content file (src/components/rich-text.astro): white among the gray. */
+.stressed {
+  color: var(--text);
+  font-weight: inherit;
+}
+
 /* Glass: a translucent panel that blurs what lies behind it. */
 .glass {
   border: 1px solid var(--glass-line);
@@ -297,9 +320,50 @@ html[data-motion="on"].is-js .reveal {
   transform: translateY(36px);
 }
 
-/* The layer where the orange fluid of a grid is drawn (src/scripts/grid-fluid.ts); its host places it. */
+/* The layer where the orange fluid of a grid is drawn; its host places it. */
 .fluid {
   pointer-events: none;
+}
+
+/* ── Grid textures, where an orange fluid follows the pointer (src/scripts/grid-fluid.ts) ──────
+   .grid-lines draws the lines of a grid whose cell is --grid-cell (--grid-step by default): the
+   footer is one. A grid behind a block (.grid-texture: a hero, the top of a page) is drawn in its
+   ::before under a mask, --grid-mask, and the fluid in a layer at the same place with the same
+   mask. .is-page-top stretches both to the width of the window and up to the top of the page,
+   fading out toward the bottom of the block, or --grid-below lower. The host sets data-fluid to
+   the token of its cell, read by the script. */
+.grid-lines,
+.grid-texture::before {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: var(--grid-cell, var(--grid-step))
+    var(--grid-cell, var(--grid-step));
+}
+
+.grid-texture {
+  position: relative;
+}
+
+.grid-texture::before,
+.grid-texture > .fluid {
+  content: "";
+  position: absolute;
+  inset: 0;
+  mask-image: var(--grid-mask);
+}
+
+.grid-texture.is-page-top {
+  --grid-mask: linear-gradient(#000000 35%, transparent);
+}
+
+.grid-texture.is-page-top::before,
+.grid-texture.is-page-top > .fluid {
+  z-index: -1;
+  inset: calc(-1 * (var(--header-height) + var(--space-fluid-3))) auto
+    calc(-1 * var(--grid-below, 0px)) 50%;
+  width: 100vw;
+  translate: -50% 0;
 }
 
 .fluid canvas {
@@ -366,5 +430,6 @@ html[data-motion="off"] .copied {
   a[href^="tel:"] {
     pointer-events: none;
     cursor: text;
+    text-decoration: none;
   }
 }

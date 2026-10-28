@@ -19,7 +19,7 @@ const faces = home.cube.map((face) => {
 ---
 
 <section
-  class="hero"
+  class="hero grid-texture"
   id="hero"
   aria-labelledby="hero-title"
   data-fluid="--grid-step"
@@ -70,34 +70,19 @@ const faces = home.cube.map((face) => {
 </script>
 
 <style>
+  /* The grid and its orange fluid (global.css), under the cube, with this mask. */
   .hero {
-    position: relative;
+    --grid-mask: radial-gradient(
+      80% 70% at 70% 40%,
+      #000000 30%,
+      transparent 75%
+    );
+
     overflow: hidden;
     padding: calc(var(--header-height) + var(--space-10)) 0 var(--space-14);
     background:
       radial-gradient(55% 50% at 78% 45%, var(--glow), transparent 70%),
       var(--bg);
-  }
-
-  /* The grid, and the orange fluid that runs along it in a layer at the same place, with the
-     same mask, under the cube. */
-  .hero::before,
-  .hero > :global(.fluid) {
-    content: "";
-    position: absolute;
-    inset: 0;
-    mask-image: radial-gradient(
-      80% 70% at 70% 40%,
-      #000000 30%,
-      transparent 75%
-    );
-  }
-
-  .hero::before {
-    background-image:
-      linear-gradient(var(--grid-line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: var(--grid-step) var(--grid-step);
   }
 
   .hero-canvas {

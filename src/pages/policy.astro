@@ -1,0 +1,17 @@
+---
+// The privacy policy (docs/mockups/privacy-site.html), at the URL of the former site, whose
+// texts are in src/content/policy.json.
+import TextPage from "../components/text-page.astro";
+import page from "../content/policy.json";
+import SiteLayout from "../layouts/site-layout.astro";
+---
+
+<SiteLayout title={page.title} description={page.description}>
+  <TextPage
+    heading={page.heading}
+    ghost={page.ghost}
+    lead={page.lead}
+    updated={page.updated}
+    sections={page.sections}
+  />
+</SiteLayout>

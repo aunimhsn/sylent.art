@@ -5,6 +5,7 @@
 import Wordmark from "../assets/brand/wordmark.svg";
 import contact from "../data/contact.json";
 import fr from "../i18n/fr.json";
+import { fill } from "../lib/rich-text";
 import { href } from "../lib/url";
 
 const navigation = [
@@ -20,7 +21,7 @@ const external = [
 const year = new Date().getFullYear();
 ---
 
-<footer class="footer" data-fluid="--grid-step-footer">
+<footer class="footer grid-lines" data-fluid="--grid-step-footer">
   <div class="footer-logo" role="img" aria-label={fr.footer.logo}>
     <Wordmark aria-hidden="true" />
   </div>
@@ -68,7 +69,10 @@ const year = new Date().getFullYear();
           <li>
             <a href={href("/policy/")}>{fr.footer.privacy}</a>
           </li>
-          <li>{fr.footer.nda.replace("{nda}", contact.nda)}</li>
+          <li>
+            {fill(fr.footer.nda)}
+            <span class="nda-notice">{fr.details.ndaNotice}</span>
+          </li>
         </ul>
       </div>
     </div>
@@ -81,18 +85,15 @@ const year = new Date().getFullYear();
 <style>
   .footer {
     --wordmark-width: clamp(220px, 38vw, 490px);
+    --grid-cell: var(--grid-step-footer);
 
     position: relative;
 
     /* Room for the lower half of the wordmark, which straddles the top edge. No border: the
-       first line of the grid is the top edge, as thin as the other lines. */
+       first line of the grid (.grid-lines) is the top edge, as thin as the other lines. */
     padding: calc(var(--wordmark-width) * 0.119 + var(--space-fluid-2)) 0
       var(--space-7);
     background-color: var(--bg);
-    background-image:
-      linear-gradient(var(--grid-line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: var(--grid-step-footer) var(--grid-step-footer);
   }
 
   .footer > .wrap {
@@ -167,6 +168,15 @@ const year = new Date().getFullYear();
   .motto {
     margin-bottom: var(--space-4);
     color: var(--dim);
+  }
+
+  /* The NDA is always followed by this sentence (Code du travail). */
+  .nda-notice {
+    display: block;
+    margin-top: var(--space-1);
+    color: var(--dim);
+    font-size: var(--size-caption);
+    line-height: 1.35;
   }
 
   .footer-bottom {
