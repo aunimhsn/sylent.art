@@ -155,10 +155,12 @@ const partnerReel = () => `
       <li${copy ? ' class="is-copy" aria-hidden="true"' : ""}>${file ? `<img src="assets/partners/${file}.svg" alt="${copy ? "" : name}" style="--scale: ${scale}">` : `<span class="app-partner-name">${name}</span>`}</li>`).join("")).join("")}
     </ul>
   </div>`;
+// The steps are numbered in Roman numerals, decorative: the list itself gives the order.
+const ROMAN = ["I", "II", "III", "IV", "V", "VI"];
 const stepList = () => `
   <ol class="app-steps">${STEPS.map(([title, text], index) => `
     <li class="app-reveal">
-      <span class="app-step-number">0${index + 1}</span>
+      <span class="app-step-number" aria-hidden="true">${ROMAN[index]}</span>
       <div class="app-step-rule"></div>
       <h3>${title}</h3><p>${text}</p>
     </li>`).join("")}

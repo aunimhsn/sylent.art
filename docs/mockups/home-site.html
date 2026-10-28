@@ -29,6 +29,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Anaheim:wght@500&display=block">
+<!-- Only for the test of the numerals of the pedagogy (?numerals=…): the candidate fonts. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Cormorant+Garamond:wght@300..700&family=Instrument+Serif&family=Fraunces:opsz,wght@9..144,100..900&family=Bodoni+Moda:opsz,wght@6..96,400..900&display=block">
 <link rel="stylesheet" href="shared/site.css">
 <style>
   /* ── Hero ──────────────────────────────────────────────────────────────────────── */
@@ -121,6 +123,22 @@
 <main id="content"></main>
 
 <script>
+  // The font of the Roman numerals of the pedagogy, still to choose: [family, weight, tracking].
+  const NUMERALS = {
+    cinzel: ["Cinzel", 400, "0.02em"],
+    cormorant: ["Cormorant Garamond", 300, "0"],
+    instrument: ["Instrument Serif", 400, "0"],
+    fraunces: ["Fraunces", 200, "0"],
+    bodoni: ["Bodoni Moda", 400, "0"],
+  };
+  const numerals = NUMERALS[query.get("numerals")];
+  if (numerals) {
+    const root = document.documentElement.style;
+    root.setProperty("--step-font", `"${numerals[0]}", serif`);
+    root.setProperty("--step-weight", numerals[1]);
+    root.setProperty("--step-tracking", numerals[2]);
+  }
+
   // ── Content: sample data close to specs.md ──────────────────────────────────────────
   const AUDIENCES = [
     ["Écoles", "Un intervenant passionné et exigeant qui saura donner la soif d’apprendre."],
