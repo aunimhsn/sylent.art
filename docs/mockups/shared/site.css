@@ -183,11 +183,11 @@ img, svg, canvas { display: block; }
 .app-card-more::after { content: ""; position: absolute; inset: 0; }
 .app-card:hover .app-card-more { padding-block: 19px; }
 /* The custom card after the domains: a band across its own row, in a dashed frame instead of the
-   glass, that turns to the signal color under the pointer; its arrow moves forward instead of the
+   glass, that turns white under the pointer; its arrow moves forward instead of the
    band growing. From two columns its button is a column on the right, exactly as wide as the
    cards above (a subgrid of the grid of the cards). */
 .app-card.is-band { grid-column: 1 / -1; background: none; outline: 1px dashed var(--line-strong); outline-offset: -1px; transition: outline-color .35s; }
-.app-card.is-band:hover { background: none; outline-color: var(--signal); }
+.app-card.is-band:hover { background: none; outline-color: var(--text); }
 .app-card.is-band .app-card-more svg { margin-left: 10px; vertical-align: -3px; transition: transform .35s; }
 .app-card.is-band:hover .app-card-more { padding-block: 16px; }
 .app-card.is-band:hover .app-card-more svg { transform: translateX(6px); }
