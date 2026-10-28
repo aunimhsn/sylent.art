@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="fr" data-theme="night">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sylent · Formateur en informatique</title>
+<meta name="description" content="Formateur en informatique depuis 2021 : développement, bases de données, tests, Python et IA, pour les écoles, les organismes de formation et les entreprises.">
+<!--
+  The home page of sylent.art (mock-up, step 4 of roadmap.md), shown at phone and desktop width
+  by home.html; open it alone to see it at the width of the window. The parts shared by every
+  page (style, header, menu, footer, shared animations) are in shared/.
+  ?motion=off shows the page without animations, as for a visitor who asked their system to
+  reduce motion; ?shot=1 copies the 3D scene into an image, since headless screenshots don't
+  show WebGL.
+
+  Layout: set 1 of the wireframes of step 3, in the Git history (home.excalidraw). The style only sets tokens (CSS variables
+  under :root[data-theme="…"]); the components use nothing else.
+  Brand: the mark and the SYLENT wordmark (Montserrat 800, -0.195 em, drawn as a path so that
+  the site loads no third font) follow the charter of sylent-slides. The section headings take
+  up the principle of the former site: a title over a large faded word (Partenaires over
+  Confiance).
+  Fonts: Manrope (titles, interface) and Anaheim medium (text; it has no italic, so the browser
+  slants it), from Google Fonts here, self-hosted by
+  the site. Three.js and GSAP come from jsDelivr here; the site will bundle them.
+  The texts are sample content close to specs.md; the logo of IGENSIA Tech is missing.
+-->
+<script src="shared/head.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Anaheim:wght@500&display=block">
+<!-- Bodoni Moda for the Roman numerals of the pedagogy, only its letters I, V and X. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400&text=IVX&display=block">
+<link rel="stylesheet" href="shared/site.css">
+<style>
+  /* ── Hero ──────────────────────────────────────────────────────────────────────── */
+
+  .app-hero {
+    position: relative;
+    overflow: hidden;
+    padding: calc(var(--header-height) + 40px) 0 56px;
+    background: radial-gradient(55% 50% at 78% 45%, var(--glow), transparent 70%), var(--bg);
+  }
+  .app-hero::before,
+  .app-hero > .app-grid-fluid {
+    content: "";
+    position: absolute;
+    inset: 0;
+    mask-image: radial-gradient(80% 70% at 70% 40%, #000 30%, transparent 75%);
+  }
+  /* The orange fluid of the grid (site.js) lies in a layer at the same place, with the same mask,
+     under the cube. */
+  .app-hero::before {
+    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .app-hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .app-hero .app-wrap { position: relative; display: grid; gap: 8px; }
+  .app-hero-text { position: relative; z-index: 2; }
+  .app-hero-title {
+    margin: 0;
+    font: var(--title-weight) clamp(44px, 6.8vw, 92px)/0.98 var(--font-title);
+    letter-spacing: var(--title-tracking);
+    text-wrap: balance;
+  }
+  .app-hero-sub { margin: 28px 0 0; max-width: 52ch; color: var(--secondary); font-size: clamp(17px, 1.5vw, 19px); text-wrap: pretty; }
+  .app-hero-sub strong { color: var(--text); font-weight: inherit; }
+  .app-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+  .app-hero-motto { margin-top: 40px; }
+  .app-hero-visual { position: relative; height: 380px; cursor: grab; touch-action: pan-y; }
+  .app-hero-visual:active { cursor: grabbing; }
+  @media (min-width: 900px) {
+    .app-hero { min-height: min(100svh, 880px); display: grid; align-items: center; padding-bottom: 72px; }
+    .app-hero .app-wrap { grid-template-columns: 7fr 5fr; align-items: center; }
+    .app-hero-visual { height: 540px; }
+  }
+
+  /* ── Audiences ──────────────────────────────────────────────────────────────────── */
+
+  /* Audiences: plain columns under a rule. */
+  .app-audiences { display: grid; gap: 36px; margin: 0; padding: 0; list-style: none; }
+  @media (min-width: 900px) { .app-audiences { grid-template-columns: repeat(3, 1fr); gap: 32px; } }
+  .app-audiences li { padding-top: 22px; border-top: 1px solid var(--line); }
+  .app-audiences h3 { margin: 0; font: 700 22px/1.2 var(--font-title); letter-spacing: -0.025em; }
+  .app-audiences p { margin: 10px 0 0; color: var(--secondary); }
+
+  /* ── The domain cards flip under the pointer, to show their modules ──────────────── */
+
+  /* The back covers the card above its white band, which stays in place on both sides and keeps
+     growing a little under the pointer. */
+  .app-card-back { position: absolute; inset: 0 0 56px; display: flex; flex-direction: column; padding: 22px 26px; visibility: hidden; }
+  .app-card.is-flipped > :not(.app-card-back, .app-card-more) { visibility: hidden; }
+  .app-card.is-flipped .app-card-back { visibility: visible; }
+  /* The card turns half a turn: its back side and the text of its band are mirrored back, so that
+     they read the right way once the card shows its back. */
+  .app-card.is-flipped .app-card-back, .app-card.is-flipped .app-card-more span { transform: scaleX(-1); }
+  .app-card-more span { display: inline-block; }
+  /* The hover is decided by the place of the card, not by its turning box (see the script). */
+  .app-card.is-hovered .app-card-more { padding-block: 19px; }
+  /* The modules scroll up without end, as the partners on a phone, over the whole height of the
+     back, so that the reel is centered above the band. */
+  .app-back-reel { position: relative; flex: 1; overflow: hidden; mask-image: linear-gradient(transparent, #000 16%, #000 84%, transparent); }
+  .app-back-list { margin: 0; padding: 0; list-style: none; will-change: transform; }
+  .app-back-list li { display: flex; flex-direction: column; justify-content: center; height: 66px; transform-origin: 50% 100%; will-change: transform, opacity; }
+  .app-back-list strong { font: 700 20px/1.2 var(--font-title); letter-spacing: -0.025em; }
+  .app-back-list span { overflow: hidden; color: var(--secondary); font-size: 14px; line-height: 1.4; white-space: nowrap; text-overflow: ellipsis; }
+  /* One or two modules: simply listed, without the reel and its fades. */
+  .app-card-back.is-still .app-back-reel { display: flex; flex-direction: column; justify-content: center; mask-image: none; }
+  .app-card-back.is-still .app-back-list span { white-space: normal; }
+
+  /* ── Pedagogy: the steps and the cycle of a lesson ─────────────────────────────────── */
+
+  /* The cycle of a lesson (theory 20 %, practice 50 %, correction 30 %, then again) as a 3D spiral
+     that climbs a step at each turn (shared/covers.js). On a phone, after the steps; from
+     1100 px, on the right of the steps, two by two. */
+  .app-pedagogy { display: grid; gap: 56px; }
+  .app-cycle { order: 2; }
+  @media (min-width: 1100px) {
+    .app-pedagogy { grid-template-columns: 1fr 1fr; align-items: center; }
+    .app-pedagogy .app-steps { grid-template-columns: repeat(2, 1fr); gap: 48px 40px; }
+    .app-pedagogy .app-step-number { font-size: 52px; }
+  }
+  /* A square scene without the frame of a cover. Under the runner, the name of the phase it goes
+     through, in the style of the « Copiée » of the email address, and beside it the share of the
+     turn done in the phase, counting up to 20, 50 or 30 %. The scene drives everything: the
+     phase (data-phase), how far it has gone (--phase-progress, from 0 to 1), from which the name
+     fades in while rising a little and fades out at the end, and the count (--count, shown by a
+     CSS counter). */
+  .app-cycle .app-cycle-scene { aspect-ratio: 1; width: min(100%, 560px); margin: 0 auto; border: 0; background: none; }
+  /* The spiral fades out toward the bottom and in toward the top: it climbs without end. */
+  .app-cycle-scene canvas { mask-image: linear-gradient(transparent 4%, #000 34%, #000 66%, transparent 96%); }
+  .app-cycle-tag {
+    --p: var(--phase-progress, 0.5);
+    position: absolute;
+    left: var(--anchor-x, 50%);
+    top: var(--anchor-y, 50%);
+    display: none;
+    color: var(--signal-text);
+    font: var(--text-weight) 15px/1 var(--font-text);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: clamp(0, min(var(--p), 1 - var(--p)) / 0.15, 1);
+    transform: translate(-50%, calc(22px - var(--p) * 14px));
+  }
+  .app-cycle-tag::after { content: "\00a0" counter(cycle-count) "\00a0%"; counter-reset: cycle-count var(--count, 0); }
+  .app-cycle-scene[data-phase="0"] .app-cycle-tag[data-phase="0"],
+  .app-cycle-scene[data-phase="1"] .app-cycle-tag[data-phase="1"],
+  .app-cycle-scene[data-phase="2"] .app-cycle-tag[data-phase="2"] { display: block; }
+  /* Each turn is a session: when one starts, « Séance suivante » above the runner, in the style
+     of the phase but in white. */
+  .app-cycle-next { position: absolute; left: var(--anchor-x, 50%); top: var(--anchor-y, 50%); display: none; color: var(--text); font: var(--text-weight) 15px/1 var(--font-text); white-space: nowrap; pointer-events: none; }
+  .app-cycle-scene[data-lap="0"] .app-cycle-next[data-lap="0"],
+  .app-cycle-scene[data-lap="1"] .app-cycle-next[data-lap="1"] { display: block; animation: app-cycle-next 1.4s linear forwards; }
+  /* It comes out of the runner and flies away upward at one steady, brisk pace, from its first
+     appearance to its last: it shows fully, then fades out on its way. */
+  @keyframes app-cycle-next {
+    0% { opacity: 0; transform: translate(-50%, -50%); }
+    18% { opacity: 1; }
+    40% { opacity: 1; }
+    100% { opacity: 0; transform: translate(-50%, calc(-100% - 90px)); }
+  }
+
+  /* ── About ──────────────────────────────────────────────────────────────────────── */
+
+  /* No photo in the first release: the text alone, aligned left. */
+  .app-about-grid { max-width: 760px; }
+  .app-about-name { margin: 0; font: 800 clamp(30px, 3.6vw, 46px)/1.05 var(--font-title); letter-spacing: var(--title-tracking); }
+  .app-about-grid .app-lead { margin-top: 18px; }
+
+</style>
+</head>
+<body data-page="home">
+<script src="shared/site.js"></script>
+
+<main id="content"></main>
+
+<script>
+  // ── Content: sample data close to specs.md ──────────────────────────────────────────
+  const AUDIENCES = [
+    ["Écoles", "Un intervenant passionné et exigeant qui saura donner la soif d’apprendre."],
+    ["Organismes de formation", "Un formateur expert dans son domaine, pour les sessions de vos clients."],
+    ["Entreprises", "Former vos équipes techniques, directement ou via un organisme."],
+  ];
+
+  const hero = `
+    <section class="app-hero" id="hero" aria-labelledby="hero-title" data-grid>
+      <canvas class="app-hero-canvas" id="cube-canvas" aria-hidden="true"></canvas>
+      <div class="app-wrap">
+        <div class="app-hero-text">
+          <h1 class="app-hero-title app-intro" id="hero-title">Je prends vos apprenants par la main, <span class="app-highlight">jusqu’à la maîtrise.</span></h1>
+          <p class="app-hero-sub app-intro"><strong>Aunim Hassan</strong>, formateur en informatique depuis 2021, pour les écoles, les organismes de formation et les entreprises.</p>
+          <div class="app-hero-actions app-intro">
+            <a class="app-button app-magnetic" href="${PAGES.contact}">Me contacter</a>
+            <a class="app-button is-outline" href="#formations">Voir les formations</a>
+          </div>
+          <p class="app-motto app-hero-motto app-intro">Une vie, mille leçons</p>
+        </div>
+        <div class="app-hero-visual" id="cube-area" aria-hidden="true"></div>
+      </div>
+    </section>`;
+
+  const partners = `
+    <section class="app-section" aria-labelledby="partners-title">
+      <div class="app-wrap">
+        ${heading("Partenaires", "Confiance", "partners-title")}
+        ${partnerReel()}
+      </div>
+    </section>`;
+
+  const audiences = `
+    <section class="app-section" aria-labelledby="audiences-title" style="padding-top:0">
+      <div class="app-wrap">
+        ${heading(`Pour qui${NB}?`, "Collaborer", "audiences-title")}
+        <ul class="app-audiences">
+          ${AUDIENCES.map(([title, text]) => `
+            <li class="app-reveal"><h3>${title}</h3><p>${text}</p></li>`).join("")}
+        </ul>
+      </div>
+    </section>`;
+
+  const domains = `
+    <section class="app-section" id="formations" aria-labelledby="domains-title" style="padding-top:0">
+      <div class="app-wrap">
+        ${heading("Formations", "Apprendre", "domains-title")}
+        <p class="app-lead app-reveal">Huit domaines, des modules indépendants et des durées toujours adaptables, sur site ou à distance.</p>
+        <ul class="app-cards is-domains">
+          ${DOMAINS.map(domainCard).join("")}${customCard(true)}
+        </ul>
+      </div>
+    </section>`;
+
+  // The cycle of a lesson: [phase, share of a turn].
+  const CYCLE = [["Théorie", 0.2], ["Pratique", 0.5], ["Correction", 0.3]];
+  const cycleFigure = () => `
+    <div class="app-cycle">
+      <div class="app-cover app-cycle-scene" data-scene="spiral" aria-hidden="true"><canvas></canvas>${CYCLE.map(([phase], index) => `<span class="app-cycle-tag" data-phase="${index}">${phase}</span>`).join("")}<span class="app-cycle-next" data-lap="0">Séance suivante</span><span class="app-cycle-next" data-lap="1">Séance suivante</span></div>
+      <p class="app-hidden">Le cycle d’une séance${NB}: 20${NB}% de théorie, 50${NB}% de pratique, 30${NB}% de correction, puis on recommence.</p>
+    </div>`;
+
+  const pedagogy = `
+    <section class="app-section" aria-labelledby="pedagogy-title" style="padding-top:0">
+      <div class="app-wrap">
+        ${heading("Pédagogie", "Accompagner", "pedagogy-title")}
+        <div class="app-pedagogy">${cycleFigure()}${stepList()}</div>
+      </div>
+    </section>`;
+
+  const about = `
+    <section class="app-section" id="a-propos" aria-labelledby="about-title" style="padding-top:0">
+      <div class="app-wrap">
+        ${heading(`Qui suis-je${NB}?`, "Transmettre", "about-title")}
+        <div class="app-about-grid">
+          <div class="app-reveal">
+            <h3 class="app-about-name">Aunim Hassan</h3>
+            <p class="app-lead">J’aime apprendre et enseigner ce qui me passionne. C’est pourquoi, aujourd’hui, je mets à profit mes connaissances et mon savoir-faire afin de vous fournir les meilleurs outils et les compétences nécessaires à la réalisation de vos projets.</p>
+            ${figureList()}
+            <a class="app-link" href="${PAGES.about}">En savoir plus</a>
+          </div>
+        </div>
+      </div>
+    </section>`;
+
+  document.getElementById("content").innerHTML = hero + partners + audiences + domains + pedagogy + about + siteCta() + siteFooter();
+  spinPartners();
+
+  // The cards of the domains: under the pointer (or with the keyboard focus) a card turns half a
+  // turn, in one smooth movement, and shows its modules on its back: in an endless reel, as the
+  // partners on a phone, or simply listed when there are only one or two. The glass of the card
+  // flattens 3D, so the sides are swapped when the card passes its edge, instead of turning a real
+  // back face. These cards don't tilt, so that both movements don't fight.
+  const clamp = x => Math.min(1, Math.max(0, x));
+  function flipCard(card, domain) {
+    card.classList.remove("app-tilt");
+    const band = card.querySelector(".app-card-more");
+    band.innerHTML = `<span>${band.textContent}</span>`;
+    const count = domain.modules.length;
+    const still = count < 3;
+    const item = ([title, , summary]) => `<li><strong>${title}</strong><span>${summary}</span></li>`;
+    card.insertAdjacentHTML("beforeend", `
+      <div class="app-card-back${still ? " is-still" : ""}" aria-hidden="true">
+        <div class="app-back-reel"><ul class="app-back-list">${domain.modules.map(item).join("")}</ul></div>
+      </div>`);
+    const backReel = card.querySelector(".app-back-reel");
+    const backList = backReel.querySelector(".app-back-list");
+    let backItems = [], cycle = 0, offset = 0, before = 0, spinning = false;
+    // The reel repeats the modules until one cycle is taller than the reel, then holds two cycles,
+    // so that it loops without a gap whatever the size of the card.
+    function fill() {
+      const row = backList.firstElementChild.offsetHeight, height = backReel.clientHeight;
+      if (!row || !height) return false;
+      const copies = Math.ceil((height / row + 1) / count);
+      if (copies !== cycle) {
+        cycle = copies;
+        backList.innerHTML = Array.from({ length: copies * 2 }, () => domain.modules.map(item).join("")).join("");
+        backItems = [...backList.children];
+        offset = 0;
+      }
+      return true;
+    }
+    // Each module comes in at the bottom, and near the top moves away toward the back.
+    function spin(now) {
+      if (!card.classList.contains("is-flipped")) { spinning = false; return; }
+      if (!fill()) { requestAnimationFrame(spin); return; }
+      const row = backItems[0].offsetHeight, height = backReel.clientHeight;
+      offset = (offset + (before ? now - before : 0) * row / 1500) % (row * backItems.length / 2);
+      before = now;
+      backList.style.transform = `translateY(${-offset}px)`;
+      backItems.forEach((element, index) => {
+        const place = (index * row + row / 2 - offset) / height; // 0 at the top, 1 at the bottom
+        const away = clamp((0.3 - place) / 0.3);
+        const coming = clamp((place - 0.72) / 0.28);
+        element.style.transform = `perspective(500px) translateZ(${-away * 220}px) rotateX(${away * 38}deg) scale(${1 - coming * 0.12})`;
+        element.style.opacity = String(Math.max(0, 1 - away * 1.1 - coming));
+      });
+      requestAnimationFrame(spin);
+    }
+    let flipped = false, turn = null;
+    // The sides follow the angle: past the edge (90°), the card shows its back.
+    const sides = back => {
+      if (back === card.classList.contains("is-flipped")) return;
+      card.classList.toggle("is-flipped", back);
+      if (back && !still && !spinning && !reduced) { spinning = true; before = 0; requestAnimationFrame(spin); }
+    };
+    function flip(open) {
+      if (open === flipped) return;
+      flipped = open;
+      if (turn) turn.kill();
+      if (reduced || !window.gsap) {
+        card.style.transform = open ? "rotateY(180deg)" : "";
+        sides(open);
+        return;
+      }
+      // From where it stands, so that a pointer that leaves halfway turns the card back smoothly.
+      turn = gsap.to(card, { rotationY: open ? 180 : 0, transformPerspective: 1000, duration: 0.8, ease: "power2.inOut", onUpdate: () => sides(gsap.getProperty(card, "rotationY") > 90) });
+    }
+    // The pointer is inside when it is over the place of the card in the grid: the turning card
+    // gets thin at its edge, so its own box would let the pointer out and in again, without end.
+    // The offsets ignore the transforms; they count from the grid, which is positioned.
+    const inside = event => {
+      const box = (card.offsetParent || card.parentElement).getBoundingClientRect();
+      const x = event.clientX - box.left - card.offsetLeft, y = event.clientY - box.top - card.offsetTop;
+      return x >= 0 && y >= 0 && x <= card.offsetWidth && y <= card.offsetHeight;
+    };
+    const hover = over => {
+      card.classList.toggle("is-hovered", over);
+      flip(over || card.contains(document.activeElement));
+    };
+    document.addEventListener("pointermove", event => { if (event.pointerType === "mouse") hover(inside(event)); });
+    document.documentElement.addEventListener("pointerleave", () => hover(false));
+    card.addEventListener("focusin", () => flip(true));
+    card.addEventListener("focusout", () => flip(false));
+  }
+  if (matchMedia("(hover: hover)").matches) {
+    DOMAINS.forEach(domain => {
+      const card = document.querySelector(`[data-domain="${domain.slug}"]`);
+      if (card) flipCard(card, domain);
+    });
+  }
+
+  // If the hero doesn't start its intro (a library that doesn't load), show it anyway.
+  setTimeout(() => { if (!window.sylentHero) document.querySelectorAll(".app-intro").forEach(element => { element.style.visibility = "visible"; }); }, 4000);
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="shared/motion.js"></script>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }</script>
+<script type="module">
+  import * as THREE from "three";
+
+  const root = document.documentElement;
+  const motion = root.dataset.motion === "on";
+  const shot = location.search.includes("shot");
+  const css = name => getComputedStyle(root).getPropertyValue(name).trim();
+  gsap.registerPlugin(ScrollTrigger, SplitText);
+
+  const header = document.getElementById("header");
+
+  // ── The cube: one quality or one figure on each face ───────────────────────────────
+  const FACES = [
+    ["Le sens", "Pourquoi ?"],
+    ["Par an depuis 2023", "900+ h"],
+    ["Pas à pas", "Patience"],
+    ["Formateur depuis", "2021"],
+    ["En toute sérénité", "Bienveillance"],
+    ["Écoles et organismes", "5"],
+  ];
+  const canvas = document.getElementById("cube-canvas");
+  const area = document.getElementById("cube-area");
+  const hero = document.getElementById("hero");
+  let renderer;
+  try {
+    // Without motion, one frame is drawn: keep it, so that it survives the compositing.
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: !motion || shot });
+  } catch {
+    canvas.remove();
+  }
+
+  if (renderer) {
+    const family = css("--font-title");
+    await Promise.all([document.fonts.load(`800 120px ${family}`), document.fonts.load(`700 24px ${family}`)]);
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
+    camera.position.set(0, 0, 14);
+
+    function faceTexture([small, big]) {
+      const size = 512;
+      const paint = document.createElement("canvas");
+      paint.width = paint.height = size;
+      const g = paint.getContext("2d");
+      g.fillStyle = "#111111";
+      g.fillRect(0, 0, size, size);
+      g.strokeStyle = "rgba(255, 255, 255, 0.06)";
+      for (let x = 0; x <= size; x += 32) {
+        g.beginPath(); g.moveTo(x, 0); g.lineTo(x, size); g.stroke();
+        g.beginPath(); g.moveTo(0, x); g.lineTo(size, x); g.stroke();
+      }
+      g.fillStyle = "#a3a3a3";
+      g.font = `700 24px ${family}`;
+      g.letterSpacing = "4px";
+      g.textBaseline = "top";
+      g.fillText(small.toUpperCase(), 48, 52);
+      g.letterSpacing = "-4px";
+      g.fillStyle = "#ffffff";
+      let fontSize = 160;
+      do { g.font = `800 ${fontSize}px ${family}`; fontSize -= 4; } while (g.measureText(big).width > size - 96);
+      g.textBaseline = "alphabetic";
+      g.fillText(big, 44, size - 70);
+      g.fillRect(48, size - 50, 72, 8);
+      const texture = new THREE.CanvasTexture(paint);
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+      return texture;
+    }
+
+    const white = new THREE.Color("#ffffff");
+    const geometry = new THREE.BoxGeometry(2, 2, 2);
+    const cube = new THREE.Mesh(geometry, FACES.map(face => new THREE.MeshBasicMaterial({ map: faceTexture(face), transparent: true, opacity: 0.95 })));
+    cube.add(new THREE.LineSegments(new THREE.EdgesGeometry(geometry), new THREE.LineBasicMaterial({ color: white, transparent: true, opacity: 0.9 })));
+    // The shell around the cube: its edges only, in the translucent signal color, so that the
+    // cube shows clearly inside.
+    const shell = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(2.7, 2.7, 2.7)), new THREE.LineBasicMaterial({ color: new THREE.Color(css("--signal") || "#d3450e"), transparent: true, opacity: 0.4 }));
+    const rig = new THREE.Group();
+    rig.add(cube, shell);
+    scene.add(rig);
+
+    // Place the cube on the visual area of the hero, whatever the layout.
+    function layout() {
+      const box = hero.getBoundingClientRect();
+      const spot = area.getBoundingClientRect();
+      renderer.setSize(box.width, box.height, false);
+      camera.aspect = box.width / box.height;
+      camera.updateProjectionMatrix();
+      const height = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z;
+      const unit = height / box.height;
+      rig.position.x = (spot.left + spot.width / 2 - box.left - box.width / 2) * unit;
+      rig.position.y = -(spot.top + spot.height / 2 - box.top - box.height / 2) * unit + 0.2;
+      rig.scale.setScalar(Math.min(spot.width, spot.height) * unit / (box.width < 900 ? 3.9 : 4.6));
+    }
+    new ResizeObserver(layout).observe(hero);
+    layout();
+
+    // Rotation: the cube presents its faces one after the other, squarely, in the order of the
+    // messages. Under the mouse it follows the pointer (to the right it shows its right face, at
+    // the edges its back, top and bottom), and resumes from the nearest face when the mouse
+    // leaves. A drag spins it, and the scroll turns it a little more.
+    const state = { scroll: 0, scale: motion ? 0 : 1 };
+    const lean = new THREE.Quaternion().setFromEuler(new THREE.Euler(0.28, -0.42, 0));
+    const FACE_TURNS = [[0, -Math.PI / 2], [Math.PI / 2, 0], [0, 0], [0, Math.PI / 2], [-Math.PI / 2, 0], [0, Math.PI]];
+    const faceViews = FACE_TURNS.map(([x, y]) => lean.clone().multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(x, y, 0))));
+    let face = 0, nextFace = 3.2;
+    const presented = faceViews[0].clone();
+    const followed = new THREE.Quaternion();
+    let drag = null, follow = null;
+    const clock = new THREE.Clock();
+    // The pointer from -1 to 1 across the area of the cube.
+    const across = event => {
+      const spot = area.getBoundingClientRect();
+      return [(event.clientX - spot.left) / spot.width * 2 - 1, (event.clientY - spot.top) / spot.height * 2 - 1];
+    };
+    area.addEventListener("pointerdown", event => { drag = { x: event.clientX, y: event.clientY }; follow = null; area.setPointerCapture(event.pointerId); });
+    area.addEventListener("pointermove", event => {
+      if (drag) {
+        const turn = new THREE.Euler((event.clientY - drag.y) * 0.009, (event.clientX - drag.x) * 0.009, 0);
+        presented.premultiply(new THREE.Quaternion().setFromEuler(turn));
+        drag = { x: event.clientX, y: event.clientY };
+        return;
+      }
+      if (event.pointerType !== "mouse") return;
+      const [nx, ny] = across(event);
+      // The first move sets the start, so that the cube doesn't jump when the pointer comes in.
+      if (!follow) follow = { x: nx, y: ny, base: presented.clone() };
+      const turn = new THREE.Euler((ny - follow.y) * Math.PI / 2, (nx - follow.x) * Math.PI, 0);
+      followed.setFromEuler(turn).multiply(follow.base);
+    });
+    area.addEventListener("pointerup", () => { drag = null; nextFace = clock.getElapsedTime() + 2.5; });
+    area.addEventListener("pointerleave", () => {
+      follow = null;
+      // Resume from the face that is nearest to what the visitor is looking at.
+      face = faceViews.reduce((best, view, index) => Math.abs(view.dot(presented)) > Math.abs(faceViews[best].dot(presented)) ? index : best, 0);
+      nextFace = clock.getElapsedTime() + 2;
+    });
+    const scrollTurn = new THREE.Quaternion();
+
+    let visible = true;
+    new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; }).observe(hero);
+    function frame() {
+      const time = clock.getElapsedTime();
+      if (motion) {
+        if (follow) presented.slerp(followed, 0.1);
+        else if (!drag) {
+          if (time >= nextFace) { face = (face + 1) % faceViews.length; nextFace = time + 3.2; }
+          presented.slerp(faceViews[face], 0.06);
+        }
+        shell.rotation.x = -time * 0.15;
+        shell.rotation.y = time * 0.11;
+      }
+      scrollTurn.setFromEuler(new THREE.Euler(state.scroll * 0.6, state.scroll * 1.4, 0));
+      cube.quaternion.copy(scrollTurn).multiply(presented);
+      cube.scale.setScalar(state.scale);
+      renderer.render(scene, camera);
+      // Headless screenshots don't show WebGL: ?shot=1 copies the first frame into an image.
+      if (shot && !frame.done) { frame.done = true; const copy = new Image(); copy.src = canvas.toDataURL(); copy.className = "app-hero-canvas"; canvas.after(copy); }
+    }
+    if (motion) {
+      renderer.setAnimationLoop(() => { if (visible) frame(); });
+      gsap.to(state, { scale: 1, duration: 1.6, delay: 0.5, ease: "elastic.out(1, 0.6)" });
+      gsap.to(state, { scroll: 1, ease: "none", scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: 0.6 } });
+      gsap.to(canvas, { yPercent: 18, autoAlpha: 0.2, ease: "none", scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: true } });
+    } else {
+      frame();
+      new ResizeObserver(frame).observe(hero);
+    }
+  }
+
+  // ── Animations ────────────────────────────────────────────────────────────────────
+  if (motion) {
+    window.sylentHero = true;
+    // Intro: the title rises line by line from behind a mask.
+    const split = SplitText.create(".app-hero-title", { type: "lines", mask: "lines" });
+    gsap.set(".app-intro", { visibility: "visible" });
+    gsap.timeline({ defaults: { ease: "expo.out", duration: 1.1 } })
+      .from(header, { yPercent: -100, duration: 0.9 })
+      .from(split.lines, { yPercent: 110, stagger: 0.09, duration: 1.2 }, "-=0.5")
+      .from([".app-hero-sub", ".app-hero-actions", ".app-hero-motto"], { y: 28, autoAlpha: 0, stagger: 0.1 }, "-=0.8");
+  } else {
+    document.querySelectorAll(".app-intro").forEach(element => { element.style.visibility = "visible"; });
+  }
+</script>
+<script type="module" src="shared/covers.js"></script>
+</body>
+</html>

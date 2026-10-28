@@ -2,6 +2,18 @@
 
 The detail of the steps of [roadmap.md](../roadmap.md) once their pull request is merged, newest first.
 
+## 4. Mock-up (#5)
+
+Approved by the owner on 2026-10-28, in `docs/mockups/` (viewer `home.html`, pages `*-site.html`, shared parts in `shared/`); every decision is in `docs/branding.md`:
+
+- Night style: neutral blacks and white, Manrope for the titles, Anaheim medium for the text, the SYLENT logo, the section headings of the former site over a large faded word; an orange signal color used sparingly, with a meaning (trails, glow on arrival, small stories). Console, Atelier and a red signal were set aside.
+- Every page of the first release: home, course list (one card per module), module page, about, contact (two fields, Formspree simulated in every state), legal notice, privacy policy, not-found page.
+- A small Three.js scene for every domain and module; on the home page the domain cards turn to show their modules, the custom request is a dashed band, and the pedagogy shows a spiral of the cycle of a lesson (theory 20 %, practice 50 %, correction 30 %).
+- New domain « Conception logicielle » (object-oriented programming, UML, SOLID, design patterns); one short sentence per module; Roman numerals in Bodoni Moda for the steps.
+- `specs.md` settled with the mock-up: one page per module at `/courses/<module>`, `/courses/1` to `12` redirected to their module, no domain pages in the first release, `/policy` for the privacy policy and `/legal` for the legal notice, SIRET and NDA, no photo.
+- `CLAUDE.md`: the large uppercase titles are shown without accents, an exception accepted by the owner.
+- Two code reviews applied; the wireframes of step 3 removed, the mock-up being the reference.
+
 ## 3. Wireframes (#4)
 
 Approved by the owner on 2026-10-28, in `docs/wireframes/1/`:

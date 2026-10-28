@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="fr" data-theme="night">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact · Sylent</title>
+<meta name="description" content="Un module, une classe, une équipe à former ? Décrivez votre besoin à Aunim Hassan, formateur en informatique.">
+<!--
+  The contact page of sylent.art (mock-up, step 4 of roadmap.md), shown at phone and desktop
+  width by home.html (?page=contact). The parts shared by every page are in shared/.
+  Layout: set 1 of the wireframes of step 3, in the Git history (contact.excalidraw): the form, and the other ways to reach
+  the trainer beside it. The fields are flat, a gray darker than the page.
+  Two fields only, email and message, to keep getting in touch easy. The form is not sent
+  anywhere here: it simulates Formspree. Its states can be opened directly with
+  ?state=errors|sending|sent|failed.
+-->
+<script src="shared/head.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Anaheim:wght@500;700&display=block">
+<link rel="stylesheet" href="shared/site.css">
+<style>
+  /* ── Page ──────────────────────────────────────────────────────────────────────── */
+
+  /* Room at the bottom for the wordmark of the footer, which straddles its top edge. */
+  .app-contact { padding: calc(var(--header-height) + clamp(48px, 7vw, 96px)) 0 clamp(150px, 17vw, 230px); }
+  /* Texture: the grid of the hero of the home page, from the top of the page; it fades out
+     just before the first field of the form. */
+  .app-contact-head { position: relative; padding-bottom: clamp(40px, 5vw, 64px); }
+  .app-contact-head .app-lead { margin-bottom: 0; }
+  .app-contact-head::before,
+  .app-contact-head > .app-grid-fluid {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: 50%;
+    width: 100vw;
+    translate: -50% 0;
+    top: calc(-1 * (var(--header-height) + clamp(48px, 7vw, 96px)));
+    bottom: -34px;
+    mask-image: linear-gradient(#000 35%, transparent);
+    pointer-events: none;
+  }
+  /* The orange fluid of the grid (site.js) lies in a layer at the same place, with the same mask. */
+  .app-contact-head::before {
+    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .app-contact-grid { display: grid; gap: 56px; }
+  @media (min-width: 960px) { .app-contact-grid { grid-template-columns: 7fr 4fr; gap: 72px; align-items: start; } }
+
+  /* ── Form: flat fields, a gray darker than the page ─────────────────────────────── */
+
+  /* No panel: the fields sit on the page itself, aligned with the text above. */
+  .app-form { --surface: #050505; --field-radius: 2px; }
+  .app-form-grid { display: grid; gap: 24px; }
+  .app-field label { display: block; margin-bottom: 10px; font: 600 14px/1.2 var(--font-title); color: var(--secondary); transition: color .3s; }
+  .app-field:focus-within label { color: var(--text); }
+  .app-input {
+    display: block;
+    width: 100%;
+    padding: 15px 18px;
+    border: 0;
+    border-radius: var(--field-radius);
+    background: var(--surface);
+    color: var(--text);
+    font: var(--text-weight) 17px/1.4 var(--font-text);
+    appearance: none;
+  }
+  .app-input::placeholder { color: var(--dim); }
+  /* No outline on focus: the white caret shows where to type, and the label of the field lights
+     up. The signal color stays for the errors, which are only a message under the field. */
+  .app-input { caret-color: var(--text); }
+  /* A thicker caret, drawn by the script since browsers only let the caret change color. The
+     native caret is hidden only while the script runs it (.has-caret), and comes back for touch
+     screens, the text being composed (accents, other alphabets) and the forced colors of high
+     contrast modes. */
+  .app-field { position: relative; }
+  .has-caret .app-input { caret-color: transparent; }
+  .has-caret .app-input.is-composing { caret-color: var(--text); }
+  .app-caret { position: absolute; z-index: 1; width: 3px; border-radius: 1px; background: var(--text); pointer-events: none; }
+  .app-caret[hidden] { display: none; }
+  .app-caret.is-blinking { animation: app-caret-blink 1.06s steps(1) infinite; }
+  @keyframes app-caret-blink { 50% { opacity: 0; } }
+  html[data-motion="off"] .app-caret.is-blinking { animation: none; }
+  @media (forced-colors: active) {
+    .has-caret .app-input { caret-color: auto; }
+    .app-caret { display: none; }
+  }
+  .app-input:focus { outline: none; }
+  textarea.app-input { min-height: 190px; resize: none; }
+  /* The scrollbar of the message shows only while it scrolls (.is-scrolling, set by the
+     script): a thin white bar on no track, flush with the right edge from top to bottom. Chrome,
+     Edge and Safari take the ::-webkit-scrollbar rules, which allow the finest drawing; Firefox
+     takes the standard properties. */
+  textarea.app-input::-webkit-scrollbar { width: 4px; }
+  textarea.app-input::-webkit-scrollbar-track,
+  textarea.app-input::-webkit-scrollbar-corner { background: transparent; }
+  textarea.app-input::-webkit-scrollbar-thumb { border-radius: 0; background: transparent; }
+  textarea.app-input.is-scrolling::-webkit-scrollbar-thumb { background: var(--text); }
+  @supports (-moz-appearance: none) {
+    textarea.app-input { scrollbar-width: thin; scrollbar-color: transparent transparent; }
+    textarea.app-input.is-scrolling { scrollbar-color: var(--text) transparent; }
+  }
+  /* A field to fill: the message just under it, in the signal color for text. */
+  .app-error { margin: 9px 0 0; color: var(--signal-text); font-size: 15px; }
+  .app-error:empty { display: none; }
+  /* Robots fill every field: this one is out of sight and out of the keyboard path. */
+  .app-trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .app-form-end { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px; margin-top: 32px; }
+  .app-button:disabled { cursor: progress; opacity: .7; }
+  .app-alert { margin: 28px 0 0; padding: 16px 20px; }
+  .app-alert a { font-weight: 700; }
+  .app-sent { display: grid; justify-items: start; gap: 18px; padding: clamp(8px, 3vw, 24px) 0; }
+  .app-sent-mark { display: grid; place-items: center; width: 64px; height: 64px; border: 1px solid var(--signal); border-radius: 0; background: #000000; color: var(--text); }
+  .app-sent h2 { margin: 0; font: var(--title-weight) clamp(28px, 3.4vw, 40px)/1.1 var(--font-title); letter-spacing: var(--title-tracking); }
+  .app-sent p { margin: 0; color: var(--secondary); font-size: 18px; }
+  .app-sent .app-link { margin-top: 10px; background: none; border-width: 0 0 1px; color: var(--text); cursor: pointer; padding: 0 0 4px; }
+
+  /* ── Other ways to reach the trainer ───────────────────────────────────────────── */
+
+  .app-ways h2 { margin: 0 0 18px; font: 800 13px/1 var(--font-title); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+  .app-ways ul { margin: 0; padding: 0; list-style: none; }
+  .app-ways li { padding: 18px 0; border-top: 1px solid var(--line); }
+  .app-ways li:last-child { border-bottom: 1px solid var(--line); }
+  .app-ways span { display: block; margin-bottom: 6px; color: var(--dim); font-size: 15px; }
+  .app-ways a { font: 700 clamp(17px, 1.6vw, 20px)/1.3 var(--font-title); letter-spacing: -0.02em; overflow-wrap: anywhere; transition: color .3s; }
+  .app-ways a:hover { color: var(--signal-text); }
+</style>
+</head>
+<body data-page="contact">
+<script src="shared/site.js"></script>
+
+<main id="content"></main>
+
+<script>
+  // ── Content ───────────────────────────────────────────────────────────────────────
+  const WAYS = [
+    ["Email", "aunim.hassan@gmail.com", "mailto:aunim.hassan@gmail.com"],
+    ["Téléphone", `06${NB}13${NB}44${NB}94${NB}24`, "tel:+33613449424"],
+    ["LinkedIn", "linkedin.com/in/aunimhsn", "https://www.linkedin.com/in/aunimhsn/"],
+    ["GitHub", "github.com/aunimhsn", "https://github.com/aunimhsn"],
+  ];
+  const MESSAGES = {
+    email: "Indiquez votre adresse email.",
+    emailFormat: "Cette adresse email n’est pas valide.",
+    message: "Écrivez quelques mots sur votre besoin.",
+  };
+
+  const input = (id, label, field, wide = false) => `
+    <div class="app-field${wide ? " is-wide" : ""}" data-field="${id}">
+      <label for="${id}">${label}</label>
+      ${field}
+      <p class="app-error" id="${id}-error" aria-live="polite"></p>
+    </div>`;
+  const form = `
+    <form class="app-form app-reveal" id="contact-form" novalidate>
+      <div class="app-form-grid">
+        ${input("email", "Email", `<input class="app-input" id="email" name="email" type="text" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="camille.martin@ecole.fr" required aria-describedby="email-error">`)}
+        ${input("message", "Message", `<textarea class="app-input" id="message" name="message" placeholder="Votre organisation, vos apprenants, la formation souhaitée, les dates envisagées…" required aria-describedby="message-error"></textarea>`)}
+      </div>
+      <div class="app-trap" aria-hidden="true"><label for="website">Ne pas remplir</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
+      <div id="form-alert"></div>
+      <div class="app-form-end">
+        <button class="app-button app-magnetic" type="submit" id="send">Envoyer</button>
+      </div>
+    </form>`;
+
+  const ways = `
+    <aside class="app-ways app-reveal" aria-labelledby="ways-title">
+      <h2 id="ways-title">Autres moyens</h2>
+      <ul>${WAYS.map(([label, value, href]) => `<li><span>${label}</span>${href.startsWith("https:") ? external(href, value) : `<a href="${href}">${value}</a>`}</li>`).join("")}</ul>
+    </aside>`;
+
+  document.getElementById("content").innerHTML = `
+    <section class="app-contact" aria-labelledby="contact-title">
+      <div class="app-wrap">
+        <div class="app-contact-head" data-grid>
+          ${heading("Contact", "Echanger", "contact-title", 1)}
+          <p class="app-lead app-reveal">Un module, une classe, une équipe à former${NB}? Décrivez votre besoin.</p>
+        </div>
+        <div class="app-contact-grid">${form}${ways}</div>
+      </div>
+    </section>
+    ${siteFooter()}`;
+
+  // ── Behavior: the checks next to each field, the sending, and its outcome ──────────────
+  const contactForm = document.getElementById("contact-form");
+  const alertBox = document.getElementById("form-alert");
+  const sendButton = document.getElementById("send");
+  const fields = ["email", "message"];
+
+  function check(id) {
+    const element = document.getElementById(id);
+    const value = element.value.trim();
+    let message = value ? "" : MESSAGES[id];
+    if (id === "email" && value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) message = MESSAGES.emailFormat;
+    element.closest(".app-field").classList.toggle("is-invalid", Boolean(message));
+    element.setAttribute("aria-invalid", String(Boolean(message)));
+    document.getElementById(`${id}-error`).textContent = message;
+    return !message;
+  }
+  // A field is checked when the visitor leaves it, then again as they correct it.
+  fields.forEach(id => {
+    const element = document.getElementById(id);
+    element.addEventListener("blur", () => check(id));
+    element.addEventListener("input", () => { if (element.closest(".app-field").classList.contains("is-invalid")) check(id); });
+    element.addEventListener("change", () => { if (element.closest(".app-field").classList.contains("is-invalid")) check(id); });
+  });
+
+  function showSending(sending) {
+    sendButton.disabled = sending;
+    sendButton.textContent = sending ? "Envoi en cours…" : "Envoyer";
+  }
+  function showFailed() {
+    alertBox.innerHTML = `<p class="app-alert app-note" role="alert">L’envoi n’a pas abouti. Votre message est conservé${NB}: réessayez dans un instant, ou écrivez-moi directement à <a href="mailto:aunim.hassan@gmail.com">aunim.hassan@gmail.com</a></p>`;
+  }
+  function showSent() {
+    contactForm.innerHTML = `
+      <div class="app-sent" role="status">
+        <span class="app-sent-mark"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+        <h2>Merci, votre message est bien envoyé.</h2>
+        <p>Je reviens vers vous rapidement.</p>
+        <button class="app-link" type="button" onclick="location.search = ''">Envoyer un autre message</button>
+      </div>`;
+  }
+
+  contactForm.addEventListener("submit", event => {
+    event.preventDefault();
+    alertBox.innerHTML = "";
+    const valid = fields.map(check).every(Boolean);
+    if (!valid) {
+      document.getElementById(fields.find(id => document.getElementById(id).getAttribute("aria-invalid") === "true")).focus();
+      return;
+    }
+    if (document.getElementById("website").value) return; // a robot
+    // The site will send the form to Formspree with fetch; here the answer is simulated.
+    showSending(true);
+    setTimeout(() => {
+      showSending(false);
+      if (query.get("fail") === "1") showFailed();
+      else showSent();
+    }, 1400);
+  });
+
+  // ── The thicker caret ─────────────────────────────────────────────────────────────
+  // A hidden copy of the field, with the same font, size, padding and wrapping, holds the text
+  // up to the caret followed by a marker: the position of the marker is the position of the
+  // caret. It is placed again on every event that can move it, since browsers don't all report
+  // the moves of the caret inside a field (selectionchange is recent there).
+  // The email field is a text field with an email keyboard (inputmode), since an email field
+  // doesn't give the position of the caret; the address is checked by the form.
+  (function thickCaret() {
+    if (!matchMedia("(pointer: fine)").matches || !("selectionStart" in HTMLInputElement.prototype)) return;
+    const COPIED = ["boxSizing", "width", "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth",
+      "paddingTop", "paddingRight", "paddingBottom", "paddingLeft", "fontStyle", "fontVariant", "fontWeight",
+      "fontStretch", "fontSize", "fontSizeAdjust", "lineHeight", "fontFamily", "fontKerning", "fontFeatureSettings",
+      "textAlign", "textTransform", "textIndent", "letterSpacing", "wordSpacing", "tabSize"];
+    const mirror = document.createElement("div");
+    mirror.setAttribute("aria-hidden", "true");
+    Object.assign(mirror.style, { position: "absolute", top: "0", left: "-9999px", visibility: "hidden", overflow: "hidden" });
+    document.body.appendChild(mirror);
+
+    function caretPoint(field) {
+      const style = getComputedStyle(field);
+      const single = field.nodeName === "INPUT";
+      COPIED.forEach(property => { mirror.style[property] = style[property]; });
+      mirror.style.whiteSpace = single ? "pre" : "pre-wrap";
+      mirror.style.overflowWrap = single ? "normal" : "break-word";
+      mirror.style.overflowY = !single && field.scrollHeight > field.clientHeight ? "scroll" : "hidden";
+      mirror.style.height = single ? "auto" : style.height;
+      mirror.textContent = field.value.slice(0, field.selectionEnd);
+      const marker = document.createElement("span");
+      marker.textContent = field.value.slice(field.selectionEnd) || ".";
+      mirror.appendChild(marker);
+      const lineHeight = parseFloat(style.lineHeight) || parseFloat(style.fontSize) * 1.2;
+      return { top: marker.offsetTop, left: marker.offsetLeft, lineHeight };
+    }
+
+    document.documentElement.classList.add("has-caret");
+    document.querySelectorAll(".app-input").forEach(field => {
+      const caret = document.createElement("span");
+      caret.className = "app-caret";
+      caret.hidden = true;
+      caret.setAttribute("aria-hidden", "true");
+      field.after(caret);
+      let frame = 0;
+
+      function place() {
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(() => {
+          const collapsed = field.selectionStart === field.selectionEnd;
+          if (document.activeElement !== field || !collapsed || field.classList.contains("is-composing")) { caret.hidden = true; return; }
+          const point = caretPoint(field);
+          const height = point.lineHeight * 0.92;
+          const top = point.top - field.scrollTop + (point.lineHeight - height) / 2;
+          const left = point.left - field.scrollLeft;
+          // Out of the visible part of the field (scrolled away): nothing to draw.
+          caret.hidden = top < 0 || top + height > field.clientHeight + 1 || left > field.clientWidth;
+          Object.assign(caret.style, { top: `${field.offsetTop + top}px`, left: `${field.offsetLeft + left - 1}px`, height: `${height}px` });
+          // Solid while it moves, then blinking, as a native caret.
+          caret.classList.remove("is-blinking");
+          void caret.offsetWidth;
+          caret.classList.add("is-blinking");
+        });
+      }
+      ["focus", "blur", "input", "keydown", "keyup", "click", "mousedown", "mouseup", "select", "scroll", "selectionchange"]
+        .forEach(type => field.addEventListener(type, place));
+      document.addEventListener("selectionchange", () => { if (document.activeElement === field) place(); });
+      addEventListener("resize", place);
+      field.addEventListener("compositionstart", () => { field.classList.add("is-composing"); place(); });
+      field.addEventListener("compositionend", () => { field.classList.remove("is-composing"); place(); });
+    });
+  })();
+
+  // The scrollbar of the message shows while it scrolls, and a moment after.
+  const messageField = document.getElementById("message");
+  let scrollEnd = 0;
+  messageField.addEventListener("scroll", () => {
+    messageField.classList.add("is-scrolling");
+    clearTimeout(scrollEnd);
+    scrollEnd = setTimeout(() => messageField.classList.remove("is-scrolling"), 900);
+  }, { passive: true });
+
+  // The states of the form, to review them without filling it (?state=…).
+  const SAMPLE = { email: "camille.martin@ecole.fr", message: "Bonjour,\n\nNous cherchons un intervenant pour un module de deux jours en développement web, pour une classe de bachelor, en mars.\n\nCamille Martin\nÉcole du numérique" };
+  const state = query.get("state");
+  if (["sending", "sent", "failed"].includes(state)) Object.entries(SAMPLE).forEach(([id, value]) => { document.getElementById(id).value = value; });
+  if (state === "errors") {
+    document.getElementById("email").value = "camille.martin@";
+    fields.forEach(check);
+  }
+  if (state === "sending") showSending(true);
+  if (state === "sent") showSent();
+  if (state === "failed") showFailed();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="shared/motion.js"></script>
+</body>
+</html>

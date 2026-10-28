@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="fr" data-theme="night">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mentions légales · Sylent</title>
+<meta name="description" content="Les mentions légales du site sylent.art : éditeur, déclaration d’activité de formation et hébergeur.">
+<!--
+  The legal notice of sylent.art (mock-up, step 4 of roadmap.md), shown at phone and desktop width
+  by home.html (?page=legal). No wireframe: a text page (docPage in shared/site.js), shared with
+  the privacy policy. The home address is never shown (specs.md, Contact details and legal
+  information).
+-->
+<script src="shared/head.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Anaheim:wght@500;700&display=block">
+<link rel="stylesheet" href="shared/site.css">
+</head>
+<body data-page="legal">
+<script src="shared/site.js"></script>
+
+<main id="content"></main>
+
+<script>
+  // ── Content ───────────────────────────────────────────────────────────────────────
+  const SECTIONS = [
+    ["editeur", "Éditeur du site", `
+      ${docFacts([
+        ["Nom", "Aunim Hassan"],
+        ["Statut", "Entrepreneur individuel (micro-entreprise)"],
+        ["SIRET", `894${NB}104${NB}132${NB}00010`],
+        ["Email", '<a href="mailto:aunim.hassan@gmail.com">aunim.hassan@gmail.com</a>'],
+        ["Téléphone", `<a href="tel:+33613449424">06${NB}13${NB}44${NB}94${NB}24</a>`],
+      ])}
+      <p>Directeur de la publication${NB}: Aunim Hassan.</p>`],
+    ["formation", "Activité de formation", `
+      <p>Déclaration d’activité enregistrée sous le numéro 76311138131 auprès du préfet de la région Occitanie.</p>
+      <p><strong>Cet enregistrement ne vaut pas agrément de l’État.</strong></p>`],
+    ["hebergement", "Hébergement", `
+      ${docFacts([
+        ["Hébergeur", "GitHub, Inc. (service GitHub Pages)"],
+        ["Adresse", "88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis"],
+        // Article 6 of the LCEN asks for the phone of the host. The number comes from third-party
+        // records: to check on GitHub's own pages before the launch.
+        ["Téléphone", `+1${NB}877${NB}448${NB}4820`],
+        ["Site", external("https://github.com", "github.com")],
+      ])}`],
+    ["propriete", "Propriété intellectuelle", `
+      <p>Les textes, les illustrations et le logo de ce site sont la propriété d’Aunim Hassan. Toute reproduction, même partielle, demande une autorisation écrite préalable.</p>
+      <p>Les logos des écoles et des organismes partenaires appartiennent à leurs propriétaires respectifs.</p>`],
+    ["credits", "Crédits", `
+      <p>Polices Manrope, Anaheim et Bodoni Moda, sous licence SIL Open Font License. Scènes 3D réalisées avec Three.js, animations avec GSAP.</p>`],
+    ["donnees", "Données personnelles", `
+      <p>Le traitement des données du formulaire de contact et la mesure d’audience sont décrits dans la <a href="${PAGES.privacy}">politique de confidentialité</a>.</p>`],
+  ];
+
+  document.getElementById("content").innerHTML = docPage({
+    title: "Mentions légales",
+    ghost: "Informer",
+    lead: `Qui édite ce site, qui l’héberge, et comment me joindre.`,
+    updated: `28${NB}octobre 2026`,
+    sections: SECTIONS,
+  }) + siteFooter();
+  followDoc();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="shared/motion.js"></script>
+</body>
+</html>

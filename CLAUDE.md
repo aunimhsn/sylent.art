@@ -27,6 +27,7 @@
 - Exception: the content of the site (pages, training courses, articles, metadata shown to visitors) is written in French. It lives in content or translation files, never hard-coded in the layout or components, so that a translation can be added later.
 - Exception: the code review notes in `outputs/` are written in French.
 - French content follows French typography: a non-breaking space before `?`, `!`, `:`, `;` and inside « », and correct accents and capitals (e.g. « À propos »).
+  - Exception, accepted by the owner on 2026-10-28: the large uppercase section titles and the large faded words behind them are shown without accents (« PEDAGOGIE », « Echanger »), because the mask of their animation would cut the accents. Their accessible name keeps the accents (`aria-label`); everywhere else, accents stay.
 
 ## Specifications and roadmap
 
