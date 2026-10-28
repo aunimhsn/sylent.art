@@ -112,19 +112,17 @@ const moduleCard = (domain, [title, , summary, scene]) => `
     <h3>${title}</h3><p class="app-card-domain">${domain.title}</p><p>${summary}</p>
     <a class="app-card-more" href="${PAGES.module}?module=${slugOf(title)}" aria-label="${title}${NB}: voir le détail">Voir le détail</a>
   </li>`;
-// The last card, after the domains or the modules: a module built for the request, without glass.
-// After the domains of the home page it is a band across its own row (isBand), without scene, its
+// The last card, after the domains or the modules: a module built for the request. After the
+// domains of the home page it is a band across its own row (isBand), without glass or scene, its
 // text in a dashed frame.
-const customText = `<div class="app-card-text">
-      <h3>Un besoin sur mesure${NB}?</h3>
-      <p>Décrivez vos apprenants et vos objectifs${NB}: je construis le module.</p>
-    </div>`;
+const customText = `<h3>Un besoin sur mesure${NB}?</h3>
+    <p>Décrivez vos apprenants et vos objectifs${NB}: je construis le module.</p>`;
 const customCard = (isBand = false) => isBand ? `
   <li class="app-card app-reveal is-band">
-    ${customText}
+    <div class="app-card-text">${customText}</div>
     <a class="app-card-more" href="${PAGES.contact}"><span>Me contacter</span>${icon("right", 18)}</a>
   </li>` : `
-  <li class="app-card app-reveal app-tilt is-plain">
+  <li class="app-card app-glass app-reveal app-tilt">
     <div class="app-cover" data-scene="custom" aria-hidden="true"><canvas></canvas></div>
     ${customText}
     <a class="app-card-more" href="${PAGES.contact}">Me contacter</a>
