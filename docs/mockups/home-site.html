@@ -144,14 +144,14 @@
      of the phase but in white. */
   .app-cycle-next { position: absolute; left: var(--anchor-x, 50%); top: var(--anchor-y, 50%); display: none; color: var(--text); font: var(--text-weight) 15px/1 var(--font-text); white-space: nowrap; pointer-events: none; }
   .app-cycle-scene[data-lap="0"] .app-cycle-next[data-lap="0"],
-  .app-cycle-scene[data-lap="1"] .app-cycle-next[data-lap="1"] { display: block; animation: app-cycle-next 3.2s ease-in-out forwards; }
-  /* It comes out of the runner softly, from a slight blur, rests a moment at full opacity, then
-     fades out slowly as it keeps rising. */
+  .app-cycle-scene[data-lap="1"] .app-cycle-next[data-lap="1"] { display: block; animation: app-cycle-next 3.2s forwards; }
+  /* It comes out of the runner softly, from a slight blur, and never stops rising: slowly at full
+     opacity, then faster and faster as it fades out, as if it flew away. */
   @keyframes app-cycle-next {
-    0% { opacity: 0; filter: blur(3px); transform: translate(-50%, -50%) scale(.85); }
-    25% { opacity: 1; filter: blur(0); transform: translate(-50%, calc(-100% - 12px)) scale(1); }
-    45% { opacity: 1; filter: blur(0); transform: translate(-50%, calc(-100% - 17px)) scale(1); }
-    100% { opacity: 0; filter: blur(0); transform: translate(-50%, calc(-100% - 32px)) scale(1); }
+    0% { opacity: 0; filter: blur(3px); transform: translate(-50%, -50%) scale(.85); animation-timing-function: ease-out; }
+    25% { opacity: 1; filter: blur(0); transform: translate(-50%, calc(-100% - 12px)) scale(1); animation-timing-function: linear; }
+    50% { opacity: 1; filter: blur(0); transform: translate(-50%, calc(-100% - 20px)) scale(1); animation-timing-function: cubic-bezier(.5, 0, .9, .4); }
+    100% { opacity: 0; filter: blur(0); transform: translate(-50%, calc(-100% - 90px)) scale(1); }
   }
 
   /* ── About ──────────────────────────────────────────────────────────────────────── */
