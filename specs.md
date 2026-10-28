@@ -143,7 +143,7 @@ The paths of the former site are kept when the page still exists, so the existin
 - `/articles/1` and `/articles/2`: redirect to the same articles at their new readable URL. In the first release, without articles, `/articles`, `/articles/1` and `/articles/2` redirect to the home page.
 - `/creations`, `/register`, `/login`: no redirect; they show the not-found page.
 
-GitHub Pages has no server-side redirects: a redirect is a static page with a canonical link and an immediate redirection. Changing a public URL is a breaking change.
+GitHub Pages has no server-side redirects: a redirect is a static page with a canonical link and an immediate redirection. Each page is served at its path with a final slash (`/about/`); GitHub Pages redirects the path without it (`/about`) there, so the former URLs keep resolving. Changing a public URL is a breaking change.
 
 ## Content
 

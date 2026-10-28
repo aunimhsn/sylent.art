@@ -1,0 +1,35 @@
+---
+// Temporary home page of the project skeleton (step 6); step 7 builds the real one.
+import BaseLayout from "../layouts/base-layout.astro";
+import fr from "../i18n/fr.json";
+---
+
+<BaseLayout title={fr.site.title} description={fr.site.description}>
+  <main>
+    <h1>{fr.site.name}</h1>
+    <p>{fr.home.lead}</p>
+  </main>
+</BaseLayout>
+
+<style>
+  main {
+    display: grid;
+    place-content: center;
+    gap: var(--space-4);
+    min-height: 100vh;
+    padding: var(--gutter);
+    text-align: center;
+  }
+
+  h1 {
+    margin: 0;
+    font: var(--title-weight) var(--size-display) / 1 var(--font-title);
+    letter-spacing: var(--tracking-title);
+  }
+
+  p {
+    margin: 0;
+    color: var(--secondary);
+    font-size: var(--size-lead);
+  }
+</style>
