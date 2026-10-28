@@ -182,8 +182,15 @@ img, svg, canvas { display: block; }
 }
 .app-card-more::after { content: ""; position: absolute; inset: 0; }
 .app-card:hover .app-card-more { padding-block: 19px; }
-/* The custom card after the modules: a card without glass, its scene alone on the background. */
+/* The custom card after the modules: a card without glass, its text in a dashed frame (as the
+   band after the domains) under the scene, open on the side of the white band, that turns white
+   under the pointer. The spaces are those of the other cards. */
+.app-card.is-plain { gap: 0; }
 .app-card.is-plain, .app-card.is-plain:hover { background: none; }
+.app-card.is-plain .app-cover { margin-bottom: 0; border-bottom: 0; }
+.app-card.is-plain .app-card-text { flex: 1; margin: 0 -26px; padding: 20px 26px 30px; }
+.app-card-text { display: grid; align-content: start; gap: 12px; border: 1px dashed var(--line-strong); border-bottom-width: 0; transition: border-color .35s; }
+.app-card:hover .app-card-text { border-color: var(--text); }
 /* The custom card after the domains: a band across its own row, without glass. Its text sits in a
    dashed frame, open on the side of the white button, that turns white under the pointer; the
    arrow of the button moves forward instead of the button growing. From two columns the button is
@@ -191,8 +198,7 @@ img, svg, canvas { display: block; }
    on a phone it is a band at the bottom. */
 .app-card.is-band { grid-column: 1 / -1; gap: 0; padding: 0; background: none; }
 .app-card.is-band:hover { background: none; }
-.app-band-text { display: grid; gap: 12px; padding: 28px 26px; border: 1px dashed var(--line-strong); border-bottom: 0; transition: border-color .35s; }
-.app-card.is-band:hover .app-band-text { border-color: var(--text); }
+.app-card.is-band .app-card-text { padding: 28px 26px; }
 .app-card.is-band .app-card-more { margin: 0; }
 /* The arrow only from two columns; on a phone the band stays a plain button, as on the other cards. */
 .app-card.is-band .app-card-more svg { display: none; margin-left: 10px; transition: transform .35s; }
@@ -201,7 +207,7 @@ img, svg, canvas { display: block; }
 @media (min-width: 640px) {
   .app-card.is-band { display: grid; grid-template-columns: subgrid; column-gap: normal; }
   /* The frame runs over the gap of the grid, up to the button. */
-  .app-band-text { grid-column: 1 / -2; margin-right: -16px; border-bottom: 1px dashed var(--line-strong); border-right: 0; }
+  .app-card.is-band .app-card-text { grid-column: 1 / -2; margin-right: -16px; border-bottom-width: 1px; border-right-width: 0; }
   .app-card.is-band .app-card-more { grid-column: -2 / -1; display: flex; align-items: center; justify-content: center; }
   .app-card.is-band .app-card-more svg { display: block; flex: none; }
 }
