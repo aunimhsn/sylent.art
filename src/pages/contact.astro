@@ -3,14 +3,13 @@
 // and the other ways to reach the trainer beside it, under a section heading over the grid of
 // the hero. Its texts are in src/content/contact.json, those of the form in src/i18n/fr.json.
 import ContactForm from "../components/contact-form.astro";
+import ExternalLink from "../components/external-link.astro";
 import SectionHeading from "../components/section-heading.astro";
 import page from "../content/contact.json";
 import contact from "../data/contact.json";
-import fr from "../i18n/fr.json";
 import SiteLayout from "../layouts/site-layout.astro";
 
 const { ways } = page;
-// A link to another site opens in a new tab, which a screen reader announces.
 const links = [
   { label: ways.email, text: contact.email, url: `mailto:${contact.email}` },
   { label: ways.phone, text: contact.phoneLabel, url: `tel:${contact.phone}` },
@@ -43,10 +42,7 @@ const links = [
               <li>
                 <span>{label}</span>
                 {url.startsWith("https:") ? (
-                  <a href={url} target="_blank" rel="noopener">
-                    {text}
-                    <span class="visually-hidden">{fr.links.newTab}</span>
-                  </a>
+                  <ExternalLink href={url}>{text}</ExternalLink>
                 ) : (
                   <a href={url}>{text}</a>
                 )}

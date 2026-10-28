@@ -33,9 +33,14 @@ function check(field: HTMLInputElement | HTMLTextAreaElement) {
   return !message;
 }
 
-// A field is checked when the visitor leaves it, then again as they correct it.
+// A field is checked when the visitor leaves it after typing in it (going through it with the
+// keyboard shows no error), then again as they correct it; every field is checked on sending.
+const typed = new WeakSet<HTMLElement>();
 fields.forEach((field) => {
-  field.addEventListener("blur", () => check(field));
+  field.addEventListener("input", () => typed.add(field));
+  field.addEventListener("blur", () => {
+    if (typed.has(field)) check(field);
+  });
   for (const type of ["input", "change"]) {
     field.addEventListener(type, () => {
       if (field.getAttribute("aria-invalid") === "true") check(field);
@@ -78,7 +83,12 @@ form.addEventListener("submit", async (event) => {
     invalid[0].focus();
     return;
   }
-  if (trap.value) return; // a robot
+  // A robot fills the honeypot: it gets the failure, as would a visitor whose browser filled it
+  // by mistake, who can still write by email.
+  if (trap.value) {
+    alertBox.replaceChildren(failed.content.cloneNode(true));
+    return;
+  }
   showSending(true);
   const received = await send();
   showSending(false);
@@ -88,6 +98,7 @@ form.addEventListener("submit", async (event) => {
     return;
   }
   form.reset();
+  fields.forEach((field) => typed.delete(field));
   form.hidden = true;
   sent.hidden = false;
   sent.querySelector("h2")?.focus();

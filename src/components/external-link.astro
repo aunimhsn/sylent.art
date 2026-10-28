@@ -1,0 +1,18 @@
+---
+// A link to another site: it opens in a new tab, which a screen reader announces. The other
+// attributes (the scope of the parent's styles among them) pass to the link.
+import fr from "../i18n/fr.json";
+
+interface Props {
+  href: string;
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { href, class: className, ...rest } = Astro.props;
+---
+
+<a class={className} href={href} target="_blank" rel="noopener" {...rest}>
+  <slot />
+  <span class="visually-hidden">{fr.links.newTab}</span>
+</a>

@@ -10,12 +10,6 @@
 // An email field doesn't give the position of its caret: the email field becomes a text field
 // with an email keyboard (inputmode), and the address is checked by the form script.
 const COPIED = [
-  "box-sizing",
-  "width",
-  "border-top-width",
-  "border-right-width",
-  "border-bottom-width",
-  "border-left-width",
   "padding-top",
   "padding-right",
   "padding-bottom",
@@ -49,6 +43,8 @@ function thickCaret(fields: Field[]) {
     left: "-9999px",
     visibility: "hidden",
     overflow: "hidden",
+    boxSizing: "content-box",
+    border: "0",
   });
   document.body.append(mirror);
 
@@ -58,11 +54,13 @@ function thickCaret(fields: Field[]) {
     COPIED.forEach((property) => {
       mirror.style.setProperty(property, style.getPropertyValue(property));
     });
+    // The copy wraps its text at the width of the text of the field, without its scrollbar,
+    // which is thinner than the default one that the copy would show.
+    const paddings =
+      parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+    mirror.style.width = `${field.clientWidth - paddings}px`;
     mirror.style.whiteSpace = single ? "pre" : "pre-wrap";
     mirror.style.overflowWrap = single ? "normal" : "break-word";
-    mirror.style.overflowY =
-      !single && field.scrollHeight > field.clientHeight ? "scroll" : "hidden";
-    mirror.style.height = single ? "auto" : style.height;
     const end = field.selectionEnd ?? field.value.length;
     mirror.textContent = field.value.slice(0, end);
     const marker = document.createElement("span");

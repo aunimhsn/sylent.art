@@ -2,9 +2,9 @@
 // A text of a content file with its links and stressed parts (src/lib/rich-text.ts). A link to
 // a page of the site goes through the base path; a link to another site opens in a new tab,
 // which a screen reader announces; an e-mail address or a phone number is a plain link.
-import fr from "../i18n/fr.json";
 import { partsOf } from "../lib/rich-text";
 import { href } from "../lib/url";
+import ExternalLink from "./external-link.astro";
 
 interface Props {
   text: string;
@@ -26,10 +26,9 @@ const parts = partsOf(Astro.props.text);
   }
   if (part.url.startsWith("https:")) {
     return (
-      <a class="inline-link" href={part.url} target="_blank" rel="noopener">
+      <ExternalLink class="inline-link" href={part.url}>
         {part.text}
-        <span class="visually-hidden">{fr.links.newTab}</span>
-      </a>
+      </ExternalLink>
     );
   }
   return (

@@ -217,7 +217,9 @@ const { form } = fr;
     }
   }
 
-  /* A field to fill: the message just under it, in the signal color for text. */
+  /* A field to fill: the message just under it, in the signal color for text. Empty, it stays
+     in the page without room (not display: none), so that screen readers announce it when it
+     fills. */
   .error {
     margin: var(--space-2) 0 0;
     color: var(--signal-text);
@@ -225,7 +227,7 @@ const { form } = fr;
   }
 
   .error:empty {
-    display: none;
+    margin: 0;
   }
 
   /* The honeypot: out of sight, and out of the keyboard path. */
