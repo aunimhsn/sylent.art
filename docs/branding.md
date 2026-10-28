@@ -73,7 +73,7 @@ On 2026-10-28 three redder colors were compared, for fear of looking like the br
 | Navigation | Manrope 600 | 15 px | `--secondary`, white on hover |
 | Mobile menu | Manrope 800 | 40 px | Uppercase |
 | Button | Manrope 700 | 15 px (14 px in the header) | |
-| Small heading (footer, « Autres moyens ») | Manrope 800 | 12–13 px | Uppercase, 0.14 em, `--dim` |
+| Small heading (footer, « Autres moyens ») | Manrope 800 | 12–13 px | Uppercase, 0.14 em; white in the footer, above its gray links, `--dim` elsewhere |
 | Badge « Nouveau » | Manrope 800 | 11 px | Uppercase, 0.1 em |
 
 ## Layout and shapes

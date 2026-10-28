@@ -260,7 +260,8 @@ img, svg, canvas { display: block; }
 .app-footer-logo .app-wordmark { display: block; width: 100%; height: auto; }
 .app-footer-grid { display: grid; gap: 32px; }
 @media (min-width: 900px) { .app-footer-grid { grid-template-columns: 4fr 3fr 3fr 3fr; } }
-.app-footer h2 { margin: 0 0 16px; font: 800 12px/1 var(--font-title); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+/* The headings of the columns in white, above the gray links that turn orange on hover. */
+.app-footer h2 { margin: 0 0 16px; font: 800 12px/1 var(--font-title); letter-spacing: .14em; text-transform: uppercase; color: var(--text); }
 .app-footer ul { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
 .app-footer li, .app-footer p { margin: 0; color: var(--secondary); font-size: 15px; }
 .app-footer a { transition: color .3s; }
