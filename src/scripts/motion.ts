@@ -1,7 +1,7 @@
 // The animations shared by every page (from docs/mockups/shared/motion.js), run after the
 // content: reveals on scroll, section headings, the faded word of the call to action, the rules
-// of the pedagogy, the key figures and the magnetic buttons. Nothing moves when the visitor asked
-// to reduce motion.
+// of the pedagogy and of the program of a module, the key figures and the magnetic buttons.
+// Nothing moves when the visitor asked to reduce motion.
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
@@ -104,6 +104,25 @@ if (root.dataset.motion === "on") {
         },
       );
     });
+  });
+
+  // A rule marked data-draw (the parts of the program of a module) draws itself as it scrolls
+  // into view.
+  document.querySelectorAll("[data-draw]").forEach((part) => {
+    gsap.fromTo(
+      part,
+      { "--progress": 0 },
+      {
+        "--progress": 1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: part,
+          start: "top 92%",
+          end: "top 62%",
+          scrub: true,
+        },
+      },
+    );
   });
 
   // The key figures count up, from data-from (or 0) to data-to.

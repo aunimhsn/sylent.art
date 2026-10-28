@@ -12,9 +12,16 @@ import SectionHeading from "../components/section-heading.astro";
 import home from "../content/home.json";
 import fr from "../i18n/fr.json";
 import SiteLayout from "../layouts/site-layout.astro";
+import { getOffers } from "../lib/offers";
 import { href } from "../lib/url";
 
 const { partners, audiences, domains, pedagogy, about } = home;
+// « Huit domaines »: the count follows the domain files, in words up to twelve.
+const count = (await getOffers()).length;
+const lead = domains.lead.replace(
+  "{count}",
+  fr.numbers[count] ?? String(count),
+);
 ---
 
 <SiteLayout title={fr.site.title} description={fr.site.description} cta>
@@ -60,7 +67,7 @@ const { partners, audiences, domains, pedagogy, about } = home;
         ghost={domains.ghost}
         id="domains-title"
       />
-      <p class="lead reveal">{domains.lead}</p>
+      <p class="lead reveal">{lead}</p>
       <DomainCards />
     </div>
   </section>

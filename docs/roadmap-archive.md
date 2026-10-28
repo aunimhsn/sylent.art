@@ -2,6 +2,14 @@
 
 The detail of the steps of [roadmap.md](../roadmap.md) once their pull request is merged, newest first.
 
+## 7b. Home page (#9)
+
+Built on 2026-10-28 from the mock-up (`docs/mockups/home-site.html`):
+
+- Hero with the cube (`src/scripts/cube.ts`, Three.js bundled) and its intro, partners (`src/data/partners.json`, IGENSIA Tech still without logo), audiences, domain cards that turn (a `shortTitle` on the back, « POO »), pedagogy with the spiral, « Qui suis-je ? » and the key figures.
+- The texts in `src/content/home.json` and `src/content/pedagogy.json` (steps and figures, shared with the about page).
+- The offers collection, one file per domain with the sample data of the mock-up (split into domains and modules in step 8a), and the covers (`src/scripts/covers.ts`) with the scenes of the domains and the spiral.
+
 ## 7a. Shared layout (#8)
 
 Built on 2026-10-28 from the mock-up (`docs/mockups/shared/`):

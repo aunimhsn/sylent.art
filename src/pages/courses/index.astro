@@ -1,0 +1,75 @@
+---
+// The offer list (docs/mockups/courses-site.html): the grid of the hero at the top of the page,
+// fading out, then one card per module, all in one grid, domain after domain. The home page
+// keeps one card per domain, whose link leads here to the first module of the domain.
+import ModuleCard from "../../components/module-card.astro";
+import SectionHeading from "../../components/section-heading.astro";
+import courses from "../../content/courses.json";
+import SiteLayout from "../../layouts/site-layout.astro";
+import { getOffers } from "../../lib/offers";
+
+const { list } = courses;
+const offers = await getOffers();
+---
+
+<SiteLayout title={list.title} description={list.description} cta={list.cta}>
+  <section class="courses" aria-labelledby="courses-title">
+    <div class="wrap">
+      <div class="courses-head" data-fluid="--grid-step">
+        <SectionHeading
+          title={list.heading}
+          ghost={list.ghost}
+          id="courses-title"
+          level={1}
+        />
+        <p class="lead reveal">{list.lead}</p>
+      </div>
+      <ul class="cards">
+        {offers.map(({ domain, modules }) =>
+          modules.map((module, index) => (
+            <ModuleCard
+              module={module}
+              domain={domain}
+              anchor={index === 0}
+              headingLevel={2}
+            />
+          )),
+        )}
+      </ul>
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  .courses {
+    padding: calc(var(--header-height) + var(--space-fluid-3)) 0
+      var(--space-section);
+  }
+
+  /* The grid of the hero of the home page, from the top of the page, and the orange fluid that
+     runs along it in a layer at the same place, with the same mask; it fades out before the
+     cards. */
+  .courses-head {
+    position: relative;
+  }
+
+  .courses-head::before,
+  .courses-head > :global(.fluid) {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: 50%;
+    top: calc(-1 * (var(--header-height) + var(--space-fluid-3)));
+    bottom: 0;
+    width: 100vw;
+    translate: -50% 0;
+    mask-image: linear-gradient(#000000 35%, transparent);
+  }
+
+  .courses-head::before {
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: var(--grid-step) var(--grid-step);
+  }
+</style>

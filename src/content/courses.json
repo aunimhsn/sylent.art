@@ -1,0 +1,45 @@
+{
+  "list": {
+    "title": "Formations · Sylent",
+    "description": "Les modules de formation en informatique, du HTML à l’IA : indépendants, aux durées adaptables, sur site ou à distance, pour les écoles, les organismes et les entreprises.",
+    "heading": "Formations",
+    "ghost": "Apprendre",
+    "lead": "Des modules indépendants, à prendre seuls ou à combiner, aux durées toujours adaptables, sur site ou à distance.",
+    "cta": ["Un domaine qui n’est pas dans la liste ?", "Parlons-en."]
+  },
+  "module": {
+    "title": "{title} · Formations · Sylent",
+    "description": "{summary} Un module de {duration}, sur site ou à distance.",
+    "crumbs": "Fil d’Ariane",
+    "home": "Accueil",
+    "courses": "Formations",
+    "seeProgram": "Voir le programme",
+    "facts": {
+      "audience": "Public",
+      "level": "Niveau",
+      "duration": "Durée",
+      "formats": "Formats"
+    },
+    "formats": "Sur site ou à distance",
+    "days": {
+      "one": "{days} jour, adaptable",
+      "other": "{days} jours, adaptable"
+    },
+    "toSpecify": "À préciser",
+    "prerequisites": "Prérequis",
+    "objectives": "Objectifs",
+    "program": "Programme",
+    "programEnd": "Des explications courtes, puis de la pratique : les exercices et le projet sont adaptés au niveau du groupe.",
+    "programToCome": "Le programme détaillé de ce module est en cours de rédaction.",
+    "organize": {
+      "title": "Organiser ce module",
+      "text": "Sur site ou à distance, avec un programme et des exercices adaptés à votre groupe.",
+      "button": "Me contacter"
+    },
+    "related": {
+      "title": "Dans le même domaine",
+      "ghost": "Explorer"
+    },
+    "cta": ["Organiser ce module ?", "Parlons de vos apprenants."]
+  }
+}

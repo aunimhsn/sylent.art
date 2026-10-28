@@ -1,146 +1,44 @@
 // The animated covers (from docs/mockups/shared/covers.js): one small Three.js scene in each
 // element marked .cover, named by its data-scene. Imported by the components that show covers:
-// the domain cards and the cycle of a lesson of the home page. The scenes of the modules come
-// with the offer list (step 8).
+// the domain and module cards, and the cycle of a lesson of the home page. The scenes of the
+// domains and of the cycle are here, those of the modules in src/scripts/module-scenes.ts, and
+// their shapes in src/scripts/cover-kit.ts.
 //
 // A single renderer draws every scene, then each frame is copied into the canvas of its cover:
-// one WebGL context for all the covers, and the covers follow their cards (reveal, flip). Only
-// the covers on screen move, and a card under the pointer plays faster. Without motion, each
-// scene draws one still frame. Without WebGL, the covers keep their grid.
+// one WebGL context for all the covers, and the covers follow their cards (reveal, flip, tilt).
+// Only the covers on screen move, and a card under the pointer plays faster. Without motion,
+// each scene draws one still frame. Without WebGL, the covers keep their grid.
+import { gsap } from "gsap";
 import * as THREE from "three";
+import type { SceneName } from "../lib/scenes";
+import {
+  FILL,
+  accent,
+  block,
+  clamp,
+  dot,
+  ease,
+  glow,
+  gray,
+  lineMaterial,
+  outline,
+  polyline,
+  trail,
+  v,
+  view,
+  type Scene,
+} from "./cover-kit";
+import { MODULE_SCENES } from "./module-scenes";
 
 const motion = document.documentElement.dataset.motion === "on";
 
-/** What a scene shows beside it (the cycle of a lesson), read by the page through CSS. */
-interface SceneState {
-  phase: number;
-  progress: number;
-  count: number;
-  lap?: string;
-}
-
-interface Scene {
-  scene: THREE.Scene;
-  camera: THREE.PerspectiveCamera;
-  /** The object that the text of the scene follows (the runner of the cycle of a lesson). */
-  anchor?: THREE.Object3D;
-  update(time: number): SceneState | void;
-}
-
-/** The material of a line, a dot or the outline of a block, which the orange can tint. */
-type Tintable = THREE.Material & { color: THREE.Color; opacity: number };
-
-// ── Helpers of the scenes ─────────────────────────────────────────────────────────────
-const WHITE = 0xffffff;
-const FILL = 0x151515;
-const v = (x: number, y: number, z = 0) => new THREE.Vector3(x, y, z);
-const ease = (x: number) => x * x * (3 - 2 * x);
-const clamp = (x: number) => Math.min(1, Math.max(0, x));
-const lineMaterial = (opacity: number) =>
-  new THREE.LineBasicMaterial({ color: WHITE, transparent: true, opacity });
-const outline = (geometry: THREE.BufferGeometry, opacity = 1, threshold = 10) =>
-  new THREE.LineSegments(
-    new THREE.EdgesGeometry(geometry, threshold),
-    lineMaterial(opacity),
-  );
-/** A solid shape, filled with the dark of the cover and outlined in white. */
-const block = (geometry: THREE.BufferGeometry, opacity = 1) => {
-  const mesh = new THREE.Mesh(
-    geometry,
-    new THREE.MeshBasicMaterial({ color: FILL }),
-  );
-  mesh.add(outline(geometry, opacity));
-  return mesh;
-};
-const dot = (radius = 0.06, opacity = 1) =>
-  new THREE.Mesh(
-    new THREE.SphereGeometry(radius, 16, 12),
-    new THREE.MeshBasicMaterial({ color: WHITE, transparent: true, opacity }),
-  );
-const polyline = (points: THREE.Vector3[], opacity = 1) =>
-  new THREE.Line(
-    new THREE.BufferGeometry().setFromPoints(points),
-    lineMaterial(opacity),
-  );
-const view = (
-  x: number,
-  y: number,
-  z: number,
-  look: [number, number, number] = [0, 0, 0],
-) => {
-  const camera = new THREE.PerspectiveCamera(32, 3 / 2, 0.1, 100);
-  camera.position.set(x, y, z);
-  camera.lookAt(...look);
-  return camera;
-};
-
-// The signal color of the site (orange), for a few elements of each scene: what moves, what is
-// aimed at, what succeeds (docs/branding.md, Animated covers). On a block, its lines take the
-// color; a line or a dot takes it whole.
-const SIGNAL = new THREE.Color(
-  getComputedStyle(document.documentElement)
-    .getPropertyValue("--signal")
-    .trim(),
-);
-const PLAIN = new THREE.Color(WHITE);
-const tinted = (object: THREE.Object3D) => {
-  const target =
-    object instanceof THREE.Mesh && object.children[0]
-      ? object.children[0]
-      : object;
-  return (target as THREE.Mesh | THREE.Line).material as Tintable;
-};
-const accent = <T extends THREE.Object3D>(object: T) => {
-  tinted(object).color.copy(SIGNAL);
-  return object;
-};
-/** From white (0) to the signal color (1): an element lights up when something reaches it. */
-const glow = (object: THREE.Object3D, amount: number) =>
-  tinted(object).color.copy(PLAIN).lerp(SIGNAL, clamp(amount));
-/**
- * A trail of dots in the signal color that fade behind a moving point, given in the space of
- * the parent; it starts again after a jump (the start of a new loop).
- */
-const trail = (
-  parent: THREE.Object3D,
-  count = 7,
-  radius = 0.05,
-  spacing = 2,
-) => {
-  const points = Array.from({ length: count }, (_, k) => {
-    const point = accent(
-      dot(radius * (1 - (k / count) * 0.6), 0.6 * (1 - k / count)),
-    );
-    point.visible = false;
-    parent.add(point);
-    return point;
-  });
-  const history: THREE.Vector3[] = [];
-  // A scene that moves its frame under the point (the spiral) shifts the history with it.
-  return (
-    position: THREE.Vector3,
-    visible = true,
-    shift: THREE.Vector3 | null = null,
-  ) => {
-    if (shift) history.forEach((point) => point.sub(shift));
-    if (history.length && history[0].distanceTo(position) > 0.5)
-      history.length = 0;
-    history.unshift(position.clone());
-    if (history.length > count * spacing) history.length = count * spacing;
-    points.forEach((point, k) => {
-      const at = history[k * spacing];
-      point.visible = visible && k > 0 && Boolean(at);
-      if (at) point.position.copy(at);
-    });
-  };
-};
-
-// ── The scenes ────────────────────────────────────────────────────────────────────────
-const SCENES: Record<string, () => Scene> = {
+// ── The scenes of the domains and of the cycle of a lesson ────────────────────────────
+const SCENES: Record<SceneName, () => Scene> = {
+  ...MODULE_SCENES,
   // Initiation: a little robot finds its way on a grid, step by step, as in Robomind.
   steps() {
     const scene = new THREE.Scene();
-    scene.add(new THREE.GridHelper(6, 6, 0x5a5a5a, 0x2a2a2a));
+    scene.add(new THREE.GridHelper(6, 6, gray(0.31), gray(0.11)));
     const path: [number, number][] = [
       [-1.5, -1.5],
       [-0.5, -1.5],
@@ -254,7 +152,7 @@ const SCENES: Record<string, () => Scene> = {
   // Python and data: a field of bars rising and falling like live data.
   chart() {
     const scene = new THREE.Scene();
-    scene.add(new THREE.GridHelper(5, 5, 0x4a4a4a, 0x262626));
+    scene.add(new THREE.GridHelper(5, 5, gray(0.24), gray(0.09)));
     const unit = new THREE.BoxGeometry(0.5, 1, 0.5);
     unit.translate(0, 0.5, 0);
     const bars: [THREE.Mesh, number, number][] = [];
@@ -491,7 +389,7 @@ const SCENES: Record<string, () => Scene> = {
   // Software design: the plan of a part drawn line by line, then the part takes shape.
   blueprint() {
     const scene = new THREE.Scene();
-    const grid = new THREE.GridHelper(6, 12, 0x3a3a3a, 0x222222);
+    const grid = new THREE.GridHelper(6, 12, gray(0.18), gray(0.075));
     grid.position.y = -0.6;
     scene.add(grid);
     const group = new THREE.Group();
@@ -642,7 +540,7 @@ function start(renderer: THREE.WebGLRenderer) {
   const items = [
     ...document.querySelectorAll<HTMLElement>(".cover[data-scene]"),
   ].flatMap((cover) => {
-    const make = SCENES[cover.dataset.scene ?? ""];
+    const make = SCENES[cover.dataset.scene as SceneName];
     const canvas = cover.querySelector("canvas");
     const context = canvas?.getContext("2d");
     if (!make || !canvas || !context) return [];
@@ -750,4 +648,33 @@ if (document.querySelector(".cover[data-scene]")) {
   } catch {
     // No WebGL: the covers keep their grid.
   }
+}
+
+// Pointer devices: the module cards tilt and light up under the pointer (the domain cards of the
+// home page turn instead, domain-cards.astro).
+if (motion && matchMedia("(hover: hover)").matches) {
+  document.querySelectorAll<HTMLElement>(".tilt").forEach((card) => {
+    const rotateX = gsap.quickTo(card, "rotationX", {
+      duration: 0.6,
+      ease: "power3",
+    });
+    const rotateY = gsap.quickTo(card, "rotationY", {
+      duration: 0.6,
+      ease: "power3",
+    });
+    gsap.set(card, { transformPerspective: 900 });
+    card.addEventListener("pointermove", (event) => {
+      const box = card.getBoundingClientRect();
+      const x = (event.clientX - box.left) / box.width;
+      const y = (event.clientY - box.top) / box.height;
+      card.style.setProperty("--mx", `${x * 100}%`);
+      card.style.setProperty("--my", `${y * 100}%`);
+      rotateY((x - 0.5) * 7);
+      rotateX((0.5 - y) * 7);
+    });
+    card.addEventListener("pointerleave", () => {
+      rotateX(0);
+      rotateY(0);
+    });
+  });
 }

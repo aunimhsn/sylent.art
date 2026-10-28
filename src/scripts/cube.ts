@@ -50,15 +50,15 @@ async function start(renderer: THREE.WebGLRenderer) {
   camera.position.set(0, 0, 14);
 
   // A face: its small label at the top, its large word at the bottom over a short rule, on a
-  // faint grid.
+  // faint grid, in the colors of the covers (src/styles/tokens.css).
   function faceTexture([small, big]: [string, string]) {
     const size = 512;
     const paint = document.createElement("canvas");
     paint.width = paint.height = size;
     const g = paint.getContext("2d")!;
-    g.fillStyle = "#111111";
+    g.fillStyle = css("--cover-bg");
     g.fillRect(0, 0, size, size);
-    g.strokeStyle = "rgba(255, 255, 255, 0.06)";
+    g.strokeStyle = css("--cover-line");
     for (let x = 0; x <= size; x += 32) {
       g.beginPath();
       g.moveTo(x, 0);
@@ -69,13 +69,13 @@ async function start(renderer: THREE.WebGLRenderer) {
       g.lineTo(size, x);
       g.stroke();
     }
-    g.fillStyle = "#a3a3a3";
+    g.fillStyle = css("--secondary");
     g.font = `700 24px ${family}`;
     g.letterSpacing = "4px";
     g.textBaseline = "top";
     g.fillText(small.toUpperCase(), 48, 52);
     g.letterSpacing = "-4px";
-    g.fillStyle = "#ffffff";
+    g.fillStyle = css("--text");
     let fontSize = 160;
     do {
       g.font = `800 ${fontSize}px ${family}`;
@@ -106,7 +106,7 @@ async function start(renderer: THREE.WebGLRenderer) {
     new THREE.LineSegments(
       new THREE.EdgesGeometry(geometry),
       new THREE.LineBasicMaterial({
-        color: 0xffffff,
+        color: new THREE.Color(css("--text")),
         transparent: true,
         opacity: 0.9,
       }),

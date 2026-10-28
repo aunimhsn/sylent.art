@@ -24,8 +24,6 @@ const droppedUrls = ["/creations", "/register", "/login"];
 // The former URLs whose page or redirect a later step of roadmap.md builds. Remove each one
 // with its step: the list must be empty for the launch (step 11).
 const pending = new Map([
-  ["/courses", 8],
-  ...Array.from({ length: 12 }, (_, index) => [`/courses/${index + 1}`, 8]),
   ["/about", 10],
   ["/contact", 10],
   ["/policy", 10],
