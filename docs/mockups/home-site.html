@@ -110,14 +110,14 @@
 
   /* ── Pedagogy: a test on a computer (?pedagogy=cycle, a tab of home.html) ──────────── */
 
-  /* From 1100 px, the cycle of a lesson on the left (theory 20 %, practice 50 %, correction 30 %,
+  /* From 1100 px, the cycle of a lesson on the right (theory 20 %, practice 50 %, correction 30 %,
      then again): a circle drawn in the signal color, a 3D spiral that climbs a step at each turn,
      or a 3D ring in three blocks, the practice the tallest. The four steps, two by two, on the
-     right, without background. Below 1100 px, nothing changes. */
+     left, without background. Below 1100 px, nothing changes. */
   .app-cycle { display: none; }
   @media (min-width: 1100px) {
     .app-pedagogy.is-cycle { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
-    .app-pedagogy.is-cycle .app-cycle { display: block; }
+    .app-pedagogy.is-cycle .app-cycle { display: block; order: 2; }
     .app-pedagogy.is-cycle .app-steps { grid-template-columns: repeat(2, 1fr); gap: 48px 40px; }
     .app-pedagogy.is-cycle .app-step-number { font-size: 52px; }
   }
