@@ -131,6 +131,11 @@ const current = Astro.url.pathname;
     transform: translateY(-100%);
   }
 
+  /* A link of the header that has the keyboard focus stays in sight. */
+  .header.is-hidden:focus-within {
+    transform: none;
+  }
+
   .header.is-menu {
     z-index: calc(var(--z-menu) + 1);
     border-color: transparent;
@@ -318,6 +323,28 @@ const current = Astro.url.pathname;
     border-color: var(--accent);
     background: var(--accent);
     color: var(--on-accent);
+  }
+
+  /* Without motion, the header, the menu and the back-to-top button appear and disappear
+     without moving; only their colors still fade. */
+  :global(html[data-motion="off"]) .header {
+    transition:
+      background-color var(--duration-fast),
+      border-color var(--duration-fast);
+  }
+
+  :global(html[data-motion="off"]) .menu {
+    transition: none;
+  }
+
+  :global(html[data-motion="off"]) .top {
+    transform: none;
+    transition:
+      opacity var(--duration-fast),
+      visibility var(--duration-fast),
+      background-color var(--duration-fast),
+      color var(--duration-fast),
+      border-color var(--duration-fast);
   }
 
   .top :global(svg) {

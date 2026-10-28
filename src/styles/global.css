@@ -148,11 +148,7 @@ html[data-motion="on"].is-js .reveal {
   transform: translateY(36px);
 }
 
-html[data-motion="on"].is-js .intro {
-  visibility: hidden;
-}
-
-/* The layer where the orange fluid of a grid is drawn (src/scripts/site.ts); its host places it. */
+/* The layer where the orange fluid of a grid is drawn (src/scripts/grid-fluid.ts); its host places it. */
 .fluid {
   pointer-events: none;
 }

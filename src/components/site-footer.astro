@@ -1,7 +1,7 @@
 ---
 // The footer of every page: the wordmark astride its top edge, the motto, the navigation, the
 // contact details and the legal links, over a grid where an orange fluid follows the pointer
-// (src/scripts/site.ts).
+// (src/scripts/grid-fluid.ts).
 import Wordmark from "../assets/brand/wordmark.svg";
 import contact from "../data/contact.json";
 import fr from "../i18n/fr.json";
@@ -14,8 +14,8 @@ const navigation = [
 ];
 // A link to another site opens in a new tab, which a screen reader announces.
 const external = [
-  { url: contact.linkedin, label: "linkedin.com/in/aunimhsn" },
-  { url: contact.github, label: "github.com/aunimhsn" },
+  { url: contact.linkedin, label: contact.linkedinLabel },
+  { url: contact.github, label: contact.githubLabel },
 ];
 const year = new Date().getFullYear();
 ---
@@ -99,7 +99,7 @@ const year = new Date().getFullYear();
     position: relative;
   }
 
-  /* The orange fluid of the grid (src/scripts/site.ts), between the grid and the content. */
+  /* The orange fluid of the grid (src/scripts/grid-fluid.ts), between the grid and the content. */
   .footer > :global(.fluid) {
     position: absolute;
     inset: 0;
@@ -175,3 +175,7 @@ const year = new Date().getFullYear();
     font-size: var(--size-caption);
   }
 </style>
+
+<script>
+  import "../scripts/grid-fluid";
+</script>

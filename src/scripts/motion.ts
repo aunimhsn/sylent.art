@@ -47,8 +47,10 @@ if (root.dataset.motion === "on") {
         }),
     });
     if (label) title.setAttribute("aria-label", label);
+    const ghost = block.querySelector(".heading-ghost");
+    if (!ghost) return;
     gsap.fromTo(
-      block.querySelector(".heading-ghost"),
+      ghost,
       { xPercent: 6 },
       {
         xPercent: -4,
@@ -65,8 +67,10 @@ if (root.dataset.motion === "on") {
 
   // The large faded word of the call to action slides the same way.
   document.querySelectorAll(".cta").forEach((band) => {
+    const ghost = band.querySelector(".cta-ghost");
+    if (!ghost) return;
     gsap.fromTo(
-      band.querySelector(".cta-ghost"),
+      ghost,
       { xPercent: 8 },
       {
         xPercent: -8,
