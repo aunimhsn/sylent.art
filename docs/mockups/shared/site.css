@@ -11,7 +11,6 @@
      signal that always means something. */
   --bg: #0a0a0a;
   --bg-alt: #0d0d0d;
-  --panel: #171717;
   --field-bg: #050505;
   --cover-bg: #101010;
   --cover-grid: rgb(255 255 255 / 0.035);
@@ -34,6 +33,8 @@
   --glass-hover: rgb(255 255 255 / 0.06);
   --glass-line: rgb(255 255 255 / 0.09);
   --glass-blur: 14px;
+  --header-blur: 16px;
+  --top-blur: 10px;
   --spot: rgb(255 255 255 / 0.09);
   --grid-line: rgb(255 255 255 / 0.05);
   --glow: rgb(255 255 255 / 0.10);
@@ -48,8 +49,11 @@
   --font-numeral: "Bodoni Moda", serif;
   --text-weight: 500;
   --title-weight: 800;
+  --label-weight: 800;
   --tracking-title: -0.045em;
   --tracking-ghost: -0.06em;
+  --tracking-tight: -0.04em;
+  --tracking-button: 0.01em;
   --tracking-card: -0.025em;
   --tracking-label: 0.14em;
 
@@ -113,8 +117,8 @@
   --measure-long: 68ch;
   --card-padding-block: var(--space-7);
   --card-padding-inline: var(--space-6);
-  --grid-step: 32px;
-  --grid-step-footer: 40px;
+  --grid-step: 32px; /* in px: also read by site.js */
+  --grid-step-footer: 40px; /* in px: also read by site.js */
   --grid-step-cover: 24px;
   --radius-button: 0;
   --radius-card: 0;
@@ -199,7 +203,7 @@ img, svg, canvas { display: block; }
   background: var(--accent);
   color: var(--on-accent);
   font: 700 var(--size-ui)/1 var(--font-title);
-  letter-spacing: 0.01em;
+  letter-spacing: var(--tracking-button);
   cursor: pointer;
   transition: background-color var(--duration-fast), border-color var(--duration-fast), color var(--duration-fast);
   will-change: transform;
@@ -253,7 +257,7 @@ img, svg, canvas { display: block; }
   border-bottom: 1px solid var(--cover-line);
 }
 .app-cover canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-.app-new { position: absolute; left: var(--space-4); top: var(--space-4); padding: var(--space-2) var(--space-3); background: var(--new-bg); color: var(--new-text); font: 800 var(--size-label)/1 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; }
+.app-new { position: absolute; left: var(--space-4); top: var(--space-4); padding: var(--space-2) var(--space-3); background: var(--new-bg); color: var(--new-text); font: var(--label-weight) var(--size-label)/1 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; }
 /* "Voir les modules": a white band across the bottom of the card; the whole card is the link. */
 .app-card-more {
   display: block;
@@ -304,7 +308,7 @@ img, svg, canvas { display: block; }
 .app-partner-list li { display: grid; place-items: center; }
 .app-partner-list img { display: block; max-width: 100%; height: calc(var(--logo-size) * var(--scale)); width: auto; opacity: .82; transition: opacity var(--duration-fast); }
 .app-partner-list li:hover img { opacity: 1; }
-.app-partner-name { font: 800 calc(var(--logo-size) * 0.36)/1 var(--font-title); letter-spacing: -0.04em; text-transform: uppercase; white-space: nowrap; opacity: .82; transition: opacity var(--duration-fast); }
+.app-partner-name { font: var(--title-weight) calc(var(--logo-size) * 0.36)/1 var(--font-title); letter-spacing: var(--tracking-tight); text-transform: uppercase; white-space: nowrap; opacity: .82; transition: opacity var(--duration-fast); }
 .app-partner-list li:hover .app-partner-name { opacity: 1; }
 /* Without motion, the five logos simply stand one under the other. */
 html[data-motion="off"] .app-partners-reel { height: auto; mask-image: none; }
@@ -389,11 +393,12 @@ html[data-motion="off"] .app-partner-list .is-copy { display: none; }
 /* Facts as a label over its value, under thin rules. */
 .app-doc-facts { margin: 0 0 var(--space-4); }
 .app-doc-facts div { display: grid; gap: var(--space-1); padding: var(--space-4) 0; border-bottom: 1px solid var(--line); }
-.app-doc-facts dt { color: var(--dim); font: 800 var(--size-label)/1.6 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; }
+.app-doc-facts dt { color: var(--dim); font: var(--label-weight) var(--size-label)/1.6 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; }
 .app-doc-facts dd { margin: 0; color: var(--text); }
-/* Small glass cards for the essentials: one under the other on a phone, side by side from 760 px. */
+/* Small glass cards for the essentials: one under the other, side by side from 1100 px, where the
+   column of text beside the table of contents is wide enough. */
 .app-doc-section .app-doc-cards { display: grid; gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
-@media (min-width: 760px) { .app-doc-section .app-doc-cards { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1100px) { .app-doc-section .app-doc-cards { grid-template-columns: repeat(3, 1fr); } }
 .app-doc-section .app-doc-cards li { display: grid; align-content: start; gap: var(--space-2); margin: 0; padding: var(--space-6); }
 .app-doc-cards h3 { margin: 0; font: 700 var(--size-title-small)/1.25 var(--font-title); letter-spacing: var(--tracking-card); }
 .app-doc-section .app-doc-cards p { margin: 0; font-size: var(--size-text-small); line-height: 1.55; }
@@ -408,7 +413,7 @@ html[data-motion="off"] .app-partner-list .is-copy { display: none; }
   border-bottom: 1px solid transparent;
   transition: background-color var(--duration-fast), border-color var(--duration-fast), transform var(--duration-slow) var(--ease-out);
 }
-.app-header.is-scrolled { background: var(--header-bg); border-color: var(--line); backdrop-filter: blur(16px) saturate(1.3); }
+.app-header.is-scrolled { background: var(--header-bg); border-color: var(--line); backdrop-filter: blur(var(--header-blur)) saturate(1.3); }
 .app-header.is-hidden { transform: translateY(-100%); }
 .app-header .app-wrap { display: flex; align-items: center; height: 100%; gap: var(--space-7); }
 .app-nav { display: none; margin-left: auto; gap: var(--space-8); }
@@ -476,7 +481,7 @@ html[data-motion="off"] .app-partner-list .is-copy { display: none; }
 .app-footer-grid { display: grid; gap: var(--space-8); }
 @media (min-width: 900px) { .app-footer-grid { grid-template-columns: 4fr 3fr 3fr 3fr; } }
 /* The headings of the columns in white, above the gray links that turn orange on hover. */
-.app-footer h2 { margin: 0 0 var(--space-4); font: 800 var(--size-label)/1 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--text); }
+.app-footer h2 { margin: 0 0 var(--space-4); font: var(--label-weight) var(--size-label)/1 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--text); }
 .app-footer ul { display: grid; gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
 .app-footer li, .app-footer p { margin: 0; color: var(--secondary); font-size: var(--size-ui); }
 .app-footer a { transition: color var(--duration-fast); }
@@ -498,7 +503,7 @@ html[data-motion="off"] .app-partner-list .is-copy { display: none; }
   padding: 0;
   border: 1px solid var(--line-strong);
   background: var(--top-bg);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(var(--top-blur));
   color: var(--text);
   cursor: pointer;
   opacity: 0;

@@ -482,10 +482,10 @@ function gridFluid(host, CELL, className) {
 // a page top, which marks its grid with data-grid.
 document.addEventListener("DOMContentLoaded", () => {
   if (reduced) return;
-  const token = name => parseFloat(getComputedStyle(document.documentElement).getPropertyValue(name));
+  const token = (name, fallback) => parseFloat(getComputedStyle(document.documentElement).getPropertyValue(name)) || fallback;
   const footer = document.querySelector(".app-footer");
-  if (footer) gridFluid(footer, token("--grid-step-footer"), "app-footer-fluid");
-  document.querySelectorAll("[data-grid]").forEach(host => gridFluid(host, token("--grid-step"), "app-grid-fluid"));
+  if (footer) gridFluid(footer, token("--grid-step-footer", 40), "app-footer-fluid");
+  document.querySelectorAll("[data-grid]").forEach(host => gridFluid(host, token("--grid-step", 32), "app-grid-fluid"));
 });
 
 // The reveals start hidden; if the animations don't start (a library that doesn't load), show

@@ -106,6 +106,8 @@
   .app-back-list span { overflow: hidden; color: var(--secondary); font-size: var(--size-caption); line-height: 1.4; white-space: nowrap; text-overflow: ellipsis; }
   /* One or two modules: simply listed, without the reel and its fades. */
   .app-card-back.is-still .app-back-reel { display: flex; flex-direction: column; justify-content: center; mask-image: none; }
+  .app-card-back.is-still .app-back-list { display: grid; gap: var(--space-5); }
+  .app-card-back.is-still .app-back-list li { height: auto; gap: var(--space-1); }
   .app-card-back.is-still .app-back-list span { white-space: normal; }
 
   /* ── Pedagogy: the steps and the cycle of a lesson ─────────────────────────────────── */
