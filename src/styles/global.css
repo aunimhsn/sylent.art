@@ -123,6 +123,23 @@ canvas {
   border-color: var(--text);
 }
 
+/* A link inside running text (the text pages, the failure of the contact form): underlined,
+   since its white alone stands out too little from the gray of the text around it (2.5:1, where
+   WCAG 1.4.1 asks 3:1 for a link shown by its color only); orange under the pointer. */
+.inline-link {
+  color: var(--text);
+  text-decoration: underline 1px var(--dim);
+  text-underline-offset: 0.25em;
+  transition:
+    color var(--duration-fast),
+    text-decoration-color var(--duration-fast);
+}
+
+.inline-link:hover {
+  color: var(--signal-text);
+  text-decoration-color: currentcolor;
+}
+
 /* Glass: a translucent panel that blurs what lies behind it. */
 .glass {
   border: 1px solid var(--glass-line);
@@ -366,5 +383,6 @@ html[data-motion="off"] .copied {
   a[href^="tel:"] {
     pointer-events: none;
     cursor: text;
+    text-decoration: none;
   }
 }

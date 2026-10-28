@@ -1,0 +1,26 @@
+{
+  "title": "À propos · Sylent",
+  "description": "Aunim Hassan, formateur en informatique depuis 2021 : son parcours, son approche pédagogique et les écoles qui lui font confiance.",
+  "name": "Aunim Hassan",
+  "role": "Formateur en informatique depuis 2021",
+  "story": [
+    "Passionné par le web depuis plus de dix ans, j’ai étudié l’informatique à l’Exia CESI de Toulouse, puis travaillé en développement web et évolué au sein d’une équipe agile.",
+    "Autodidacte dans l’âme, je forme depuis 2021 des étudiants, des personnes en reconversion et des salariés, avec une conviction : chacun peut progresser, à son rythme, quand il est bien accompagné."
+  ],
+  "pedagogy": {
+    "title": "Pédagogie",
+    "ghost": "Accompagner"
+  },
+  "partners": {
+    "title": "Partenaires",
+    "ghost": "Confiance"
+  },
+  "admin": {
+    "title": "Informations administratives",
+    "text": [
+      "Micro-entreprise · SIRET : {siret} · NDA : {nda}",
+      "**{ndaNotice}**"
+    ],
+    "legal": "Mentions légales"
+  }
+}

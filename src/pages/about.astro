@@ -1,0 +1,169 @@
+---
+// The about page (docs/mockups/about-site.html): the name and the background on the left, over
+// the grid, without a portrait in the first release; the key figures, larger than on the home
+// page; the pedagogy; the partners; the administrative information; the call to action. The
+// figures, the steps and the partners are shared with the home page.
+import KeyFigures from "../components/key-figures.astro";
+import PartnerReel from "../components/partner-reel.astro";
+import PedagogySteps from "../components/pedagogy-steps.astro";
+import RichText from "../components/rich-text.astro";
+import SectionHeading from "../components/section-heading.astro";
+import about from "../content/about.json";
+import SiteLayout from "../layouts/site-layout.astro";
+import { href } from "../lib/url";
+
+const { pedagogy, partners, admin } = about;
+---
+
+<SiteLayout title={about.title} description={about.description} cta>
+  <section
+    class="about-hero"
+    aria-labelledby="about-title"
+    data-fluid="--grid-step"
+  >
+    <div class="wrap">
+      <h1 class="about-title reveal" id="about-title">
+        {about.name}
+      </h1>
+      <p class="about-role reveal">{about.role}</p>
+      {about.story.map((paragraph) => (
+        <p class="about-story reveal">{paragraph}</p>
+      ))}
+    </div>
+  </section>
+
+  <div class="wrap reveal">
+    <KeyFigures large />
+  </div>
+
+  <section class="section" aria-labelledby="pedagogy-title">
+    <div class="wrap">
+      <SectionHeading
+        title={pedagogy.title}
+        ghost={pedagogy.ghost}
+        id="pedagogy-title"
+      />
+      <PedagogySteps />
+    </div>
+  </section>
+
+  <section class="section is-next" aria-labelledby="partners-title">
+    <div class="wrap">
+      <SectionHeading
+        title={partners.title}
+        ghost={partners.ghost}
+        id="partners-title"
+      />
+      <PartnerReel />
+    </div>
+  </section>
+
+  <section class="section is-next" aria-labelledby="admin-title">
+    <div class="wrap">
+      <div class="admin glass reveal">
+        <h2 id="admin-title">{admin.title}</h2>
+        {admin.text.map((line) => (
+          <p>
+            <RichText text={line} />
+          </p>
+        ))}
+        <a class="link" href={href("/legal/")}>
+          {admin.legal}
+        </a>
+      </div>
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  .section.is-next {
+    padding-top: 0;
+  }
+
+  /* The name and the background, on the left, over the grid. */
+  .about-hero {
+    position: relative;
+    padding: calc(var(--header-height) + var(--space-fluid-2)) 0
+      var(--space-fluid-3);
+  }
+
+  /* The grid, and the orange fluid that runs along it in a layer at the same place, with the
+     same mask. */
+  .about-hero::before,
+  .about-hero > :global(.fluid) {
+    content: "";
+    position: absolute;
+    inset: 0;
+    mask-image: radial-gradient(
+      80% 75% at 30% 40%,
+      #000000 30%,
+      transparent 75%
+    );
+  }
+
+  .about-hero::before {
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: var(--grid-step) var(--grid-step);
+  }
+
+  .about-hero .wrap {
+    position: relative;
+  }
+
+  .about-title {
+    margin: 0;
+    font: var(--title-weight) var(--size-display) / 0.98 var(--font-title);
+    letter-spacing: var(--tracking-title);
+  }
+
+  .about-role {
+    margin: var(--space-5) 0 0;
+    font: 700 var(--size-role) / 1.3 var(--font-title);
+    letter-spacing: var(--tracking-card);
+  }
+
+  .about-story {
+    max-width: var(--measure);
+    margin: var(--space-6) 0 0;
+    color: var(--secondary);
+    font-size: var(--size-intro);
+    text-wrap: pretty;
+  }
+
+  .about-story + .about-story {
+    margin-top: var(--space-4);
+  }
+
+  /* The administrative information: a glass panel. */
+  .admin {
+    display: grid;
+    gap: var(--space-3);
+    max-width: var(--width-narrow);
+    margin-inline: auto;
+    padding: var(--card-padding-block) var(--card-padding-inline);
+  }
+
+  .admin h2 {
+    margin: 0 0 var(--space-1);
+    font: 700 var(--size-card-title) / 1.2 var(--font-title);
+    letter-spacing: var(--tracking-card);
+  }
+
+  .admin p {
+    margin: 0;
+    color: var(--secondary);
+    font-size: var(--size-text-small);
+  }
+
+  .admin :global(strong) {
+    color: var(--text);
+    font-weight: inherit;
+  }
+
+  .admin .link {
+    justify-self: start;
+    margin-top: var(--space-2);
+  }
+</style>

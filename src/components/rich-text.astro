@@ -1,0 +1,39 @@
+---
+// A text of a content file with its links and stressed parts (src/lib/rich-text.ts). A link to
+// a page of the site goes through the base path; a link to another site opens in a new tab,
+// which a screen reader announces.
+import fr from "../i18n/fr.json";
+import { partsOf } from "../lib/rich-text";
+import { href } from "../lib/url";
+
+interface Props {
+  text: string;
+}
+
+const parts = partsOf(Astro.props.text);
+---
+
+{parts.map((part) => {
+  if (part.kind === "text") return part.text;
+  if (part.kind === "strong") return <strong>{part.text}</strong>;
+  if (part.url.startsWith("/")) {
+    return (
+      <a class="inline-link" href={href(part.url)}>
+        {part.text}
+      </a>
+    );
+  }
+  if (part.url.startsWith("https:")) {
+    return (
+      <a class="inline-link" href={part.url} target="_blank" rel="noopener">
+        {part.text}
+        <span class="visually-hidden">{fr.links.newTab}</span>
+      </a>
+    );
+  }
+  return (
+    <a class="inline-link" href={part.url}>
+      {part.text}
+    </a>
+  );
+})}

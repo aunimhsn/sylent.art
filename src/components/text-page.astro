@@ -1,0 +1,323 @@
+---
+// A text page (docs/mockups/legal-site.html, privacy-site.html): a section heading over the grid
+// of the hero, a lead and the date of the last update; then sections under thin rules, beside a
+// table of contents that follows the scroll on a computer. A section shows, in this order, its
+// cards, its facts (a label over its value) and its paragraphs. Used by the legal notice and the
+// privacy policy, whose texts are in src/content/legal.json and policy.json.
+import fr from "../i18n/fr.json";
+import RichText from "./rich-text.astro";
+import SectionHeading from "./section-heading.astro";
+
+interface Section {
+  id: string;
+  title: string;
+  cards?: { title: string; text: string }[];
+  facts?: { label: string; value: string }[];
+  text?: string[];
+}
+
+interface Props {
+  heading: string;
+  ghost: string;
+  /** The lines of the lead. */
+  lead: string[];
+  /** The date of the last update, as YYYY-MM-DD. */
+  updated: string;
+  sections: Section[];
+}
+
+const { heading, ghost, lead, updated, sections } = Astro.props;
+// « 28 octobre 2026 », kept on one line.
+const date = new Intl.DateTimeFormat("fr-FR", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  timeZone: "UTC",
+})
+  .format(new Date(`${updated}T00:00:00Z`))
+  .replaceAll(" ", " ");
+const [before, after] = fr.textPage.updated.split("{date}");
+---
+
+<article class="text-page" aria-labelledby="text-page-title">
+  <div class="wrap">
+    <header class="text-page-head" data-fluid="--grid-step">
+      <SectionHeading
+        title={heading}
+        ghost={ghost}
+        id="text-page-title"
+        level={1}
+      />
+      <p class="lead reveal">
+        {lead.map((line, index) => (index > 0 ? [<br />, line] : line))}
+      </p>
+      <p class="updated reveal">
+        {before}
+        <time datetime={updated}>{date}</time>
+        {after}
+      </p>
+    </header>
+    <div class="text-page-body">
+      <nav class="toc" aria-label={fr.textPage.toc}>
+        <ol>
+          {sections.map(({ id, title }) => (
+            <li>
+              <a href={`#${id}`}>{title}</a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+      <div>
+        {sections.map(({ id, title, cards, facts, text }) => (
+          <section
+            class="text-section reveal"
+            id={id}
+            aria-labelledby={`${id}-title`}
+          >
+            <h2 id={`${id}-title`}>{title}</h2>
+            {cards && (
+              <ul class="text-cards">
+                {cards.map((card) => (
+                  <li class="glass">
+                    <h3>{card.title}</h3>
+                    <p>
+                      <RichText text={card.text} />
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {facts && (
+              <dl class="text-facts">
+                {facts.map(({ label, value }) => (
+                  <div>
+                    <dt>{label}</dt>
+                    <dd>
+                      <RichText text={value} />
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            )}
+            {text?.map((paragraph) => (
+              <p>
+                <RichText text={paragraph} />
+              </p>
+            ))}
+          </section>
+        ))}
+      </div>
+    </div>
+  </div>
+</article>
+
+<style>
+  /* Room at the bottom for the wordmark of the footer, which straddles its top edge. */
+  .text-page {
+    padding: calc(var(--header-height) + var(--space-fluid-3)) 0
+      var(--space-wordmark);
+  }
+
+  /* The grid of the hero of the home page, from the top of the page, and the orange fluid that
+     runs along it in a layer at the same place, with the same mask; it fades out above the
+     text. */
+  .text-page-head {
+    position: relative;
+    padding-bottom: var(--space-fluid-3);
+  }
+
+  .text-page-head::before,
+  .text-page-head > :global(.fluid) {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: 50%;
+    top: calc(-1 * (var(--header-height) + var(--space-fluid-3)));
+    bottom: 0;
+    width: 100vw;
+    translate: -50% 0;
+    mask-image: linear-gradient(#000000 35%, transparent);
+  }
+
+  .text-page-head::before {
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: var(--grid-step) var(--grid-step);
+  }
+
+  /* The long titles (« CONFIDENTIALITE ») hold on one line at phone width. */
+  .text-page-head :global(.heading-title) {
+    font-size: var(--size-section-long);
+  }
+
+  .updated {
+    margin: var(--space-4) 0 0;
+    color: var(--dim);
+    font-size: var(--size-ui);
+  }
+
+  .text-page-body {
+    display: grid;
+    gap: var(--space-12);
+  }
+
+  /* The table of contents shows on a computer only, where it follows the scroll. */
+  .toc {
+    display: none;
+  }
+
+  .toc ol {
+    margin: 0;
+    padding: 0;
+    border-left: 1px solid var(--line);
+    list-style: none;
+  }
+
+  .toc a {
+    display: block;
+    margin-left: -1px;
+    padding: var(--space-2) 0 var(--space-2) var(--space-4);
+    border-left: 1px solid transparent;
+    color: var(--dim);
+    font: 600 var(--size-ui) / 1.35 var(--font-title);
+    transition:
+      color var(--duration-fast),
+      border-color var(--duration-fast);
+  }
+
+  .toc a:hover {
+    color: var(--text);
+  }
+
+  /* The section being read, marked by the script below. */
+  .toc a[aria-current="location"] {
+    border-left-color: var(--signal);
+    color: var(--text);
+  }
+
+  .text-section {
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--line);
+    scroll-margin-top: calc(var(--header-height) + var(--space-6));
+  }
+
+  .text-section + .text-section {
+    margin-top: var(--space-fluid-2);
+  }
+
+  h2 {
+    margin: 0 0 var(--space-6);
+    font: var(--title-weight) var(--size-h2) / 1.1 var(--font-title);
+    letter-spacing: var(--tracking-title);
+  }
+
+  .text-section > p {
+    max-width: var(--measure-long);
+    margin: 0 0 var(--space-4);
+    color: var(--secondary);
+    text-wrap: pretty;
+  }
+
+  .text-section :global(strong) {
+    color: var(--text);
+    font-weight: inherit;
+  }
+
+  /* Facts: a label in small capitals over its value, under rules. */
+  .text-facts {
+    margin: 0 0 var(--space-4);
+  }
+
+  .text-facts div {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  dt {
+    color: var(--dim);
+    font: var(--label-weight) var(--size-label) / 1.6 var(--font-title);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+
+  dd {
+    margin: 0;
+    color: var(--text);
+  }
+
+  /* The essentials of the privacy policy: small glass cards, one under the other, side by side
+     from 1100 px. */
+  .text-cards {
+    display: grid;
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .text-cards li {
+    display: grid;
+    align-content: start;
+    gap: var(--space-2);
+    padding: var(--space-6);
+  }
+
+  h3 {
+    margin: 0;
+    font: 700 var(--size-title-small) / 1.25 var(--font-title);
+    letter-spacing: var(--tracking-card);
+  }
+
+  .text-cards p {
+    margin: 0;
+    color: var(--secondary);
+    font-size: var(--size-text-small);
+    line-height: 1.55;
+  }
+
+  @media (width >= 900px) {
+    .text-page-body {
+      grid-template-columns: 3fr 8fr;
+      gap: var(--space-18);
+      align-items: start;
+    }
+
+    .toc {
+      display: block;
+      position: sticky;
+      top: calc(var(--header-height) + var(--space-8));
+    }
+  }
+
+  @media (width >= 1100px) {
+    .text-cards {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>
+
+<script>
+  // The table of contents marks the section being read: the last one whose top has passed the
+  // upper third of the window.
+  const links = [...document.querySelectorAll<HTMLAnchorElement>(".toc a")];
+  const sections = links.map((link) => document.querySelector(link.hash));
+  function mark() {
+    const passed = sections.filter(
+      (section) =>
+        section && section.getBoundingClientRect().top < innerHeight / 3,
+    );
+    const reading = passed.at(-1) ?? sections[0];
+    links.forEach((link, index) => {
+      if (sections[index] === reading) {
+        link.setAttribute("aria-current", "location");
+      } else {
+        link.removeAttribute("aria-current");
+      }
+    });
+  }
+  addEventListener("scroll", mark, { passive: true });
+  mark();
+</script>

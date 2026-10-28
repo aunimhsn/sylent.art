@@ -1,0 +1,89 @@
+{
+  "title": "Confidentialité · Sylent",
+  "description": "Comment sylent.art traite vos données : le formulaire de contact, la mesure d’audience sans cookie et vos droits.",
+  "heading": "Confidentialité",
+  "ghost": "Proteger",
+  "lead": [
+    "Les données recueillies sur ce site,",
+    "et l’usage qui en est fait."
+  ],
+  "updated": "2026-10-28",
+  "sections": [
+    {
+      "id": "essentiel",
+      "title": "L’essentiel",
+      "cards": [
+        {
+          "title": "Aucun cookie",
+          "text": "Rien n’est déposé dans votre navigateur, donc aucun bandeau à accepter."
+        },
+        {
+          "title": "Un seul usage",
+          "text": "Vos données servent à répondre à votre demande : jamais de prospection, jamais de revente."
+        },
+        {
+          "title": "Vos droits",
+          "text": "Vous pouvez à tout moment demander à les consulter ou à les supprimer."
+        }
+      ]
+    },
+    {
+      "id": "responsable",
+      "title": "Responsable du traitement",
+      "text": [
+        "Aunim Hassan, formateur indépendant, joignable à [{email}](mailto:{email})."
+      ]
+    },
+    {
+      "id": "formulaire",
+      "title": "Le formulaire de contact",
+      "facts": [
+        {
+          "label": "Données",
+          "value": "Votre adresse email et votre message"
+        },
+        {
+          "label": "Finalité",
+          "value": "Répondre à votre demande et, le cas échéant, préparer une formation"
+        },
+        {
+          "label": "Base légale",
+          "value": "Les mesures précontractuelles prises à votre demande"
+        },
+        {
+          "label": "Destinataire",
+          "value": "Formspree, Inc., qui reçoit le formulaire et me le transmet par email"
+        },
+        {
+          "label": "Conservation",
+          "value": "30 jours chez Formspree, puis 3 ans après notre dernier échange dans ma messagerie"
+        }
+      ],
+      "text": [
+        "Formspree est situé aux États-Unis : vos données y sont donc transférées, hors de l’Union européenne. Sa [politique de confidentialité](https://formspree.io/legal/privacy-policy/) décrit son traitement. Si vous préférez l’éviter, écrivez-moi directement à [{email}](mailto:{email})."
+      ]
+    },
+    {
+      "id": "audience",
+      "title": "La mesure d’audience",
+      "text": [
+        "Le site compte ses visites avec GoatCounter, un outil sans cookie, hébergé dans l’Union européenne. Il ne conserve ni votre adresse IP ni aucun identifiant : seulement des totaux (pages vues, sites d’origine, navigateurs, tailles d’écran, pays), qui ne permettent pas de vous reconnaître."
+      ]
+    },
+    {
+      "id": "hebergement",
+      "title": "L’hébergement",
+      "text": [
+        "Le site est hébergé par GitHub Pages (GitHub, Inc., États-Unis), qui peut enregistrer l’adresse IP des visiteurs pour la sécurité de son service. Les liens vers LinkedIn et GitHub mènent à des sites qui appliquent leur propre politique."
+      ]
+    },
+    {
+      "id": "droits",
+      "title": "Vos droits",
+      "text": [
+        "Vous pouvez demander l’accès à vos données, leur rectification ou leur effacement, vous opposer à leur traitement ou en demander la limitation et la portabilité. Écrivez à [{email}](mailto:{email}) : je réponds dans un délai d’un mois.",
+        "Si vous estimez que vos droits ne sont pas respectés, vous pouvez adresser une réclamation à la [CNIL](https://www.cnil.fr/fr/plaintes)."
+      ]
+    }
+  ]
+}

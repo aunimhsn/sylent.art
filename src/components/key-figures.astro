@@ -1,10 +1,16 @@
 ---
 // Three key figures under rules, which count up (src/scripts/motion.ts). Shared by the home and
-// about pages.
+// about pages; the about page shows them larger, since they open the page (large).
 import pedagogy from "../content/pedagogy.json";
+
+interface Props {
+  large?: boolean;
+}
+
+const { large = false } = Astro.props;
 ---
 
-<div class="figures">
+<div class:list={["figures", { "is-large": large }]}>
   {pedagogy.figures.map((figure) => (
     <div>
       <strong>
@@ -40,5 +46,17 @@ import pedagogy from "../content/pedagogy.json";
     color: var(--secondary);
     font-size: var(--size-caption);
     line-height: 1.35;
+  }
+
+  .is-large {
+    margin: 0;
+  }
+
+  .is-large strong {
+    font-size: var(--size-figure-large);
+  }
+
+  .is-large div > span {
+    font-size: clamp(var(--size-caption), 1.3vw, var(--size-text-small));
   }
 </style>

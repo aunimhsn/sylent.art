@@ -1,0 +1,16 @@
+---
+// The legal notice (docs/mockups/legal-site.html), whose texts are in src/content/legal.json.
+import TextPage from "../components/text-page.astro";
+import page from "../content/legal.json";
+import SiteLayout from "../layouts/site-layout.astro";
+---
+
+<SiteLayout title={page.title} description={page.description}>
+  <TextPage
+    heading={page.heading}
+    ghost={page.ghost}
+    lead={page.lead}
+    updated={page.updated}
+    sections={page.sections}
+  />
+</SiteLayout>

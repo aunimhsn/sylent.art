@@ -23,11 +23,7 @@ const droppedUrls = ["/creations", "/register", "/login"];
 
 // The former URLs whose page or redirect a later step of roadmap.md builds. Remove each one
 // with its step: the list must be empty for the launch (step 10).
-const pending = new Map([
-  ["/about", 9],
-  ["/contact", 9],
-  ["/policy", 9],
-]);
+const pending = new Map([["/contact", 9]]);
 
 /** The file that GitHub Pages serves for a URL path, as written by Astro. */
 const fileOf = (path) => join(dist, path, "index.html");
