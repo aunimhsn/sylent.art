@@ -375,24 +375,12 @@ if (coverRenderer) {
       const runner = accent(dot(0.06));
       group.add(runner);
       const wake = trail(group, 8, 0.04, 3);
-      // Each turn is a session: its number stands on its left, like the floors of a building.
-      const floors = [-2, -1, 0, 1, 2].map(k => {
-        const floor = new THREE.Object3D();
-        floor.position.copy(at(k + 0.75)).add(v(-0.15, 0));
-        group.add(floor);
-        return floor;
-      });
       let lastLap;
-      return { scene, camera: view(5.4, 3.0, 7.0, [0, 0, 0]), anchor: runner, anchors: floors, styles: {}, data: {}, update(t) {
+      return { scene, camera: view(5.4, 3.0, 7.0, [0, 0, 0]), anchor: runner, data: {}, update(t) {
         const lap = Math.floor(t * 0.1 + 0.32);
         const u = (t * 0.1 + 0.32) % 1;
-        // The session of the runner, and the ones below and above it.
-        floors.forEach((_, i) => {
-          const session = lap + 1 + i - 2;
-          this.styles[`--session-${i}`] = String(Math.max(1, session));
-          this.styles[`--session-${i}-shown`] = session >= 1 ? "1" : "0";
-        });
-        // A new session starts: its tag shows once (two tags take turns, so that it plays again).
+        // Each turn is a session. A new one starts: its tag shows once (two tags take turns, so
+        // that it plays again).
         if (lastLap !== undefined && lap !== lastLap) this.data.lap = String(lap % 2);
         lastLap = lap;
         this.phase = u < 0.2 ? 0 : u < 0.7 ? 1 : 2;
@@ -1228,7 +1216,6 @@ if (coverRenderer) {
     // A scene may report what it shows (the phase of the cycle of a lesson), for the text beside it.
     if (item.phase !== undefined && item.cover.dataset.phase !== String(item.phase)) item.cover.dataset.phase = item.phase;
     if (item.count !== undefined) item.cover.style.setProperty("--count", String(Math.min(99, Math.floor(item.count + 1))));
-    Object.entries(item.styles || {}).forEach(([name, value]) => item.cover.style.setProperty(name, value));
     Object.entries(item.data || {}).forEach(([name, value]) => { if (item.cover.dataset[name] !== value) item.cover.dataset[name] = value; });
     coverRenderer.setViewport(0, 0, width, height);
     coverRenderer.setScissor(0, 0, width, height);
@@ -1236,15 +1223,13 @@ if (coverRenderer) {
     coverRenderer.setClearColor(0x000000, 0);
     coverRenderer.clear();
     coverRenderer.render(item.scene, item.camera);
-    // A scene may also name the objects that its text follows (the runner of the cycle of a lesson,
-    // its sessions): their place in the cover, in percent.
-    const place = (object, name) => {
-      const point = object.getWorldPosition(new THREE.Vector3()).project(item.camera);
-      item.cover.style.setProperty(`--${name}-x`, `${(point.x + 1) * 50}%`);
-      item.cover.style.setProperty(`--${name}-y`, `${(1 - point.y) * 50}%`);
-    };
-    if (item.anchor) place(item.anchor, "anchor");
-    (item.anchors || []).forEach((object, index) => place(object, `anchor-${index}`));
+    // A scene may also name the object that its text follows (the runner of the cycle of a
+    // lesson): its place in the cover, in percent.
+    if (item.anchor) {
+      const point = item.anchor.getWorldPosition(new THREE.Vector3()).project(item.camera);
+      item.cover.style.setProperty("--anchor-x", `${(point.x + 1) * 50}%`);
+      item.cover.style.setProperty("--anchor-y", `${(1 - point.y) * 50}%`);
+    }
     item.context.clearRect(0, 0, width, height);
     item.context.drawImage(coverRenderer.domElement, 0, room[1] - height, width, height, 0, 0, width, height);
   }

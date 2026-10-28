@@ -112,14 +112,11 @@
 
   /* The cycle of a lesson (theory 20 %, practice 50 %, correction 30 %, then again): a circle drawn
      in the signal color, a 3D spiral that climbs a step at each turn, or a 3D ring in three
-     blocks, the practice the tallest; under a caption in the style of the motto, its rule after
-     the text. On a phone, after the steps; from 1100 px, on the right of the steps, two by two
+     blocks, the practice the tallest. On a phone, after the steps; from 1100 px, on the right of the steps, two by two
      and without background. */
   .app-cycle { display: none; }
   .app-pedagogy.is-cycle { display: grid; gap: 56px; }
   .app-pedagogy.is-cycle .app-cycle { display: block; order: 2; }
-  .app-cycle-caption { display: flex; align-items: center; gap: 14px; margin: 0; color: var(--dim); font: var(--text-weight) 16px/1.3 var(--font-text); }
-  .app-cycle-caption::after { content: ""; flex: none; width: 40px; height: 1px; background: currentColor; }
   @media (min-width: 1100px) {
     .app-pedagogy.is-cycle { grid-template-columns: 1fr 1fr; align-items: center; }
     .app-pedagogy.is-cycle .app-steps { grid-template-columns: repeat(2, 1fr); gap: 48px 40px; }
@@ -151,13 +148,8 @@
     100% { opacity: 0; transform: translate(-50%, calc(-100% - 22px)); }
   }
   html[data-motion="off"] .app-cycle-tag { animation: none; transform: translate(-50%, calc(-100% - 14px)); }
-  /* Each turn is a session, numbered on its left like the floors of a building: the sessions done
-     in gray, the one of the runner in white, the ones to come barely visible. */
-  .app-cycle-session { position: absolute; color: #3a3a3a; font: var(--text-weight) 15px/1 var(--font-text); white-space: nowrap; transform: translate(-100%, -50%); pointer-events: none; }
-  .app-cycle-session::after { content: "Séance\00a0" counter(session); }
-  .app-cycle-session.is-done { color: var(--dim); }
-  .app-cycle-session.is-current { color: var(--text); }
-  /* When a session starts, « Séance suivante » under the runner, in the style of the phase. */
+  /* Each turn is a session: when one starts, « Séance suivante » under the runner, in the style
+     of the phase. */
   .app-cycle-next { position: absolute; left: var(--anchor-x, 50%); top: var(--anchor-y, 50%); display: none; color: var(--signal-text); font: var(--text-weight) 15px/1 var(--font-text); white-space: nowrap; pointer-events: none; }
   .app-cycle-scene[data-lap="0"] .app-cycle-next[data-lap="0"],
   .app-cycle-scene[data-lap="1"] .app-cycle-next[data-lap="1"] { display: block; animation: app-cycle-next 1.8s ease forwards; }
@@ -249,16 +241,13 @@
     return `<text class="app-cycle-label" x="${x.toFixed(1)}" y="${(y + 6).toFixed(1)}" text-anchor="${anchor}">${phase}</text>`;
   }
   const CYCLE_SENTENCE = `Le cycle d’une séance${NB}: 20${NB}% de théorie, 50${NB}% de pratique, 30${NB}% de correction, puis on recommence.`;
-  const CYCLE_CAPTION = "Le cycle d’une séance de formation";
   const PEDAGOGY = query.get("pedagogy");
   const cycleFigure = () => PEDAGOGY === "spiral" || PEDAGOGY === "ring" ? `
     <div class="app-cycle">
-      <p class="app-cycle-caption">${CYCLE_CAPTION}</p>
-      <div class="app-cover app-cycle-scene" data-scene="${PEDAGOGY}" aria-hidden="true"><canvas></canvas>${CYCLE.map(([phase]) => `<span class="app-cycle-tag">${phase}</span>`).join("")}${PEDAGOGY === "spiral" ? [0, 1, 2, 3, 4].map(i => `<span class="app-cycle-session${i < 2 ? " is-done" : i === 2 ? " is-current" : ""}" style="left: var(--anchor-${i}-x); top: var(--anchor-${i}-y); opacity: var(--session-${i}-shown, 0); counter-reset: session var(--session-${i}, 1)"></span>`).join("") + '<span class="app-cycle-next" data-lap="0">Séance suivante</span><span class="app-cycle-next" data-lap="1">Séance suivante</span>' : ""}</div>
+      <div class="app-cover app-cycle-scene" data-scene="${PEDAGOGY}" aria-hidden="true"><canvas></canvas>${CYCLE.map(([phase]) => `<span class="app-cycle-tag">${phase}</span>`).join("")}${PEDAGOGY === "spiral" ? '<span class="app-cycle-next" data-lap="0">Séance suivante</span><span class="app-cycle-next" data-lap="1">Séance suivante</span>' : ""}</div>
       <p class="app-hidden">${CYCLE_SENTENCE}</p>
     </div>` : `
     <div class="app-cycle is-flat">
-      <p class="app-cycle-caption">${CYCLE_CAPTION}</p>
       <svg viewBox="-80 0 560 400" role="img" aria-label="${CYCLE_SENTENCE}">
         <circle class="app-cycle-track" cx="200" cy="200" r="${CYCLE_RADIUS}"/>
         <g transform="rotate(-90 200 200)">${CYCLE.map(() => `<circle class="app-cycle-arc" cx="200" cy="200" r="${CYCLE_RADIUS}" stroke-dasharray="0 ${CYCLE_LENGTH}"/>`).join("")}</g>
