@@ -1,0 +1,369 @@
+---
+// The cards of the domains on the home page, then a band for a custom request. No domain pages
+// in the first release: a card leads to the offer list, at the first module of its domain.
+//
+// Under the pointer (or with the keyboard focus) a card turns half a turn and shows its modules
+// on its back (docs/branding.md, Components). The back is decorative, hidden from screen readers:
+// the modules are listed on the offer list.
+import { getCollection } from "astro:content";
+import fr from "../i18n/fr.json";
+import { href } from "../lib/url";
+import Icon from "./icon.astro";
+
+const domains = (await getCollection("offers")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<ul class="cards">
+  {domains.map(({ id, data }) => (
+    <li class="card glass reveal" data-domain={id}>
+      <div class="cover" data-scene={data.scene} aria-hidden="true">
+        <canvas />
+        {data.isNew && <span class="new">{fr.cards.new}</span>}
+      </div>
+      <h3>{data.title}</h3>
+      <p>{data.summary}</p>
+      <a
+        class="card-more"
+        href={href(`/courses/#${id}`)}
+        aria-label={fr.cards.domainLabel.replace("{title}", data.title)}
+      >
+        <span>{fr.cards.domainMore}</span>
+      </a>
+      <div
+        class:list={["card-back", { "is-still": data.modules.length < 3 }]}
+        aria-hidden="true"
+      >
+        <div class="back-reel">
+          <ul class="back-list">
+            {data.modules.map((module) => (
+              <li>
+                <strong>{module.shortTitle ?? module.title}</strong>
+                <span class="back-summary">{module.summary}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </li>
+  ))}
+  <li class="card reveal is-band">
+    <div class="card-text">
+      <h3>{fr.cards.customTitle}</h3>
+      <p>{fr.cards.customText}</p>
+    </div>
+    <a class="card-more" href={href("/contact/")}>
+      <span>{fr.cards.customButton}</span>
+      <Icon name="right" size={18} />
+    </a>
+  </li>
+</ul>
+
+<script>
+  import "../scripts/covers";
+  import { gsap } from "gsap";
+
+  // The card turns in one smooth movement, from wherever it stands. Its glass flattens 3D, so
+  // the sides are swapped when the card passes its edge, instead of turning a real back face.
+  // Only on pointer devices: touch screens don't turn the cards.
+  const motion = document.documentElement.dataset.motion === "on";
+  const clamp = (x: number) => Math.min(1, Math.max(0, x));
+
+  function flipCard(card: HTMLElement) {
+    const back = card.querySelector(".card-back") as HTMLElement;
+    const reel = back.querySelector(".back-reel") as HTMLElement;
+    const list = reel.querySelector(".back-list") as HTMLElement;
+    const modules = [...list.children];
+    const still = back.classList.contains("is-still");
+    let items: HTMLElement[] = [];
+    let copies = 0;
+    let offset = 0;
+    let before = 0;
+    let spinning = false;
+
+    // From three modules, they scroll up without end. The reel repeats them until one cycle is
+    // taller than the reel, then holds two cycles, so that it loops without a gap whatever the
+    // size of the card.
+    function fill() {
+      const row = (list.firstElementChild as HTMLElement).offsetHeight;
+      const height = reel.clientHeight;
+      if (!row || !height) return false;
+      const needed = Math.ceil((height / row + 1) / modules.length);
+      if (needed !== copies) {
+        copies = needed;
+        list.replaceChildren(
+          ...Array.from({ length: copies * 2 }, () =>
+            modules.map((module) => module.cloneNode(true)),
+          ).flat(),
+        );
+        items = [...list.children] as HTMLElement[];
+        offset = 0;
+      }
+      return true;
+    }
+
+    // Each module comes in at the bottom, and near the top moves away toward the back.
+    function spin(now: number) {
+      if (!card.classList.contains("is-flipped")) {
+        spinning = false;
+        return;
+      }
+      requestAnimationFrame(spin);
+      if (!fill()) return;
+      const row = items[0].offsetHeight;
+      const height = reel.clientHeight;
+      offset =
+        (offset + ((before ? now - before : 0) * row) / 1500) %
+        ((row * items.length) / 2);
+      before = now;
+      list.style.transform = `translateY(${-offset}px)`;
+      items.forEach((element, index) => {
+        const place = (index * row + row / 2 - offset) / height; // 0 at the top, 1 at the bottom
+        const away = clamp((0.3 - place) / 0.3);
+        const coming = clamp((place - 0.72) / 0.28);
+        element.style.transform = `perspective(500px) translateZ(${-away * 220}px) rotateX(${away * 38}deg) scale(${1 - coming * 0.12})`;
+        element.style.opacity = String(Math.max(0, 1 - away * 1.1 - coming));
+      });
+    }
+
+    // The sides follow the angle: past the edge (90°), the card shows its back.
+    const sides = (showBack: boolean) => {
+      if (showBack === card.classList.contains("is-flipped")) return;
+      card.classList.toggle("is-flipped", showBack);
+      if (showBack && !still && !spinning && motion) {
+        spinning = true;
+        before = 0;
+        requestAnimationFrame(spin);
+      }
+    };
+    let flipped = false;
+    let turn: gsap.core.Tween | null = null;
+    function flip(open: boolean) {
+      if (open === flipped) return;
+      flipped = open;
+      turn?.kill();
+      if (!motion) {
+        card.style.transform = open ? "rotateY(180deg)" : "";
+        sides(open);
+        return;
+      }
+      turn = gsap.to(card, {
+        rotationY: open ? 180 : 0,
+        transformPerspective: 1000,
+        duration: 0.8,
+        ease: "power2.inOut",
+        onUpdate: () => sides(Number(gsap.getProperty(card, "rotationY")) > 90),
+      });
+    }
+
+    // The pointer is inside when it is over the place of the card in the grid: the turning card
+    // gets thin at its edge, so its own box would let the pointer out and in again, without end.
+    // The offsets ignore the transforms; they count from the grid, which is positioned.
+    const inside = (event: PointerEvent) => {
+      const box = (card.offsetParent ??
+        card.parentElement)!.getBoundingClientRect();
+      const x = event.clientX - box.left - card.offsetLeft;
+      const y = event.clientY - box.top - card.offsetTop;
+      return (
+        x >= 0 && y >= 0 && x <= card.offsetWidth && y <= card.offsetHeight
+      );
+    };
+    const hover = (over: boolean) => {
+      card.classList.toggle("is-hovered", over);
+      flip(over || card.contains(document.activeElement));
+    };
+    document.addEventListener("pointermove", (event) => {
+      if (event.pointerType === "mouse") hover(inside(event));
+    });
+    document.documentElement.addEventListener("pointerleave", () =>
+      hover(false),
+    );
+    card.addEventListener("focusin", () => flip(true));
+    card.addEventListener("focusout", () => flip(false));
+  }
+
+  if (matchMedia("(hover: hover)").matches) {
+    document.querySelectorAll<HTMLElement>("[data-domain]").forEach(flipCard);
+  }
+</script>
+
+<style>
+  /* The back covers the card above its white band, which stays in place on both sides and
+     keeps growing a little under the pointer. */
+  .card-back {
+    position: absolute;
+    inset: 0 0 var(--space-14);
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-6) var(--card-padding-inline);
+    visibility: hidden;
+  }
+
+  .card.is-flipped > :not(.card-back, .card-more) {
+    visibility: hidden;
+  }
+
+  .card.is-flipped .card-back {
+    visibility: visible;
+  }
+
+  .card-more span {
+    display: inline-block;
+  }
+
+  /* The card turns half a turn: its back and the text of its band are mirrored back, so that
+     they read the right way once the card shows its back. */
+  .card.is-flipped .card-back,
+  .card.is-flipped .card-more span {
+    transform: scaleX(-1);
+  }
+
+  /* The hover is decided by the place of the card, not by its turning box (see the script). */
+  .card.is-hovered .card-more {
+    padding-block: var(--space-5);
+  }
+
+  /* The modules scroll up without end over the whole height of the back, so that the reel is
+     centered above the band. */
+  .back-reel {
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+    mask-image: linear-gradient(
+      transparent,
+      #000000 16%,
+      #000000 84%,
+      transparent
+    );
+  }
+
+  .back-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    will-change: transform;
+  }
+
+  .back-list li {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 66px;
+    transform-origin: 50% 100%;
+    will-change: transform, opacity;
+  }
+
+  .back-list strong {
+    font: 700 var(--size-card-title) / 1.2 var(--font-title);
+    letter-spacing: var(--tracking-card);
+  }
+
+  .back-summary {
+    overflow: hidden;
+    color: var(--secondary);
+    font-size: var(--size-caption);
+    line-height: 1.4;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  /* One or two modules: simply listed, without the reel and its fades. */
+  .card-back.is-still .back-reel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    mask-image: none;
+  }
+
+  .card-back.is-still .back-list {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .card-back.is-still .back-list li {
+    gap: var(--space-1);
+    height: auto;
+  }
+
+  .card-back.is-still .back-summary {
+    white-space: normal;
+  }
+
+  /* The custom request: a band across its own row, without glass or scene. Its text sits in a
+     dashed frame, open on the side of the white button, that turns white under the pointer; the
+     arrow of the button moves forward instead of the button growing. From two columns the
+     button is a column on the right, exactly as wide as the cards above (a subgrid of the grid
+     of the cards); on a phone it is a band at the bottom. */
+  .card.is-band {
+    grid-column: 1 / -1;
+    gap: 0;
+    padding: 0;
+    background: none;
+  }
+
+  .card.is-band:hover {
+    background: none;
+  }
+
+  .card-text {
+    display: grid;
+    gap: var(--space-3);
+    padding: var(--card-padding-block) var(--card-padding-inline);
+    border: 1px dashed var(--line-strong);
+    border-bottom-width: 0;
+    transition: border-color var(--duration-fast);
+  }
+
+  .card.is-band:hover .card-text {
+    border-color: var(--text);
+  }
+
+  .card.is-band .card-more {
+    margin: 0;
+  }
+
+  .card.is-band:hover .card-more {
+    padding-block: var(--space-4);
+  }
+
+  /* The arrow only from two columns; on a phone the band stays a plain button, as on the other
+     cards. */
+  .card.is-band .card-more :global(svg) {
+    display: none;
+    margin-left: var(--space-3);
+    transition: transform var(--duration-fast);
+  }
+
+  .card.is-band:hover .card-more :global(svg) {
+    transform: translateX(6px);
+  }
+
+  @media (width >= 640px) {
+    .card.is-band {
+      display: grid;
+      grid-template-columns: subgrid;
+      column-gap: normal;
+    }
+
+    /* The frame runs over the gap of the grid, up to the button. */
+    .card-text {
+      grid-column: 1 / -2;
+      margin-right: calc(-1 * var(--cards-gap));
+      border-right-width: 0;
+      border-bottom-width: 1px;
+    }
+
+    .card.is-band .card-more {
+      grid-column: -2 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card.is-band .card-more :global(svg) {
+      display: block;
+      flex: none;
+    }
+  }
+</style>

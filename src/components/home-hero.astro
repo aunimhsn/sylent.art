@@ -1,0 +1,175 @@
+---
+// The hero of the home page: the headline, the trainer and the audiences, the two buttons and
+// the motto, beside the cube (src/scripts/cube.ts), over a grid where an orange fluid follows the
+// pointer (src/scripts/grid-fluid.ts, loaded by the footer).
+import home from "../content/home.json";
+import fr from "../i18n/fr.json";
+import { href } from "../lib/url";
+---
+
+<section
+  class="hero"
+  id="hero"
+  aria-labelledby="hero-title"
+  data-fluid="--grid-step"
+>
+  <canvas
+    class="hero-canvas"
+    id="cube-canvas"
+    aria-hidden="true"
+    data-faces={JSON.stringify(home.cube)}
+  ></canvas>
+  <div class="wrap">
+    <div class="hero-text">
+      <h1 class="hero-title intro" id="hero-title">
+        {home.hero.title}
+        <span class="highlight">{home.hero.highlight}</span>
+      </h1>
+      <p class="hero-sub intro">
+        <strong>{home.hero.name}</strong>
+        {home.hero.sub}
+      </p>
+      <div class="hero-actions intro">
+        <a class="button magnetic" href={href("/contact/")}>
+          {home.hero.contact}
+        </a>
+        <a class="button is-outline" href="#formations">
+          {home.hero.courses}
+        </a>
+      </div>
+      <p class="motto hero-motto intro">{fr.site.motto}</p>
+    </div>
+    <div class="hero-visual" id="cube-area" aria-hidden="true"></div>
+  </div>
+</section>
+
+<!--
+  The elements of the intro stay hidden until src/scripts/hero-intro.ts starts it; if it hasn't
+  after 4 s (a script that failed), they show.
+-->
+<script is:inline>
+  setTimeout(() => {
+    document.documentElement.dataset.introStarted ??= "fallback";
+  }, 4000);
+</script>
+
+<script>
+  import "../scripts/hero-intro";
+  import "../scripts/cube";
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding: calc(var(--header-height) + var(--space-10)) 0 var(--space-14);
+    background:
+      radial-gradient(55% 50% at 78% 45%, var(--glow), transparent 70%),
+      var(--bg);
+  }
+
+  /* The grid, and the orange fluid that runs along it in a layer at the same place, with the
+     same mask, under the cube. */
+  .hero::before,
+  .hero > :global(.fluid) {
+    content: "";
+    position: absolute;
+    inset: 0;
+    mask-image: radial-gradient(
+      80% 70% at 70% 40%,
+      #000000 30%,
+      transparent 75%
+    );
+  }
+
+  .hero::before {
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: var(--grid-step) var(--grid-step);
+  }
+
+  .hero-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .wrap {
+    position: relative;
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .hero-text {
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-title {
+    margin: 0;
+    font: var(--title-weight) var(--size-display) / 0.98 var(--font-title);
+    letter-spacing: var(--tracking-title);
+    text-wrap: balance;
+  }
+
+  .hero-sub {
+    margin: var(--space-7) 0 0;
+    max-width: var(--measure-narrow);
+    color: var(--secondary);
+    font-size: var(--size-intro);
+    text-wrap: pretty;
+  }
+
+  .hero-sub strong {
+    color: var(--text);
+    font-weight: inherit;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-9);
+  }
+
+  .hero-motto {
+    margin-top: var(--space-10);
+  }
+
+  /* The area of the cube, which a drag spins. */
+  .hero-visual {
+    position: relative;
+    height: 380px;
+    cursor: grab;
+    touch-action: pan-y;
+  }
+
+  .hero-visual:active {
+    cursor: grabbing;
+  }
+
+  @media (width >= 900px) {
+    .hero {
+      display: grid;
+      align-items: center;
+      min-height: min(100svh, 880px);
+      padding-bottom: var(--space-18);
+    }
+
+    .wrap {
+      grid-template-columns: 7fr 5fr;
+      align-items: center;
+    }
+
+    .hero-visual {
+      height: 540px;
+    }
+  }
+
+  /* The starting state of the intro (src/scripts/hero-intro.ts), only when it runs. */
+  :global(html[data-motion="on"].is-js:not([data-intro-started])) .intro {
+    visibility: hidden;
+  }
+</style>

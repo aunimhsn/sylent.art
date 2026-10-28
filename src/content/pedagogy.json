@@ -1,0 +1,47 @@
+{
+  "steps": [
+    {
+      "title": "Définir un pourquoi",
+      "text": [
+        "Pourquoi cette notion ? Pourquoi ce module ? Pourquoi ensemble ? Quand on comprend le sens, l’envie d’apprendre suit."
+      ]
+    },
+    {
+      "title": "Pas à pas",
+      "text": [
+        "Avec patience et bienveillance, une analogie après l’autre, de votre point A à votre point B, en toute sérénité."
+      ]
+    },
+    {
+      "title": "Apprendre à apprendre",
+      "text": [
+        "L’informatique évolue vite, apprendre en autodidacte devient indispensable.",
+        "Deux clés : la curiosité et la méthode."
+      ]
+    },
+    {
+      "title": "L’expérience",
+      "text": [
+        "Formateur depuis 2021, plus de 900 heures de formation par an depuis 2023."
+      ]
+    }
+  ],
+  "figures": [
+    {
+      "from": 2000,
+      "value": 2021,
+      "unit": "",
+      "label": "formateur depuis"
+    },
+    {
+      "value": 900,
+      "unit": "+ h",
+      "label": "de formation par an"
+    },
+    {
+      "value": 5,
+      "unit": "",
+      "label": "écoles et organismes"
+    }
+  ]
+}

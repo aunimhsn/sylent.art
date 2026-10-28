@@ -1,0 +1,94 @@
+---
+// The steps of the pedagogy, numbered in Roman numerals: a rule that draws itself as the page
+// scrolls (src/scripts/motion.ts), the title and the text. Shared by the home and about pages;
+// the home page sets them two by two beside the cycle of a lesson (compact).
+import pedagogy from "../content/pedagogy.json";
+
+interface Props {
+  compact?: boolean;
+}
+
+const { compact = false } = Astro.props;
+// Decorative: the list itself gives the order.
+const roman = ["I", "II", "III", "IV", "V", "VI"];
+---
+
+<ol class:list={["steps", { "is-compact": compact }]}>
+  {pedagogy.steps.map(({ title, text }, index) => (
+    <li class="reveal">
+      <span class="step-number" aria-hidden="true">
+        {roman[index]}
+      </span>
+      <div class="step-rule" />
+      <h3>{title}</h3>
+      <p>{text.map((line, k) => (k > 0 ? [<br />, line] : line))}</p>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .steps {
+    display: grid;
+    gap: var(--space-11);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Roman numerals in Bodoni Moda, whose contrast answers the thin and bold Manrope. */
+  .step-number {
+    font: 400 var(--size-numeral) / 1 var(--font-numeral);
+    letter-spacing: 0;
+  }
+
+  .step-rule {
+    position: relative;
+    height: 1px;
+    margin: var(--space-5) 0 var(--space-6);
+    overflow: hidden;
+    background: var(--line);
+  }
+
+  .step-rule::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--text);
+    transform: scaleX(var(--progress, 1));
+    transform-origin: left;
+  }
+
+  h3 {
+    margin: 0;
+    font: 700 var(--size-card-title) / 1.2 var(--font-title);
+    letter-spacing: var(--tracking-card);
+  }
+
+  p {
+    margin: var(--space-3) 0 0;
+    color: var(--secondary);
+    font-size: var(--size-text-small);
+  }
+
+  @media (width >= 640px) {
+    .steps {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (width >= 1100px) {
+    .steps {
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-8);
+    }
+
+    .steps.is-compact {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-12) var(--space-10);
+    }
+
+    .is-compact .step-number {
+      font-size: var(--size-numeral-compact);
+    }
+  }
+</style>

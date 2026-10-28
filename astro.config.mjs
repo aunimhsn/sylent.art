@@ -23,6 +23,14 @@ export default defineConfig({
     "/articles/1": to("/"),
     "/articles/2": to("/"),
   },
+  vite: {
+    build: {
+      // Three.js (the cube and the covers, docs/technical-choices.md) is one module of about
+      // 540 kB minified, 135 kB compressed, that Vite can't split: the warning starts above it,
+      // so that any other large chunk still shows.
+      chunkSizeWarningLimit: 600,
+    },
+  },
   // Self-hosted fonts, downloaded at build time (docs/branding.md, Type).
   fonts: [
     {

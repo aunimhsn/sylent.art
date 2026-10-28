@@ -1,6 +1,7 @@
 // The animations shared by every page (from docs/mockups/shared/motion.js), run after the
-// content: reveals on scroll, section headings, the faded word of the call to action and the
-// magnetic buttons. Nothing moves when the visitor asked to reduce motion.
+// content: reveals on scroll, section headings, the faded word of the call to action, the rules
+// of the pedagogy, the key figures and the magnetic buttons. Nothing moves when the visitor asked
+// to reduce motion.
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
@@ -83,6 +84,40 @@ if (root.dataset.motion === "on") {
         },
       },
     );
+  });
+
+  // The rules of the pedagogy draw themselves as the steps scroll, one after the other.
+  document.querySelectorAll(".steps").forEach((steps) => {
+    steps.querySelectorAll(".step-rule").forEach((rule, index) => {
+      gsap.fromTo(
+        rule,
+        { "--progress": 0 },
+        {
+          "--progress": 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: steps,
+            start: `top ${80 - index * 6}%`,
+            end: `top ${40 - index * 6}%`,
+            scrub: true,
+          },
+        },
+      );
+    });
+  });
+
+  // The key figures count up, from data-from (or 0) to data-to.
+  document.querySelectorAll<HTMLElement>(".count").forEach((counter) => {
+    const value = { n: Number(counter.dataset.from ?? 0) };
+    gsap.to(value, {
+      n: Number(counter.dataset.to),
+      duration: 2,
+      ease: "power2.out",
+      scrollTrigger: { trigger: counter, start: "top 92%" },
+      onUpdate: () => {
+        counter.textContent = String(Math.round(value.n));
+      },
+    });
   });
 
   // Pointer devices: the main buttons are magnetic.

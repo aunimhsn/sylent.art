@@ -1,0 +1,44 @@
+---
+// Three key figures under rules, which count up (src/scripts/motion.ts). Shared by the home and
+// about pages.
+import pedagogy from "../content/pedagogy.json";
+---
+
+<div class="figures">
+  {pedagogy.figures.map((figure) => (
+    <div>
+      <strong>
+        <span class="count" data-from={figure.from} data-to={figure.value}>
+          {figure.value}
+        </span>
+        {figure.unit}
+      </strong>
+      <span>{figure.label}</span>
+    </div>
+  ))}
+</div>
+
+<style>
+  .figures {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+    margin: var(--space-8) 0;
+    padding: var(--space-6) 0;
+    border-block: 1px solid var(--line);
+  }
+
+  strong {
+    display: block;
+    font: var(--title-weight) var(--size-figure) / 1 var(--font-title);
+    letter-spacing: var(--tracking-title);
+  }
+
+  div > span {
+    display: block;
+    margin-top: var(--space-2);
+    color: var(--secondary);
+    font-size: var(--size-caption);
+    line-height: 1.35;
+  }
+</style>

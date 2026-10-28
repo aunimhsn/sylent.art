@@ -2,6 +2,15 @@
 
 The detail of the steps of [roadmap.md](../roadmap.md) once their pull request is merged, newest first.
 
+## 7a. Shared layout (#8)
+
+Built on 2026-10-28 from the mock-up (`docs/mockups/shared/`):
+
+- Header with its navigation and mobile menu (the page made inert while it is open, closed past 900 px), footer with its wordmark and the orange fluid of its grid (`src/scripts/grid-fluid.ts`), call to action, back-to-top button, section heading (titles without accents, their real name in `aria-label`).
+- Shared animations in `src/scripts/motion.ts` with GSAP bundled (ScrollTrigger, SplitText); nothing moves with reduced motion (`data-motion`, `?motion=off`), and the revealed elements show after 4 s if the scripts don't start.
+- Interface texts in `src/i18n/fr.json` (scripts read theirs from data attributes), contact details in `src/data/contact.json`, internal links through `src/lib/url.ts`; the email copies itself, with the mail application as fallback.
+- The links to pages still to build skipped by linkinator (`linkinator.config.json`), each later step removing its own.
+
 ## 6. Project and deployment (#7)
 
 Built on 2026-10-28, as chosen in `docs/technical-choices.md` (which records the details):
