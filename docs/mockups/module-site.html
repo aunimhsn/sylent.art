@@ -13,8 +13,8 @@
   and the 3D scene of the module in large on the right (shared/covers.js); the key facts under a
   rule; the prerequisites, the objectives and the program, numbered as the pedagogy of the home
   page, beside a card that follows the scroll on a computer; the other modules of the domain.
-  Sample content: JavaScript and Claude Code have a program; the other modules show theirs as to
-  come.
+  Sample content: JavaScript (after its page on the former site) and Claude Code have a program;
+  the other modules show theirs as to come.
 -->
 <script src="shared/head.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,8 +38,14 @@
     background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
     background-size: 32px 32px;
   }
-  .app-module-hero .app-wrap { position: relative; display: grid; gap: 40px; }
-  @media (min-width: 900px) { .app-module-hero .app-wrap { grid-template-columns: 7fr 5fr; align-items: center; gap: 56px; } }
+  .app-module-hero .app-wrap { position: relative; display: grid; gap: 8px; }
+  .app-module-text { position: relative; z-index: 2; }
+  /* The scene floats over the grid, larger than its column, and passes a little behind the text,
+     which stays above it. */
+  @media (min-width: 900px) {
+    .app-module-hero .app-wrap { grid-template-columns: 6fr 6fr; align-items: center; gap: 0; }
+    .app-cover.is-large { width: 125%; margin-left: -22%; }
+  }
 
   .app-crumbs ol { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 0 0 32px; padding: 0; list-style: none; color: var(--dim); font: 600 14px/1.3 var(--font-title); }
   .app-crumbs li + li::before { content: "/"; margin-right: 10px; color: var(--line-strong); }
@@ -50,11 +56,11 @@
   .app-module-domain { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin: 0; color: var(--dim); font: 800 13px/1.3 var(--font-title); letter-spacing: .14em; text-transform: uppercase; }
   .app-module-domain .app-new { position: static; }
   .app-module-title { margin: 16px 0 0; font: var(--title-weight) clamp(44px, 6.8vw, 92px)/0.98 var(--font-title); letter-spacing: var(--title-tracking); text-wrap: balance; }
-  .app-module-lead { margin: 28px 0 0; max-width: 52ch; color: var(--secondary); font-size: clamp(17px, 1.5vw, 19px); text-wrap: pretty; }
+  .app-module-lead { margin: 28px 0 0; max-width: 56ch; color: var(--secondary); font-size: clamp(17px, 1.5vw, 19px); text-wrap: pretty; }
   .app-module-note { margin: 24px 0 0; max-width: 52ch; padding: 12px 18px; border-left: 3px solid var(--signal); background: color-mix(in srgb, var(--signal) 8%, transparent); color: var(--text); font-size: 16px; }
   .app-module-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
-  /* The scene of the module, the same as on its card, in large. */
-  .app-cover.is-large { margin: 0; border: 1px solid var(--glass-line); }
+  /* The scene of the module, the same as on its card, in large, without the frame of the card. */
+  .app-cover.is-large { position: relative; z-index: 1; margin: 0; border: 0; background: none; pointer-events: none; }
 
   /* ── Key facts: plain columns under a rule ──────────────────────────────────────── */
 
@@ -108,7 +114,8 @@
   // ── Content: sample programs ────────────────────────────────────────────────────────
   const PROGRAMS = {
     javascript: {
-      audience: "Étudiants, développeurs débutants, intégrateurs web",
+      description: `JavaScript est le langage qui rend le web interactif${NB}: c’est lui qui fait vivre un menu, un formulaire ou une carte, et qui fait tourner les applications web, sans recharger la page. Tous les navigateurs l’exécutent, mais il ne s’arrête pas là${NB}: avec Node.js, il fonctionne aussi côté serveur, et il sert à créer des applications mobiles et de bureau. Un seul langage du navigateur au serveur${NB}: c’est l’un des plus utilisés au monde, et une étape incontournable pour tout futur développeur web.`,
+      audience: "Étudiants, webmasters, développeurs, chefs de projet technique",
       level: "Débutant",
       prerequisites: "Connaître les bases du HTML et du CSS. Aucune connaissance en programmation.",
       objectives: [
@@ -118,14 +125,15 @@
         "Récupérer et afficher des données avec fetch",
       ],
       parts: [
-        ["Les bases du langage", "Variables et types, opérateurs, conditions et boucles, fonctions, tableaux et objets."],
-        ["Le DOM", "Sélectionner des éléments, modifier leur contenu et leurs styles, en créer et en supprimer."],
-        ["Les événements", `Clics, saisies et formulaires${NB}: écouter un événement, le propager, empêcher le comportement par défaut.`],
-        ["L’asynchrone et fetch", "Promesses, async et await, appeler une API, afficher ses données et gérer ses erreurs."],
-        ["Un projet fil rouge", "Une petite application, construite pas à pas, du premier script à la version finale."],
+        ["Les bases du langage", "L’environnement et l’intégration dans une page, les variables et les constantes, l’objet console, les tableaux et les objets."],
+        ["La logique", "Les conditions, les boucles et les fonctions."],
+        ["La page web", "Manipuler le DOM et réagir aux événements du visiteur."],
+        ["Les données", "Le format JSON et la méthode fetch, pour échanger avec un serveur."],
+        ["Travaux pratiques", `Par exemple le chiffrement de César ou le jeu du «${NB}Plus ou moins${NB}», parmi d’autres exercices adaptés au niveau du groupe.`],
       ],
     },
     "claude-code": {
+      description: `Claude Code est un assistant de programmation qui travaille directement dans le projet${NB}: il lit le code, propose et applique des modifications, lance les tests. Bien cadré, il fait gagner un temps précieux${NB}; laissé sans règles, il produit du code que personne ne maîtrise. Ce module apprend à vos équipes à s’en servir avec méthode${NB}: lui donner le bon contexte, relire ce qu’il produit et garder la main sur la qualité.`,
       audience: "Développeurs, équipes techniques",
       level: "Intermédiaire",
       prerequisites: "Savoir programmer dans au moins un langage et utiliser Git.",
@@ -157,16 +165,15 @@
   const hero = `
     <section class="app-module-hero" aria-labelledby="module-title" data-grid>
       <div class="app-wrap">
-        <div>
+        <div class="app-module-text">
           <nav class="app-crumbs app-reveal" aria-label="Fil d’Ariane">
             <ol><li><a href="${PAGES.home}">Accueil</a></li><li><a href="${PAGES.courses}">Formations</a></li><li aria-current="page">${title}</li></ol>
           </nav>
           <p class="app-module-domain app-reveal">${domain.title}${domain.isNew ? '<span class="app-new">Nouveau</span>' : ""}</p>
           <h1 class="app-module-title app-reveal" id="module-title">${title}</h1>
-          <p class="app-module-lead app-reveal">${summary}</p>
+          <p class="app-module-lead app-reveal">${program && program.description || summary}</p>
           ${domain.isNew ? `<p class="app-module-note app-reveal">Une offre nouvelle, centrée sur la méthode et les bonnes pratiques${NB}: utiliser les outils d’IA pour être plus efficace et plus serein au quotidien.</p>` : ""}
           <div class="app-module-actions app-reveal">
-            <a class="app-button app-magnetic" href="${PAGES.contact}">Me contacter</a>
             <a class="app-button is-outline" href="#programme">Voir le programme</a>
           </div>
         </div>
@@ -212,12 +219,14 @@
       <a class="app-button" href="${PAGES.contact}">Me contacter</a>
     </aside>`;
 
-  // The other modules of the same domain, when it has some.
+  // The other modules of the same domain, when it has some. The large word behind the heading is
+  // still to choose (?ghost=…, a tab of home.html).
+  const GHOSTS = { combiner: "Combiner", completer: "Completer", explorer: "Explorer", composer: "Composer" };
   const others = domain.modules.filter(other => other !== module);
   const related = others.length ? `
     <section class="app-section" aria-labelledby="related-title" style="padding-top:0">
       <div class="app-wrap">
-        ${heading("Dans le même domaine", "Continuer", "related-title")}
+        ${heading("Dans le même domaine", GHOSTS[query.get("ghost")] || GHOSTS.combiner, "related-title")}
         <ul class="app-cards is-domains">${others.map(other => moduleCard(domain, other)).join("")}</ul>
       </div>
     </section>` : "";

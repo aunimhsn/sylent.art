@@ -22,10 +22,13 @@ const ICONS = {
 const icon = (name, size = 22) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]}</svg>`;
 
 // Section heading, after the former site: a title over a large faded word.
+// Its title is in capitals and drops its accents, which the mask of its animation would cut (« DANS
+// LE MEME DOMAINE »); screen readers and search engines keep the real words.
+const unaccented = text => text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 const heading = (title, ghost, id, level = 2) => `
   <div class="app-heading">
     <span class="app-heading-ghost" aria-hidden="true">${ghost}</span>
-    <h${level} class="app-heading-title" id="${id}">${title}</h${level}>
+    <h${level} class="app-heading-title" id="${id}"${unaccented(title) !== title ? ` aria-label="${title}"` : ""}>${unaccented(title)}</h${level}>
   </div>`;
 
 // The pages of the mock-up, and the links of the navigation.

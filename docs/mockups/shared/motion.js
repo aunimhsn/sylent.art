@@ -16,7 +16,11 @@
   // the page scrolls.
   document.querySelectorAll(".app-heading").forEach(block => {
     const title = block.querySelector(".app-heading-title");
+    // SplitText names the title after its visible text; a title shown without its accents keeps
+    // its real name.
+    const label = title.getAttribute("aria-label");
     SplitText.create(title, { type: "words", mask: "words", onSplit: self => gsap.from(self.words, { yPercent: 100, stagger: 0.05, duration: 1, ease: "expo.out", scrollTrigger: { trigger: block, start: "top 86%" } }) });
+    if (label) title.setAttribute("aria-label", label);
     gsap.fromTo(block.querySelector(".app-heading-ghost"), { xPercent: 6 }, { xPercent: -4, ease: "none", scrollTrigger: { trigger: block, start: "top bottom", end: "bottom top", scrub: true } });
   });
   gsap.utils.toArray(".app-cta").forEach(band => {
