@@ -84,8 +84,6 @@ const DOMAINS = [
     ["Initiation à l’agilité avec Scrum", 2, "Valeurs, rôles, événements et artefacts, sur un projet fil rouge.", "sprint"],
   ] },
 ];
-// « 2 jours, adaptable »: the durations are indicative, always adaptable.
-const duration = days => `${days}${NB}jour${days > 1 ? "s" : ""}, adaptable`;
 
 // The offer pages are not in the mock-up yet: the cards lead nowhere for now.
 const domainCard = domain => `
@@ -94,11 +92,12 @@ const domainCard = domain => `
     <h3>${domain.title}</h3><p>${domain.summary}</p>
     <a class="app-card-more" href="#" aria-label="${domain.title}${NB}: voir les modules">Voir les modules</a>
   </li>`;
-// The card of one module, on the offer list.
-const moduleCard = ([title, days, summary, scene]) => `
+// The card of one module, on the offer list: under its name, the domain it belongs to. The
+// modules of a new domain are new too.
+const moduleCard = (domain, [title, , summary, scene]) => `
   <li class="app-card app-glass app-reveal app-tilt">
-    <div class="app-cover" data-scene="${scene}" aria-hidden="true"><canvas></canvas></div>
-    <h3>${title}</h3><p class="app-card-duration">${duration(days)}</p><p>${summary}</p>
+    <div class="app-cover" data-scene="${scene}" aria-hidden="true"><canvas></canvas>${domain.isNew ? '<span class="app-new">Nouveau</span>' : ""}</div>
+    <h3>${title}</h3><p class="app-card-domain">${domain.title}</p><p>${summary}</p>
     <a class="app-card-more" href="#" aria-label="${title}${NB}: voir le détail">Voir le détail</a>
   </li>`;
 // The last card, after the domains: a module built for the request.

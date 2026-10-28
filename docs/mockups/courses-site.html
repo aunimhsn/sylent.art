@@ -9,9 +9,9 @@
   The offer list of sylent.art (/courses, mock-up, step 4 of roadmap.md), shown at phone and
   desktop width by home.html (?page=courses). The parts shared by every page are in shared/.
   Layout, chosen by the owner instead of courses.excalidraw: the top of page of the contact page
-  (the grid of the hero, fading out), then one section per domain with one card per module, in the
-  style of the domain cards of the home page, each with its own animated cover (shared/site.js,
-  shared/covers.js). The home page keeps one card per domain.
+  (the grid of the hero, fading out), then one card per module, all in one grid, in the style of
+  the domain cards of the home page: its own animated cover, its name and its domain
+  (shared/site.js, shared/covers.js). The home page keeps one card per domain.
 -->
 <script src="shared/head.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,24 +43,6 @@
     background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
     background-size: 32px 32px;
   }
-
-  /* ── Links to the domains, under the text ──────────────────────────────────────── */
-
-  .app-jumps { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
-  .app-jumps a { display: block; padding: 9px 15px; border: 1px solid var(--line-strong); border-radius: var(--radius-chip); color: var(--secondary); font: 600 14px/1 var(--font-title); transition: color .3s, border-color .3s; }
-  .app-jumps a:hover { border-color: var(--text); color: var(--text); }
-
-  /* ── One section per domain ─────────────────────────────────────────────────────── */
-
-  .app-domain { margin-top: clamp(64px, 8vw, 112px); scroll-margin-top: calc(var(--header-height) + 24px); }
-  .app-domain-head { display: grid; gap: 12px; margin-bottom: 28px; padding-top: 24px; border-top: 1px solid var(--line); }
-  @media (min-width: 900px) { .app-domain-head { grid-template-columns: 1fr auto; align-items: end; column-gap: 40px; } }
-  .app-domain-title { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
-  .app-domain-title h2 { margin: 0; font: var(--title-weight) clamp(28px, 3.4vw, 40px)/1.1 var(--font-title); letter-spacing: var(--title-tracking); }
-  .app-domain-title .app-new { position: static; }
-  .app-domain-head p { grid-column: 1; margin: 0; color: var(--secondary); font-size: 17px; }
-  .app-domain-head .app-link { justify-self: start; }
-  @media (min-width: 900px) { .app-domain-head .app-link { grid-column: 2; grid-row: 1 / span 2; align-self: end; } }
 </style>
 </head>
 <body data-page="courses">
@@ -69,28 +51,14 @@
 <main id="content"></main>
 
 <script>
-  // The domain pages are not in the mock-up yet: their links lead nowhere for now.
-  const domainSection = domain => `
-    <section class="app-domain" id="${domain.slug}" aria-labelledby="${domain.slug}-title">
-      <div class="app-domain-head app-reveal">
-        <div class="app-domain-title"><h2 id="${domain.slug}-title">${domain.title}</h2>${domain.isNew ? '<span class="app-new">Nouveau</span>' : ""}</div>
-        <p>${domain.summary}</p>
-        <a class="app-link" href="#" aria-label="${domain.title}${NB}: voir le domaine">Voir le domaine</a>
-      </div>
-      <ul class="app-cards is-domains">${domain.modules.map(moduleCard).join("")}</ul>
-    </section>`;
-
   document.getElementById("content").innerHTML = `
     <section class="app-courses" aria-labelledby="courses-title">
       <div class="app-wrap">
         <div class="app-courses-head" data-grid>
           ${heading("Formations", "Apprendre", "courses-title", 1)}
           <p class="app-lead app-reveal">Des modules indépendants, à prendre seuls ou à combiner, aux durées toujours adaptables, sur site ou à distance.</p>
-          <nav aria-label="Domaines" class="app-reveal">
-            <ul class="app-jumps">${DOMAINS.map(domain => `<li><a href="#${domain.slug}">${domain.title}</a></li>`).join("")}</ul>
-          </nav>
         </div>
-        ${DOMAINS.map(domainSection).join("")}
+        <ul class="app-cards is-domains">${DOMAINS.flatMap(domain => domain.modules.map(module => moduleCard(domain, module))).join("")}</ul>
       </div>
     </section>
     ${siteCta(`Un domaine qui n’est pas dans la liste${NB}?<br>Parlons-en.`)}

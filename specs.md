@@ -68,7 +68,7 @@ Proofs:
 | Page | URL | Purpose |
 |---|---|---|
 | Home | `/` | State the promise, the audiences, the domains, the differentiators, the proofs (partners, figure) and lead to the contact form. |
-| Offer list | `/courses` | Present every module, grouped by domain: each domain with its summary and a link to its page, then one card per module (cover, name, indicative duration, summary) that leads to the module on the page of its domain. The home page keeps one card per domain. |
+| Offer list | `/courses` | Present every module, one card per module in a single grid, domain after domain, without headings: cover, name, domain, summary, and a link to the module on the page of its domain. The home page keeps one card per domain. |
 | Offer page | `/courses/<domain>` | Detail one domain (see [Training offers](#training-offers)). |
 | Article list | `/articles` | List the articles, newest first. After the first release. |
 | Article page | `/articles/<slug>` | Show one article, with a call to action at the end. After the first release. |

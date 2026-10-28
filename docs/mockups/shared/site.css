@@ -154,8 +154,8 @@ img, svg, canvas { display: block; }
 .app-card h3 { margin: 0; font: 700 21px/1.2 var(--font-title); letter-spacing: -0.025em; }
 .app-card p { margin: 0; color: var(--secondary); font-size: 15.5px; line-height: 1.55; }
 .app-card > p { margin-bottom: 18px; }
-/* The duration of a module, just under its name. */
-.app-card > .app-card-duration { margin: -6px 0 0; color: var(--dim); font: 600 14px/1.3 var(--font-title); }
+/* The domain of a module, just under its name. */
+.app-card > .app-card-domain { margin: -6px 0 0; color: var(--dim); font: 600 14px/1.3 var(--font-title); }
 /* Cover: a small 3D scene of the domain, drawn by Three.js, across the top of the card. */
 .app-cover {
   position: relative;
