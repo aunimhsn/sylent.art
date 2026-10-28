@@ -1,6 +1,6 @@
 ---
 title: "Méthodologie et tests"
 summary: "Versionner, tester et livrer avec méthode."
-order: 6
+order: 7
 scene: branch
 ---
