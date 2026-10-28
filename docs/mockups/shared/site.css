@@ -181,6 +181,8 @@ img, svg, canvas { display: block; }
   transition: padding .35s;
 }
 .app-card-more::after { content: ""; position: absolute; inset: 0; }
+/* A card reached by a link (/courses#<domain>) stays clear of the fixed header. */
+.app-card[id] { scroll-margin-top: calc(var(--header-height) + 24px); }
 .app-card:hover .app-card-more { padding-block: 19px; }
 /* The custom card after the domains: a band across its own row, without glass or scene. Its text
    sits in a dashed frame, open on the side of the white button, that turns white under the

@@ -58,7 +58,7 @@
           ${heading("Formations", "Apprendre", "courses-title", 1)}
           <p class="app-lead app-reveal">Des modules indépendants, à prendre seuls ou à combiner, aux durées toujours adaptables, sur site ou à distance.</p>
         </div>
-        <ul class="app-cards is-domains">${DOMAINS.flatMap(domain => domain.modules.map(module => moduleCard(domain, module))).join("")}</ul>
+        <ul class="app-cards is-domains">${DOMAINS.flatMap(domain => domain.modules.map((module, index) => moduleCard(domain, module, index === 0))).join("")}</ul>
       </div>
     </section>
     ${siteCta(`Un domaine qui n’est pas dans la liste${NB}?<br>Parlons-en.`)}

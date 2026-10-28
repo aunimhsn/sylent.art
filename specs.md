@@ -68,13 +68,14 @@ Proofs:
 | Page | URL | Purpose |
 |---|---|---|
 | Home | `/` | State the promise, the audiences, the domains, the differentiators, the proofs (partners, figure) and lead to the contact form. |
-| Offer list | `/courses` | Present every module, one card per module in a single grid, domain after domain, without headings: cover, name, domain, summary, and a link to the module on the page of its domain. The home page keeps one card per domain. |
-| Offer page | `/courses/<domain>` | Detail one domain (see [Training offers](#training-offers)). |
+| Offer list | `/courses` | Present every module, one card per module in a single grid, domain after domain, without headings: cover, name, domain, summary, and a link to the page of the module. The home page keeps one card per domain, whose « Voir les modules » leads to the offer list at that domain (`/courses#<domain>`). |
+| Module page | `/courses/<module>` | Detail one module (see [Training offers](#training-offers)). |
 | Article list | `/articles` | List the articles, newest first. After the first release. |
 | Article page | `/articles/<slug>` | Show one article, with a call to action at the end. After the first release. |
 | About | `/about` | Present the trainer: background, approach, references, NDA. No photo in the first release. |
 | Contact | `/contact` | The contact form and the other ways to reach the trainer. |
-| Legal notice and privacy policy | `/policy` | The legal information and how the form and audience data are handled. |
+| Legal notice | `/legal` | The publisher, the training activity declaration, the host, the intellectual property and the credits. |
+| Privacy policy | `/policy` | How the form and audience data are handled. |
 | Not found | `404.html` | A page « Oups, perdu dans l’espace », as on the former site (« Page introuvable » at phone width), with links to the home page and the offers. |
 
 Every page has a header with the navigation (Formations, Articles, À propos) and a visible « Me contacter » button, which leads to the contact page (so the navigation has no separate « Contact » link), and a footer with the navigation, the contact details, the legal page and the signature.
@@ -85,7 +86,7 @@ The former « Créations » section (photography, artwork), the user accounts an
 
 ## Training offers
 
-One page per **domain**. Pedagogical teams look for a speaker on a domain, and the technology matters less and less. The domains below are a first grouping, refined with the owner when the content is written.
+One page per **module**, grouped by **domain**. Pedagogical teams look for a speaker on a domain, and the technology matters less and less: the domains organize the home page and the offer list, but the first release has no domain pages. They can come later at `/courses/<domain>` without changing any URL. The domains below are a first grouping, refined with the owner when the content is written.
 
 | Domain | Slug | Modules | Former courses |
 |---|---|---|---|
@@ -98,29 +99,47 @@ One page per **domain**. Pedagogical teams look for a speaker on a domain, and t
 | IA pour le développement | `ia-pour-le-developpement` | Claude Code, prompt engineering, intégrer l'IA avec méthode et rigueur | — |
 | Gestion de projet | `gestion-de-projet` | Initiation à l'agilité avec Scrum | — |
 
-All the former courses are kept, as modules of their domain.
+All the former courses are kept, as modules:
 
-Each offer page shows:
+| Former course | Module page |
+|---|---|
+| `/courses/1` | `/courses/html` |
+| `/courses/2` | `/courses/css` |
+| `/courses/3` | `/courses/javascript` |
+| `/courses/4` | `/courses/php` |
+| `/courses/5` | `/courses/mysql` |
+| `/courses/6` | `/courses/python` |
+| `/courses/7` | `/courses/robomind` |
+| `/courses/8` | `/courses/cypress` |
+| `/courses/9` | `/courses/vue` |
+| `/courses/10` | `/courses/alpine` |
+| `/courses/11` | `/courses/laravel` |
+| `/courses/12` | `/courses/django` |
 
-- the title and a summary of the domain;
-- the audience and the level (e.g. « Étudiants, développeurs, chefs de projet technique »);
-- the prerequisites;
-- the objectives;
-- the modules, each with an indicative duration (« 2 jours, adaptable ») and a summary of its program. The modules are independent: a client takes one or several, in any order, so the site never presents them as a sequence to follow (« Voir les modules », not « Voir le programme », and no module numbers);
-- the formats (on-site or remote) and the note that the program and exercises are adapted to the group;
-- a call to action to the contact form;
-- links to the related domains.
+The slug of a module is its name in kebab-case, without version numbers (`html`, `css`, `integrer-l-ia-avec-methode`). It is unique among the modules and the domains, never a number, and never changes once published: a module that moves to another domain keeps its URL.
 
-**IA pour le développement** has not been taught yet: its page says honestly that it is a new offer (e.g. a « Nouveau » label), centered on method and good practices, to help employees use AI tools to be more productive and more satisfied in their daily work.
+Each module page shows:
 
-Each offer is a content file in the repository, named after its slug, which lists the ids of the former courses it contains (e.g. `former-ids: [1, 2, 3, 4, 9, 10, 11]`). The redirects are generated from these lists.
+- the domain (with a « Nouveau » label for a new one), the name of the module, and a short paragraph that says what the subject is and why it matters, written for pedagogical teams rather than as a list of notions;
+- the key facts: audience (e.g. « Étudiants, développeurs, chefs de projet technique »), level, indicative duration (« 3 jours, adaptable »), formats (on-site or remote);
+- the prerequisites and the objectives;
+- the program, in parts without numbers: they are not an order, and the practice comes when it is needed. The note that the explanations are short and the exercises adapted to the group;
+- a way to organize the module (the contact page);
+- the other modules of the same domain, then a card for a custom request; this part is left out when the domain has a single module;
+- a call to action to the contact form.
+
+The modules are independent: a client takes one or several, in any order, so the site never presents them as a sequence to follow (no module numbers). Each module has a summary of one short sentence that says what it is for, not a list of notions, shown on its card.
+
+**IA pour le développement** has not been taught yet: its modules say honestly that it is a new offer (a « Nouveau » label and a short note), centered on method and good practices, to help employees use AI tools to be more productive and more satisfied in their daily work.
+
+Each module is a content file in the repository, named after its slug, which gives its domain and, for a former course, its former id (e.g. `former-id: 3`). The redirects are generated from these ids.
 
 ## URLs and redirects
 
 The paths of the former site are kept when the page still exists, so the existing links and the search ranking are not lost:
 
-- `/`, `/courses`, `/articles`, `/about`, `/contact`, `/policy`: the same paths.
-- `/courses/1` to `/courses/12`: redirect to the page of the domain that now contains the course (see the table above).
+- `/`, `/courses`, `/articles`, `/about`, `/contact`, `/policy`: the same paths; `/policy` is the privacy policy, as on the former site. The legal notice is a new page, `/legal`.
+- `/courses/1` to `/courses/12`: redirect to the page of the module that the course became (see the table above).
 - `/articles/1` and `/articles/2`: redirect to the same articles at their new readable URL. In the first release, without articles, `/articles`, `/articles/1` and `/articles/2` redirect to the home page.
 - `/creations`, `/register`, `/login`: no redirect; they show the not-found page.
 
@@ -139,7 +158,7 @@ GitHub Pages has no server-side redirects: a redirect is a static page with a ca
 - Not shown: Instagram, YouTube, Twitch (Twitch may be added later, once the owner streams).
 - Legal notice: name (Aunim Hassan), status (micro-entreprise), SIRET (894 104 132 00010), e-mail, phone, NDA (76311138131, registered with the prefect of the Occitanie region, as its code 76 says) followed by « Cet enregistrement ne vaut pas agrément de l'État », and the host (GitHub). **The home address is never shown**, for the owner's safety; see the accepted risk in [docs/external-services.md](docs/external-services.md).
 - The Qualiopi certification is never mentioned: the trainer doesn't have it and works through schools and training organizations.
-- Privacy policy: the data of the form (fields, sending to Formspree, transfer to the United States, use limited to answering, retention), the audience measurement (GoatCounter, without cookies), the visitor's rights and how to exercise them by e-mail.
+- Privacy policy: the data of the form (fields, sending to Formspree, transfer to the United States, use limited to answering, retention: 30 days at Formspree, then 3 years after the last exchange, as the CNIL recommends for business contacts), the audience measurement (GoatCounter, without cookies), the visitor's rights and how to exercise them by e-mail.
 
 ## Audience measurement
 
