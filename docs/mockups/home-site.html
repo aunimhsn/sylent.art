@@ -151,6 +151,22 @@
     100% { opacity: 0; transform: translate(-50%, calc(-100% - 22px)); }
   }
   html[data-motion="off"] .app-cycle-tag { animation: none; transform: translate(-50%, calc(-100% - 14px)); }
+  /* Each turn is a session, numbered on its left like the floors of a building: the sessions done
+     in gray, the one of the runner in white, the ones to come barely visible. */
+  .app-cycle-session { position: absolute; color: #3a3a3a; font: var(--text-weight) 15px/1 var(--font-text); white-space: nowrap; transform: translate(-100%, -50%); pointer-events: none; }
+  .app-cycle-session::after { content: "Séance\00a0" counter(session); }
+  .app-cycle-session.is-done { color: var(--dim); }
+  .app-cycle-session.is-current { color: var(--text); }
+  /* When a session starts, « Séance suivante » under the runner, in the style of the phase. */
+  .app-cycle-next { position: absolute; left: var(--anchor-x, 50%); top: var(--anchor-y, 50%); display: none; color: var(--signal-text); font: var(--text-weight) 15px/1 var(--font-text); white-space: nowrap; pointer-events: none; }
+  .app-cycle-scene[data-lap="0"] .app-cycle-next[data-lap="0"],
+  .app-cycle-scene[data-lap="1"] .app-cycle-next[data-lap="1"] { display: block; animation: app-cycle-next 1.8s ease forwards; }
+  @keyframes app-cycle-next {
+    0% { opacity: 0; transform: translate(-50%, 12px); }
+    18% { opacity: 1; transform: translate(-50%, 18px); }
+    72% { opacity: 1; transform: translate(-50%, 20px); }
+    100% { opacity: 0; transform: translate(-50%, 26px); }
+  }
 
   /* ── About ──────────────────────────────────────────────────────────────────────── */
 
@@ -238,7 +254,7 @@
   const cycleFigure = () => PEDAGOGY === "spiral" || PEDAGOGY === "ring" ? `
     <div class="app-cycle">
       <p class="app-cycle-caption">${CYCLE_CAPTION}</p>
-      <div class="app-cover app-cycle-scene" data-scene="${PEDAGOGY}" aria-hidden="true"><canvas></canvas>${CYCLE.map(([phase]) => `<span class="app-cycle-tag">${phase}</span>`).join("")}</div>
+      <div class="app-cover app-cycle-scene" data-scene="${PEDAGOGY}" aria-hidden="true"><canvas></canvas>${CYCLE.map(([phase]) => `<span class="app-cycle-tag">${phase}</span>`).join("")}${PEDAGOGY === "spiral" ? [0, 1, 2, 3, 4].map(i => `<span class="app-cycle-session${i < 2 ? " is-done" : i === 2 ? " is-current" : ""}" style="left: var(--anchor-${i}-x); top: var(--anchor-${i}-y); opacity: var(--session-${i}-shown, 0); counter-reset: session var(--session-${i}, 1)"></span>`).join("") + '<span class="app-cycle-next" data-lap="0">Séance suivante</span><span class="app-cycle-next" data-lap="1">Séance suivante</span>' : ""}</div>
       <p class="app-hidden">${CYCLE_SENTENCE}</p>
     </div>` : `
     <div class="app-cycle is-flat">
