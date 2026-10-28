@@ -146,12 +146,12 @@
   .app-cycle-scene[data-lap="0"] .app-cycle-next[data-lap="0"],
   .app-cycle-scene[data-lap="1"] .app-cycle-next[data-lap="1"] { display: block; animation: app-cycle-next 1.4s linear forwards; }
   /* It comes out of the runner and flies away upward at one steady, brisk pace, from its first
-     appearance to its last: it sharpens and shows fully, then fades out on its way. */
+     appearance to its last: it shows fully, then fades out on its way. */
   @keyframes app-cycle-next {
-    0% { opacity: 0; filter: blur(3px); transform: translate(-50%, -50%); }
-    18% { opacity: 1; filter: blur(0); }
+    0% { opacity: 0; transform: translate(-50%, -50%); }
+    18% { opacity: 1; }
     40% { opacity: 1; }
-    100% { opacity: 0; filter: blur(0); transform: translate(-50%, calc(-100% - 90px)); }
+    100% { opacity: 0; transform: translate(-50%, calc(-100% - 90px)); }
   }
 
   /* ── About ──────────────────────────────────────────────────────────────────────── */
