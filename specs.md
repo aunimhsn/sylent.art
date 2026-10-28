@@ -75,7 +75,7 @@ Proofs:
 | About | `/about` | Present the trainer: photo, background, approach, references, NDA. |
 | Contact | `/contact` | The contact form and the other ways to reach the trainer. |
 | Legal notice and privacy policy | `/policy` | The legal information and how the form and audience data are handled. |
-| Not found | `404.html` | A page « Page introuvable » with links to the home page and the offers. |
+| Not found | `404.html` | A page « Oups, perdu dans l’espace », as on the former site, with links to the home page and the offers. |
 
 Every page has a header with the navigation (Formations, Articles, À propos) and a visible « Me contacter » button, which leads to the contact page (so the navigation has no separate « Contact » link), and a footer with the navigation, the contact details, the legal page and the signature.
 
