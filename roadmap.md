@@ -18,7 +18,7 @@ Read only by the steps that need them:
 - [x] **2. Technical choices** (#3): Astro, native CSS with tokens, Prettier, ESLint, Stylelint, linkinator.
 - [x] **3. Wireframes** (#4): one Excalidraw wireframe per page type, set 1 kept and approved.
 - [x] **4. Mock-up** (#5): Night style, every page of the first release in `docs/mockups/` (`python3 docs/mockups/serve.py 8781`), the reference of the build; decisions in `docs/branding.md`; wireframes removed.
-- [ ] **5. Design system**: complete the tokens in `docs/branding.md` (started during step 4) once the mock-up is approved, entry in `design-journal.md`.
+- [x] **5. Design system** (#6): tokens in `docs/branding.md` (4 px spacing scale, one size per typographic role, four breakpoints), the mock-up rewritten to use only them, entry in `design-journal.md`.
 - [ ] **6. Project and deployment**: project skeleton, checks, CI (`ci.yml`) and deployment to GitHub Pages (`deploy.yml`), `CNAME`.
 - [ ] **7. Layout and home page**: shared layout (header, navigation, footer, calls to action) and home page.
 - [ ] **8. Offers**: offer list and one page per module (`/courses/<module>`), redirects of `/courses/<id>` generated from the modules' former ids. Refine the domains and the modules with the owner first.

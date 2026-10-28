@@ -478,12 +478,14 @@ function gridFluid(host, CELL, className) {
     else { running = false; context.clearRect(0, 0, width, height); }
   }
 }
-// The footer has cells of 40 px; a page top marks its grid with data-grid (cells of 32 px).
+// The cells of the grids come from the tokens: --grid-step-footer for the footer, --grid-step for
+// a page top, which marks its grid with data-grid.
 document.addEventListener("DOMContentLoaded", () => {
   if (reduced) return;
+  const token = (name, fallback) => parseFloat(getComputedStyle(document.documentElement).getPropertyValue(name)) || fallback;
   const footer = document.querySelector(".app-footer");
-  if (footer) gridFluid(footer, 40, "app-footer-fluid");
-  document.querySelectorAll("[data-grid]").forEach(host => gridFluid(host, 32, "app-grid-fluid"));
+  if (footer) gridFluid(footer, token("--grid-step-footer", 40), "app-footer-fluid");
+  document.querySelectorAll("[data-grid]").forEach(host => gridFluid(host, token("--grid-step", 32), "app-grid-fluid"));
 });
 
 // The reveals start hidden; if the animations don't start (a library that doesn't load), show
