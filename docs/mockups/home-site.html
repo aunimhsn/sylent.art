@@ -123,6 +123,15 @@
 
   /* The back covers the card above its white band, which stays in place on both sides and keeps
      growing a little under the pointer. */
+  /* The grid of the domains, still to choose (?grid=…, a tab of home.html): 3 columns, or the
+     custom card as a band across its own row, its cover on the left. */
+  @media (min-width: 1100px) { .app-cards.is-domains.is-three { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 640px) {
+    .app-cards.is-band > .app-card:last-child { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(240px, 30%) 1fr; grid-template-rows: auto auto 1fr auto; column-gap: 32px; }
+    .app-cards.is-band > .app-card:last-child > :not(.app-cover) { grid-column: 2; }
+    .app-cards.is-band > .app-card:last-child .app-cover { grid-row: 1 / -1; min-height: 200px; margin: -28px 0 -28px -26px; aspect-ratio: auto; border-bottom: 0; border-right: 1px solid rgb(255 255 255 / .06); }
+    .app-cards.is-band > .app-card:last-child .app-card-more { grid-row: 4; margin: 0 -26px -28px 0; }
+  }
   .app-card-back { position: absolute; inset: 0 0 56px; display: flex; flex-direction: column; padding: 22px 26px; visibility: hidden; }
   .app-card.is-flipped > :not(.app-card-back, .app-card-more) { visibility: hidden; }
   .app-card.is-flipped .app-card-back { visibility: visible; }
@@ -222,7 +231,7 @@
       <div class="app-wrap">
         ${heading("Formations", "Apprendre", "domains-title")}
         <p class="app-lead app-reveal">Huit domaines, des modules indépendants et des durées toujours adaptables, sur site ou à distance.</p>
-        <ul class="app-cards is-domains">
+        <ul class="app-cards is-domains${{ three: " is-three", band: " is-band" }[query.get("grid")] || ""}">
           ${DOMAINS.map(domainCard).join("")}${customCard()}
         </ul>
       </div>

@@ -69,6 +69,14 @@
       fallback: "combiner",
       only: "module",
     },
+    // The grid of the domains, now 8 cards and the custom one: 4 columns leave the custom card
+    // alone on its row, 3 columns fill three rows, or the custom card becomes a band on its own row.
+    grid: {
+      label: "Grid",
+      options: { four: "4 columns", three: "3 columns", band: "Custom card as a band" },
+      fallback: "four",
+      only: "home",
+    },
     view: {
       label: "View",
       options: { both: "Mobile and desktop", desktop: "Desktop, full width", mobile: "Mobile" },

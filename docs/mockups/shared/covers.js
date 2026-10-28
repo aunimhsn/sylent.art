@@ -735,6 +735,48 @@ if (coverRenderer) {
         group.rotation.set(0.05, Math.sin(t * 0.4) * 0.4, 0);
       } };
     },
+    // Programmation orientée objet: a class, the mold, from which objects come one after another;
+    // the newest one still carries the color of its creation.
+    instances() {
+      const scene = new THREE.Scene();
+      const group = new THREE.Group();
+      scene.add(group);
+      const source = v(0, 0.9);
+      const mold = outline(new THREE.BoxGeometry(1.1, 0.7, 0.5), 0.9);
+      mold.position.copy(source);
+      group.add(mold);
+      const objects = [-1.4, 0, 1.4].map((x, k) => {
+        const object = block(new THREE.BoxGeometry(0.7, 0.45, 0.32));
+        // Each object has its own state: a different number of dots on its front.
+        for (let d = 0; d <= k; d++) {
+          const state = dot(0.04, 0.8);
+          state.position.set(-0.18 + d * 0.18, 0, 0.17);
+          object.add(state);
+        }
+        const link = polyline([v(0, 0.55), v(x, -0.375)], 0);
+        group.add(object, link);
+        return [object, v(x, -0.6), link];
+      });
+      return { scene, camera: view(0, 0.4, 6.0, [0, 0.1, 0]), update(t) {
+        const cycle = (t * 0.25) % 1;
+        const out = 1 - ease(clamp((cycle - 0.9) / 0.1));
+        let pulse = 0;
+        const starts = objects.map((_, k) => 0.08 + k * 0.24);
+        const newest = starts.filter(start => cycle > start).length - 1;
+        objects.forEach(([object, target, link], k) => {
+          const start = starts[k];
+          const f = ease(clamp((cycle - start) / 0.2));
+          pulse = Math.max(pulse, 1 - Math.abs(cycle - start) / 0.06);
+          object.visible = cycle > start;
+          object.position.copy(source).lerp(target, f);
+          object.scale.setScalar(Math.max(0.001, (0.6 + 0.4 * f) * out));
+          glow(object, k === newest ? 1 - f * 0.5 : 0);
+          link.material.opacity = object.visible ? 0.25 * f * out : 0;
+        });
+        glow(mold, pulse);
+        group.rotation.set(0.15, Math.sin(t * 0.4) * 0.45, 0);
+      } };
+    },
     // Principes SOLID: one large class splits into small classes, one responsibility each, which
     // all depend on the same interface.
     solid() {

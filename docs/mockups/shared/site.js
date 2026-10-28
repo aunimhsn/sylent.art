@@ -75,6 +75,7 @@ const DOMAINS = [
     ["PostgreSQL", 2, "Aller plus loin en SQL avec une base robuste et complète.", "join"],
   ] },
   { slug: "conception-logicielle", title: "Conception logicielle", summary: "Penser l’architecture d’un logiciel avant de l’écrire.", scene: "blueprint", modules: [
+    ["Programmation orientée objet", 3, "Penser un programme en objets, quel que soit le langage.", "instances"],
     ["UML", 2, "Représenter un logiciel en diagrammes pour mieux le concevoir.", "classes"],
     ["Principes SOLID", 2, "Organiser son code objet pour qu’il reste simple à faire évoluer.", "solid"],
     ["Design patterns", 2, "Reconnaître et appliquer des solutions éprouvées aux problèmes courants.", "observer"],
