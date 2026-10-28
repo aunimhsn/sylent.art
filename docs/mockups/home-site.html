@@ -144,12 +144,14 @@
      of the phase. */
   .app-cycle-next { position: absolute; left: var(--anchor-x, 50%); top: var(--anchor-y, 50%); display: none; color: var(--signal-text); font: var(--text-weight) 15px/1 var(--font-text); white-space: nowrap; pointer-events: none; }
   .app-cycle-scene[data-lap="0"] .app-cycle-next[data-lap="0"],
-  .app-cycle-scene[data-lap="1"] .app-cycle-next[data-lap="1"] { display: block; animation: app-cycle-next 2.6s cubic-bezier(.25, .8, .35, 1) forwards; }
-  /* It comes out of the runner, at full opacity at once, then fades out slowly as it rises. */
+  .app-cycle-scene[data-lap="1"] .app-cycle-next[data-lap="1"] { display: block; animation: app-cycle-next 3.2s ease-in-out forwards; }
+  /* It comes out of the runner softly, from a slight blur, rests a moment at full opacity, then
+     fades out slowly as it keeps rising. */
   @keyframes app-cycle-next {
-    0% { opacity: 0; transform: translate(-50%, -50%) scale(.6); }
-    12% { opacity: 1; transform: translate(-50%, calc(-100% - 12px)) scale(1); }
-    100% { opacity: 0; transform: translate(-50%, calc(-100% - 34px)) scale(1); }
+    0% { opacity: 0; filter: blur(3px); transform: translate(-50%, -50%) scale(.85); }
+    25% { opacity: 1; filter: blur(0); transform: translate(-50%, calc(-100% - 12px)) scale(1); }
+    45% { opacity: 1; filter: blur(0); transform: translate(-50%, calc(-100% - 17px)) scale(1); }
+    100% { opacity: 0; filter: blur(0); transform: translate(-50%, calc(-100% - 32px)) scale(1); }
   }
 
   /* ── About ──────────────────────────────────────────────────────────────────────── */
