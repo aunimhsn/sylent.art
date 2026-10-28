@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="fr" data-theme="night">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>À propos · Sylent</title>
+<meta name="description" content="Aunim Hassan, formateur en informatique depuis 2021 : son parcours, son approche pédagogique et les écoles qui lui font confiance.">
+<!--
+  The about page of sylent.art (mock-up, step 4 of roadmap.md), shown at phone and desktop width
+  by home.html (?page=about). The parts shared by every page are in shared/; the figures, the
+  steps of the approach and the partners are the same as on the home page (shared/site.js).
+  Layout: set 1 of docs/wireframes (about.excalidraw): the portrait beside the name and the
+  background, over the grid; the key figures; the approach; the partners; the administrative
+  information; the call to action. The photo is still to provide: a placeholder holds its place.
+-->
+<script src="shared/head.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Anaheim:wght@500;700&display=block">
+<link rel="stylesheet" href="shared/site.css">
+<style>
+  /* ── Hero: the portrait beside the name and the background, over the grid ────────── */
+
+  .app-about-hero { position: relative; padding: calc(var(--header-height) + clamp(36px, 5vw, 72px)) 0 clamp(56px, 7vw, 96px); }
+  .app-about-hero::before,
+  .app-about-hero > .app-grid-fluid {
+    content: "";
+    position: absolute;
+    inset: 0;
+    mask-image: radial-gradient(80% 75% at 30% 40%, #000 30%, transparent 75%);
+    pointer-events: none;
+  }
+  /* The orange fluid of the grid (site.js) lies in a layer at the same place, with the same mask. */
+  .app-about-hero::before {
+    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .app-about-hero .app-wrap { position: relative; display: grid; gap: 40px; }
+  @media (min-width: 900px) { .app-about-hero .app-wrap { grid-template-columns: 5fr 7fr; gap: clamp(48px, 6vw, 96px); align-items: center; } }
+
+  /* The portrait, in the frame of the covers; until the photo comes, the mark of the logo. */
+  .app-portrait { position: relative; display: grid; place-items: center; width: min(100%, 460px); aspect-ratio: 4 / 5; margin: 0; background-color: #101010; background-image: linear-gradient(rgb(255 255 255 / .035) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / .035) 1px, transparent 1px); background-size: 24px 24px; border: 1px solid var(--line); }
+  .app-portrait .app-mark { height: 38%; width: auto; color: #222222; }
+  .app-portrait figcaption { position: absolute; left: 18px; bottom: 16px; color: var(--dim); font: 600 13px/1 var(--font-title); }
+
+  .app-about-kicker { margin: 0; color: var(--dim); font: 800 13px/1.3 var(--font-title); letter-spacing: .14em; text-transform: uppercase; }
+  .app-about-title { margin: 16px 0 0; font: var(--title-weight) clamp(44px, 6.8vw, 92px)/0.98 var(--font-title); letter-spacing: var(--title-tracking); }
+  .app-about-role { margin: 20px 0 0; font: 700 clamp(19px, 1.8vw, 24px)/1.3 var(--font-title); letter-spacing: -0.02em; }
+  .app-about-story { margin: 24px 0 0; max-width: 60ch; color: var(--secondary); font-size: clamp(17px, 1.5vw, 19px); text-wrap: pretty; }
+  .app-about-story + .app-about-story { margin-top: 14px; }
+  .app-about-hero .app-motto { margin-top: 36px; }
+
+  /* ── Figures, larger than on the home page: they open the page ───────────────────── */
+
+  .app-about-figures .app-figures { margin: 0; }
+  .app-about-figures .app-figures strong { font-size: clamp(36px, 6vw, 72px); }
+  .app-about-figures .app-figures div > span { font-size: clamp(14px, 1.3vw, 16px); }
+
+  /* ── Partners: a small label over the logos, as on the wireframe ────────────────── */
+
+  .app-about-label { margin: 0 0 clamp(24px, 3vw, 40px); color: var(--dim); font: 800 13px/1.3 var(--font-title); letter-spacing: .14em; text-align: center; text-transform: uppercase; }
+
+  /* ── Administrative information: a glass panel ──────────────────────────────────── */
+
+  .app-admin { display: grid; gap: 10px; max-width: 760px; margin-inline: auto; padding: 28px 26px; }
+  .app-admin h2 { margin: 0 0 4px; font: 700 21px/1.2 var(--font-title); letter-spacing: -0.025em; }
+  .app-admin p { margin: 0; color: var(--secondary); font-size: 16px; }
+  .app-admin strong { color: var(--text); font-weight: inherit; }
+  .app-admin .app-link { justify-self: start; margin-top: 10px; }
+</style>
+</head>
+<body data-page="about">
+<script src="shared/site.js"></script>
+
+<main id="content"></main>
+
+<script>
+  // ── Content: after the former site and the wireframe ────────────────────────────────
+  const STORY = [
+    `Passionné par le web depuis plus de dix ans, j’ai étudié l’informatique à l’Exia CESI de Toulouse, puis travaillé en développement web et en gestion de projet.`,
+    `Autodidacte dans l’âme, je forme depuis 2021 des étudiants, des personnes en reconversion et des salariés, avec une conviction${NB}: on n’arrête jamais d’apprendre.`,
+  ];
+
+  const hero = `
+    <section class="app-about-hero" aria-labelledby="about-title" data-grid>
+      <div class="app-wrap">
+        <figure class="app-portrait app-reveal">${MARK}<figcaption>Photo à venir</figcaption></figure>
+        <div>
+          <p class="app-about-kicker app-reveal">À propos</p>
+          <h1 class="app-about-title app-reveal" id="about-title">Aunim Hassan</h1>
+          <p class="app-about-role app-reveal">Formateur en informatique depuis 2021</p>
+          ${STORY.map(paragraph => `<p class="app-about-story app-reveal">${paragraph}</p>`).join("")}
+          <p class="app-motto app-reveal">Une vie, mille leçons</p>
+        </div>
+      </div>
+    </section>`;
+
+  const figures = `
+    <div class="app-wrap app-about-figures app-reveal">${figureList()}</div>`;
+
+  const approach = `
+    <section class="app-section" aria-labelledby="approach-title">
+      <div class="app-wrap">
+        ${heading("Mon approche", "Accompagner", "approach-title")}
+        ${stepList()}
+      </div>
+    </section>`;
+
+  const partners = `
+    <section class="app-section" aria-labelledby="partners-title" style="padding-top:0">
+      <div class="app-wrap">
+        <h2 class="app-about-label" id="partners-title">Partenaires actuels</h2>
+        ${partnerReel()}
+      </div>
+    </section>`;
+
+  const admin = `
+    <section class="app-section" aria-labelledby="admin-title" style="padding-top:0">
+      <div class="app-wrap">
+        <div class="app-admin app-glass app-reveal">
+          <h2 id="admin-title">Informations administratives</h2>
+          <p>Micro-entreprise · SIRET${NB}: <span class="app-pending">à fournir</span> · NDA${NB}: <span class="app-pending">à fournir</span></p>
+          <p><strong>Cet enregistrement ne vaut pas agrément de l’État.</strong></p>
+          <a class="app-link" href="${PAGES.legal}">Mentions légales</a>
+        </div>
+      </div>
+    </section>`;
+
+  document.getElementById("content").innerHTML = hero + figures + approach + partners + admin + siteCta() + siteFooter();
+  spinPartners();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="shared/motion.js"></script>
+</body>
+</html>

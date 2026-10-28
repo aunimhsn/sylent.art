@@ -33,11 +33,11 @@ const heading = (title, ghost, id, level = 2) => `
   </div>`;
 
 // The pages of the mock-up, and the links of the navigation.
-const PAGES = { home: "home-site.html", courses: "courses-site.html", module: "module-site.html", contact: "contact-site.html", legal: "legal-site.html", privacy: "privacy-site.html", notFound: "not-found-site.html" };
+const PAGES = { home: "home-site.html", courses: "courses-site.html", module: "module-site.html", contact: "contact-site.html", legal: "legal-site.html", privacy: "privacy-site.html", notFound: "not-found-site.html", about: "about-site.html" };
 // The slug of a module, for its page: « Intégrer l’IA avec méthode » gives integrer-l-ia-avec-methode.
 const slugOf = text => text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 // The articles are left out of the first release.
-const NAVIGATION = [["Formations", PAGES.courses, "courses"], ["À propos", "#", "about"], ["Contact", PAGES.contact, "contact"]];
+const NAVIGATION = [["Formations", PAGES.courses, "courses"], ["À propos", PAGES.about, "about"], ["Contact", PAGES.contact, "contact"]];
 // The header and the menu leave out Contact: their « Me contacter » button leads there. The
 // footer keeps the full list.
 const MENU = NAVIGATION.filter(([, , page]) => page !== "contact");
@@ -138,6 +138,73 @@ const siteCta = (question = `Un module à confier${NB}?<br>Parlons de vos appren
       <a class="app-button app-magnetic app-reveal" href="${PAGES.contact}">Me contacter</a>
     </div>
   </section>`;
+// The sections shared by the home and about pages: the partners, the steps of the pedagogy and the
+// key figures.
+const STEPS = [
+  ["Définir un pourquoi", `Pourquoi cette notion${NB}? Pourquoi ce module${NB}? Pourquoi ensemble${NB}? Quand on comprend le sens, l’envie d’apprendre suit.`],
+  ["Pas à pas", "Avec patience et bienveillance, une analogie après l’autre, de votre point A à votre point B, en toute sérénité."],
+  ["Apprendre à apprendre", `L’informatique évolue vite, apprendre en autodidacte devient indispensable.<br>Deux clés${NB}: la curiosité et la méthode.`],
+  ["L’expérience", "Formateur depuis 2021, plus de 900 heures de formation par an depuis 2023."],
+];
+// Logos of the former site, traced into white SVG; IGENSIA Tech has none yet. The scale is
+// 1 / √(width / height) of each logo, for an equal visual weight.
+const PARTNERS = [["YNOV", "ynov", 0.638], ["IGENSIA Tech", null], ["EPSI", "epsi", 0.8], ["CESI", "cesi", 1], ["OpenClassrooms", "openclassrooms", 0.277]];
+const partnerReel = () => `
+  <div class="app-partners-reel app-reveal">
+    <ul class="app-partner-list">${[false, true].map(copy => PARTNERS.map(([name, file, scale]) => `
+      <li${copy ? ' class="is-copy" aria-hidden="true"' : ""}>${file ? `<img src="assets/partners/${file}.svg" alt="${copy ? "" : name}" style="--scale: ${scale}">` : `<span class="app-partner-name">${name}</span>`}</li>`).join("")).join("")}
+    </ul>
+  </div>`;
+const stepList = () => `
+  <ol class="app-steps">${STEPS.map(([title, text], index) => `
+    <li class="app-reveal">
+      <span class="app-step-number">0${index + 1}</span>
+      <div class="app-step-rule"></div>
+      <h3>${title}</h3><p>${text}</p>
+    </li>`).join("")}
+  </ol>`;
+const figureList = () => `
+  <div class="app-figures">
+    <div><strong><span class="app-count" data-from="2000" data-to="2021">2021</span></strong><span>formateur depuis</span></div>
+    <div><strong><span class="app-count" data-to="900">900</span>+${NB}h</strong><span>de formation par an</span></div>
+    <div><strong><span class="app-count" data-to="5">5</span></strong><span>écoles et organismes</span></div>
+  </div>`;
+function spinPartners() {
+  // The reel of partners on a phone, driven frame by frame so that each logo has its own depth:
+  // it comes in at the bottom, and near the top it moves away toward the back (smaller, tilted
+  // back, fading) before it disappears. The CSS animation stays as a fallback.
+  const reel = document.querySelector(".app-partners-reel");
+  const reelList = reel.querySelector(".app-partner-list");
+  const reelItems = [...reelList.children];
+  const phone = matchMedia("(max-width: 759px)");
+  let reelOffset = 0, reelTime = performance.now(), reelSeen = true;
+  new IntersectionObserver(([entry]) => { reelSeen = entry.isIntersecting; }).observe(reel);
+  function spinReel(now) {
+    requestAnimationFrame(spinReel);
+    const step = now - reelTime;
+    reelTime = now;
+    if (!phone.matches || reduced) {
+      reelList.style.animation = reelList.style.transform = "";
+      reelItems.forEach(item => { item.style.transform = item.style.opacity = ""; });
+      return;
+    }
+    if (!reelSeen) return;
+    const row = reelItems[0].offsetHeight;
+    const height = reel.clientHeight;
+    reelOffset = (reelOffset + step * row / 2800) % (row * reelItems.length / 2);
+    reelList.style.animation = "none";
+    reelList.style.transform = `translateY(${-reelOffset}px)`;
+    reelItems.forEach((item, index) => {
+      const place = (index * row + row / 2 - reelOffset) / height; // 0 at the top, 1 at the bottom
+      const away = Math.min(1, Math.max(0, (0.42 - place) / 0.42));
+      const coming = Math.min(1, Math.max(0, (place - 0.62) / 0.38));
+      item.style.transform = `perspective(500px) translateZ(${-away * 320}px) rotateX(${away * 38}deg) scale(${1 - coming * 0.12})`;
+      item.style.opacity = String(Math.max(0, 1 - away * 1.1 - coming));
+    });
+  }
+  requestAnimationFrame(spinReel);
+}
+
 // A text page (legal notice, privacy policy): a heading over the grid, the date of the last update,
 // then numbered sections beside their table of contents, which follows the scroll on a computer.
 // Each section is [id, title, html].

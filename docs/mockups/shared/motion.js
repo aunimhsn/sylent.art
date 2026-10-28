@@ -27,6 +27,17 @@
     gsap.fromTo(band.querySelector(".app-cta-ghost"), { xPercent: 8 }, { xPercent: -8, ease: "none", scrollTrigger: { trigger: band, start: "top bottom", end: "bottom top", scrub: true } });
   });
 
+  // The rules of the pedagogy draw themselves as the section scrolls.
+  gsap.utils.toArray(".app-step-rule").forEach((rule, index) => {
+    gsap.fromTo(rule, { "--progress": 0 }, { "--progress": 1, ease: "none", scrollTrigger: { trigger: rule.closest(".app-steps"), start: `top ${80 - index * 6}%`, end: `top ${40 - index * 6}%`, scrub: true } });
+  });
+
+  // The figures count up.
+  gsap.utils.toArray(".app-count").forEach(counter => {
+    const value = { n: Number(counter.dataset.from || 0) };
+    gsap.to(value, { n: Number(counter.dataset.to), duration: 2, ease: "power2.out", scrollTrigger: { trigger: counter, start: "top 92%" }, onUpdate: () => { counter.textContent = Math.round(value.n); } });
+  });
+
   // Pointer devices: the main buttons are magnetic.
   if (matchMedia("(hover: hover)").matches) {
     document.querySelectorAll(".app-magnetic").forEach(button => {
