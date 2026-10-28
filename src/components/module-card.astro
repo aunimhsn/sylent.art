@@ -11,9 +11,12 @@ interface Props {
   domain: Domain;
   /** The first card of a domain carries its slug, for the links of the home page. */
   anchor?: boolean;
+  /** 2 on the offer list, right under its h1; 3 under a section heading. */
+  headingLevel?: 2 | 3;
 }
 
-const { module, domain, anchor = false } = Astro.props;
+const { module, domain, anchor = false, headingLevel = 3 } = Astro.props;
+const Heading = `h${headingLevel}` as const;
 const { title, summary, scene } = module.data;
 const { isNew } = domain.data;
 ---
@@ -23,10 +26,10 @@ const { isNew } = domain.data;
     <canvas></canvas>
     {isNew && <span class="new">{fr.cards.new}</span>}
   </div>
-  <h3>
+  <Heading>
     {title}
     {isNew && <span class="visually-hidden">{fr.cards.newHidden}</span>}
-  </h3>
+  </Heading>
   <p class="card-domain">{domain.data.title}</p>
   <p>{summary}</p>
   <a

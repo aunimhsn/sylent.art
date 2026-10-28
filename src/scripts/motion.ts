@@ -1,7 +1,7 @@
 // The animations shared by every page (from docs/mockups/shared/motion.js), run after the
 // content: reveals on scroll, section headings, the faded word of the call to action, the rules
-// of the pedagogy and of the program of a module, the key figures and the magnetic buttons. Nothing moves when the visitor asked
-// to reduce motion.
+// of the pedagogy and of the program of a module, the key figures and the magnetic buttons.
+// Nothing moves when the visitor asked to reduce motion.
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";

@@ -1,7 +1,7 @@
 {
   "list": {
     "title": "Formations · Sylent",
-    "description": "Les modules de formation en informatique, du HTML à l’IA, par domaine : indépendants, aux durées adaptables, sur site ou à distance, pour les écoles, les organismes de formation et les entreprises.",
+    "description": "Les modules de formation en informatique, du HTML à l’IA : indépendants, aux durées adaptables, sur site ou à distance, pour les écoles, les organismes et les entreprises.",
     "heading": "Formations",
     "ghost": "Apprendre",
     "lead": "Des modules indépendants, à prendre seuls ou à combiner, aux durées toujours adaptables, sur site ou à distance.",
@@ -22,10 +22,10 @@
     },
     "formats": "Sur site ou à distance",
     "days": {
-      "one": "{days} jour, adaptable",
-      "other": "{days} jours, adaptable"
+      "one": "{days} jour, adaptable",
+      "other": "{days} jours, adaptable"
     },
-    "toDefine": "À définir",
+    "toSpecify": "À préciser",
     "prerequisites": "Prérequis",
     "objectives": "Objectifs",
     "program": "Programme",

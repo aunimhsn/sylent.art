@@ -8,11 +8,13 @@ import fr from "../i18n/fr.json";
 import { href } from "../lib/url";
 
 // The faces of the cube: a label over a word, or over one of the key figures, written once in
-// pedagogy.json.
+// pedagogy.json and named by its id; an unknown id fails the build.
 const faces = home.cube.map((face) => {
   if (face.figure === undefined) return [face.label, face.value];
-  const { value, unit } = pedagogy.figures[face.figure];
-  return [face.label, `${value}${unit}`];
+  const figure = pedagogy.figures.find(({ id }) => id === face.figure);
+  if (!figure)
+    throw new Error(`home.json: unknown key figure "${face.figure}"`);
+  return [face.label, `${figure.value}${figure.unit}`];
 });
 ---
 

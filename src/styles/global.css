@@ -179,7 +179,7 @@ canvas {
   background-color: var(--glass-hover);
 }
 
-.card h3 {
+.card :is(h2, h3) {
   margin: 0;
   font: 700 var(--size-card-title) / 1.2 var(--font-title);
   letter-spacing: var(--tracking-card);

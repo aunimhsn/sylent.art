@@ -9,11 +9,11 @@
   },
   "cube": [
     { "label": "Le sens", "value": "Pourquoi ?" },
-    { "label": "Par an depuis 2023", "figure": 1 },
+    { "label": "Par an depuis 2023", "figure": "hours" },
     { "label": "Pas à pas", "value": "Patience" },
-    { "label": "Formateur depuis", "figure": 0 },
+    { "label": "Formateur depuis", "figure": "since" },
     { "label": "En toute sérénité", "value": "Bienveillance" },
-    { "label": "Écoles et organismes", "figure": 2 }
+    { "label": "Écoles et organismes", "figure": "partners" }
   ],
   "partners": {
     "title": "Partenaires",

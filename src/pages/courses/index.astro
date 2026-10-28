@@ -27,7 +27,12 @@ const offers = await getOffers();
       <ul class="cards">
         {offers.map(({ domain, modules }) =>
           modules.map((module, index) => (
-            <ModuleCard module={module} domain={domain} anchor={index === 0} />
+            <ModuleCard
+              module={module}
+              domain={domain}
+              anchor={index === 0}
+              headingLevel={2}
+            />
           )),
         )}
       </ul>
