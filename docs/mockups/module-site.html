@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="fr" data-theme="night">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JavaScript · Formations · Sylent</title>
+<meta name="description" content="Le programme du module, son public, ses prérequis et ses objectifs, sur site ou à distance.">
+<!--
+  The page of one module of sylent.art (mock-up, step 4 of roadmap.md), shown at phone and
+  desktop width by home.html (?page=module); ?module=<slug> opens another module (the slugs come
+  from slugOf in shared/site.js). The parts shared by every page are in shared/.
+  Layout, in the style of the home page: a hero with the grid and its fluid, the text on the left
+  and the 3D scene of the module in large on the right (shared/covers.js); the key facts under a
+  rule; the prerequisites, the objectives and the program, numbered as the pedagogy of the home
+  page, beside a card that follows the scroll on a computer; the other modules of the domain.
+  Sample content: JavaScript and Claude Code have a program; the other modules show theirs as to
+  come.
+-->
+<script src="shared/head.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Anaheim:wght@500&display=block">
+<link rel="stylesheet" href="shared/site.css">
+<style>
+  /* ── Hero: the text and the scene of the module, over the grid ──────────────────── */
+
+  .app-module-hero { position: relative; padding: calc(var(--header-height) + clamp(36px, 5vw, 72px)) 0 clamp(48px, 6vw, 80px); }
+  .app-module-hero::before,
+  .app-module-hero > .app-grid-fluid {
+    content: "";
+    position: absolute;
+    inset: 0;
+    mask-image: radial-gradient(80% 75% at 70% 40%, #000 30%, transparent 75%);
+    pointer-events: none;
+  }
+  /* The orange fluid of the grid (site.js) lies in a layer at the same place, with the same mask. */
+  .app-module-hero::before {
+    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .app-module-hero .app-wrap { position: relative; display: grid; gap: 40px; }
+  @media (min-width: 900px) { .app-module-hero .app-wrap { grid-template-columns: 7fr 5fr; align-items: center; gap: 56px; } }
+
+  .app-crumbs ol { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 0 0 32px; padding: 0; list-style: none; color: var(--dim); font: 600 14px/1.3 var(--font-title); }
+  .app-crumbs li + li::before { content: "/"; margin-right: 10px; color: var(--line-strong); }
+  .app-crumbs a { transition: color .3s; }
+  .app-crumbs a:hover { color: var(--text); }
+  .app-crumbs [aria-current] { color: var(--secondary); }
+
+  .app-module-domain { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin: 0; color: var(--dim); font: 800 13px/1.3 var(--font-title); letter-spacing: .14em; text-transform: uppercase; }
+  .app-module-domain .app-new { position: static; }
+  .app-module-title { margin: 16px 0 0; font: var(--title-weight) clamp(44px, 6.8vw, 92px)/0.98 var(--font-title); letter-spacing: var(--title-tracking); text-wrap: balance; }
+  .app-module-lead { margin: 28px 0 0; max-width: 52ch; color: var(--secondary); font-size: clamp(17px, 1.5vw, 19px); text-wrap: pretty; }
+  .app-module-note { margin: 24px 0 0; max-width: 52ch; padding: 12px 18px; border-left: 3px solid var(--signal); background: color-mix(in srgb, var(--signal) 8%, transparent); color: var(--text); font-size: 16px; }
+  .app-module-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+  /* The scene of the module, the same as on its card, in large. */
+  .app-cover.is-large { margin: 0; border: 1px solid var(--glass-line); }
+
+  /* ── Key facts: plain columns under a rule ──────────────────────────────────────── */
+
+  .app-facts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px 24px; margin: 0; }
+  @media (min-width: 900px) { .app-facts { grid-template-columns: repeat(4, 1fr); } }
+  .app-facts div { padding-top: 18px; border-top: 1px solid var(--line); }
+  .app-facts dt { color: var(--dim); font: 800 12px/1.3 var(--font-title); letter-spacing: .14em; text-transform: uppercase; }
+  .app-facts dd { margin: 10px 0 0; font: 700 18px/1.35 var(--font-title); letter-spacing: -0.02em; }
+
+  /* ── Body: prerequisites, objectives and program, beside the card to organize ─────── */
+
+  .app-module-body { display: grid; gap: 56px; padding-block: clamp(64px, 8vw, 112px); }
+  @media (min-width: 960px) { .app-module-body { grid-template-columns: 8fr 4fr; gap: 72px; align-items: start; } }
+  .app-module-main > section + section { margin-top: clamp(48px, 6vw, 80px); }
+  .app-module-main h2 { margin: 0 0 22px; font: var(--title-weight) clamp(28px, 3vw, 36px)/1.1 var(--font-title); letter-spacing: var(--title-tracking); }
+  .app-module-main > section > p { margin: 0; max-width: 60ch; color: var(--secondary); font-size: 18px; }
+
+  .app-objectives { display: grid; gap: 14px; margin: 0; padding: 0; list-style: none; }
+  .app-objectives li { display: flex; align-items: flex-start; gap: 16px; font-size: 18px; }
+  .app-objectives svg { flex: none; margin-top: 2px; padding: 4px; border: 1px solid var(--line-strong); box-sizing: content-box; }
+
+  /* The parts of the program, numbered as the pedagogy of the home page; their rule draws itself
+     as the page scrolls. */
+  .app-program { margin: 0; padding: 0; list-style: none; }
+  .app-program li { position: relative; display: grid; grid-template-columns: 64px 1fr; gap: 4px 20px; padding: 26px 0; }
+  @media (min-width: 640px) { .app-program li { grid-template-columns: 96px 1fr; } }
+  .app-program li::before { content: ""; position: absolute; inset: 0 0 auto; height: 1px; background: var(--line); }
+  .app-program li::after { content: ""; position: absolute; inset: 0 0 auto; height: 1px; background: var(--text); transform: scaleX(var(--progress, 1)); transform-origin: left; }
+  .app-program-number { grid-row: span 2; font: 200 clamp(40px, 4.4vw, 56px)/0.9 var(--font-title); letter-spacing: -0.05em; }
+  .app-program h3 { margin: 0; font: 700 21px/1.25 var(--font-title); letter-spacing: -0.025em; }
+  .app-program p { margin: 0; color: var(--secondary); font-size: 16.5px; }
+  .app-program-end { margin: 8px 0 0; padding-top: 22px; border-top: 1px solid var(--line); color: var(--dim); font-size: 16px; }
+
+  /* The card to organize the module: it follows the scroll on a computer; on a phone the header
+     button and the call to action at the end are enough. */
+  .app-organize { display: none; }
+  @media (min-width: 960px) {
+    .app-organize { position: sticky; top: calc(var(--header-height) + 24px); display: grid; gap: 14px; padding: 28px 26px; }
+  }
+  .app-organize h2 { margin: 0; font: 700 21px/1.2 var(--font-title); letter-spacing: -0.025em; }
+  .app-organize p { margin: 0; color: var(--secondary); font-size: 15.5px; }
+  .app-organize .app-button { margin-top: 8px; }
+</style>
+</head>
+<body data-page="courses">
+<script src="shared/site.js"></script>
+
+<main id="content"></main>
+
+<script>
+  // ── Content: sample programs ────────────────────────────────────────────────────────
+  const PROGRAMS = {
+    javascript: {
+      audience: "Étudiants, développeurs débutants, intégrateurs web",
+      level: "Débutant",
+      prerequisites: "Connaître les bases du HTML et du CSS. Aucune connaissance en programmation.",
+      objectives: [
+        `Écrire un programme lisible${NB}: variables, conditions, boucles et fonctions`,
+        "Manipuler une page web avec le DOM",
+        "Réagir aux actions du visiteur avec les événements",
+        "Récupérer et afficher des données avec fetch",
+      ],
+      parts: [
+        ["Les bases du langage", "Variables et types, opérateurs, conditions et boucles, fonctions, tableaux et objets."],
+        ["Le DOM", "Sélectionner des éléments, modifier leur contenu et leurs styles, en créer et en supprimer."],
+        ["Les événements", `Clics, saisies et formulaires${NB}: écouter un événement, le propager, empêcher le comportement par défaut.`],
+        ["L’asynchrone et fetch", "Promesses, async et await, appeler une API, afficher ses données et gérer ses erreurs."],
+        ["Un projet fil rouge", "Une petite application, construite pas à pas, du premier script à la version finale."],
+      ],
+    },
+    "claude-code": {
+      audience: "Développeurs, équipes techniques",
+      level: "Intermédiaire",
+      prerequisites: "Savoir programmer dans au moins un langage et utiliser Git.",
+      objectives: [
+        "Installer et configurer Claude Code dans un projet",
+        `Donner le bon contexte${NB}: instructions, conventions de l’équipe, mémoire`,
+        "Confier une tâche, relire et corriger le résultat",
+        `Garder la maîtrise${NB}: permissions, revue de code et tests`,
+      ],
+      parts: [
+        ["Prise en main", "Installation, premiers échanges, lire et modifier un projet existant."],
+        ["Le contexte", "Les fichiers d’instructions, les conventions de l’équipe, découper une demande."],
+        ["Le travail au quotidien", "Corriger un bug, écrire des tests, refactoriser, documenter."],
+        ["Garder la maîtrise", "Permissions, relecture, revue de code et sécurité des données."],
+        ["Automatiser", "Commandes, agents et intégration dans le flux de travail de l’équipe."],
+      ],
+    },
+  };
+  const duration = days => `${days}${NB}jour${days > 1 ? "s" : ""}, adaptable`;
+
+  // The module asked for (?module=<slug>), with its domain; JavaScript by default.
+  const MODULES = DOMAINS.flatMap(domain => domain.modules.map(module => ({ domain, module, slug: slugOf(module[0]) })));
+  const { domain, module } = MODULES.find(({ slug }) => slug === query.get("module")) || MODULES.find(({ slug }) => slug === "javascript");
+  const [title, days, summary, scene] = module;
+  const program = PROGRAMS[slugOf(title)];
+  document.title = `${title} · Formations · Sylent`;
+  document.querySelector('meta[name="description"]').content = `${summary} Un module de ${duration(days)}, sur site ou à distance.`;
+
+  const hero = `
+    <section class="app-module-hero" aria-labelledby="module-title" data-grid>
+      <div class="app-wrap">
+        <div>
+          <nav class="app-crumbs app-reveal" aria-label="Fil d’Ariane">
+            <ol><li><a href="${PAGES.home}">Accueil</a></li><li><a href="${PAGES.courses}">Formations</a></li><li aria-current="page">${title}</li></ol>
+          </nav>
+          <p class="app-module-domain app-reveal">${domain.title}${domain.isNew ? '<span class="app-new">Nouveau</span>' : ""}</p>
+          <h1 class="app-module-title app-reveal" id="module-title">${title}</h1>
+          <p class="app-module-lead app-reveal">${summary}</p>
+          ${domain.isNew ? `<p class="app-module-note app-reveal">Une offre nouvelle, centrée sur la méthode et les bonnes pratiques${NB}: utiliser les outils d’IA pour être plus efficace et plus serein au quotidien.</p>` : ""}
+          <div class="app-module-actions app-reveal">
+            <a class="app-button app-magnetic" href="${PAGES.contact}">Me contacter</a>
+            <a class="app-button is-outline" href="#programme">Voir le programme</a>
+          </div>
+        </div>
+        <div class="app-cover is-large app-reveal" data-scene="${scene}" aria-hidden="true"><canvas></canvas></div>
+      </div>
+    </section>`;
+
+  const facts = `
+    <div class="app-wrap">
+      <dl class="app-facts app-reveal">
+        <div><dt>Public</dt><dd>${program ? program.audience : "À préciser"}</dd></div>
+        <div><dt>Niveau</dt><dd>${program ? program.level : "À préciser"}</dd></div>
+        <div><dt>Durée</dt><dd>${duration(days)}</dd></div>
+        <div><dt>Formats</dt><dd>Sur site ou à distance</dd></div>
+      </dl>
+    </div>`;
+
+  const main = program ? `
+    <section class="app-reveal" aria-labelledby="prerequisites-title">
+      <h2 id="prerequisites-title">Prérequis</h2>
+      <p>${program.prerequisites}</p>
+    </section>
+    <section class="app-reveal" aria-labelledby="objectives-title">
+      <h2 id="objectives-title">Objectifs</h2>
+      <ul class="app-objectives">${program.objectives.map(objective => `<li>${icon("check", 16)}<span>${objective}</span></li>`).join("")}</ul>
+    </section>
+    <section id="programme" aria-labelledby="program-title">
+      <h2 class="app-reveal" id="program-title">Programme</h2>
+      <ol class="app-program">${program.parts.map(([part, text], index) => `
+        <li class="app-reveal"><span class="app-program-number" aria-hidden="true">0${index + 1}</span><h3>${part}</h3><p>${text}</p></li>`).join("")}
+      </ol>
+      <p class="app-program-end app-reveal">Des explications courtes, puis de la pratique${NB}: les exercices et le projet sont adaptés au niveau du groupe.</p>
+    </section>` : `
+    <section id="programme" class="app-reveal" aria-labelledby="program-title">
+      <h2 id="program-title">Programme</h2>
+      <p>Le programme détaillé de ce module est en cours de rédaction.</p>
+    </section>`;
+
+  const organize = `
+    <aside class="app-organize app-glass" aria-labelledby="organize-title">
+      <h2 id="organize-title">Organiser ce module</h2>
+      <p>Sur site ou à distance, avec un programme et des exercices adaptés à votre groupe.</p>
+      <a class="app-button" href="${PAGES.contact}">Me contacter</a>
+    </aside>`;
+
+  // The other modules of the same domain, when it has some.
+  const others = domain.modules.filter(other => other !== module);
+  const related = others.length ? `
+    <section class="app-section" aria-labelledby="related-title" style="padding-top:0">
+      <div class="app-wrap">
+        ${heading("Dans le même domaine", "Continuer", "related-title")}
+        <ul class="app-cards is-domains">${others.map(other => moduleCard(domain, other)).join("")}</ul>
+      </div>
+    </section>` : "";
+
+  document.getElementById("content").innerHTML = hero + facts + `
+    <div class="app-wrap"><div class="app-module-body"><div class="app-module-main">${main}</div>${organize}</div></div>` +
+    related + siteCta(`Organiser ce module${NB}?<br>Parlons de vos apprenants.`) + siteFooter();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="shared/motion.js"></script>
+<script>
+  // The rules of the program draw themselves as the page scrolls, as the pedagogy of the home page.
+  if (!reduced && window.gsap) {
+    gsap.utils.toArray(".app-program li").forEach(part => {
+      gsap.fromTo(part, { "--progress": 0 }, { "--progress": 1, ease: "none", scrollTrigger: { trigger: part, start: "top 92%", end: "top 62%", scrub: true } });
+    });
+  }
+</script>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }</script>
+<script type="module" src="shared/covers.js"></script>
+</body>
+</html>

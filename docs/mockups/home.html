@@ -45,7 +45,7 @@
   const VARIANTS = {
     page: {
       label: "Page",
-      options: { home: "Home", courses: "Formations", contact: "Contact" },
+      options: { home: "Home", courses: "Formations", module: "Module", contact: "Contact" },
       fallback: "home",
     },
     // The states of the contact form (only for the contact page).
@@ -54,6 +54,13 @@
       options: { empty: "Empty", errors: "Errors", sending: "Sending", sent: "Sent", failed: "Failed" },
       fallback: "empty",
       only: "contact",
+    },
+    // The module shown by the module page: one with its program, one new.
+    module: {
+      label: "Module",
+      options: { javascript: "JavaScript", "claude-code": "Claude Code (new)" },
+      fallback: "javascript",
+      only: "module",
     },
     view: {
       label: "View",
@@ -64,7 +71,7 @@
   // The Console style chosen by the owner, in white instead of green, with Manrope for the titles
   // and Anaheim medium for the text, and the headings of the former site. Atelier was set aside.
   const NOTE = "Night style: neutral blacks and white, Manrope for the titles, Anaheim medium for the text, the SYLENT logo, the headings of the former site.";
-  const FILES = { home: "home-site.html", courses: "courses-site.html", contact: "contact-site.html" };
+  const FILES = { home: "home-site.html", courses: "courses-site.html", module: "module-site.html", contact: "contact-site.html" };
 
   const params = new URLSearchParams(location.search);
   const chosen = Object.fromEntries(Object.entries(VARIANTS).map(([key, variant]) =>

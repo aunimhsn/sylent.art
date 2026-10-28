@@ -975,7 +975,7 @@ if (coverRenderer) {
 
   const items = [...document.querySelectorAll(".app-cover")].map(cover => {
     const canvas = cover.querySelector("canvas");
-    return { cover, canvas, context: canvas.getContext("2d"), card: cover.closest(".app-card"), time: 1.3, visible: true, ...SCENES[cover.dataset.scene]() };
+    return { cover, canvas, context: canvas.getContext("2d"), card: cover.closest(".app-card") || cover, time: 1.3, visible: true, ...SCENES[cover.dataset.scene]() };
   });
   let room = [0, 0];
   function drawCover(item) {

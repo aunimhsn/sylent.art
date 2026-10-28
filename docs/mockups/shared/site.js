@@ -29,7 +29,9 @@ const heading = (title, ghost, id, level = 2) => `
   </div>`;
 
 // The pages of the mock-up, and the links of the navigation.
-const PAGES = { home: "home-site.html", courses: "courses-site.html", contact: "contact-site.html" };
+const PAGES = { home: "home-site.html", courses: "courses-site.html", module: "module-site.html", contact: "contact-site.html" };
+// The slug of a module, for its page: « Intégrer l’IA avec méthode » gives integrer-l-ia-avec-methode.
+const slugOf = text => text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 // The articles are left out of the first release.
 const NAVIGATION = [["Formations", PAGES.courses, "courses"], ["À propos", "#", "about"], ["Contact", PAGES.contact, "contact"]];
 // The header and the menu leave out Contact: their « Me contacter » button leads there. The
@@ -98,7 +100,7 @@ const moduleCard = (domain, [title, , summary, scene]) => `
   <li class="app-card app-glass app-reveal app-tilt">
     <div class="app-cover" data-scene="${scene}" aria-hidden="true"><canvas></canvas>${domain.isNew ? '<span class="app-new">Nouveau</span>' : ""}</div>
     <h3>${title}</h3><p class="app-card-domain">${domain.title}</p><p>${summary}</p>
-    <a class="app-card-more" href="#" aria-label="${title}${NB}: voir le détail">Voir le détail</a>
+    <a class="app-card-more" href="${PAGES.module}?module=${slugOf(title)}" aria-label="${title}${NB}: voir le détail">Voir le détail</a>
   </li>`;
 // The last card, after the domains: a module built for the request.
 const customCard = () => `
