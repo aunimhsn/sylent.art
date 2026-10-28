@@ -3,7 +3,8 @@
     "name": "Sylent",
     "title": "Sylent · Formateur en informatique",
     "description": "Formateur en informatique depuis 2021 : développement, bases de données, tests, Python et IA, pour les écoles, les organismes de formation et les entreprises.",
-    "motto": "Une vie, mille leçons"
+    "motto": "Une vie, mille leçons",
+    "locale": "fr-FR"
   },
   "navigation": {
     "label": "Navigation principale",
@@ -69,5 +70,11 @@
   "textPage": {
     "toc": "Sommaire",
     "updated": "Mis à jour le {date}"
+  },
+  "details": {
+    "ndaNotice": "Cet enregistrement ne vaut pas agrément de l’État."
+  },
+  "dates": {
+    "firstDay": "1er"
   }
 }

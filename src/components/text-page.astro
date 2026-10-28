@@ -5,6 +5,7 @@
 // cards, its facts (a label over its value) and its paragraphs. Used by the legal notice and the
 // privacy policy, whose texts are in src/content/legal.json and policy.json.
 import fr from "../i18n/fr.json";
+import { longDate } from "../lib/dates";
 import RichText from "./rich-text.astro";
 import SectionHeading from "./section-heading.astro";
 
@@ -27,21 +28,16 @@ interface Props {
 }
 
 const { heading, ghost, lead, updated, sections } = Astro.props;
-// « 28 octobre 2026 », kept on one line.
-const date = new Intl.DateTimeFormat("fr-FR", {
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-  timeZone: "UTC",
-})
-  .format(new Date(`${updated}T00:00:00Z`))
-  .replaceAll(" ", " ");
+const date = longDate(updated);
 const [before, after] = fr.textPage.updated.split("{date}");
 ---
 
 <article class="text-page" aria-labelledby="text-page-title">
   <div class="wrap">
-    <header class="text-page-head" data-fluid="--grid-step">
+    <header
+      class="text-page-head grid-texture is-page-top"
+      data-fluid="--grid-step"
+    >
       <SectionHeading
         title={heading}
         ghost={ghost}
@@ -118,32 +114,10 @@ const [before, after] = fr.textPage.updated.split("{date}");
       var(--space-wordmark);
   }
 
-  /* The grid of the hero of the home page, from the top of the page, and the orange fluid that
-     runs along it in a layer at the same place, with the same mask; it fades out above the
-     text. */
+  /* The grid of the hero of the home page and its orange fluid (global.css), from the top of
+     the page; it fades out above the text. */
   .text-page-head {
-    position: relative;
     padding-bottom: var(--space-fluid-3);
-  }
-
-  .text-page-head::before,
-  .text-page-head > :global(.fluid) {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    left: 50%;
-    top: calc(-1 * (var(--header-height) + var(--space-fluid-3)));
-    bottom: 0;
-    width: 100vw;
-    translate: -50% 0;
-    mask-image: linear-gradient(#000000 35%, transparent);
-  }
-
-  .text-page-head::before {
-    background-image:
-      linear-gradient(var(--grid-line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: var(--grid-step) var(--grid-step);
   }
 
   /* The long titles (« CONFIDENTIALITE ») hold on one line at phone width. */
@@ -217,11 +191,6 @@ const [before, after] = fr.textPage.updated.split("{date}");
     margin: 0 0 var(--space-4);
     color: var(--secondary);
     text-wrap: pretty;
-  }
-
-  .text-section :global(strong) {
-    color: var(--text);
-    font-weight: inherit;
   }
 
   /* Facts: a label in small capitals over its value, under rules. */

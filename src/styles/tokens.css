@@ -65,7 +65,8 @@
   --size-h2: clamp(28px, 3vw, 36px);
   --size-name: clamp(30px, 3.6vw, 46px);
   --size-figure: clamp(28px, 4vw, 44px);
-  --size-figure-large: clamp(36px, 6vw, 72px);
+  --size-figure-large: clamp(28px, 6vw, 72px);
+  --size-figure-label: clamp(14px, 1.3vw, 16px);
   --size-menu: 40px;
   --size-numeral: 64px;
   --size-numeral-compact: 52px;

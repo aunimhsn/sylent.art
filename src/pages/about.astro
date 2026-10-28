@@ -17,7 +17,7 @@ const { pedagogy, partners, admin } = about;
 
 <SiteLayout title={about.title} description={about.description} cta>
   <section
-    class="about-hero"
+    class="about-hero grid-texture"
     aria-labelledby="about-title"
     data-fluid="--grid-step"
   >
@@ -80,32 +80,16 @@ const { pedagogy, partners, admin } = about;
     padding-top: 0;
   }
 
-  /* The name and the background, on the left, over the grid. */
+  /* The name and the background, on the left, over the grid and its orange fluid (global.css). */
   .about-hero {
-    position: relative;
-    padding: calc(var(--header-height) + var(--space-fluid-2)) 0
-      var(--space-fluid-3);
-  }
-
-  /* The grid, and the orange fluid that runs along it in a layer at the same place, with the
-     same mask. */
-  .about-hero::before,
-  .about-hero > :global(.fluid) {
-    content: "";
-    position: absolute;
-    inset: 0;
-    mask-image: radial-gradient(
+    --grid-mask: radial-gradient(
       80% 75% at 30% 40%,
       #000000 30%,
       transparent 75%
     );
-  }
 
-  .about-hero::before {
-    background-image:
-      linear-gradient(var(--grid-line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: var(--grid-step) var(--grid-step);
+    padding: calc(var(--header-height) + var(--space-fluid-2)) 0
+      var(--space-fluid-3);
   }
 
   .about-hero .wrap {
@@ -155,11 +139,6 @@ const { pedagogy, partners, admin } = about;
     margin: 0;
     color: var(--secondary);
     font-size: var(--size-text-small);
-  }
-
-  .admin :global(strong) {
-    color: var(--text);
-    font-weight: inherit;
   }
 
   .admin .link {
