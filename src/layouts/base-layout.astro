@@ -27,6 +27,25 @@ const isPreview = import.meta.env.BASE_URL !== "/";
     <Font cssVariable="--font-manrope" preload />
     <Font cssVariable="--font-anaheim" preload />
     <Font cssVariable="--font-bodoni-moda" />
+    <!--
+      Before the first paint, so that nothing flashes: data-motion is off when the visitor asked
+      their system to reduce motion (or with ?motion=off, for checks and screenshots), and is-js
+      hides the elements that the animations reveal. If the animations haven't started after 4 s
+      (a script that failed), everything shows.
+    -->
+    <script is:inline>
+      {
+        const root = document.documentElement;
+        const reduced =
+          new URLSearchParams(location.search).get("motion") === "off" ||
+          matchMedia("(prefers-reduced-motion: reduce)").matches;
+        root.dataset.motion = reduced ? "off" : "on";
+        root.classList.add("is-js");
+        setTimeout(() => {
+          if (!root.dataset.motionStarted) root.classList.remove("is-js");
+        }, 4000);
+      }
+    </script>
   </head>
   <body>
     <slot />

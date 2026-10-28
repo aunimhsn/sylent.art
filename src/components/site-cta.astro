@@ -1,0 +1,68 @@
+---
+// The call to action at the end of a page: a question on two lines over a large faded word, and
+// the button to the contact page. A page may ask its own question.
+import fr from "../i18n/fr.json";
+import { href } from "../lib/url";
+
+interface Props {
+  question?: string[];
+}
+
+const { question = fr.cta.question } = Astro.props;
+---
+
+<section class="cta" aria-labelledby="cta-title">
+  <span class="cta-ghost" aria-hidden="true">
+    {fr.cta.ghost}
+  </span>
+  <div class="wrap">
+    <h2 class="reveal" id="cta-title">
+      {question.map((line, index) => (index > 0 ? [<br />, line] : line))}
+    </h2>
+    <a class="button magnetic reveal" href={href("/contact/")}>
+      {fr.cta.button}
+    </a>
+  </div>
+</section>
+
+<style>
+  .cta {
+    position: relative;
+    overflow: hidden;
+    padding-block: var(--space-section) var(--space-wordmark);
+    border-top: 1px solid var(--line);
+    background: var(--bg-alt);
+    text-align: center;
+  }
+
+  .wrap {
+    position: relative;
+    display: grid;
+    justify-items: center;
+  }
+
+  .cta-ghost {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    translate: -50% -58%;
+    color: var(--ghost-word);
+    font: var(--title-weight) var(--size-cta-ghost) / 0.8 var(--font-title);
+    letter-spacing: var(--tracking-ghost);
+    text-transform: uppercase;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  h2 {
+    position: relative;
+    margin: 0;
+    font: var(--title-weight) var(--size-cta) / 1 var(--font-title);
+    letter-spacing: var(--tracking-title);
+    text-wrap: balance;
+  }
+
+  .button {
+    margin-top: var(--space-11);
+  }
+</style>

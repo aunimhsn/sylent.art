@@ -1,35 +1,26 @@
 ---
-// Temporary home page of the project skeleton (step 6); step 7 builds the real one.
-import BaseLayout from "../layouts/base-layout.astro";
+// Temporary home page, inside the shared layout (step 7a); step 7b builds the real one.
+import SiteLayout from "../layouts/site-layout.astro";
 import fr from "../i18n/fr.json";
 ---
 
-<BaseLayout title={fr.site.title} description={fr.site.description}>
-  <main>
-    <h1>{fr.site.name}</h1>
-    <p>{fr.home.lead}</p>
-  </main>
-</BaseLayout>
+<SiteLayout title={fr.site.title} description={fr.site.description} cta>
+  <section class="section">
+    <div class="wrap">
+      <h1>{fr.site.name}</h1>
+      <p class="lead">{fr.home.lead}</p>
+    </div>
+  </section>
+</SiteLayout>
 
 <style>
-  main {
-    display: grid;
-    place-content: center;
-    gap: var(--space-4);
-    min-height: 100vh;
-    padding: var(--gutter);
-    text-align: center;
+  .section {
+    padding-top: calc(var(--header-height) + var(--space-section));
   }
 
   h1 {
-    margin: 0;
+    margin: 0 0 var(--space-4);
     font: var(--title-weight) var(--size-display) / 1 var(--font-title);
     letter-spacing: var(--tracking-title);
-  }
-
-  p {
-    margin: 0;
-    color: var(--secondary);
-    font-size: var(--size-lead);
   }
 </style>

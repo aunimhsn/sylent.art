@@ -1,5 +1,5 @@
-/* The base shared by every page, from the mock-up (docs/mockups/shared/site.css, Base). The
-   styles of each block live in its component. */
+/* The base and the classes shared by every page, from the mock-up (docs/mockups/shared/site.css,
+   Base). The styles of each block live in its component. */
 @import url("./tokens.css");
 
 *,
@@ -12,10 +12,10 @@ html {
   scroll-behavior: smooth;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
+/* data-motion is set before the first paint by the base layout, from the visitor's system
+   setting or ?motion=off. */
+html[data-motion="off"] {
+  scroll-behavior: auto;
 }
 
 body {
@@ -41,4 +41,181 @@ canvas {
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
+}
+
+.wrap {
+  width: min(100% - 2 * var(--gutter), var(--width));
+  margin-inline: auto;
+}
+
+.section {
+  position: relative;
+  padding-block: var(--space-section);
+}
+
+/* The motto, after a short rule: in the hero, the footer and the mobile menu. */
+.motto {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0;
+  color: var(--dim);
+  font: var(--text-weight) var(--size-text-small) / 1 var(--font-text);
+}
+
+.motto::before {
+  content: "";
+  width: var(--space-10);
+  height: 1px;
+  background: currentcolor;
+}
+
+.lead {
+  margin: 0;
+  max-width: var(--measure);
+  color: var(--secondary);
+  font-size: var(--size-lead);
+  text-wrap: pretty;
+}
+
+.highlight {
+  color: var(--highlight);
+}
+
+/* Buttons: white and sharp, or outlined. */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4) var(--space-7);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-button);
+  background: var(--accent);
+  color: var(--on-accent);
+  font: 700 var(--size-ui) / 1 var(--font-title);
+  letter-spacing: var(--tracking-button);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast),
+    border-color var(--duration-fast),
+    color var(--duration-fast);
+  will-change: transform;
+}
+
+.button.is-outline {
+  border-color: var(--line-strong);
+  background: transparent;
+  color: var(--text);
+}
+
+.button.is-outline:hover {
+  border-color: var(--text);
+}
+
+.link {
+  padding-bottom: var(--space-1);
+  border-bottom: 1px solid var(--line-strong);
+  font: 700 var(--size-ui) / 1.2 var(--font-title);
+  transition: border-color var(--duration-fast);
+}
+
+.link:hover {
+  border-color: var(--text);
+}
+
+/* Glass: a translucent panel that blurs what lies behind it. */
+.glass {
+  border: 1px solid var(--glass-line);
+  border-radius: var(--radius-card);
+  background-color: var(--glass);
+  backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
+}
+
+/* Read by screen readers only. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* The starting state of the animations (src/scripts/motion.ts), only when they run: is-js is set
+   by the base layout and removed if they don't start. */
+html[data-motion="on"].is-js .reveal {
+  opacity: 0;
+  transform: translateY(36px);
+}
+
+/* The layer where the orange fluid of a grid is drawn (src/scripts/grid-fluid.ts); its host places it. */
+.fluid {
+  pointer-events: none;
+}
+
+.fluid canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* The word that confirms the copy of an email address (src/scripts/site.ts), in the signal
+   color: it fades in while rising a little, then fades out. */
+.copied {
+  position: absolute;
+  z-index: var(--z-copied);
+  color: var(--signal-text);
+  font: var(--text-weight) var(--size-ui) / 1 var(--font-text);
+  white-space: nowrap;
+  pointer-events: none;
+  animation: copied 1.6s ease forwards;
+}
+
+@keyframes copied {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 6px);
+  }
+
+  18% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  72% {
+    opacity: 1;
+    transform: translate(-50%, -3px);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -10px);
+  }
+}
+
+html[data-motion="off"] .copied {
+  animation-name: copied-still;
+}
+
+@keyframes copied-still {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate(-50%, 0);
+  }
+
+  15%,
+  75% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* A phone number is a link only where it can call: elsewhere it is plain text, without hover. */
+@media not (pointer: coarse) {
+  a[href^="tel:"] {
+    pointer-events: none;
+    cursor: text;
+  }
 }

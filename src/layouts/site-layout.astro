@@ -1,0 +1,29 @@
+---
+// The layout of every page of the site: the header and its menu, the content of the page, the
+// call to action when the page asks for one, and the footer.
+import SiteCta from "../components/site-cta.astro";
+import SiteFooter from "../components/site-footer.astro";
+import SiteHeader from "../components/site-header.astro";
+import BaseLayout from "./base-layout.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  /** The call to action at the end of the page: true for the usual question, or its own. */
+  cta?: boolean | string[];
+}
+
+const { title, description, cta = false } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <SiteHeader />
+  <main id="content">
+    <slot />
+    {cta && <SiteCta question={cta === true ? undefined : cta} />}
+  </main>
+  <SiteFooter />
+  <script>
+    import "../scripts/motion";
+  </script>
+</BaseLayout>
