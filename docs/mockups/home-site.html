@@ -119,15 +119,6 @@
   .app-steps h3 { margin: 0; font: 700 22px/1.2 var(--font-title); letter-spacing: -0.025em; }
   .app-steps p { margin: 10px 0 0; color: var(--secondary); font-size: 16px; }
 
-  /* The button of the custom card, still to choose (?custom=bottom, a tab of home.html): a band
-     across the bottom of the card, as on the other cards, instead of a column on the right. */
-  @media (min-width: 640px) {
-    .app-cards.is-bottom > .is-band { display: flex; padding: 28px 26px; }
-    .app-cards.is-bottom > .is-band > h3 { margin: 0; }
-    .app-cards.is-bottom > .is-band > p { margin: 0 0 18px; }
-    .app-cards.is-bottom > .is-band .app-card-more { display: block; margin: auto -26px -28px; }
-  }
-
   /* ── The domain cards flip under the pointer, to show their modules ──────────────── */
 
   /* The back covers the card above its white band, which stays in place on both sides and keeps
@@ -231,7 +222,7 @@
       <div class="app-wrap">
         ${heading("Formations", "Apprendre", "domains-title")}
         <p class="app-lead app-reveal">Huit domaines, des modules indépendants et des durées toujours adaptables, sur site ou à distance.</p>
-        <ul class="app-cards is-domains${query.get("custom") === "bottom" ? " is-bottom" : ""}">
+        <ul class="app-cards is-domains">
           ${DOMAINS.map(domainCard).join("")}${customCard(true)}
         </ul>
       </div>
