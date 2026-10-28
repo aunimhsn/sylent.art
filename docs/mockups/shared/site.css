@@ -183,12 +183,12 @@ img, svg, canvas { display: block; }
 .app-card-more::after { content: ""; position: absolute; inset: 0; }
 .app-card:hover .app-card-more { padding-block: 19px; }
 /* The custom card after the modules: a card without glass, its text in a dashed frame (as the
-   band after the domains) under the scene, open on the side of the white band, that turns white
-   under the pointer. The spaces are those of the other cards. */
+   band after the domains) on its sides only, between the scene and the white band, that turns
+   white under the pointer. The spaces are those of the other cards. */
 .app-card.is-plain { gap: 0; }
 .app-card.is-plain, .app-card.is-plain:hover { background: none; }
 .app-card.is-plain .app-cover { margin-bottom: 0; border-bottom: 0; }
-.app-card.is-plain .app-card-text { flex: 1; margin: 0 -26px; padding: 20px 26px 30px; }
+.app-card.is-plain .app-card-text { flex: 1; margin: 0 -26px; padding: 20px 26px 30px; border-top-width: 0; }
 .app-card-text { display: grid; align-content: start; gap: 12px; border: 1px dashed var(--line-strong); border-bottom-width: 0; transition: border-color .35s; }
 .app-card:hover .app-card-text { border-color: var(--text); }
 /* The custom card after the domains: a band across its own row, without glass. Its text sits in a
