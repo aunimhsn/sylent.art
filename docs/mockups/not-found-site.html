@@ -9,7 +9,7 @@
 <!--
   The not-found page of sylent.art, 404.html (mock-up, step 4 of roadmap.md), shown at phone and
   desktop width by home.html (?page=not-found). No wireframe: the hero of the home page, with its
-  grid and its fluid over the whole window, a section heading whose large faded word is « 404 », its title « Oups, perdu dans l’espace » as on the former site,
+  grid and its fluid over the whole window, a section heading whose large faded word is « 404 », its title « Oups, perdu dans l’espace » as on the former site (« Page introuvable » on a phone),
   and the two ways out that specs.md asks for: the home page and the offers.
 -->
 <script src="shared/head.js"></script>
@@ -37,6 +37,10 @@
   .app-lost .app-heading-ghost { font-size: clamp(150px, 34vw, 420px); letter-spacing: -0.04em; }
   .app-lost .app-heading-title { top: auto; bottom: 18%; }
   .app-lost .app-lead { margin-top: 0; }
+  /* The title of the former site, « Oups, perdu dans l’espace », from 640 px; a phone has room
+     for a shorter one. The hidden title is hidden from screen readers too. */
+  .app-lost-wide { display: none; }
+  @media (min-width: 640px) { .app-lost-wide { display: inline; } .app-lost-narrow { display: none; } }
   .app-lost-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
 </style>
 </head>
@@ -49,7 +53,10 @@
   document.getElementById("content").innerHTML = `
     <section class="app-lost" aria-labelledby="lost-title" data-grid>
       <div class="app-wrap">
-        ${heading("Oups, perdu dans l’espace", "404", "lost-title", 1)}
+        <div class="app-heading">
+          <span class="app-heading-ghost" aria-hidden="true">404</span>
+          <h1 class="app-heading-title" id="lost-title"><span class="app-lost-wide">Oups, perdu dans l’espace</span><span class="app-lost-narrow">Page introuvable</span></h1>
+        </div>
         <p class="app-lead app-reveal">Cette page n’existe pas ou a changé d’adresse.<br>Les formations, elles, sont toujours là.</p>
         <div class="app-lost-actions app-reveal">
           <a class="app-button app-magnetic" href="${PAGES.home}">Retour à l’accueil</a>
