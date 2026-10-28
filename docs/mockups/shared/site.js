@@ -18,6 +18,7 @@ const ICONS = {
   up: '<path d="M6 15l6-6 6 6"/>',
   down: '<path d="M6 9l6 6 6-6"/>',
   check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  right: '<path d="M5 12h14M13 6l6 6-6 6"/>',
 };
 const icon = (name, size = 22) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]}</svg>`;
 
@@ -111,13 +112,14 @@ const moduleCard = (domain, [title, , summary, scene]) => `
     <h3>${title}</h3><p class="app-card-domain">${domain.title}</p><p>${summary}</p>
     <a class="app-card-more" href="${PAGES.module}?module=${slugOf(title)}" aria-label="${title}${NB}: voir le détail">Voir le détail</a>
   </li>`;
-// The last card, after the domains: a module built for the request.
-const customCard = () => `
-  <li class="app-card app-glass app-reveal app-tilt">
-    <div class="app-cover" data-scene="custom" aria-hidden="true"><canvas></canvas></div>
+// The last card, after the domains or the modules: a module built for the request. After the
+// domains of the home page it is a band across its own row (isBand), without glass or scene.
+const customCard = (isBand = false) => `
+  <li class="app-card app-reveal ${isBand ? "is-band" : "app-glass app-tilt"}">
+    ${isBand ? "" : '<div class="app-cover" data-scene="custom" aria-hidden="true"><canvas></canvas></div>'}
     <h3>Un besoin sur mesure${NB}?</h3>
     <p>Décrivez vos apprenants et vos objectifs${NB}: je construis le module.</p>
-    <a class="app-card-more" href="${PAGES.contact}">Me contacter</a>
+    <a class="app-card-more" href="${PAGES.contact}">${isBand ? `<span>Me contacter</span>${icon("right", 18)}` : "Me contacter"}</a>
   </li>`;
 
 // The call to action and the footer, which a page places at its end; an offer page asks its own
