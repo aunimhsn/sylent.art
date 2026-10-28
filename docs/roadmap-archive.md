@@ -2,6 +2,24 @@
 
 The detail of the steps of [roadmap.md](../roadmap.md) once their pull request is merged, newest first.
 
+## 8b. Module content
+
+Written on 2026-10-28 with the owner, module by module, then aligned on the course material of the private `sylent-courses` repository (chapters and exercise names only):
+
+- The presentation, audience, level, prerequisites, objectives and program of the 14 modules still without content; the first drafts of the former courses reviewed against their lessons (Algorithmique, Merise, MySQL, JavaScript, Python, POO, SOLID, Git et GitHub, Scrum).
+- The modules stay independent: MySQL and PostgreSQL both start from the basics, since a client asks for one or the other. MySQL lasts 3 days, as on the former site; Vue and Alpine keep 2 days and 1 day.
+- `audience`, `level`, `prerequisites`, `objectives` and `program` required in `src/content.config.ts`; `toSpecify` and `programToCome` dropped from `src/content/courses.json`.
+
+## 8a. Offer pages (#10)
+
+Built on 2026-10-28 from the mock-up (`docs/mockups/courses-site.html`, `docs/mockups/module-site.html`):
+
+- The offer list (`/courses/`), one page per module (`/courses/<module>/`) and the redirects of the former `/courses/<id>`.
+- The collections split into `src/content/domains/` and `src/content/modules/`, one file per module, checked across files by `src/lib/offers.ts`.
+- The scenes of the modules, the `custom` scene and the tilt of the cards (`src/scripts/module-scenes.ts`, `src/scripts/cover-kit.ts`).
+- A first draft of the 12 former courses and of Claude Code.
+- From the code review of 7b: the figures of the cube read from `pedagogy.json`, « Huit domaines » counted, unknown scenes and duplicate orders refused, the colors of the cube and the covers read from the tokens.
+
 ## 7b. Home page (#9)
 
 Built on 2026-10-28 from the mock-up (`docs/mockups/home-site.html`):

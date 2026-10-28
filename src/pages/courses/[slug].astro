@@ -102,11 +102,11 @@ const { Content } = await render(module);
     <dl class="facts reveal">
       <div>
         <dt>{page.facts.audience}</dt>
-        <dd>{audience ?? page.toSpecify}</dd>
+        <dd>{audience}</dd>
       </div>
       <div>
         <dt>{page.facts.level}</dt>
-        <dd>{level ?? page.toSpecify}</dd>
+        <dd>{level}</dd>
       </div>
       <div>
         <dt>{page.facts.duration}</dt>
@@ -120,44 +120,34 @@ const { Content } = await render(module);
 
     <div class="module-body">
       <div class="module-main">
-        {prerequisites && (
-          <section class="reveal" aria-labelledby="prerequisites-title">
-            <h2 id="prerequisites-title">{page.prerequisites}</h2>
-            <p class="body-text">{prerequisites}</p>
-          </section>
-        )}
-        {objectives && (
-          <section class="reveal" aria-labelledby="objectives-title">
-            <h2 id="objectives-title">{page.objectives}</h2>
-            <ul class="objectives">
-              {objectives.map((objective) => (
-                <li>
-                  <Icon name="check" size={16} />
-                  <span>{objective}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
+        <section class="reveal" aria-labelledby="prerequisites-title">
+          <h2 id="prerequisites-title">{page.prerequisites}</h2>
+          <p class="body-text">{prerequisites}</p>
+        </section>
+        <section class="reveal" aria-labelledby="objectives-title">
+          <h2 id="objectives-title">{page.objectives}</h2>
+          <ul class="objectives">
+            {objectives.map((objective) => (
+              <li>
+                <Icon name="check" size={16} />
+                <span>{objective}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
         <section id="programme" aria-labelledby="program-title">
           <h2 class="reveal" id="program-title">
             {page.program}
           </h2>
-          {program ? (
-            <>
-              <ul class="program">
-                {program.map((part) => (
-                  <li class="part reveal" data-draw>
-                    <h3>{part.title}</h3>
-                    <p>{part.text}</p>
-                  </li>
-                ))}
-              </ul>
-              <p class="program-end reveal">{page.programEnd}</p>
-            </>
-          ) : (
-            <p class="body-text reveal">{page.programToCome}</p>
-          )}
+          <ul class="program">
+            {program.map((part) => (
+              <li class="part reveal" data-draw>
+                <h3>{part.title}</h3>
+                <p>{part.text}</p>
+              </li>
+            ))}
+          </ul>
+          <p class="program-end reveal">{page.programEnd}</p>
         </section>
       </div>
       <aside class="organize glass" aria-labelledby="organize-title">

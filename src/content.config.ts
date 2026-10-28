@@ -26,9 +26,8 @@ const domains = defineCollection({
 });
 
 // The modules, one file per module named after its slug, which is its URL (/courses/<slug>/):
-// the front matter gives its domain and key facts, the text its presentation. The audience,
-// level, prerequisites, objectives and program are written with the owner module by module
-// (step 8b of roadmap.md); until then the page shows them as to be defined.
+// the front matter gives its domain, its key facts, its prerequisites, objectives and program,
+// the text its presentation.
 const modules = defineCollection({
   loader: glob({ pattern: "*.md", base: "./src/content/modules" }),
   schema: z.object({
@@ -46,15 +45,12 @@ const modules = defineCollection({
     /** The id of the course of the former site, whose URL (/courses/<id>) redirects here. */
     formerId: z.number().int().positive().optional(),
     /** Who the module is for, e.g. « Étudiants, développeurs, chefs de projet technique ». */
-    audience: z.string().optional(),
-    level: z.string().optional(),
-    prerequisites: z.string().optional(),
-    objectives: z.array(z.string()).min(1).optional(),
+    audience: z.string(),
+    level: z.string(),
+    prerequisites: z.string(),
+    objectives: z.array(z.string()).min(1),
     /** The parts of the program, without numbers: they are not an order. */
-    program: z
-      .array(z.object({ title: z.string(), text: z.string() }))
-      .min(1)
-      .optional(),
+    program: z.array(z.object({ title: z.string(), text: z.string() })).min(1),
   }),
 });
 
