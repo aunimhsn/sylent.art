@@ -351,8 +351,9 @@ if (coverRenderer) {
       } };
     },
     // ── The cycle of a lesson (pedagogy of the home page, a test) ──
-    // Theory 20 %, practice 50 %, correction 30 %, then again; each scene reports its phase. The
-    // cycles start mid-practice, so that a still scene shows the practice.
+    // Theory 20 %, practice 50 %, correction 30 %, then again; each scene reports its phase and
+    // names its runner, which the name of the phase follows. The cycles start mid-practice, so that
+    // a still scene shows the practice.
 
     // Spiral: the cycle climbs a step at each turn. The turns below are done (white), the turn of
     // the runner lights up in the signal color behind it, the turns above are still to come.
@@ -374,7 +375,7 @@ if (coverRenderer) {
       const runner = accent(dot(0.06));
       group.add(runner);
       const wake = trail(group, 8, 0.04, 3);
-      return { scene, camera: view(5.4, 3.0, 7.0, [0, 0, 0]), update(t) {
+      return { scene, camera: view(5.4, 3.0, 7.0, [0, 0, 0]), anchor: runner, update(t) {
         const u = (t * 0.1 + 0.32) % 1;
         this.phase = u < 0.2 ? 0 : u < 0.7 ? 1 : 2;
         lit.geometry.setDrawRange(0, Math.max(2, Math.round(u * steps) + 1));
@@ -410,7 +411,7 @@ if (coverRenderer) {
       const runner = accent(dot(0.06));
       group.add(runner);
       const wake = trail(group, 8, 0.04, 3);
-      return { scene, camera: view(0, 4.6, 6.4, [0, 0.1, 0]), update(t) {
+      return { scene, camera: view(0, 4.6, 6.4, [0, 0.1, 0]), anchor: runner, update(t) {
         const u = (t * 0.1 + 0.32) % 1;
         const phase = u < 0.2 ? 0 : u < 0.7 ? 1 : 2;
         this.phase = phase;
@@ -1186,7 +1187,7 @@ if (coverRenderer) {
 
   const items = [...document.querySelectorAll(".app-cover")].map(cover => {
     const canvas = cover.querySelector("canvas");
-    return { cover, canvas, context: canvas.getContext("2d"), card: cover.closest(".app-card") || cover, time: 1.3, visible: true, ...SCENES[cover.dataset.scene]() };
+    return { cover, canvas, context: canvas.getContext("2d"), card: cover.closest(".app-card"), time: 1.3, visible: true, ...SCENES[cover.dataset.scene]() };
   });
   let room = [0, 0];
   function drawCover(item) {
@@ -1211,6 +1212,13 @@ if (coverRenderer) {
     coverRenderer.setClearColor(0x000000, 0);
     coverRenderer.clear();
     coverRenderer.render(item.scene, item.camera);
+    // A scene may also name the object that the text follows (the runner of the cycle of a lesson):
+    // its place in the cover, in percent.
+    if (item.anchor) {
+      const point = item.anchor.getWorldPosition(new THREE.Vector3()).project(item.camera);
+      item.cover.style.setProperty("--anchor-x", `${(point.x + 1) * 50}%`);
+      item.cover.style.setProperty("--anchor-y", `${(1 - point.y) * 50}%`);
+    }
     item.context.clearRect(0, 0, width, height);
     item.context.drawImage(coverRenderer.domElement, 0, room[1] - height, width, height, 0, 0, width, height);
   }
@@ -1223,7 +1231,7 @@ if (coverRenderer) {
       const delta = Math.min(clock.getDelta(), 0.1);
       items.forEach(item => {
         if (!item.visible) return;
-        item.time += delta * (item.card.matches(":hover") ? 2.2 : 1);
+        item.time += delta * (item.card && item.card.matches(":hover") ? 2.2 : 1);
         drawCover(item);
       });
     });
