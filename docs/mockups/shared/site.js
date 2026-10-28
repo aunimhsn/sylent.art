@@ -240,8 +240,8 @@ function gridFluid(host, CELL, className) {
   layer.appendChild(canvas);
   host.prepend(layer);
   const context = canvas.getContext("2d");
-  const orange = getComputedStyle(document.documentElement).getPropertyValue("--signal").trim() || "#d3450e";
-  const [red, green, blue] = [1, 3, 5].map(index => parseInt(orange.slice(index, index + 2), 16));
+  const signal = getComputedStyle(document.documentElement).getPropertyValue("--signal").trim() || "#d3450e";
+  const [red, green, blue] = [1, 3, 5].map(index => parseInt(signal.slice(index, index + 2), 16));
   let columns = 0, rows = 0, energy = new Float32Array(0), next = new Float32Array(0);
   let width = 0, height = 0, running = false, seen = false, pointer = null;
 

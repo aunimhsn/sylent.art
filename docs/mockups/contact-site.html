@@ -69,7 +69,7 @@
   }
   .app-input::placeholder { color: var(--dim); }
   /* No outline on focus: the white caret shows where to type, and the label of the field lights
-     up. The orange stays for the errors, which are only a message under the field. */
+     up. The signal color stays for the errors, which are only a message under the field. */
   .app-input { caret-color: var(--text); }
   /* A thicker caret, drawn by the script since browsers only let the caret change color. The
      native caret is hidden only while the script runs it (.has-caret), and comes back for touch
@@ -102,8 +102,8 @@
     textarea.app-input { scrollbar-width: thin; scrollbar-color: transparent transparent; }
     textarea.app-input.is-scrolling { scrollbar-color: var(--text) transparent; }
   }
-  /* A field to fill: the message just under it, in orange. */
-  .app-error { margin: 9px 0 0; color: #f07a4a; font-size: 15px; }
+  /* A field to fill: the message just under it, in the signal color for text. */
+  .app-error { margin: 9px 0 0; color: var(--signal-text); font-size: 15px; }
   .app-error:empty { display: none; }
   /* Robots fill every field: this one is out of sight and out of the keyboard path. */
   .app-trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }

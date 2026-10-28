@@ -39,6 +39,7 @@ Tokens of `:root[data-theme="night"]` (`docs/mockups/shared/site.css`). Contrast
 | `--accent` | `#ffffff` | Main buttons, the « Voir les modules » band | |
 | `--on-accent` | `#0a0a0a` | Text on the accent | 19.8:1 |
 | `--signal` | `#d3450e` | The orange (see [The orange](#the-orange)) | white on it 4.54:1 |
+| `--signal-text` | `#f07a4a` | The same orange, lighter, for text on the backgrounds: « Copiée », the errors under a field | 7.2:1 |
 | `--new-bg` / `--new-text` | `--signal` / `#ffffff` | « Nouveau » badge | 4.54:1 |
 | `--ghost-word` | `#181818` | The large faded words, opaque so that overlapping letters keep one tone | decorative |
 | `--glass` / `--glass-hover` | white at 3.5 % / 6 % | Card background, at rest and under the pointer | |
@@ -47,9 +48,10 @@ Tokens of `:root[data-theme="night"]` (`docs/mockups/shared/site.css`). Contrast
 | `--grid-line` | white at 5 % | The lines of the grid textures | |
 | `--header-bg` | `#0a0a0a` at 72 % | Header once the page scrolls, with a 16 px blur | |
 | Field fill | `#050505` | Contact fields, a gray darker than the page (chosen among six) | |
-| Error text | `#f07a4a` | Error messages under a field | 7.2:1 |
 
-The orange went through `#ff6a00`, then `#d9480f` (chosen by eye), then `#d3450e`, which looks the same and gives its white text the 4.5:1 of WCAG AA.
+The orange went through `#ff6a00`, then `#d9480f` (chosen by eye), then `#d3450e`, which looks the same and gives its white text the 4.5:1 of WCAG AA. As text on black it reaches only 4.36:1, hence `--signal-text` for small text.
+
+On 2026-10-28 three redder colors were compared, for fear of looking like the brand Orange (`#ff7900`): vermilion `#d63c1c`, tomato `#d4352a`, red `#d42a2a`. The orange was kept: its hue (17°) is already far from the brand Orange (28°) and it is used only in small touches, while in a development course red means an error, a failing test or a deleted line, which would blur the brand in the course materials.
 
 ## Typography
 
@@ -96,7 +98,7 @@ The orange went through `#ff6a00`, then `#d9480f` (chosen by eye), then `#d3450e
 - **Call to action**: a band in `--bg-alt` with its faded word, two wide lines (« Un module à confier ? / Parlons de vos apprenants. », or a question of the page) and the button; no promise of a response time.
 - **Footer**: the wordmark astride its top edge, a 40 px grid whose first line is the top edge (no border), four columns (motto and line, navigation, contact, information), copyright line. Links turn orange on hover.
 - **Back to top**: a 48 px square with a chevron, bottom right, once the first screen is passed; it brings the focus back to the logo.
-- **Contact form**: two fields only (email, message), flat, filled with `#050505`, 2 px corners, no panel. No focus ring: a thick white caret (3 px, drawn by the script, native caret on touch screens, while composing and in forced colors) and the label lighting up show the focus. Errors are only a message under the field, in `#f07a4a`; the fields themselves don't change. The scrollbar of the message is a thin white bar, square, shown only while scrolling. A failure is a note with an orange left border and the email address in bold, without a final period. A sent message shows a white check in an orange outlined square on black.
+- **Contact form**: two fields only (email, message), flat, filled with `#050505`, 2 px corners, no panel. No focus ring: a thick white caret (3 px, drawn by the script, native caret on touch screens, while composing and in forced colors) and the label lighting up show the focus. Errors are only a message under the field, in `--signal-text`; the fields themselves don't change. The scrollbar of the message is a thin white bar, square, shown only while scrolling. A failure is a note with an orange left border and the email address in bold, without a final period. A sent message shows a white check in an orange outlined square on black.
 - **Contact details**: a click on the email address copies it and shows the word « Copiée » in orange, rising then fading (a screen reader hears « Adresse email copiée »); the phone number is a link only on touch screens; LinkedIn and GitHub open in a new tab, announced « [nouvel onglet] ».
 
 ## Textures
@@ -130,7 +132,7 @@ Where `--signal` appears, and nowhere else:
 
 - the « Nouveau » badge;
 - the hover of the footer links and of the contact links;
-- the word « Copiée »;
+- the word « Copiée » and the errors under a field (`--signal-text`);
 - the left border of the failure note and the outline of the sent check;
 - the fluid of the grids;
 - the touches of the covers and the edges of the shell around the hero cube.
@@ -153,9 +155,8 @@ Never for: the focus, the fields, the errors' fields, the buttons, large surface
 
 ## Open points
 
-- The word « Copiée » is orange text on black at 4.36:1, under the 4.5:1 of WCAG AA for small text: to settle with the code review of the mock-up (`outputs/2026-10-28-docs-mockups-code-review.md`).
 - The offer page, the about page, the legal page and the 404 page are still to be designed in this style.
 
 ## Set aside
 
-Kept here so that they are not proposed again without a reason: the « Console » style of the course materials (night and mint green), the « Atelier » style (paper, vermilion, Fraunces), Poppins and Roboto for the text, neumorphic fields, an orange caret or orange field glows, a focus ring on the fields, gradients and glows behind the sections, monospace labels, arrows on buttons, icons and technology tags on the cards, a spider chart or pentagon for the partners, a « Fait main à Toulouse » line.
+Kept here so that they are not proposed again without a reason: the « Console » style of the course materials (night and mint green), the « Atelier » style (paper, vermilion, Fraunces), Poppins and Roboto for the text, neumorphic fields, an orange caret or orange field glows, a focus ring on the fields, gradients and glows behind the sections, monospace labels, arrows on buttons, icons and technology tags on the cards, a spider chart or pentagon for the partners, a « Fait main à Toulouse » line, a red signal color (it reads as an error in course materials).

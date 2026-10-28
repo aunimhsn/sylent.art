@@ -51,19 +51,19 @@ if (coverRenderer) {
   const random = k => { const x = Math.sin(k * 12.9898) * 43758.5453; return x - Math.floor(x); };
   // The lines of a block, to light it up.
   const edges = mesh => mesh.children[0].material;
-  // The orange of the site, for a few elements of each scene: what moves, what is aimed at, what
-  // succeeds. On a block, its lines take the color; a line or a dot takes it whole.
-  const ORANGE = new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue("--signal").trim() || "#d3450e");
+  // The signal color of the site (orange), for a few elements of each scene: what moves, what
+  // is aimed at, what succeeds. On a block, its lines take the color; a line or a dot takes it whole.
+  const SIGNAL = new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue("--signal").trim() || "#d3450e");
   const PLAIN = new THREE.Color(WHITE);
   const tinted = object => (object.isMesh && object.children[0] ? object.children[0] : object).material;
-  const orange = object => { tinted(object).color.copy(ORANGE); return object; };
-  // From white (0) to orange (1): an element lights up when something reaches it.
-  const glow = (object, amount) => tinted(object).color.copy(PLAIN).lerp(ORANGE, clamp(amount));
-  // A trail of orange dots that fade behind a moving point, given in the space of the parent; it
+  const accent = object => { tinted(object).color.copy(SIGNAL); return object; };
+  // From white (0) to the signal color (1): an element lights up when something reaches it.
+  const glow = (object, amount) => tinted(object).color.copy(PLAIN).lerp(SIGNAL, clamp(amount));
+  // A trail of dots in the signal color that fade behind a moving point, given in the space of the parent; it
   // starts again after a jump (the start of a new loop).
   const trail = (parent, count = 7, radius = 0.05, spacing = 2) => {
     const points = Array.from({ length: count }, (_, k) => {
-      const point = orange(dot(radius * (1 - k / count * 0.6), 0.6 * (1 - k / count)));
+      const point = accent(dot(radius * (1 - k / count * 0.6), 0.6 * (1 - k / count)));
       point.visible = false;
       parent.add(point);
       return point;
@@ -88,11 +88,11 @@ if (coverRenderer) {
       scene.add(new THREE.GridHelper(6, 6, 0x5a5a5a, 0x2a2a2a));
       const path = [[-1.5, -1.5], [-0.5, -1.5], [0.5, -1.5], [0.5, -0.5], [0.5, 0.5], [1.5, 0.5], [1.5, 1.5]];
       scene.add(polyline(path.map(([x, z]) => v(x, 0.01, z)), 0.35));
-      const goal = orange(outline(new THREE.CylinderGeometry(0.34, 0.34, 0.02, 40), 0.9));
+      const goal = accent(outline(new THREE.CylinderGeometry(0.34, 0.34, 0.02, 40), 0.9));
       goal.position.set(1.5, 0.02, 1.5);
       scene.add(goal);
       const robot = block(new THREE.BoxGeometry(0.6, 0.6, 0.6));
-      const eye = orange(dot(0.06));
+      const eye = accent(dot(0.06));
       eye.position.set(0, 0.1, 0.31);
       robot.add(eye);
       scene.add(robot);
@@ -123,7 +123,7 @@ if (coverRenderer) {
         page.add(block(new THREE.PlaneGeometry(w, h), front ? 1 : 0.45));
         page.add(polyline([v(-w / 2, h / 2 - 0.3, 0.01), v(w / 2, h / 2 - 0.3, 0.01)], front ? 0.6 : 0.3));
         [0, 1, 2].forEach(k => {
-          const light = front && k === 0 ? orange(dot(0.05)) : dot(0.045, front ? 0.9 : 0.4);
+          const light = front && k === 0 ? accent(dot(0.05)) : dot(0.045, front ? 0.9 : 0.4);
           light.position.set(-w / 2 + 0.2 + k * 0.15, h / 2 - 0.15, 0.01);
           page.add(light);
         });
@@ -170,7 +170,7 @@ if (coverRenderer) {
       const ring = new THREE.Group();
       let found;
       for (let k = 0; k < 16; k++) {
-        const record = k === 0 ? (found = orange(dot(0.065))) : dot(0.045, 0.9);
+        const record = k === 0 ? (found = accent(dot(0.065))) : dot(0.045, 0.9);
         const angle = k / 16 * Math.PI * 2;
         record.position.set(Math.cos(angle) * 1.75, 0, Math.sin(angle) * 1.75);
         ring.add(record);
@@ -200,10 +200,10 @@ if (coverRenderer) {
         graph.add(commit);
         return commit;
       });
-      const pulses = [dot(0.06, 0.8), orange(dot(0.07))];
+      const pulses = [dot(0.06, 0.8), accent(dot(0.07))];
       graph.add(...pulses);
       const wake = trail(graph, 7, 0.05, 2);
-      const check = orange(polyline([v(-0.2, 0), v(-0.06, -0.15), v(0.24, 0.2)]));
+      const check = accent(polyline([v(-0.2, 0), v(-0.06, -0.15), v(0.24, 0.2)]));
       check.position.set(2.2, 0.05, 0);
       graph.add(check);
       return { scene, camera: view(0, 0.4, 6.6), update(t) {
@@ -233,7 +233,7 @@ if (coverRenderer) {
       // Each signal crosses the network layer by layer, on links chosen by a fixed sequence.
       const signals = Array.from({ length: 8 }, (_, k) => {
         const lit = k % 4 === 0;
-        const mesh = lit ? orange(dot(0.06)) : dot(0.05);
+        const mesh = lit ? accent(dot(0.06)) : dot(0.05);
         net.add(mesh);
         return { mesh, seed: k * 5 + 3, wake: lit ? trail(net, 6, 0.045, 2) : null };
       });
@@ -328,7 +328,7 @@ if (coverRenderer) {
       chart.add(polyline([v(0, 0.99), v(0, 0.57)], 0.6));
       [-1, 1].forEach(side => chart.add(polyline([v(side * 0.43, 0.15), v(side * 1.3, 0.15), v(side * 1.3, -0.79)], 0.6)));
       const paths = [-1, 1].map(side => [v(0, 1.2, 0.1), v(0, 0.15, 0.1), v(side * 1.3, 0.15, 0.1), v(side * 1.3, -1.0, 0.1)]);
-      const token = orange(dot(0.08));
+      const token = accent(dot(0.08));
       chart.add(token);
       const wake = trail(chart, 7, 0.06, 2);
       const flash = (node, center) => {
@@ -403,7 +403,7 @@ if (coverRenderer) {
       const button = block(new THREE.BoxGeometry(1.7, 0.56, 0.24));
       group.add(button);
       const waves = [0, 1].map(() => {
-        const wave = orange(circle(0.5));
+        const wave = accent(circle(0.5));
         group.add(wave);
         return wave;
       });
@@ -435,7 +435,7 @@ if (coverRenderer) {
         unit.position.set(0.7, y, 0);
         group.add(unit, polyline([v(0.8, y, 0.61), v(1.45, y, 0.61)], 0.4));
         [0, 1].forEach(j => {
-          const light = j === 1 ? orange(dot(0.045)) : dot(0.045);
+          const light = j === 1 ? accent(dot(0.045)) : dot(0.045);
           light.position.set(0.05 + j * 0.16, y, 0.61);
           group.add(light);
           lights.push([light, k * 2 + j]);
@@ -448,7 +448,7 @@ if (coverRenderer) {
       const go = new THREE.CatmullRomCurve3([v(-1.3, 0.25, 0.3), v(-0.6, 0.6, 0.5), v(0.1, 0.3, 0.62)]);
       const back = new THREE.CatmullRomCurve3([v(0.1, -0.3, 0.62), v(-0.6, -0.6, 0.5), v(-1.3, -0.25, 0.3)]);
       group.add(polyline(go.getPoints(24), 0.25), polyline(back.getPoints(24), 0.25));
-      const request = orange(dot(0.065)), answer = orange(dot(0.065));
+      const request = accent(dot(0.065)), answer = accent(dot(0.065));
       group.add(request, answer);
       const wake = trail(group, 7, 0.05, 2);
       return { scene, camera: view(1.6, 1.2, 6.2, [-0.2, 0, 0]), update(t) {
@@ -476,7 +476,7 @@ if (coverRenderer) {
       const links = [];
       nodes.slice(1).forEach((level, l) => level.forEach((child, k) => {
         const a = nodes[l][Math.floor(k / 2)].position.clone().add(v(0, -0.17)), b = child.position.clone().add(v(0, 0.17));
-        const signal = orange(dot(0.06));
+        const signal = accent(dot(0.06));
         group.add(polyline([a, b], 0.4), signal);
         links.push({ a, b, l, signal });
       }));
@@ -507,10 +507,10 @@ if (coverRenderer) {
       terrain.add(climber);
       const summit = v(-0.7, height(-0.7, -0.2), -0.2);
       const flag = new THREE.Group();
-      flag.add(polyline([v(0, 0), v(0, 0.45)], 0.9), orange(polyline([v(0, 0.45), v(0.24, 0.36), v(0, 0.27)])));
+      flag.add(polyline([v(0, 0), v(0, 0.45)], 0.9), accent(polyline([v(0, 0.45), v(0.24, 0.36), v(0, 0.27)])));
       flag.position.copy(summit);
       terrain.add(flag);
-      const sun = orange(dot(0.13));
+      const sun = accent(dot(0.13));
       scene.add(sun);
       return { scene, camera: view(0, 2.8, 6.2, [0, 0.4, 0]), update(t) {
         const f = ease(clamp(((t * 0.3) % 1.3) / 1.1));
@@ -538,7 +538,7 @@ if (coverRenderer) {
       group.add(route, controller, model, page);
       [[route, controller], [controller, model], [controller, page]].forEach(([a, b]) => group.add(polyline([a.position, b.position], 0.3)));
       const stops = [route, controller, model, controller, page].map(node => node.position);
-      const request = orange(dot(0.08));
+      const request = accent(dot(0.08));
       group.add(request);
       const wake = trail(group, 7, 0.06, 2);
       return { scene, camera: view(0.4, 1.2, 6.4), update(t) {
@@ -562,7 +562,7 @@ if (coverRenderer) {
         return part;
       });
       const at = s => v(Math.sin(s) * 2, 0.13, Math.sin(s * 2) * 0.9);
-      const apple = orange(dot(0.11));
+      const apple = accent(dot(0.11));
       scene.add(apple);
       let next = null, eaten = -10, meals = 0;
       return { scene, camera: view(0, 4.6, 5.2, [0, 0, 0.2]), update(t) {
@@ -594,7 +594,7 @@ if (coverRenderer) {
       });
       const button = block(new THREE.BoxGeometry(0.9, 0.32, 0.14));
       button.position.set(-0.55, -0.95, 0.07);
-      const check = orange(polyline([v(-0.18, 0), v(-0.05, -0.13), v(0.2, 0.16)]));
+      const check = accent(polyline([v(-0.18, 0), v(-0.05, -0.13), v(0.2, 0.16)]));
       check.position.set(0.55, -0.95, 0.1);
       group.add(button, check);
       return { scene, camera: view(0, 0, 6.2), update(t) {
@@ -623,7 +623,7 @@ if (coverRenderer) {
         group.add(point);
         return [point, Math.abs(point.position.y - x * slope) < 0.14];
       });
-      const model = orange(polyline([v(-2.1, 0), v(2.1, 0)]));
+      const model = accent(polyline([v(-2.1, 0), v(2.1, 0)]));
       group.add(model);
       return { scene, camera: view(0, 0, 6.8), update(t) {
         const p = (t * 0.45) % 3;
@@ -649,7 +649,7 @@ if (coverRenderer) {
       });
       const association = circle(0.5, 0.9);
       group.add(association, polyline([v(-1.15, 0), v(-0.5, 0)], 0.6), polyline([v(0.5, 0), v(1.15, 0)], 0.6));
-      const tokens = [orange(dot(0.065)), orange(dot(0.065))];
+      const tokens = [accent(dot(0.065)), accent(dot(0.065))];
       group.add(...tokens);
       return { scene, camera: view(0, 0.6, 6.3), update(t) {
         const p = (t * 0.6) % 2;
@@ -684,7 +684,7 @@ if (coverRenderer) {
       group.add(polyline([v(0, 0.375), v(-0.13, 0.17), v(0.13, 0.17), v(0, 0.375)]));
       group.add(polyline([v(-1.4, -0.375), v(-1.4, -0.05), v(1.4, -0.05), v(1.4, -0.375)], 0.6), polyline([v(0, -0.05), v(0, 0.17)], 0.6));
       const paths = [-1.4, 1.4].map(x => [v(x, -0.375, 0.05), v(x, -0.05, 0.05), v(0, -0.05, 0.05), v(0, 0.17, 0.05)]);
-      const tokens = paths.map(() => { const token = orange(dot(0.06)); group.add(token); return token; });
+      const tokens = paths.map(() => { const token = accent(dot(0.06)); group.add(token); return token; });
       return { scene, camera: view(0, 0.3, 6.0), update(t) {
         const f = ease((t * 0.45) % 1);
         tokens.forEach((token, k) => token.position.copy(along(paths[k], f)));
@@ -704,7 +704,7 @@ if (coverRenderer) {
       const cursor = outline(new THREE.PlaneGeometry(w + 0.12, rowHeight + 0.06));
       group.add(cursor);
       const marks = [1, 3, 4].map(index => {
-        const mark = orange(dot(0.065));
+        const mark = accent(dot(0.065));
         mark.position.set(-w / 2 - 0.25, rowY(index), 0);
         group.add(mark);
         return [mark, index];
@@ -736,7 +736,7 @@ if (coverRenderer) {
       const pairs = [[0, 2], [1, 0], [2, 4], [3, 1], [4, 3]];
       const links = pairs.map(([a, b]) => {
         const ya = left[a].position.y, yb = right[b].position.y;
-        const link = orange(polyline(new THREE.CatmullRomCurve3([v(-0.9, ya, 0.05), v(0, (ya + yb) / 2, 0.45), v(0.9, yb, 0.05)]).getPoints(32), 0));
+        const link = accent(polyline(new THREE.CatmullRomCurve3([v(-0.9, ya, 0.05), v(0, (ya + yb) / 2, 0.45), v(0.9, yb, 0.05)]).getPoints(32), 0));
         group.add(link);
         return link;
       });
@@ -768,7 +768,7 @@ if (coverRenderer) {
         group.add(frame, polyline([v(-0.8, y), v(-0.2 + random(k) * 1.2, y)], 0.45), ring, check);
         return { ring, check };
       });
-      const spinner = orange(polyline(Array.from({ length: 17 }, (_, k) => v(Math.cos(k / 16 * Math.PI * 1.4) * 0.11, Math.sin(k / 16 * Math.PI * 1.4) * 0.11))));
+      const spinner = accent(polyline(Array.from({ length: 17 }, (_, k) => v(Math.cos(k / 16 * Math.PI * 1.4) * 0.11, Math.sin(k / 16 * Math.PI * 1.4) * 0.11))));
       group.add(spinner);
       return { scene, camera: view(0, 0.2, 5.4), update(t) {
         const p = (t * 0.9) % (rows.length + 2);
@@ -798,9 +798,9 @@ if (coverRenderer) {
         group.add(stage);
         return stage;
       });
-      const token = orange(dot(0.075));
+      const token = accent(dot(0.075));
       const wake = trail(group, 7, 0.055, 2);
-      const check = orange(polyline([v(-0.2, 0), v(-0.06, -0.15), v(0.24, 0.2)], 0));
+      const check = accent(polyline([v(-0.2, 0), v(-0.06, -0.15), v(0.24, 0.2)], 0));
       check.position.set(1.8, 0.75, 0);
       group.add(token, check);
       return { scene, camera: view(1.2, 1.6, 6.2), update(t) {
@@ -827,10 +827,10 @@ if (coverRenderer) {
       const target = outline(new THREE.BoxGeometry(1.0, 1.0, 1.0), 0.5);
       target.position.y = 1.0;
       const box = block(new THREE.BoxGeometry(0.62, 0.62, 0.62));
-      const wave = orange(circle(0.8, 0));
+      const wave = accent(circle(0.8, 0));
       wave.rotation.x = -Math.PI / 2;
       wave.position.y = 1.0;
-      const flame = [0, 1, 2, 3].map(k => orange(dot(0.05 - k * 0.009, 0.9 - k * 0.2)));
+      const flame = [0, 1, 2, 3].map(k => accent(dot(0.05 - k * 0.009, 0.9 - k * 0.2)));
       scene.add(base, target, box, wave, ...flame);
       return { scene, camera: view(2.9, 1.5, 6.3), update(t) {
         const p = (t * 0.5) % 2;
@@ -862,13 +862,13 @@ if (coverRenderer) {
       });
       const lines = [1.6, 2.4, 1.1, 2.0, 1.4].map((length, k) => {
         const y = 0.55 - k * 0.32;
-        const prompt = orange(polyline([v(-1.45, y + 0.06, 0.04), v(-1.37, y, 0.04), v(-1.45, y - 0.06, 0.04)], 0.9));
+        const prompt = accent(polyline([v(-1.45, y + 0.06, 0.04), v(-1.37, y, 0.04), v(-1.45, y - 0.06, 0.04)], 0.9));
         const text = polyline([v(0, 0, 0.04), v(1, 0, 0.04)], 0.75);
         text.position.set(-1.25, y, 0);
         group.add(prompt, text);
         return { prompt, text, length, y };
       });
-      const caret = orange(new THREE.Mesh(new THREE.PlaneGeometry(0.1, 0.18), new THREE.MeshBasicMaterial({ color: WHITE })));
+      const caret = accent(new THREE.Mesh(new THREE.PlaneGeometry(0.1, 0.18), new THREE.MeshBasicMaterial({ color: WHITE })));
       group.add(caret);
       return { scene, camera: view(0, 0, 5.4), update(t) {
         const p = (t * 0.8) % (lines.length + 2);
@@ -898,7 +898,7 @@ if (coverRenderer) {
         group.add(bubble);
         return bubble;
       });
-      const typing = [0, 1, 2].map(() => { const point = orange(dot(0.05)); group.add(point); return point; });
+      const typing = [0, 1, 2].map(() => { const point = accent(dot(0.05)); group.add(point); return point; });
       return { scene, camera: view(0, 0, 5.6), update(t) {
         const p = (t * 0.7) % (bubbles.length + 2);
         const out = ease(clamp(p - bubbles.length - 1));
@@ -923,7 +923,7 @@ if (coverRenderer) {
       const orbits = [[1.0, 0.3, 0], [1.3, -0.5, 0.6], [1.6, 0.9, -0.4]].map(([radius, tiltX, tiltZ], k) => {
         const track = new THREE.Group();
         track.rotation.set(Math.PI / 2 + tiltX, 0, tiltZ);
-        const satellite = k === 1 ? orange(dot(0.085)) : dot(0.07);
+        const satellite = k === 1 ? accent(dot(0.085)) : dot(0.07);
         track.add(circle(radius, 0.3), satellite);
         scene.add(track);
         return { radius, satellite, speed: 0.9 - k * 0.2, phase: k * 2, wake: k === 1 ? trail(track, 9, 0.06, 2) : null };
@@ -946,7 +946,7 @@ if (coverRenderer) {
       const loop = circle(radius, 0.35);
       loop.rotation.x = -Math.PI / 2;
       loop.position.y = -0.5;
-      const runner = orange(dot(0.085));
+      const runner = accent(dot(0.085));
       group.add(loop, runner);
       const wake = trail(group, 9, 0.06, 2);
       const layers = [0, 1, 2, 3].map(() => {

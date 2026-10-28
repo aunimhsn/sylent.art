@@ -55,14 +55,6 @@
       fallback: "empty",
       only: "contact",
     },
-    // The signal color, passed to every page: the orange chosen, and three redder ones, further
-    // from the orange of the Orange brand (#ff7900). White text keeps 4.5:1 on each.
-    signal: {
-      label: "Signal",
-      options: { d3450e: "Orange #d3450e", d63c1c: "Vermillon #d63c1c", d4352a: "Tomate #d4352a", d42a2a: "Rouge #d42a2a" },
-      fallback: "d3450e",
-      every: true,
-    },
     view: {
       label: "View",
       options: { both: "Mobile and desktop", desktop: "Desktop, full width", mobile: "Mobile" },
@@ -78,10 +70,9 @@
   const chosen = Object.fromEntries(Object.entries(VARIANTS).map(([key, variant]) =>
     [key, params.get(key) in variant.options ? params.get(key) : variant.fallback]));
 
-  // A page receives the groups that belong to it (only) or to every page (every), when they differ
-  // from their default.
+  // A page receives the groups that belong to it, when they differ from their default.
   const site = () => {
-    const passed = Object.entries(VARIANTS).filter(([key, variant]) => (variant.only === chosen.page || variant.every) && chosen[key] !== variant.fallback);
+    const passed = Object.entries(VARIANTS).filter(([key, variant]) => variant.only === chosen.page && chosen[key] !== variant.fallback);
     return FILES[chosen.page] + (passed.length ? "?" + new URLSearchParams(passed.map(([key]) => [key, chosen[key]])) : "");
   };
   const phone = () => `<div class="page-slot"><span>Mobile · 390 × 844 · scroll inside the phone</span><div class="page-phone"><iframe src="${site()}" title="Page at phone width"></iframe></div></div>`;
