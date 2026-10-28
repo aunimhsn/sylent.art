@@ -1,0 +1,177 @@
+---
+// The footer of every page: the wordmark astride its top edge, the motto, the navigation, the
+// contact details and the legal links, over a grid where an orange fluid follows the pointer
+// (src/scripts/site.ts).
+import Wordmark from "../assets/brand/wordmark.svg";
+import contact from "../data/contact.json";
+import fr from "../i18n/fr.json";
+import { href } from "../lib/url";
+
+const navigation = [
+  { label: fr.navigation.courses, path: "/courses/" },
+  { label: fr.navigation.about, path: "/about/" },
+  { label: fr.navigation.contact, path: "/contact/" },
+];
+// A link to another site opens in a new tab, which a screen reader announces.
+const external = [
+  { url: contact.linkedin, label: "linkedin.com/in/aunimhsn" },
+  { url: contact.github, label: "github.com/aunimhsn" },
+];
+const year = new Date().getFullYear();
+---
+
+<footer class="footer" data-fluid="--grid-step-footer">
+  <div class="footer-logo" role="img" aria-label={fr.footer.logo}>
+    <Wordmark aria-hidden="true" />
+  </div>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <p class="motto">{fr.site.motto}</p>
+        <p>{fr.footer.tagline}</p>
+      </div>
+      <div>
+        <h2>{fr.footer.navigation}</h2>
+        <ul>
+          {navigation.map(({ label, path }) => (
+            <li>
+              <a href={href(path)}>{label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <h2>{fr.footer.contact}</h2>
+        <ul>
+          <li>
+            <a href={`mailto:${contact.email}`}>{contact.email}</a>
+          </li>
+          <li>
+            <a href={`tel:${contact.phone}`}>{contact.phoneLabel}</a>
+          </li>
+          {external.map(({ url, label }) => (
+            <li>
+              <a href={url} target="_blank" rel="noopener">
+                {label}
+                <span class="visually-hidden">{fr.links.newTab}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <h2>{fr.footer.information}</h2>
+        <ul>
+          <li>
+            <a href={href("/legal/")}>{fr.footer.legal}</a>
+          </li>
+          <li>
+            <a href={href("/policy/")}>{fr.footer.privacy}</a>
+          </li>
+          <li>{fr.footer.nda.replace("{nda}", contact.nda)}</li>
+        </ul>
+      </div>
+    </div>
+    <p class="footer-bottom">
+      {fr.footer.copyright.replace("{year}", String(year))}
+    </p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    --wordmark-width: clamp(220px, 38vw, 490px);
+
+    position: relative;
+
+    /* Room for the lower half of the wordmark, which straddles the top edge. No border: the
+       first line of the grid is the top edge, as thin as the other lines. */
+    padding: calc(var(--wordmark-width) * 0.119 + var(--space-fluid-2)) 0
+      var(--space-7);
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: var(--grid-step-footer) var(--grid-step-footer);
+  }
+
+  .footer > .wrap {
+    position: relative;
+  }
+
+  /* The orange fluid of the grid (src/scripts/site.ts), between the grid and the content. */
+  .footer > :global(.fluid) {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* The wordmark straddles the edge between the call to action and the footer. */
+  .footer-logo {
+    position: absolute;
+    top: 0;
+    left: max(var(--gutter), calc((100% - var(--width)) / 2));
+    z-index: 2;
+    width: var(--wordmark-width);
+    translate: 0 -50%;
+    color: var(--text);
+  }
+
+  .footer-logo :global(svg) {
+    width: 100%;
+    height: auto;
+  }
+
+  .footer-grid {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  @media (width >= 900px) {
+    .footer-grid {
+      grid-template-columns: 4fr 3fr 3fr 3fr;
+    }
+  }
+
+  /* The headings of the columns in white, above the gray links that turn orange on hover. */
+  h2 {
+    margin: 0 0 var(--space-4);
+    color: var(--text);
+    font: var(--label-weight) var(--size-label) / 1 var(--font-title);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+
+  ul {
+    display: grid;
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li,
+  p {
+    margin: 0;
+    color: var(--secondary);
+    font-size: var(--size-ui);
+  }
+
+  a {
+    transition: color var(--duration-fast);
+  }
+
+  a:hover {
+    color: var(--signal-text);
+  }
+
+  .motto {
+    margin-bottom: var(--space-4);
+    color: var(--dim);
+  }
+
+  .footer-bottom {
+    margin-top: var(--space-14);
+    color: var(--dim);
+    font-size: var(--size-caption);
+  }
+</style>

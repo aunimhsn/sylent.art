@@ -1,0 +1,65 @@
+---
+// Section heading, after the former site: a title over a large faded word. The title rises and
+// the word slides as the page scrolls (src/scripts/motion.ts).
+// The title is in capitals and drops its accents, which the mask of its animation would cut
+// (« PEDAGOGIE »): an exception to French typography accepted by the owner (CLAUDE.md). Screen
+// readers keep the real words through aria-label.
+interface Props {
+  title: string;
+  ghost: string;
+  id: string;
+  level?: 1 | 2;
+}
+
+const { title, ghost, id, level = 2 } = Astro.props;
+const shown = title.normalize("NFD").replace(/\p{M}/gu, "");
+const Title = `h${level}` as const;
+---
+
+<div class="heading">
+  <span class="heading-ghost" aria-hidden="true">
+    {ghost}
+  </span>
+  <Title
+    class="heading-title"
+    id={id}
+    aria-label={shown === title ? undefined : title}
+  >
+    {shown}
+  </Title>
+</div>
+
+<style>
+  .heading {
+    position: relative;
+    margin-bottom: var(--space-fluid-2);
+    padding-top: var(--space-fluid-1);
+  }
+
+  .heading-ghost {
+    display: block;
+    margin-left: 0.12em;
+    color: var(--ghost-word);
+    font: var(--title-weight) var(--size-ghost) / 0.8 var(--font-title);
+    letter-spacing: var(--tracking-ghost);
+    text-transform: uppercase;
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  .heading-title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    font: var(--title-weight) var(--size-section) / 1 var(--font-title);
+    letter-spacing: var(--tracking-title);
+    text-transform: uppercase;
+  }
+
+  /* A lead right under a heading comes closer to it. */
+  .heading + :global(.lead) {
+    margin-top: calc(-1 * var(--space-fluid-1));
+    margin-bottom: var(--space-fluid-2);
+  }
+</style>

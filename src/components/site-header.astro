@@ -1,0 +1,334 @@
+---
+// The top of every page: the skip link, the fixed header (logo, navigation, « Me contacter »),
+// the mobile menu and the back-to-top button. Their behavior is in src/scripts/site.ts.
+// The navigation has no Contact link: the « Me contacter » button leads there (specs.md, Pages).
+import Mark from "../assets/brand/mark.svg";
+import Wordmark from "../assets/brand/wordmark.svg";
+import fr from "../i18n/fr.json";
+import { currentOf, href } from "../lib/url";
+import Icon from "./icon.astro";
+
+const menu = [
+  { label: fr.navigation.courses, path: "/courses/" },
+  { label: fr.navigation.about, path: "/about/" },
+];
+const current = Astro.url.pathname;
+---
+
+<a class="skip" href="#content">
+  {fr.header.skip}
+</a>
+<header class="header" id="header">
+  <div class="wrap">
+    <a class="logo" href={href("/")} aria-label={fr.header.home}>
+      <Mark class="mark" aria-hidden="true" />
+      <Wordmark class="wordmark" aria-hidden="true" />
+    </a>
+    <nav class="nav" aria-label={fr.navigation.label}>
+      {menu.map(({ label, path }) => (
+        <a href={href(path)} aria-current={currentOf(path, current)}>
+          {label}
+        </a>
+      ))}
+    </nav>
+    <a
+      class="button magnetic"
+      href={href("/contact/")}
+      aria-current={currentOf("/contact/", current)}
+    >
+      {fr.header.contact}
+    </a>
+    <button
+      class="burger"
+      id="burger"
+      type="button"
+      aria-expanded="false"
+      aria-controls="menu"
+      aria-label={fr.header.openMenu}
+      data-open-label={fr.header.openMenu}
+      data-close-label={fr.header.closeMenu}
+    >
+      <span class="burger-open">
+        <Icon name="menu" size={24} />
+      </span>
+      <span class="burger-close">
+        <Icon name="close" size={24} />
+      </span>
+    </button>
+  </div>
+</header>
+<div class="menu" id="menu" aria-hidden="true">
+  {menu.map(({ label, path }) => (
+    <a
+      class="menu-link"
+      href={href(path)}
+      aria-current={currentOf(path, current)}
+    >
+      {label}
+    </a>
+  ))}
+  <a
+    class="button"
+    href={href("/contact/")}
+    aria-current={currentOf("/contact/", current)}
+  >
+    {fr.header.contact}
+  </a>
+  <p class="motto">{fr.site.motto}</p>
+</div>
+<button
+  class="top"
+  id="back-to-top"
+  type="button"
+  aria-label={fr.header.backToTop}
+>
+  <Icon name="up" size={20} />
+</button>
+<p
+  class="visually-hidden"
+  id="announcer"
+  aria-live="polite"
+  data-copied={fr.links.copied}
+  data-announce={fr.links.copiedAnnounce}
+></p>
+
+<style>
+  .skip {
+    position: absolute;
+    left: var(--space-3);
+    top: -60px;
+    z-index: var(--z-skip);
+    padding: var(--space-3) var(--space-4);
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  .skip:focus {
+    top: var(--space-3);
+  }
+
+  /* ── Header: solid once the page scrolls, hidden while scrolling down ─────────────── */
+
+  .header {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: var(--z-header);
+    height: var(--header-height);
+    border-bottom: 1px solid transparent;
+    transition:
+      background-color var(--duration-fast),
+      border-color var(--duration-fast),
+      transform var(--duration-slow) var(--ease-out);
+  }
+
+  .header.is-scrolled {
+    border-color: var(--line);
+    background: var(--header-bg);
+    backdrop-filter: blur(var(--header-blur)) saturate(1.3);
+  }
+
+  .header.is-hidden {
+    transform: translateY(-100%);
+  }
+
+  .header.is-menu {
+    z-index: calc(var(--z-menu) + 1);
+    border-color: transparent;
+    background: transparent;
+    backdrop-filter: none;
+  }
+
+  .header .wrap {
+    display: flex;
+    align-items: center;
+    gap: var(--space-7);
+    height: 100%;
+  }
+
+  /* The logo: the mark and the wordmark, in the proportions of the charter (gap one third of
+     the mark, letters half of it). */
+  .logo {
+    --logo-height: 34px;
+
+    display: flex;
+    align-items: center;
+    gap: calc(var(--logo-height) / 3);
+    color: var(--text);
+  }
+
+  .logo :global(.mark) {
+    width: auto;
+    height: var(--logo-height);
+  }
+
+  .logo :global(.wordmark) {
+    width: auto;
+    height: calc(var(--logo-height) * 0.5 * 0.728);
+  }
+
+  .nav {
+    display: none;
+    gap: var(--space-8);
+    margin-left: auto;
+  }
+
+  .nav a {
+    position: relative;
+    color: var(--secondary);
+    font: 600 var(--size-ui) / 1 var(--font-title);
+    transition: color var(--duration-fast);
+  }
+
+  .nav a:hover {
+    color: var(--text);
+  }
+
+  .nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: calc(-1 * var(--space-2));
+    height: 2px;
+    background: var(--text);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform var(--duration-fast) var(--ease-out);
+  }
+
+  .nav a:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .header .button {
+    margin-left: auto;
+    padding: var(--space-3) var(--space-5);
+    font-size: var(--size-caption);
+  }
+
+  .burger {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-right: -10px;
+    border: 0;
+    background: none;
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .burger[aria-expanded="true"] .burger-open,
+  .burger[aria-expanded="false"] .burger-close {
+    display: none;
+  }
+
+  @media (width >= 900px) {
+    .nav {
+      display: flex;
+    }
+
+    .header .button {
+      margin-left: 0;
+    }
+
+    .burger {
+      display: none;
+    }
+  }
+
+  /* ── Mobile menu: a circle that opens from the burger ─────────────────────────────── */
+
+  .menu {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-menu);
+    display: flex;
+    flex-direction: column;
+    padding: calc(var(--header-height) + var(--space-6)) var(--gutter)
+      var(--space-8);
+    background: var(--bg);
+    visibility: hidden;
+    clip-path: circle(0 at calc(100% - 40px) 38px);
+    transition:
+      clip-path var(--duration-menu) var(--ease-in-out),
+      visibility 0s var(--duration-menu);
+  }
+
+  .menu.is-open {
+    visibility: visible;
+    clip-path: circle(150% at calc(100% - 40px) 38px);
+    transition: clip-path var(--duration-menu) var(--ease-in-out);
+  }
+
+  .menu-link {
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--line);
+    font: var(--title-weight) var(--size-menu) / 1.05 var(--font-title);
+    letter-spacing: var(--tracking-title);
+    text-transform: uppercase;
+  }
+
+  .menu .button {
+    align-self: stretch;
+    margin-top: var(--space-8);
+  }
+
+  .menu .motto {
+    margin-top: auto;
+  }
+
+  /* ── Back to the top: a small square in the bottom right corner, once the hero is passed */
+
+  .top {
+    position: fixed;
+    right: clamp(var(--space-4), 2.5vw, var(--space-8));
+    bottom: clamp(var(--space-4), 2.5vw, var(--space-8));
+    z-index: var(--z-top);
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: 1px solid var(--line-strong);
+    background: var(--top-bg);
+    backdrop-filter: blur(var(--top-blur));
+    color: var(--text);
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(12px);
+    transition:
+      opacity var(--duration-fast),
+      transform var(--duration-fast),
+      visibility var(--duration-fast),
+      background-color var(--duration-fast),
+      color var(--duration-fast),
+      border-color var(--duration-fast);
+  }
+
+  .top.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+
+  .top:hover {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  .top :global(svg) {
+    transition: transform var(--duration-fast);
+  }
+
+  .top:hover :global(svg) {
+    transform: translateY(-2px);
+  }
+</style>
+
+<script>
+  import "../scripts/site";
+</script>

@@ -2,7 +2,43 @@
   "site": {
     "name": "Sylent",
     "title": "Sylent · Formateur en informatique",
-    "description": "Formateur en informatique depuis 2021 : développement, bases de données, tests, Python et IA, pour les écoles, les organismes de formation et les entreprises."
+    "description": "Formateur en informatique depuis 2021 : développement, bases de données, tests, Python et IA, pour les écoles, les organismes de formation et les entreprises.",
+    "motto": "Une vie, mille leçons"
+  },
+  "navigation": {
+    "label": "Navigation principale",
+    "courses": "Formations",
+    "about": "À propos",
+    "contact": "Contact"
+  },
+  "header": {
+    "skip": "Aller au contenu",
+    "home": "Sylent, accueil",
+    "contact": "Me contacter",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "backToTop": "Revenir en haut de la page"
+  },
+  "cta": {
+    "question": ["Un module à confier ?", "Parlons de vos apprenants."],
+    "ghost": "Echanger",
+    "button": "Me contacter"
+  },
+  "footer": {
+    "logo": "Sylent",
+    "tagline": "Formateur en informatique, sur site ou à distance.",
+    "navigation": "Navigation",
+    "contact": "Contact",
+    "information": "Informations",
+    "legal": "Mentions légales",
+    "privacy": "Confidentialité",
+    "nda": "NDA : {nda}",
+    "copyright": "© {year} Aunim Hassan · Micro-entreprise"
+  },
+  "links": {
+    "newTab": " [nouvel onglet]",
+    "copied": "Copiée",
+    "copiedAnnounce": "Adresse email copiée"
   },
   "home": {
     "lead": "Le nouveau site est en construction."

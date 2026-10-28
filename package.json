@@ -19,7 +19,8 @@
     "check:base": "SITE_URL=https://aunimhsn.github.io BASE_PATH=/sylent.art astro build --outDir dist-base/sylent.art && linkinator sylent.art/ --server-root dist-base"
   },
   "dependencies": {
-    "astro": "^7.4.3"
+    "astro": "^7.4.3",
+    "gsap": "^3.15.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",

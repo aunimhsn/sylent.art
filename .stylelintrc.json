@@ -2,6 +2,10 @@
   "extends": ["stylelint-config-standard", "stylelint-config-html/astro"],
   "ignoreFiles": ["dist/**", "dist-base/**", "docs/mockups/**"],
   "rules": {
-    "color-hex-length": "long"
+    "color-hex-length": "long",
+    "selector-pseudo-class-no-unknown": [
+      true,
+      { "ignorePseudoClasses": ["global"] }
+    ]
   }
 }
