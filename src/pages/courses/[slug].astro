@@ -1,0 +1,476 @@
+---
+// The page of one module (docs/mockups/module-site.html), at /courses/<slug>/: a hero over the
+// grid with the presentation of the module, the key facts under a rule, the prerequisites, the
+// objectives and the program beside a card that follows the scroll on a computer, then the other
+// modules of the domain. The former courses (/courses/<id>/) redirect to the module they became.
+import type { GetStaticPaths } from "astro";
+import { render } from "astro:content";
+import CustomCard from "../../components/custom-card.astro";
+import Icon from "../../components/icon.astro";
+import ModuleCard from "../../components/module-card.astro";
+import SectionHeading from "../../components/section-heading.astro";
+import courses from "../../content/courses.json";
+import fr from "../../i18n/fr.json";
+import SiteLayout from "../../layouts/site-layout.astro";
+import { durationOf, getOffers, type Offer } from "../../lib/offers";
+import { href } from "../../lib/url";
+
+export const getStaticPaths = (async () => {
+  const offers = await getOffers();
+  return offers.flatMap((offer) =>
+    offer.modules.flatMap((module) => [
+      { params: { slug: module.id }, props: { offer, module } },
+      ...(module.data.formerId
+        ? [
+            {
+              params: { slug: String(module.data.formerId) },
+              props: { offer, module, isFormer: true },
+            },
+          ]
+        : []),
+    ]),
+  );
+}) satisfies GetStaticPaths;
+
+interface Props {
+  offer: Offer;
+  module: Offer["modules"][number];
+  isFormer?: boolean;
+}
+
+const { offer, module, isFormer = false } = Astro.props;
+if (isFormer) return Astro.redirect(href(`/courses/${module.id}/`), 301);
+
+const { domain } = offer;
+const page = courses.module;
+const { title, summary, days, audience, level, prerequisites } = module.data;
+const { objectives, program } = module.data;
+const duration = durationOf(days);
+const others = offer.modules.filter(({ id }) => id !== module.id);
+const hasText = Boolean(module.body?.trim());
+const { Content } = await render(module);
+---
+
+<SiteLayout
+  title={page.title.replace("{title}", title)}
+  description={page.description
+    .replace("{summary}", summary)
+    .replace("{duration}", duration)}
+  cta={page.cta}
+>
+  <section
+    class="module-hero"
+    aria-labelledby="module-title"
+    data-fluid="--grid-step"
+  >
+    <div class="wrap">
+      <div class="module-text">
+        <nav class="crumbs reveal" aria-label={page.crumbs}>
+          <ol>
+            <li>
+              <a href={href("/")}>{page.home}</a>
+            </li>
+            <li>
+              <a href={href("/courses/")}>{page.courses}</a>
+            </li>
+            <li aria-current="page">{title}</li>
+          </ol>
+        </nav>
+        <p class="module-domain reveal">
+          {domain.data.title}
+          {domain.data.isNew && <span class="new">{fr.cards.new}</span>}
+        </p>
+        <h1 class="module-title reveal" id="module-title">
+          {title}
+        </h1>
+        <div class="module-lead reveal">
+          {hasText ? <Content /> : <p>{summary}</p>}
+        </div>
+        {domain.data.note && (
+          <p class="module-note note reveal">{domain.data.note}</p>
+        )}
+        <div class="module-actions reveal">
+          <a class="button is-outline" href="#programme">
+            {page.seeProgram}
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <dl class="facts reveal">
+      <div>
+        <dt>{page.facts.audience}</dt>
+        <dd>{audience ?? page.toDefine}</dd>
+      </div>
+      <div>
+        <dt>{page.facts.level}</dt>
+        <dd>{level ?? page.toDefine}</dd>
+      </div>
+      <div>
+        <dt>{page.facts.duration}</dt>
+        <dd>{duration}</dd>
+      </div>
+      <div>
+        <dt>{page.facts.formats}</dt>
+        <dd>{page.formats}</dd>
+      </div>
+    </dl>
+
+    <div class="module-body">
+      <div class="module-main">
+        <section class="reveal" aria-labelledby="prerequisites-title">
+          <h2 id="prerequisites-title">{page.prerequisites}</h2>
+          <p class="body-text">{prerequisites ?? page.toDefine}</p>
+        </section>
+        <section class="reveal" aria-labelledby="objectives-title">
+          <h2 id="objectives-title">{page.objectives}</h2>
+          {objectives ? (
+            <ul class="objectives">
+              {objectives.map((objective) => (
+                <li>
+                  <Icon name="check" size={16} />
+                  <span>{objective}</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p class="body-text">{page.toDefine}</p>
+          )}
+        </section>
+        <section id="programme" aria-labelledby="program-title">
+          <h2 class="reveal" id="program-title">
+            {page.program}
+          </h2>
+          {program ? (
+            <>
+              <ul class="program">
+                {program.map((part) => (
+                  <li class="part reveal" data-draw>
+                    <h3>{part.title}</h3>
+                    <p>{part.text}</p>
+                  </li>
+                ))}
+              </ul>
+              <p class="program-end reveal">{page.programEnd}</p>
+            </>
+          ) : (
+            <p class="body-text reveal">{page.programToCome}</p>
+          )}
+        </section>
+      </div>
+      <aside class="organize glass" aria-labelledby="organize-title">
+        <h2 id="organize-title">{page.organize.title}</h2>
+        <p>{page.organize.text}</p>
+        <a class="button" href={href("/contact/")}>
+          {page.organize.button}
+        </a>
+      </aside>
+    </div>
+  </div>
+
+  {others.length > 0 && (
+    <section class="section related" aria-labelledby="related-title">
+      <div class="wrap">
+        <SectionHeading
+          title={page.related.title}
+          ghost={page.related.ghost}
+          id="related-title"
+        />
+        <ul class="cards">
+          {others.map((other) => (
+            <ModuleCard module={other} domain={domain} />
+          ))}
+          <CustomCard />
+        </ul>
+      </div>
+    </section>
+  )}
+</SiteLayout>
+
+<style>
+  /* ── Hero: the text of the module, over the grid ── */
+  .module-hero {
+    position: relative;
+    padding: calc(var(--header-height) + var(--space-fluid-2)) 0
+      var(--space-fluid-3);
+  }
+
+  /* The grid, and the orange fluid that runs along it in a layer at the same place, with the
+     same mask. */
+  .module-hero::before,
+  .module-hero > :global(.fluid) {
+    content: "";
+    position: absolute;
+    inset: 0;
+    mask-image: radial-gradient(
+      80% 75% at 70% 40%,
+      #000000 30%,
+      transparent 75%
+    );
+  }
+
+  .module-hero::before {
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: var(--grid-step) var(--grid-step);
+  }
+
+  .module-hero .wrap {
+    position: relative;
+  }
+
+  .module-text {
+    max-width: var(--width-text);
+  }
+
+  .crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-3);
+    margin: 0 0 var(--space-8);
+    padding: 0;
+    list-style: none;
+    color: var(--dim);
+    font: 600 var(--size-caption) / 1.3 var(--font-title);
+  }
+
+  .crumbs li + li::before {
+    content: "/";
+    margin-right: var(--space-3);
+    color: var(--line-strong);
+  }
+
+  .crumbs a {
+    transition: color var(--duration-fast);
+  }
+
+  .crumbs a:hover {
+    color: var(--text);
+  }
+
+  .crumbs [aria-current] {
+    color: var(--secondary);
+  }
+
+  .module-domain {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3) var(--space-4);
+    margin: 0;
+    color: var(--dim);
+    font: var(--label-weight) var(--size-label) / 1.3 var(--font-title);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+
+  .module-domain .new {
+    position: static;
+  }
+
+  .module-title {
+    margin: var(--space-4) 0 0;
+    font: var(--title-weight) var(--size-display) / 0.98 var(--font-title);
+    letter-spacing: var(--tracking-title);
+    text-wrap: balance;
+  }
+
+  .module-lead :global(p) {
+    margin: var(--space-7) 0 0;
+    max-width: var(--measure);
+    color: var(--secondary);
+    font-size: var(--size-intro);
+    text-wrap: pretty;
+  }
+
+  .module-lead :global(p + p) {
+    margin-top: var(--space-4);
+  }
+
+  .module-note {
+    margin: var(--space-6) 0 0;
+    max-width: var(--measure-narrow);
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--size-text-small);
+  }
+
+  .module-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-9);
+  }
+
+  /* ── Key facts: plain columns under a rule ── */
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-7) var(--space-6);
+    margin: 0;
+  }
+
+  .facts div {
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--line);
+  }
+
+  .facts dt {
+    color: var(--dim);
+    font: var(--label-weight) var(--size-label) / 1.3 var(--font-title);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+
+  .facts dd {
+    margin: var(--space-3) 0 0;
+    font: 700 var(--size-title-small) / 1.35 var(--font-title);
+    letter-spacing: var(--tracking-card);
+  }
+
+  /* ── Body: prerequisites, objectives and program, beside the card to organize ── */
+  .module-body {
+    display: grid;
+    gap: var(--space-14);
+    padding-block: var(--space-fluid-3);
+  }
+
+  .module-main > section + section {
+    margin-top: var(--space-fluid-3);
+  }
+
+  .module-main h2 {
+    margin: 0 0 var(--space-6);
+    font: var(--title-weight) var(--size-h2) / 1.1 var(--font-title);
+    letter-spacing: var(--tracking-title);
+  }
+
+  .body-text {
+    margin: 0;
+    max-width: var(--measure);
+    color: var(--secondary);
+    font-size: var(--size-lead);
+  }
+
+  .objectives {
+    display: grid;
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .objectives li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-4);
+    font-size: var(--size-lead);
+  }
+
+  .objectives :global(svg) {
+    flex: none;
+    box-sizing: content-box;
+    margin-top: 2px;
+    padding: var(--space-1);
+    border: 1px solid var(--line-strong);
+  }
+
+  /* The parts of the program, without numbers: they are not an order, the practice comes when
+     it is needed. Their rule draws itself as the page scrolls (data-draw, src/scripts/motion.ts). */
+  .program {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .part {
+    position: relative;
+    display: grid;
+    gap: var(--space-2);
+    padding: var(--space-6) 0;
+  }
+
+  .part::before,
+  .part::after {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .part::after {
+    background: var(--text);
+    transform: scaleX(var(--progress, 1));
+    transform-origin: left;
+  }
+
+  .part h3 {
+    margin: 0;
+    font: 700 var(--size-card-title) / 1.25 var(--font-title);
+    letter-spacing: var(--tracking-card);
+  }
+
+  .part p {
+    margin: 0;
+    color: var(--secondary);
+    font-size: var(--size-text-small);
+  }
+
+  .program-end {
+    margin: var(--space-2) 0 0;
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--line);
+    color: var(--dim);
+    font-size: var(--size-text-small);
+  }
+
+  /* The card to organize the module: it follows the scroll on a computer; on a phone the
+     header button and the call to action at the end are enough. */
+  .organize {
+    display: none;
+  }
+
+  .organize h2 {
+    margin: 0;
+    font: 700 var(--size-card-title) / 1.2 var(--font-title);
+    letter-spacing: var(--tracking-card);
+  }
+
+  .organize p {
+    margin: 0;
+    color: var(--secondary);
+    font-size: var(--size-text-small);
+  }
+
+  .organize .button {
+    margin-top: var(--space-2);
+  }
+
+  /* The other modules of the domain follow on without the top padding of their section. */
+  .related {
+    padding-top: 0;
+  }
+
+  @media (width >= 900px) {
+    .facts {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .module-body {
+      grid-template-columns: 8fr 4fr;
+      gap: var(--space-18);
+      align-items: start;
+    }
+
+    .organize {
+      position: sticky;
+      top: calc(var(--header-height) + var(--space-6));
+      display: grid;
+      gap: var(--space-3);
+      padding: var(--card-padding-block) var(--card-padding-inline);
+    }
+  }
+</style>

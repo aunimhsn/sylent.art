@@ -1,0 +1,43 @@
+---
+// The card of one module, on the offer list and under a module page: its animated cover, its
+// name, its domain and its summary; the whole card leads to its page. The modules of a new
+// domain are new too. It tilts under the pointer (src/scripts/covers.ts).
+import fr from "../i18n/fr.json";
+import type { Domain, Module } from "../lib/offers";
+import { href } from "../lib/url";
+
+interface Props {
+  module: Module;
+  domain: Domain;
+  /** The first card of a domain carries its slug, for the links of the home page. */
+  anchor?: boolean;
+}
+
+const { module, domain, anchor = false } = Astro.props;
+const { title, summary, scene } = module.data;
+const { isNew } = domain.data;
+---
+
+<li class="card glass reveal tilt" id={anchor ? domain.id : undefined}>
+  <div class="cover" data-scene={scene} aria-hidden="true">
+    <canvas></canvas>
+    {isNew && <span class="new">{fr.cards.new}</span>}
+  </div>
+  <h3>
+    {title}
+    {isNew && <span class="visually-hidden">{fr.cards.newHidden}</span>}
+  </h3>
+  <p class="card-domain">{domain.data.title}</p>
+  <p>{summary}</p>
+  <a
+    class="card-more"
+    href={href(`/courses/${module.id}/`)}
+    aria-label={fr.cards.moduleLabel.replace("{title}", title)}
+  >
+    {fr.cards.moduleMore}
+  </a>
+</li>
+
+<script>
+  import "../scripts/covers";
+</script>

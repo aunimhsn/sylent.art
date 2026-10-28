@@ -8,12 +8,12 @@
     "courses": "Voir les formations"
   },
   "cube": [
-    ["Le sens", "Pourquoi ?"],
-    ["Par an depuis 2023", "900+ h"],
-    ["Pas à pas", "Patience"],
-    ["Formateur depuis", "2021"],
-    ["En toute sérénité", "Bienveillance"],
-    ["Écoles et organismes", "5"]
+    { "label": "Le sens", "value": "Pourquoi ?" },
+    { "label": "Par an depuis 2023", "figure": 1 },
+    { "label": "Pas à pas", "value": "Patience" },
+    { "label": "Formateur depuis", "figure": 0 },
+    { "label": "En toute sérénité", "value": "Bienveillance" },
+    { "label": "Écoles et organismes", "figure": 2 }
   ],
   "partners": {
     "title": "Partenaires",
@@ -40,7 +40,7 @@
   "domains": {
     "title": "Formations",
     "ghost": "Apprendre",
-    "lead": "Huit domaines, des modules indépendants et des durées toujours adaptables, sur site ou à distance."
+    "lead": "{count} domaines, des modules indépendants et des durées toujours adaptables, sur site ou à distance."
   },
   "pedagogy": {
     "title": "Pédagogie",

@@ -1,0 +1,22 @@
+---
+// The last card after the modules of a domain: a module built for the request, with its own
+// scene, that leads to the contact page. After the domains of the home page, the same request
+// is a band instead (domain-cards.astro).
+import fr from "../i18n/fr.json";
+import { href } from "../lib/url";
+---
+
+<li class="card glass reveal tilt">
+  <div class="cover" data-scene="custom" aria-hidden="true">
+    <canvas></canvas>
+  </div>
+  <h3>{fr.cards.customTitle}</h3>
+  <p>{fr.cards.customText}</p>
+  <a class="card-more" href={href("/contact/")}>
+    {fr.cards.customButton}
+  </a>
+</li>
+
+<script>
+  import "../scripts/covers";
+</script>

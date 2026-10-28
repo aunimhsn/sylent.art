@@ -5,18 +5,16 @@
 // Under the pointer (or with the keyboard focus) a card turns half a turn and shows its modules
 // on its back (docs/branding.md, Components). The back is decorative, hidden from screen readers:
 // the modules are listed on the offer list.
-import { getCollection } from "astro:content";
 import fr from "../i18n/fr.json";
+import { getOffers } from "../lib/offers";
 import { href } from "../lib/url";
 import Icon from "./icon.astro";
 
-const domains = (await getCollection("offers")).sort(
-  (a, b) => a.data.order - b.data.order,
-);
+const offers = await getOffers();
 ---
 
 <ul class="cards">
-  {domains.map(({ id, data }) => (
+  {offers.map(({ domain: { id, data }, modules }) => (
     <li class="card glass reveal" data-domain={id}>
       <div class="cover" data-scene={data.scene} aria-hidden="true">
         <canvas />
@@ -37,12 +35,12 @@ const domains = (await getCollection("offers")).sort(
         <span>{fr.cards.domainMore}</span>
       </a>
       <div
-        class:list={["card-back", { "is-still": data.modules.length < 3 }]}
+        class:list={["card-back", { "is-still": modules.length < 3 }]}
         aria-hidden="true"
       >
         <div class="back-reel">
           <ul class="back-list">
-            {data.modules.map((module) => (
+            {modules.map(({ data: module }) => (
               <li>
                 <strong>{module.shortTitle ?? module.title}</strong>
                 <span class="back-summary">{module.summary}</span>

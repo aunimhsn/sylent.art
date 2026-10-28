@@ -132,7 +132,7 @@ The modules are independent: a client takes one or several, in any order, so the
 
 **IA pour le développement** has not been taught yet: its modules say honestly that it is a new offer (a « Nouveau » label and a short note), centered on method and good practices, to help employees use AI tools to be more productive and more satisfied in their daily work.
 
-Each module is a content file in the repository, named after its slug, which gives its domain and, for a former course, its former id (e.g. `former-id: 3`). The redirects are generated from these ids.
+Each module is a content file in the repository, named after its slug, which gives its domain and, for a former course, its former id (e.g. `formerId: 3`). The redirects are generated from these ids.
 
 ## URLs and redirects
 

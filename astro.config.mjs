@@ -16,8 +16,9 @@ export default defineConfig({
   // GitHub Pages serves about/index.html at /about/ and redirects /about to it: links and
   // canonical URLs end with a slash, in the development server too.
   trailingSlash: "always",
-  // The former URLs that must keep resolving; the redirects of /courses/<id> are generated
-  // from the offers in step 8. Without articles in the first release, they go to the home page.
+  // The former URLs that must keep resolving; the redirects of /courses/<id> are written by the
+  // module pages (src/pages/courses/[slug].astro). Without articles in the first release, they
+  // go to the home page.
   redirects: {
     "/articles": to("/"),
     "/articles/1": to("/"),

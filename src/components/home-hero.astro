@@ -3,8 +3,17 @@
 // the motto, beside the cube (src/scripts/cube.ts), over a grid where an orange fluid follows the
 // pointer (src/scripts/grid-fluid.ts, loaded by the footer).
 import home from "../content/home.json";
+import pedagogy from "../content/pedagogy.json";
 import fr from "../i18n/fr.json";
 import { href } from "../lib/url";
+
+// The faces of the cube: a label over a word, or over one of the key figures, written once in
+// pedagogy.json.
+const faces = home.cube.map((face) => {
+  if (face.figure === undefined) return [face.label, face.value];
+  const { value, unit } = pedagogy.figures[face.figure];
+  return [face.label, `${value}${unit}`];
+});
 ---
 
 <section
@@ -17,7 +26,7 @@ import { href } from "../lib/url";
     class="hero-canvas"
     id="cube-canvas"
     aria-hidden="true"
-    data-faces={JSON.stringify(home.cube)}
+    data-faces={JSON.stringify(faces)}
   ></canvas>
   <div class="wrap">
     <div class="hero-text">
