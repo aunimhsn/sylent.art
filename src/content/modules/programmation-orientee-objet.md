@@ -1,6 +1,5 @@
 ---
-title: "Programmation orientée objet"
-shortTitle: "POO"
+title: "Prog orientée objet"
 domain: conception-logicielle
 order: 1
 days: 3

@@ -1,5 +1,5 @@
 ---
-title: "Initiation à l’agilité avec Scrum"
+title: "Méthode agile"
 domain: gestion-de-projet
 order: 1
 days: 2

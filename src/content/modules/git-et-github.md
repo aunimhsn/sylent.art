@@ -1,5 +1,5 @@
 ---
-title: "Git et GitHub"
+title: "Git / GitHub"
 domain: methodologie-et-tests
 order: 1
 days: 2
