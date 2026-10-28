@@ -20,12 +20,14 @@
   },
   "dependencies": {
     "astro": "^7.4.3",
-    "gsap": "^3.15.0"
+    "gsap": "^3.15.0",
+    "three": "^0.186.1"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
     "@eslint/js": "^10.0.1",
     "@types/node": "^24.19.2",
+    "@types/three": "^0.186.0",
     "eslint": "^10.13.0",
     "eslint-plugin-astro": "^3.2.1",
     "eslint-plugin-jsx-a11y-x": "^0.2.0",

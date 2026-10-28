@@ -1,0 +1,124 @@
+---
+// The cycle of a lesson on the home page (docs/branding.md, Components): theory 20 %, practice
+// 50 %, correction 30 %, then again, as a 3D spiral that climbs a step at each turn (spiral in
+// src/scripts/covers.ts). Under the runner, the name of the phase it goes through and the share
+// of the turn done in it; at each new turn, « Séance suivante » flies away from it. The scene
+// drives the texts through CSS: the phase (data-phase), how far it has gone (--phase-progress,
+// from 0 to 1), the count (--count), the new session (data-lap) and the place of the runner
+// (--anchor-x, --anchor-y). A hidden sentence describes the cycle to screen readers.
+import home from "../content/home.json";
+
+const { phases, next, description } = home.pedagogy.cycle;
+---
+
+<div class="cycle">
+  <div class="cover cycle-scene" data-scene="spiral" aria-hidden="true">
+    <canvas></canvas>
+    {phases.map((phase, index) => (
+      <span class="cycle-tag" data-phase={index}>
+        {phase}
+      </span>
+    ))}
+    {[0, 1].map((lap) => (
+      <span class="cycle-next" data-lap={lap}>
+        {next}
+      </span>
+    ))}
+  </div>
+  <p class="visually-hidden">{description}</p>
+</div>
+
+<script>
+  import "../scripts/covers";
+</script>
+
+<style>
+  /* A square scene without the frame of a cover. */
+  .cycle-scene {
+    aspect-ratio: 1;
+    width: min(100%, 560px);
+    margin: 0 auto;
+    border: 0;
+    background: none;
+  }
+
+  /* The spiral fades out toward the bottom and in toward the top: it climbs without end. */
+  .cycle-scene canvas {
+    mask-image: linear-gradient(
+      transparent 4%,
+      #000000 34%,
+      #000000 66%,
+      transparent 96%
+    );
+  }
+
+  /* The name of the phase, in the style of « Copiée », and beside it the share of the turn done
+     in the phase, counting up: it fades in while rising a little, and fades out at its end. */
+  .cycle-tag {
+    --p: var(--phase-progress, 0.5);
+
+    position: absolute;
+    left: var(--anchor-x, 50%);
+    top: var(--anchor-y, 50%);
+    display: none;
+    color: var(--signal-text);
+    font: var(--text-weight) var(--size-ui) / 1 var(--font-text);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: clamp(0, min(var(--p), 1 - var(--p)) / 0.15, 1);
+    transform: translate(-50%, calc(22px - var(--p) * 14px));
+  }
+
+  .cycle-tag::after {
+    content: "\00a0" counter(cycle-count) "\00a0%";
+    counter-reset: cycle-count var(--count, 0);
+  }
+
+  .cycle-scene[data-phase="0"] .cycle-tag[data-phase="0"],
+  .cycle-scene[data-phase="1"] .cycle-tag[data-phase="1"],
+  .cycle-scene[data-phase="2"] .cycle-tag[data-phase="2"] {
+    display: block;
+  }
+
+  /* Each turn is a session: when one starts, « Séance suivante » above the runner, in the style
+     of the phase but in white. */
+  .cycle-next {
+    position: absolute;
+    left: var(--anchor-x, 50%);
+    top: var(--anchor-y, 50%);
+    display: none;
+    color: var(--text);
+    font: var(--text-weight) var(--size-ui) / 1 var(--font-text);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .cycle-scene[data-lap="0"] .cycle-next[data-lap="0"],
+  .cycle-scene[data-lap="1"] .cycle-next[data-lap="1"] {
+    display: block;
+    animation: cycle-next 1.4s linear forwards;
+  }
+
+  /* It comes out of the runner and flies away upward at one steady, brisk pace: it shows fully,
+     then fades out on its way. */
+  @keyframes cycle-next {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%);
+    }
+
+    18% {
+      opacity: 1;
+    }
+
+    40% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+      transform: translate(-50%, calc(-100% - 90px));
+    }
+  }
+</style>

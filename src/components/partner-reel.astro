@@ -1,0 +1,224 @@
+---
+// The logos of the partners, of equal visual weight: each is sized by 1 / √(width / height),
+// written in src/data/partners.json, so that a wide logo is lower and a square one taller. In one
+// row from 760 px; on a phone, a reel of three that scrolls up without end, where each logo moves
+// away toward the back at the top. A partner without a logo yet shows its name.
+// The list is written twice, for the reel to loop: the copy is hidden from screen readers.
+// Shared by the home and about pages.
+import type { ImageMetadata } from "astro";
+import partners from "../data/partners.json";
+
+const logos = import.meta.glob<{ default: ImageMetadata }>(
+  "../assets/partners/*.svg",
+  { eager: true },
+);
+const logoOf = (name: string) =>
+  logos[`../assets/partners/${name}.svg`]?.default;
+---
+
+<div class="partners-reel reveal">
+  <ul class="partner-list">
+    {[false, true].map((copy) =>
+      partners.map(({ name, logo, scale }) => {
+        const image = logo ? logoOf(logo) : undefined;
+        return (
+          <li class:list={{ "is-copy": copy }} aria-hidden={copy || undefined}>
+            {image ? (
+              <img
+                src={image.src}
+                width={image.width}
+                height={image.height}
+                alt={copy ? "" : name}
+                style={`--scale: ${scale}`}
+              />
+            ) : (
+              <span class="partner-name">{name}</span>
+            )}
+          </li>
+        );
+      }),
+    )}
+  </ul>
+</div>
+
+<script>
+  // The reel of a phone, driven frame by frame so that each logo has its own depth: it comes in
+  // at the bottom, and near the top it moves away toward the back (smaller, tilted back,
+  // fading) before it disappears. The CSS animation stays as a fallback. The loop runs only on
+  // a phone, with motion, while the reel is on screen. A finger held on the reel pauses it, so
+  // that a logo can be read (WCAG 2.2.2); it goes on when the finger is lifted or scrolls.
+  const reel = document.querySelector<HTMLElement>(".partners-reel");
+  if (reel && document.documentElement.dataset.motion === "on") {
+    const list = reel.querySelector("ul") as HTMLElement;
+    const items = [...list.children] as HTMLElement[];
+    const phone = matchMedia("(width < 760px)");
+    let offset = 0;
+    let before = 0;
+    let seen = false;
+    let running = false;
+    let held = false;
+    const hold = (on: boolean) => {
+      held = on;
+      reel.classList.toggle("is-held", on);
+    };
+    reel.addEventListener("pointerdown", (event) => {
+      if (event.pointerType === "touch") hold(true);
+    });
+    for (const type of ["pointerup", "pointercancel", "pointerleave"]) {
+      reel.addEventListener(type, () => hold(false));
+    }
+    // A long press would open the menu of the logo instead of holding the reel.
+    reel.addEventListener("contextmenu", (event) => {
+      if (held) event.preventDefault();
+    });
+    const clamp = (x: number) => Math.min(1, Math.max(0, x));
+    const start = () => {
+      if (running || !phone.matches || !seen) return;
+      running = true;
+      before = performance.now();
+      requestAnimationFrame(spin);
+    };
+    new IntersectionObserver(([entry]) => {
+      seen = entry.isIntersecting;
+      start();
+    }).observe(reel);
+    phone.addEventListener("change", start);
+
+    function spin(now: number) {
+      if (!phone.matches || !seen) {
+        running = false;
+        if (!phone.matches) {
+          list.style.animation = list.style.transform = "";
+          items.forEach((item) => {
+            item.style.transform = item.style.opacity = "";
+          });
+        }
+        return;
+      }
+      requestAnimationFrame(spin);
+      const row = items[0].offsetHeight;
+      const height = reel!.clientHeight;
+      // Held, the reel stands still: the time held doesn't count.
+      if (held) before = now;
+      offset =
+        (offset + ((now - before) * row) / 2800) % ((row * items.length) / 2);
+      before = now;
+      list.style.animation = "none";
+      list.style.transform = `translateY(${-offset}px)`;
+      items.forEach((item, index) => {
+        const place = (index * row + row / 2 - offset) / height; // 0 at the top, 1 at the bottom
+        const away = clamp((0.42 - place) / 0.42);
+        const coming = clamp((place - 0.62) / 0.38);
+        item.style.transform = `perspective(500px) translateZ(${-away * 320}px) rotateX(${away * 38}deg) scale(${1 - coming * 0.12})`;
+        item.style.opacity = String(Math.max(0, 1 - away * 1.1 - coming));
+      });
+    }
+  }
+</script>
+
+<style>
+  .partners-reel {
+    --row: 88px;
+
+    height: calc(var(--row) * 3);
+    overflow: hidden;
+    mask-image: linear-gradient(
+      transparent,
+      #000000 12%,
+      #000000 88%,
+      transparent
+    );
+  }
+
+  .partner-list {
+    --logo-size: 56px;
+
+    display: grid;
+    grid-auto-rows: var(--row);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    animation: reel 14s linear infinite;
+  }
+
+  @keyframes reel {
+    to {
+      transform: translateY(-50%);
+    }
+  }
+
+  li {
+    display: grid;
+    place-items: center;
+    transform-origin: 50% 100%;
+    will-change: transform, opacity;
+  }
+
+  img {
+    -webkit-touch-callout: none;
+    max-width: 100%;
+    width: auto;
+    height: calc(var(--logo-size) * var(--scale));
+    opacity: 0.82;
+    transition: opacity var(--duration-fast);
+  }
+
+  .partner-name {
+    font: var(--title-weight) calc(var(--logo-size) * 0.36) / 1
+      var(--font-title);
+    letter-spacing: var(--tracking-tight);
+    text-transform: uppercase;
+    white-space: nowrap;
+    opacity: 0.82;
+    transition: opacity var(--duration-fast);
+  }
+
+  li:hover img,
+  li:hover .partner-name {
+    opacity: 1;
+  }
+
+  /* Without motion, the five logos simply stand one under the other. */
+  :global(html[data-motion="off"]) .partners-reel {
+    height: auto;
+    mask-image: none;
+  }
+
+  :global(html[data-motion="off"]) .partner-list {
+    animation: none;
+  }
+
+  :global(html[data-motion="off"]) .is-copy {
+    display: none;
+  }
+
+  /* A finger held on the reel pauses it (see the script). */
+  .partners-reel.is-held .partner-list {
+    animation-play-state: paused;
+  }
+
+  @media (width >= 760px) {
+    .partners-reel {
+      height: auto;
+      overflow: visible;
+      mask-image: none;
+    }
+
+    .partner-list {
+      --logo-size: 64px;
+
+      grid-template-columns: repeat(5, 1fr);
+      grid-auto-rows: auto;
+      gap: var(--space-3) var(--space-6);
+      animation: none;
+    }
+
+    li {
+      height: 110px;
+    }
+
+    .is-copy {
+      display: none;
+    }
+  }
+</style>

@@ -1,26 +1,166 @@
 ---
-// Temporary home page, inside the shared layout (step 7a); step 7b builds the real one.
-import SiteLayout from "../layouts/site-layout.astro";
+// The home page (docs/mockups/home-site.html): the hero and its cube, the partners, the
+// audiences, the domains, the pedagogy with the cycle of a lesson, « Qui suis-je ? » with the
+// key figures, then the call to action.
+import DomainCards from "../components/domain-cards.astro";
+import HomeHero from "../components/home-hero.astro";
+import KeyFigures from "../components/key-figures.astro";
+import LessonCycle from "../components/lesson-cycle.astro";
+import PartnerReel from "../components/partner-reel.astro";
+import PedagogySteps from "../components/pedagogy-steps.astro";
+import SectionHeading from "../components/section-heading.astro";
+import home from "../content/home.json";
 import fr from "../i18n/fr.json";
+import SiteLayout from "../layouts/site-layout.astro";
+import { href } from "../lib/url";
+
+const { partners, audiences, domains, pedagogy, about } = home;
 ---
 
 <SiteLayout title={fr.site.title} description={fr.site.description} cta>
-  <section class="section">
+  <HomeHero />
+
+  <section class="section" aria-labelledby="partners-title">
     <div class="wrap">
-      <h1>{fr.site.name}</h1>
-      <p class="lead">{fr.home.lead}</p>
+      <SectionHeading
+        title={partners.title}
+        ghost={partners.ghost}
+        id="partners-title"
+      />
+      <PartnerReel />
+    </div>
+  </section>
+
+  <section class="section is-next" aria-labelledby="audiences-title">
+    <div class="wrap">
+      <SectionHeading
+        title={audiences.title}
+        ghost={audiences.ghost}
+        id="audiences-title"
+      />
+      <ul class="audiences">
+        {audiences.items.map(({ title, text }) => (
+          <li class="reveal">
+            <h3>{title}</h3>
+            <p>{text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section
+    class="section is-next"
+    id="formations"
+    aria-labelledby="domains-title"
+  >
+    <div class="wrap">
+      <SectionHeading
+        title={domains.title}
+        ghost={domains.ghost}
+        id="domains-title"
+      />
+      <p class="lead reveal">{domains.lead}</p>
+      <DomainCards />
+    </div>
+  </section>
+
+  <section class="section is-next" aria-labelledby="pedagogy-title">
+    <div class="wrap">
+      <SectionHeading
+        title={pedagogy.title}
+        ghost={pedagogy.ghost}
+        id="pedagogy-title"
+      />
+      <div class="pedagogy">
+        <PedagogySteps compact />
+        <LessonCycle />
+      </div>
+    </div>
+  </section>
+
+  <section class="section is-next" id="a-propos" aria-labelledby="about-title">
+    <div class="wrap">
+      <SectionHeading
+        title={about.title}
+        ghost={about.ghost}
+        id="about-title"
+      />
+      <div class="about reveal">
+        <h3 class="about-name">{about.name}</h3>
+        <p class="lead">{about.lead}</p>
+        <KeyFigures />
+        <a class="link" href={href("/about/")}>
+          {about.more}
+        </a>
+      </div>
     </div>
   </section>
 </SiteLayout>
 
 <style>
-  .section {
-    padding-top: calc(var(--header-height) + var(--space-section));
+  /* The sections after the partners follow on without their top padding. */
+  .section.is-next {
+    padding-top: 0;
   }
 
-  h1 {
-    margin: 0 0 var(--space-4);
-    font: var(--title-weight) var(--size-display) / 1 var(--font-title);
+  /* Audiences: plain columns under a rule. */
+  .audiences {
+    display: grid;
+    gap: var(--space-9);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .audiences li {
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--line);
+  }
+
+  .audiences h3 {
+    margin: 0;
+    font: 700 var(--size-card-title) / 1.2 var(--font-title);
+    letter-spacing: var(--tracking-card);
+  }
+
+  .audiences p {
+    margin: var(--space-3) 0 0;
+    color: var(--secondary);
+  }
+
+  /* The steps, then the cycle of a lesson; from 1100 px, the cycle on the right of the steps. */
+  .pedagogy {
+    display: grid;
+    gap: var(--space-14);
+  }
+
+  /* No photo in the first release: the text alone, aligned left. */
+  .about {
+    max-width: var(--width-narrow);
+  }
+
+  .about-name {
+    margin: 0;
+    font: var(--title-weight) var(--size-name) / 1.05 var(--font-title);
     letter-spacing: var(--tracking-title);
+  }
+
+  .about .lead {
+    margin-top: var(--space-5);
+  }
+
+  @media (width >= 900px) {
+    .audiences {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-8);
+    }
+  }
+
+  @media (width >= 1100px) {
+    .pedagogy {
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+    }
   }
 </style>

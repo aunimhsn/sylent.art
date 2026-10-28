@@ -1,0 +1,61 @@
+{
+  "hero": {
+    "title": "Je prends vos apprenants par la main,",
+    "highlight": "jusqu’à la maîtrise.",
+    "name": "Aunim Hassan",
+    "sub": ", formateur en informatique depuis 2021, pour les écoles, les organismes de formation et les entreprises.",
+    "contact": "Me contacter",
+    "courses": "Voir les formations"
+  },
+  "cube": [
+    ["Le sens", "Pourquoi ?"],
+    ["Par an depuis 2023", "900+ h"],
+    ["Pas à pas", "Patience"],
+    ["Formateur depuis", "2021"],
+    ["En toute sérénité", "Bienveillance"],
+    ["Écoles et organismes", "5"]
+  ],
+  "partners": {
+    "title": "Partenaires",
+    "ghost": "Confiance"
+  },
+  "audiences": {
+    "title": "Pour qui ?",
+    "ghost": "Collaborer",
+    "items": [
+      {
+        "title": "Écoles",
+        "text": "Un intervenant passionné et exigeant qui saura donner la soif d’apprendre."
+      },
+      {
+        "title": "Organismes de formation",
+        "text": "Un formateur expert dans son domaine, pour les sessions de vos clients."
+      },
+      {
+        "title": "Entreprises",
+        "text": "Former vos équipes techniques, directement ou via un organisme."
+      }
+    ]
+  },
+  "domains": {
+    "title": "Formations",
+    "ghost": "Apprendre",
+    "lead": "Huit domaines, des modules indépendants et des durées toujours adaptables, sur site ou à distance."
+  },
+  "pedagogy": {
+    "title": "Pédagogie",
+    "ghost": "Accompagner",
+    "cycle": {
+      "phases": ["Théorie", "Pratique", "Correction"],
+      "next": "Séance suivante",
+      "description": "Le cycle d’une séance : 20 % de théorie, 50 % de pratique, 30 % de correction, puis on recommence."
+    }
+  },
+  "about": {
+    "title": "Qui suis-je ?",
+    "ghost": "Transmettre",
+    "name": "Aunim Hassan",
+    "lead": "J’aime apprendre et enseigner ce qui me passionne. C’est pourquoi, aujourd’hui, je mets à profit mes connaissances et mon savoir-faire afin de vous fournir les meilleurs outils et les compétences nécessaires à la réalisation de vos projets.",
+    "more": "En savoir plus"
+  }
+}
