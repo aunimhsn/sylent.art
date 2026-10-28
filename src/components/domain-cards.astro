@@ -22,7 +22,12 @@ const domains = (await getCollection("offers")).sort(
         <canvas />
         {data.isNew && <span class="new">{fr.cards.new}</span>}
       </div>
-      <h3>{data.title}</h3>
+      <h3>
+        {data.title}
+        {data.isNew && (
+          <span class="visually-hidden">{fr.cards.newHidden}</span>
+        )}
+      </h3>
       <p>{data.summary}</p>
       <a
         class="card-more"
@@ -190,9 +195,11 @@ const domains = (await getCollection("offers")).sort(
 
 <style>
   /* The back covers the card above its white band, which stays in place on both sides and
-     keeps growing a little under the pointer. */
+     keeps growing a little under the pointer. It lets the pointer through to the link of the
+     card, which covers the whole card. */
   .card-back {
     position: absolute;
+    pointer-events: none;
     inset: 0 0 var(--space-14);
     display: flex;
     flex-direction: column;

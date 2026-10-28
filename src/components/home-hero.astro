@@ -22,8 +22,7 @@ import { href } from "../lib/url";
   <div class="wrap">
     <div class="hero-text">
       <h1 class="hero-title intro" id="hero-title">
-        {home.hero.title}
-        <span class="highlight">{home.hero.highlight}</span>
+        {home.hero.title} <span class="highlight">{home.hero.highlight}</span>
       </h1>
       <p class="hero-sub intro">
         <strong>{home.hero.name}</strong>
@@ -55,7 +54,8 @@ import { href } from "../lib/url";
 
 <script>
   import "../scripts/hero-intro";
-  import "../scripts/cube";
+  // Three.js is large: the intro, which shows the headline, doesn't wait for it.
+  import("../scripts/cube");
 </script>
 
 <style>

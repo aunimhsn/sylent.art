@@ -251,6 +251,12 @@ canvas {
   inset: 0;
 }
 
+/* The card hides what overflows it: the focus ring goes inside the white band, in its text color. */
+.card-more:focus-visible {
+  outline-color: var(--on-accent);
+  outline-offset: -6px;
+}
+
 .card:hover .card-more {
   padding-block: var(--space-5);
 }

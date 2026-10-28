@@ -18,6 +18,8 @@ if (root.dataset.motion === "on") {
 }
 
 function intro() {
+  // Too late: the hero has already been shown by its fallback, don't play it again.
+  if (root.dataset.introStarted) return;
   const header = document.getElementById("header");
   const split = SplitText.create(".hero-title", {
     type: "lines",
