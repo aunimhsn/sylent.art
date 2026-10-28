@@ -133,7 +133,10 @@
      address: it fades in while rising a little when the phase starts, follows the runner, and
      fades out as the phase ends. Each phase lasts its share of the 10 s of a turn. */
   .app-cycle .app-cycle-scene { aspect-ratio: 1; width: min(100%, 560px); margin: 0 auto; border: 0; background: none; }
-  .app-cycle-tag { position: absolute; left: var(--anchor-x, 50%); top: var(--anchor-y, 50%); display: none; color: var(--signal-text); font: var(--text-weight) 15px/1 var(--font-text); white-space: nowrap; pointer-events: none; animation: app-cycle-tag ease both; }
+  .app-cycle-tag { position: absolute; left: var(--anchor-x, 50%); top: var(--anchor-y, 50%); display: none; color: var(--signal-text); font: var(--text-weight) 15px/1 var(--font-text); font-variant-numeric: tabular-nums; white-space: nowrap; pointer-events: none; animation: app-cycle-tag ease both; }
+  /* Beside the name, the share of the turn done in the phase, counting up to 20, 50 or 30 % (a
+     CSS counter shows the number that covers.js gives in --count). */
+  .app-cycle-tag::after { content: "\00a0" counter(cycle-count) "\00a0%"; counter-reset: cycle-count var(--count, 0); }
   .app-cycle-scene[data-phase="0"] .app-cycle-tag:nth-of-type(1) { display: block; animation-duration: 2s; }
   .app-cycle-scene[data-phase="1"] .app-cycle-tag:nth-of-type(2) { display: block; animation-duration: 5s; }
   .app-cycle-scene[data-phase="2"] .app-cycle-tag:nth-of-type(3) { display: block; animation-duration: 3s; }

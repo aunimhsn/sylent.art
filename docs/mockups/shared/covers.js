@@ -378,6 +378,8 @@ if (coverRenderer) {
       return { scene, camera: view(5.4, 3.0, 7.0, [0, 0, 0]), anchor: runner, update(t) {
         const u = (t * 0.1 + 0.32) % 1;
         this.phase = u < 0.2 ? 0 : u < 0.7 ? 1 : 2;
+        // The share of the turn done in this phase, in percent: up to 20, 50 or 30.
+        this.count = (u - [0, 0.2, 0.7][this.phase]) * 100;
         lit.geometry.setDrawRange(0, Math.max(2, Math.round(u * steps) + 1));
         runner.position.copy(at(u));
         wake(runner.position);
@@ -415,6 +417,7 @@ if (coverRenderer) {
         const u = (t * 0.1 + 0.32) % 1;
         const phase = u < 0.2 ? 0 : u < 0.7 ? 1 : 2;
         this.phase = phase;
+        this.count = (u - phases[phase][0]) * 100;
         const a = angle(u);
         runner.position.set(Math.cos(a) * middle, phases[phase][2] + 0.1, -Math.sin(a) * middle);
         wake(runner.position);
@@ -1206,6 +1209,7 @@ if (coverRenderer) {
     item.update(item.time);
     // A scene may report what it shows (the phase of the cycle of a lesson), for the text beside it.
     if (item.phase !== undefined && item.cover.dataset.phase !== String(item.phase)) item.cover.dataset.phase = item.phase;
+    if (item.count !== undefined) item.cover.style.setProperty("--count", String(Math.min(99, Math.floor(item.count + 1))));
     coverRenderer.setViewport(0, 0, width, height);
     coverRenderer.setScissor(0, 0, width, height);
     coverRenderer.setScissorTest(true);
