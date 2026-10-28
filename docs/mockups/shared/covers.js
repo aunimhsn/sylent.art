@@ -350,10 +350,10 @@ if (coverRenderer) {
         group.rotation.set(0.3, t * 0.4, 0);
       } };
     },
-    // ── The cycle of a lesson (pedagogy of the home page, a test) ──
-    // Theory 20 %, practice 50 %, correction 30 %, then again; each scene reports its phase and
-    // names its runner, which the name of the phase follows. The cycles start mid-practice, so that
-    // a still scene shows the practice.
+    // ── The cycle of a lesson (pedagogy of the home page) ──
+    // Theory 20 %, practice 50 %, correction 30 %, then again; the scene reports its phase and
+    // names its runner, which the name of the phase follows. The cycle starts mid-practice, so
+    // that a still scene shows the practice.
 
     // Spiral: the cycle climbs a step at each turn. The turns below are done (white), the turn of
     // the runner lights up in the signal color behind it, the turns above are still to come.
@@ -391,44 +391,6 @@ if (coverRenderer) {
         wake(runner.position);
         group.position.y = -u * pitch;
         group.rotation.y = Math.sin(t * 0.25) * 0.15;
-      } };
-    },
-    // Ring: the cycle as three blocks around a ring, as tall as their weight; the runner goes round,
-    // and the block it crosses lights up.
-    ring() {
-      const scene = new THREE.Scene();
-      const group = new THREE.Group();
-      scene.add(group);
-      const outer = 1.65, inner = 1.05, gap = 0.035;
-      const phases = [[0, 0.2, 0.3], [0.2, 0.5, 0.75], [0.7, 0.3, 0.42]]; // start, share, height
-      const angle = u => Math.PI / 2 - u * Math.PI * 2;
-      const blocks = phases.map(([start, share, height]) => {
-        const high = angle(start) - gap, low = angle(start + share) + gap;
-        const shape = new THREE.Shape();
-        shape.absarc(0, 0, outer, low, high, false);
-        shape.absarc(0, 0, inner, high, low, true);
-        shape.closePath();
-        const geometry = new THREE.ExtrudeGeometry(shape, { depth: height, bevelEnabled: false, curveSegments: 64 });
-        geometry.rotateX(-Math.PI / 2);
-        const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ color: FILL }));
-        mesh.add(outline(geometry, 0.9, 30));
-        group.add(mesh);
-        return mesh;
-      });
-      const middle = (outer + inner) / 2;
-      const runner = accent(dot(0.06));
-      group.add(runner);
-      const wake = trail(group, 8, 0.04, 3);
-      return { scene, camera: view(0, 4.6, 6.4, [0, 0.1, 0]), anchor: runner, update(t) {
-        const u = (t * 0.1 + 0.32) % 1;
-        const phase = u < 0.2 ? 0 : u < 0.7 ? 1 : 2;
-        this.phase = phase;
-        this.count = (u - phases[phase][0]) * 100;
-        const a = angle(u);
-        runner.position.set(Math.cos(a) * middle, phases[phase][2] + 0.1, -Math.sin(a) * middle);
-        wake(runner.position);
-        blocks.forEach((block, k) => glow(block, k === phase ? 1 : 0));
-        group.rotation.y = 0.35 + Math.sin(t * 0.2) * 0.2;
       } };
     },
     // ── The modules of the offer list ──
