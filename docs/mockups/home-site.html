@@ -108,6 +108,27 @@
   .app-card-back.is-still .app-back-reel { display: flex; flex-direction: column; justify-content: center; mask-image: none; }
   .app-card-back.is-still .app-back-list span { white-space: normal; }
 
+  /* ── Pedagogy: a test on a computer (?pedagogy=cycle, a tab of home.html) ──────────── */
+
+  /* From 1100 px, the cycle of a lesson on the left, drawn in the signal color (theory 20 %,
+     practice 50 %, correction 30 %, then again), and the four steps as glass cards, two by two,
+     on the right. Below, nothing changes. */
+  .app-cycle { display: none; }
+  @media (min-width: 1100px) {
+    .app-pedagogy.is-cycle { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+    .app-pedagogy.is-cycle .app-cycle { display: block; }
+    .app-pedagogy.is-cycle .app-steps { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .app-pedagogy.is-cycle .app-steps li { padding: 26px 26px 28px; border-radius: var(--radius-card); background-color: var(--glass); backdrop-filter: blur(var(--glass-blur)) saturate(1.2); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.2); }
+    .app-pedagogy.is-cycle .app-step-number { font-size: 52px; }
+  }
+  .app-cycle svg { display: block; width: min(100%, 520px); height: auto; margin-inline: auto; overflow: visible; }
+  .app-cycle-track { fill: none; stroke: var(--line); stroke-width: 2; }
+  .app-cycle-arc { fill: none; stroke: var(--signal); stroke-width: 4; transition: opacity .6s; }
+  .app-cycle-label { fill: var(--dim); font: 700 17px var(--font-title); letter-spacing: -0.01em; transition: fill .4s; }
+  .app-cycle-label.is-on { fill: var(--text); }
+  .app-cycle-share { fill: var(--text); font: 200 76px var(--font-title); letter-spacing: -0.04em; text-anchor: middle; }
+  .app-cycle-phase { fill: var(--secondary); font: 700 19px var(--font-title); text-anchor: middle; }
+
   /* ── About ──────────────────────────────────────────────────────────────────────── */
 
   /* No photo for now: the text alone, aligned left. */
@@ -177,11 +198,33 @@
       </div>
     </section>`;
 
+  // The cycle of a lesson, for the test of the pedagogy: [phase, share of the circle].
+  const CYCLE = [["Théorie", 0.2], ["Pratique", 0.5], ["Correction", 0.3]];
+  const CYCLE_RADIUS = 150, CYCLE_LENGTH = 2 * Math.PI * CYCLE_RADIUS, CYCLE_GAP = 8;
+  const cycleStarts = CYCLE.map((_, k) => CYCLE.slice(0, k).reduce((sum, [, share]) => sum + share, 0));
+  // Each label stands outside the circle, at the middle of its arc (0 at the top, clockwise).
+  function cycleLabel([phase], k) {
+    const angle = (cycleStarts[k] + CYCLE[k][1] / 2) * 2 * Math.PI;
+    const x = 200 + Math.sin(angle) * (CYCLE_RADIUS + 26), y = 200 - Math.cos(angle) * (CYCLE_RADIUS + 26);
+    const anchor = Math.abs(Math.sin(angle)) < 0.3 ? "middle" : Math.sin(angle) > 0 ? "start" : "end";
+    return `<text class="app-cycle-label" x="${x.toFixed(1)}" y="${(y + 6).toFixed(1)}" text-anchor="${anchor}">${phase}</text>`;
+  }
+  const cycleFigure = () => `
+    <div class="app-cycle">
+      <svg viewBox="0 0 400 400" role="img" aria-label="Le cycle d’une séance${NB}: 20${NB}% de théorie, 50${NB}% de pratique, 30${NB}% de correction, puis on recommence.">
+        <circle class="app-cycle-track" cx="200" cy="200" r="${CYCLE_RADIUS}"/>
+        <g transform="rotate(-90 200 200)">${CYCLE.map(() => `<circle class="app-cycle-arc" cx="200" cy="200" r="${CYCLE_RADIUS}" stroke-dasharray="0 ${CYCLE_LENGTH}"/>`).join("")}</g>
+        ${CYCLE.map(cycleLabel).join("")}
+        <text class="app-cycle-share" x="200" y="210"></text>
+        <text class="app-cycle-phase" x="200" y="248"></text>
+      </svg>
+    </div>`;
+
   const pedagogy = `
     <section class="app-section" aria-labelledby="pedagogy-title" style="padding-top:0">
       <div class="app-wrap">
         ${heading("Pédagogie", "Accompagner", "pedagogy-title")}
-        ${stepList()}
+        <div class="app-pedagogy${query.get("pedagogy") === "cycle" ? " is-cycle" : ""}">${cycleFigure()}${stepList()}</div>
       </div>
     </section>`;
 
@@ -202,6 +245,46 @@
 
   document.getElementById("content").innerHTML = hero + partners + audiences + domains + pedagogy + about + siteCta() + siteFooter();
   spinPartners();
+
+  // The cycle draws itself around the circle at a steady pace, phase after phase, holds once
+  // complete, fades and starts again; the center names the phase being drawn. Without motion it
+  // stands complete, on the practice.
+  const cycle = document.querySelector(".is-cycle .app-cycle");
+  if (cycle) {
+    const arcs = [...cycle.querySelectorAll(".app-cycle-arc")];
+    const labels = [...cycle.querySelectorAll(".app-cycle-label")];
+    const share = cycle.querySelector(".app-cycle-share"), phase = cycle.querySelector(".app-cycle-phase");
+    const showCenter = (big, small) => { share.textContent = big; phase.textContent = small; };
+    const drawCycle = drawn => arcs.forEach((arc, k) => {
+      const start = cycleStarts[k] * CYCLE_LENGTH + CYCLE_GAP / 2, length = CYCLE[k][1] * CYCLE_LENGTH - CYCLE_GAP;
+      const done = Math.min(1, Math.max(0, (drawn - cycleStarts[k]) / CYCLE[k][1])) * length;
+      arc.setAttribute("stroke-dasharray", `${done} ${CYCLE_LENGTH}`);
+      arc.setAttribute("stroke-dashoffset", String(-start));
+    });
+    if (reduced) {
+      drawCycle(1);
+      labels.forEach(label => label.classList.add("is-on"));
+      showCenter(`50${NB}%`, "Pratique");
+    } else {
+      const DURATION = 10000;
+      let seen = false, begin = performance.now();
+      new IntersectionObserver(([entry]) => { if (entry.isIntersecting && !seen) begin = performance.now(); seen = entry.isIntersecting; }).observe(cycle);
+      const turn = now => {
+        requestAnimationFrame(turn);
+        if (!seen) return;
+        const time = ((now - begin) % DURATION) / DURATION;
+        const drawn = Math.min(1, time / 0.8);
+        const fading = time > 0.93;
+        drawCycle(drawn);
+        arcs.forEach(arc => { arc.style.opacity = fading ? "0" : "1"; });
+        labels.forEach((label, k) => label.classList.toggle("is-on", !fading && drawn > cycleStarts[k]));
+        const current = CYCLE.findIndex((_, k) => drawn < cycleStarts[k] + CYCLE[k][1]);
+        if (current >= 0) showCenter(`${Math.round(CYCLE[current][1] * 100)}${NB}%`, CYCLE[current][0]);
+        else showCenter("", "Et on recommence");
+      };
+      requestAnimationFrame(turn);
+    }
+  }
 
   // The cards of the domains: under the pointer (or with the keyboard focus) a card turns half a
   // turn, in one smooth movement, and shows its modules on its back: in an endless reel, as the
