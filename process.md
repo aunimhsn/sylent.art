@@ -45,7 +45,7 @@ Goal: agree on **what** the site says and does before deciding **how**.
 
 ## 3. Wireframes
 
-Goal: agree on the **layout** of each page type (home, course list, course, article, about, contact), without colors or code, in a format the owner can edit.
+Goal: agree on the **layout** of each page type (home, course list, course, about, contact), without colors or code, in a format the owner can edit.
 
 The `excalidraw-wireframes` skill carries out this phase: its Python helpers write the file and preview it.
 

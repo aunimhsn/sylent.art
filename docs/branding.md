@@ -1,6 +1,6 @@
 # Branding
 
-The visual identity of sylent.art and its design system: every design decision taken with the owner during the mock-up (step 4 of [roadmap.md](../roadmap.md)) and the design tokens written from it (step 5). The build (steps 6 to 11) implements exactly these tokens and rules, in one place, so that a color or a size changes in one file.
+The visual identity of sylent.art and its design system: every design decision taken with the owner during the mock-up (step 4 of [roadmap.md](../roadmap.md)) and the design tokens written from it (step 5). The build (steps 6 to 10) implements exactly these tokens and rules, in one place, so that a color or a size changes in one file.
 
 A **design token** is a named value that the components use instead of a raw value: a button writes `padding: var(--space-4) var(--space-7)`, not `16px 28px`, so that the spacing of every button changes in one line. The tokens are the CSS variables of `:root` in `docs/mockups/shared/site.css`; the build copies them into one stylesheet.
 

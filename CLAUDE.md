@@ -50,12 +50,12 @@ Two folders are the exchange area between the owner and Claude Code. They are ig
 
 - `inputs/`: what the owner gives for context: screenshots, examples, references, copied texts (e.g. the content of the former site). Read them when the owner points to them; never commit, move or delete them unless asked.
 - `outputs/`: what Claude Code produces for the owner: reports, code review notes, previews, screenshots. Name them `<YYYY-MM-DD>-<subject>.<ext>` when they are meant to be kept for a while.
-- Anything meant to last goes elsewhere and is committed: documentation in `docs/`, images used by the site in the assets folder chosen in `docs/technical-choices.md`, course and article content in its content folder.
+- Anything meant to last goes elsewhere and is committed: documentation in `docs/`, images used by the site in the assets folder chosen in `docs/technical-choices.md`, course content in its content folder.
 
 ## Process
 
 - Follow the phases of `process.md`: specifications, wireframes, mock-up, design system, then the build, one pull request per step.
-- For each page type (home, course list, course, article, about, contact), start with editable Excalidraw wireframes in `docs/wireframes/` (grayscale, one group per block; `excalidraw-wireframes` skill), and build the HTML mock-up only once the owner has approved the layout (`html-mockups` skill).
+- For each page type (home, course list, course, about, contact), start with editable Excalidraw wireframes in `docs/wireframes/` (grayscale, one group per block; `excalidraw-wireframes` skill), and build the HTML mock-up only once the owner has approved the layout (`html-mockups` skill).
 - During the specifications, check the documentation, limits and terms of use of every external service (GitHub Pages, a form service if any, analytics if any), and record its limits and the risks the owner accepts, with their date, in a note of `docs/` linked from `roadmap.md` (e.g. `docs/github-pages-usage.md`).
 - For the mock-up, compare 3 or 4 styles that explore new directions for this site. The site must read as professional and trustworthy for schools and training organizations. `design-journal.md` records the past design experiences: use it as a source of ideas for one style at most, never as default rules. Give each open decision its own tab group on the mock-up page, and remove it once decided.
 
@@ -85,7 +85,7 @@ Follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.
 | `feat` | A new page, section or feature for the visitor. |
 | `fix` | A bug fix (broken link, layout issue, wrong content). |
 | `docs` | Documentation only (`README.md`, `specs.md`, `roadmap.md`, `CLAUDE.md`). |
-| `content` | Site content only: a training course, an article, a text change. |
+| `content` | Site content only: a training course, a text change. |
 | `style` | Formatting with no behavior change. |
 | `refactor` | A change that neither fixes a bug nor adds a feature. |
 | `perf` | A performance improvement (image weight, loading). |
