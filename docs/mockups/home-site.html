@@ -126,6 +126,10 @@
   .app-card-back { position: absolute; inset: 0 0 56px; display: flex; flex-direction: column; padding: 26px 26px 0; visibility: hidden; }
   .app-card.is-flipped > :not(.app-card-back, .app-card-more) { visibility: hidden; }
   .app-card.is-flipped .app-card-back { visibility: visible; }
+  /* The card turns half a turn: its back side and the text of its band are mirrored back, so that
+     they read the right way once the card shows its back. */
+  .app-card.is-flipped .app-card-back, .app-card.is-flipped .app-card-more span { transform: scaleX(-1); }
+  .app-card-more span { display: inline-block; }
   /* The hover is decided by the place of the card, not by its turning box (see the script). */
   .app-card.is-hovered .app-card-more { padding-block: 19px; }
   .app-card-back h4 { margin: 0 0 10px; font: 800 12px/1.3 var(--font-title); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
@@ -292,15 +296,17 @@
   requestAnimationFrame(spinReel);
 
   // Test, on the card of web development only: under the pointer (or with the keyboard focus) the
-  // card flips, a quarter turn to its edge, then a quarter turn back with its back side, and shows
-  // its modules in an endless reel, as the partners on a phone. The glass of the card flattens 3D,
-  // so the flip swaps the sides at its middle instead of turning a real back face. The card
-  // doesn't tilt, so that both movements don't fight.
+  // card turns half a turn, in one smooth movement, and shows its modules in an endless reel, as
+  // the partners on a phone. The glass of the card flattens 3D, so the sides are swapped when the
+  // card passes its edge, instead of turning a real back face. The card doesn't tilt, so that both
+  // movements don't fight.
   (function flipCard() {
     const domain = DOMAINS.find(({ slug }) => slug === "developpement-web");
     const card = document.querySelector(`[data-domain="${domain.slug}"]`);
     if (!card || !matchMedia("(hover: hover)").matches) return;
     card.classList.remove("app-tilt");
+    const band = card.querySelector(".app-card-more");
+    band.innerHTML = `<span>${band.textContent}</span>`;
     card.insertAdjacentHTML("beforeend", `
       <div class="app-card-back" aria-hidden="true">
         <h4>${domain.modules.length} modules</h4>
@@ -329,20 +335,23 @@
       requestAnimationFrame(spin);
     }
     let flipped = false, turn = null;
+    // The sides follow the angle: past the edge (90°), the card shows its back.
+    const sides = back => {
+      if (back === card.classList.contains("is-flipped")) return;
+      card.classList.toggle("is-flipped", back);
+      if (back && !spinning && !reduced) { spinning = true; before = 0; requestAnimationFrame(spin); }
+    };
     function flip(open) {
       if (open === flipped) return;
       flipped = open;
-      const swap = () => {
-        card.classList.toggle("is-flipped", open);
-        if (open && !spinning && !reduced) { spinning = true; before = 0; requestAnimationFrame(spin); }
-      };
       if (turn) turn.kill();
-      if (reduced || !window.gsap) { swap(); return; }
-      gsap.set(card, { transformPerspective: 1000 });
-      turn = gsap.timeline()
-        .to(card, { rotationY: open ? 90 : -90, duration: 0.2, ease: "power2.in" })
-        .add(swap)
-        .fromTo(card, { rotationY: open ? -90 : 90 }, { rotationY: 0, duration: 0.34, ease: "power2.out" });
+      if (reduced || !window.gsap) {
+        card.style.transform = open ? "rotateY(180deg)" : "";
+        sides(open);
+        return;
+      }
+      // From where it stands, so that a pointer that leaves halfway turns the card back smoothly.
+      turn = gsap.to(card, { rotationY: open ? 180 : 0, transformPerspective: 1000, duration: 0.8, ease: "power2.inOut", onUpdate: () => sides(gsap.getProperty(card, "rotationY") > 90) });
     }
     // The pointer is inside when it is over the place of the card in the grid: the turning card
     // gets thin at its edge, so its own box would let the pointer out and in again, without end.
