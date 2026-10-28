@@ -235,8 +235,9 @@ html[data-motion="off"] .app-partner-list .is-copy { display: none; }
 .app-steps { display: grid; gap: 44px; margin: 0; padding: 0; list-style: none; }
 @media (min-width: 640px) { .app-steps { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1100px) { .app-steps { grid-template-columns: repeat(4, 1fr); gap: 32px; } }
-/* The font of the numerals is still to choose (?numerals=…, a tab of home.html). */
-.app-step-number { font: var(--step-weight, 200) 64px/1 var(--step-font, var(--font-title)); letter-spacing: var(--step-tracking, -0.02em); }
+/* Roman numerals in Bodoni Moda, whose contrast answers the thin and bold Manrope; the page loads
+   only its letters I, V and X. */
+.app-step-number { font: 400 64px/1 "Bodoni Moda", serif; letter-spacing: 0; }
 .app-step-rule { position: relative; height: 1px; margin: 20px 0 22px; overflow: hidden; background: var(--line); }
 .app-step-rule::after { content: ""; position: absolute; inset: 0; background: var(--text); transform: scaleX(var(--progress, 1)); transform-origin: left; }
 .app-steps h3 { margin: 0; font: 700 22px/1.2 var(--font-title); letter-spacing: -0.025em; }

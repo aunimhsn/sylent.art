@@ -17,7 +17,7 @@ The visual identity of sylent.art and every design decision taken with the owner
 ## Logo
 
 - The **mark** (three slanted bars forming an S, `logo-sylent.svg` of the charter of sylent-courses) and the **wordmark** « SYLENT » (Montserrat 800, letter spacing -0.195 em), both white on the dark background.
-- The wordmark is drawn as an SVG path, so that the site loads no third font.
+- The wordmark is drawn as an SVG path, so that the site loads no third font for it.
 - Header: mark and wordmark side by side, mark 34 px high, gap one third of the mark, letters half of its height.
 - Footer: the wordmark alone, large (`clamp(220px, 38vw, 490px)` wide), set astride the edge between the call to action and the footer.
 
@@ -57,7 +57,8 @@ On 2026-10-28 three redder colors were compared, for fear of looking like the br
 
 - **Titles and interface**: Manrope (SIL Open Font License), weights 200 to 800; titles in 800 with a letter spacing of -0.045 em.
 - **Text**: Anaheim medium (500, SIL Open Font License), chosen after comparing Roboto, Open Sans, Google Sans, Alegreya Sans, Roboto Condensed and Anaheim. Anaheim has no italic: the browser slants it.
-- Both fonts are self-hosted by the site (Google Fonts in the mock-up only), loaded with `font-display: block`.
+- **Numerals of the pedagogy**: Bodoni Moda 400 (SIL Open Font License), for the Roman numerals I to IV of the steps (home and about pages), chosen after comparing Manrope, Cinzel, Cormorant Garamond, Instrument Serif and Fraunces: its strong contrast answers the thin and bold Manrope. The one exception to the two fonts: only its letters I, V and X are loaded (`text=IVX` on Google Fonts, a subset of a few kilobytes once self-hosted).
+- The fonts are self-hosted by the site (Google Fonts in the mock-up only), loaded with `font-display: block`.
 
 | Role | Font | Size / line height | Notes |
 |---|---|---|---|
@@ -68,6 +69,7 @@ On 2026-10-28 three redder colors were compared, for fear of looking like the br
 | Lead | Anaheim 500 | 18 px | `--secondary`, at most 58 characters wide |
 | Body | Anaheim 500 | 17 px / 1.6 | |
 | Card title | Manrope 700 | 21 px / 1.2 | -0.025 em |
+| Step numeral | Bodoni Moda 400 | 64 px / 1 | Roman numerals I to IV, decorative (`aria-hidden`) |
 | Card text | Anaheim 500 | 15.5 px / 1.55 | `--secondary` |
 | Domain of a module | Manrope 600 | 14 px | `--dim`, just under the module name |
 | Navigation | Manrope 600 | 15 px | `--secondary`, white on hover |
