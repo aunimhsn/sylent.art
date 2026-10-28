@@ -350,6 +350,77 @@ if (coverRenderer) {
         group.rotation.set(0.3, t * 0.4, 0);
       } };
     },
+    // ── The cycle of a lesson (pedagogy of the home page, a test) ──
+    // Theory 20 %, practice 50 %, correction 30 %, then again; each scene reports its phase. The
+    // cycles start mid-practice, so that a still scene shows the practice.
+
+    // Spiral: the cycle climbs a step at each turn. The turns below are done (white), the turn of
+    // the runner lights up in the signal color behind it, the turns above are still to come.
+    spiral() {
+      const scene = new THREE.Scene();
+      const group = new THREE.Group();
+      scene.add(group);
+      const radius = 1.35, pitch = 0.62, steps = 160;
+      const at = u => v(Math.cos(Math.PI / 2 - u * Math.PI * 2) * radius, u * pitch, -Math.sin(Math.PI / 2 - u * Math.PI * 2) * radius);
+      const turn = k => Array.from({ length: steps + 1 }, (_, i) => at(k + i / steps));
+      // Five turns around the one of the runner; the group slides down one step per turn, so that
+      // the loop has no seam.
+      [-2, -1, 1, 2].forEach(k => group.add(polyline(turn(k), k < 0 ? 0.75 : 0.18)));
+      group.add(polyline(turn(0), 0.18));
+      const lit = accent(polyline(turn(0)));
+      group.add(lit);
+      // A small mark where each phase starts, on every turn.
+      for (let k = -2; k <= 2; k++) [0, 0.2, 0.7].forEach(start => { const mark = dot(0.035, k < 0 ? 0.8 : 0.35); mark.position.copy(at(k + start)); group.add(mark); });
+      const runner = accent(dot(0.06));
+      group.add(runner);
+      const wake = trail(group, 8, 0.04, 3);
+      return { scene, camera: view(5.4, 3.0, 7.0, [0, 0, 0]), update(t) {
+        const u = (t * 0.1 + 0.32) % 1;
+        this.phase = u < 0.2 ? 0 : u < 0.7 ? 1 : 2;
+        lit.geometry.setDrawRange(0, Math.max(2, Math.round(u * steps) + 1));
+        runner.position.copy(at(u));
+        wake(runner.position);
+        group.position.y = -u * pitch;
+        group.rotation.y = Math.sin(t * 0.25) * 0.15;
+      } };
+    },
+    // Ring: the cycle as three blocks around a ring, as tall as their weight; the runner goes round,
+    // and the block it crosses lights up.
+    ring() {
+      const scene = new THREE.Scene();
+      const group = new THREE.Group();
+      scene.add(group);
+      const outer = 1.65, inner = 1.05, gap = 0.035;
+      const phases = [[0, 0.2, 0.3], [0.2, 0.5, 0.75], [0.7, 0.3, 0.42]]; // start, share, height
+      const angle = u => Math.PI / 2 - u * Math.PI * 2;
+      const blocks = phases.map(([start, share, height]) => {
+        const high = angle(start) - gap, low = angle(start + share) + gap;
+        const shape = new THREE.Shape();
+        shape.absarc(0, 0, outer, low, high, false);
+        shape.absarc(0, 0, inner, high, low, true);
+        shape.closePath();
+        const geometry = new THREE.ExtrudeGeometry(shape, { depth: height, bevelEnabled: false, curveSegments: 64 });
+        geometry.rotateX(-Math.PI / 2);
+        const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ color: FILL }));
+        mesh.add(outline(geometry, 0.9, 30));
+        group.add(mesh);
+        return mesh;
+      });
+      const middle = (outer + inner) / 2;
+      const runner = accent(dot(0.06));
+      group.add(runner);
+      const wake = trail(group, 8, 0.04, 3);
+      return { scene, camera: view(0, 4.6, 6.4, [0, 0.1, 0]), update(t) {
+        const u = (t * 0.1 + 0.32) % 1;
+        const phase = u < 0.2 ? 0 : u < 0.7 ? 1 : 2;
+        this.phase = phase;
+        const a = angle(u);
+        runner.position.set(Math.cos(a) * middle, phases[phase][2] + 0.1, -Math.sin(a) * middle);
+        wake(runner.position);
+        blocks.forEach((block, k) => glow(block, k === phase ? 1 : 0));
+        group.rotation.y = 0.35 + Math.sin(t * 0.2) * 0.2;
+      } };
+    },
     // ── The modules of the offer list ──
 
     // Algorithmique: a flowchart, where a token goes through a test, to one side then the other.
@@ -1132,6 +1203,8 @@ if (coverRenderer) {
       coverRenderer.setSize(room[0], room[1], false);
     }
     item.update(item.time);
+    // A scene may report what it shows (the phase of the cycle of a lesson), for the text beside it.
+    if (item.phase !== undefined && item.cover.dataset.phase !== String(item.phase)) item.cover.dataset.phase = item.phase;
     coverRenderer.setViewport(0, 0, width, height);
     coverRenderer.setScissor(0, 0, width, height);
     coverRenderer.setScissorTest(true);

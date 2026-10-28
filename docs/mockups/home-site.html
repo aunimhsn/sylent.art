@@ -110,15 +110,15 @@
 
   /* ── Pedagogy: a test on a computer (?pedagogy=cycle, a tab of home.html) ──────────── */
 
-  /* From 1100 px, the cycle of a lesson on the left, drawn in the signal color (theory 20 %,
-     practice 50 %, correction 30 %, then again), and the four steps as glass cards, two by two,
-     on the right. Below, nothing changes. */
+  /* From 1100 px, the cycle of a lesson on the left (theory 20 %, practice 50 %, correction 30 %,
+     then again): a circle drawn in the signal color, a 3D spiral that climbs a step at each turn,
+     or a 3D ring in three blocks, the practice the tallest. The four steps, two by two, on the
+     right, without background. Below 1100 px, nothing changes. */
   .app-cycle { display: none; }
   @media (min-width: 1100px) {
     .app-pedagogy.is-cycle { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
     .app-pedagogy.is-cycle .app-cycle { display: block; }
-    .app-pedagogy.is-cycle .app-steps { grid-template-columns: repeat(2, 1fr); gap: 16px; }
-    .app-pedagogy.is-cycle .app-steps li { padding: 26px 26px 28px; border-radius: var(--radius-card); background-color: var(--glass); backdrop-filter: blur(var(--glass-blur)) saturate(1.2); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.2); }
+    .app-pedagogy.is-cycle .app-steps { grid-template-columns: repeat(2, 1fr); gap: 48px 40px; }
     .app-pedagogy.is-cycle .app-step-number { font-size: 52px; }
   }
   .app-cycle svg { display: block; width: min(100%, 620px); height: auto; margin-inline: auto; overflow: visible; }
@@ -128,6 +128,15 @@
   .app-cycle-label.is-on { fill: var(--text); }
   .app-cycle-share { fill: var(--text); font: 200 76px var(--font-title); letter-spacing: -0.04em; text-anchor: middle; }
   .app-cycle-phase { fill: var(--secondary); font: 700 19px var(--font-title); text-anchor: middle; }
+  /* The 3D cycles (shared/covers.js): a square scene without the frame of a cover, and under it
+     the three phases, the one being drawn in white. */
+  .app-cycle .app-cycle-scene { aspect-ratio: 1; width: min(100%, 560px); margin: 0 auto; border: 0; background: none; }
+  .app-cycle-legend { display: flex; justify-content: center; gap: 36px; margin: 8px 0 0; padding: 0; list-style: none; }
+  .app-cycle-legend li { color: var(--dim); font: 700 17px/1.3 var(--font-title); text-align: center; transition: color .4s; }
+  .app-cycle-legend span { display: block; margin-top: 4px; font: 200 30px/1 var(--font-title); letter-spacing: -0.03em; }
+  .app-cycle-scene[data-phase="0"] ~ .app-cycle-legend li:nth-child(1),
+  .app-cycle-scene[data-phase="1"] ~ .app-cycle-legend li:nth-child(2),
+  .app-cycle-scene[data-phase="2"] ~ .app-cycle-legend li:nth-child(3) { color: var(--text); }
 
   /* ── About ──────────────────────────────────────────────────────────────────────── */
 
@@ -209,9 +218,16 @@
     const anchor = Math.abs(Math.sin(angle)) < 0.3 ? "middle" : Math.sin(angle) > 0 ? "start" : "end";
     return `<text class="app-cycle-label" x="${x.toFixed(1)}" y="${(y + 6).toFixed(1)}" text-anchor="${anchor}">${phase}</text>`;
   }
-  const cycleFigure = () => `
+  const CYCLE_SENTENCE = `Le cycle d’une séance${NB}: 20${NB}% de théorie, 50${NB}% de pratique, 30${NB}% de correction, puis on recommence.`;
+  const PEDAGOGY = query.get("pedagogy");
+  const cycleFigure = () => PEDAGOGY === "spiral" || PEDAGOGY === "ring" ? `
     <div class="app-cycle">
-      <svg viewBox="-80 0 560 400" role="img" aria-label="Le cycle d’une séance${NB}: 20${NB}% de théorie, 50${NB}% de pratique, 30${NB}% de correction, puis on recommence.">
+      <div class="app-cover app-cycle-scene" data-scene="${PEDAGOGY}" aria-hidden="true"><canvas></canvas></div>
+      <ul class="app-cycle-legend" aria-hidden="true">${CYCLE.map(([phase, share]) => `<li>${phase}<span>${Math.round(share * 100)}${NB}%</span></li>`).join("")}</ul>
+      <p class="app-hidden">${CYCLE_SENTENCE}</p>
+    </div>` : `
+    <div class="app-cycle is-flat">
+      <svg viewBox="-80 0 560 400" role="img" aria-label="${CYCLE_SENTENCE}">
         <circle class="app-cycle-track" cx="200" cy="200" r="${CYCLE_RADIUS}"/>
         <g transform="rotate(-90 200 200)">${CYCLE.map(() => `<circle class="app-cycle-arc" cx="200" cy="200" r="${CYCLE_RADIUS}" stroke-dasharray="0 ${CYCLE_LENGTH}"/>`).join("")}</g>
         ${CYCLE.map(cycleLabel).join("")}
@@ -224,7 +240,7 @@
     <section class="app-section" aria-labelledby="pedagogy-title" style="padding-top:0">
       <div class="app-wrap">
         ${heading("Pédagogie", "Accompagner", "pedagogy-title")}
-        <div class="app-pedagogy${query.get("pedagogy") === "cycle" ? " is-cycle" : ""}">${cycleFigure()}${stepList()}</div>
+        <div class="app-pedagogy${["cycle", "spiral", "ring"].includes(PEDAGOGY) ? " is-cycle" : ""}">${cycleFigure()}${stepList()}</div>
       </div>
     </section>`;
 
@@ -249,7 +265,7 @@
   // The cycle draws itself around the circle at a steady pace, phase after phase, holds once
   // complete, fades and starts again; the center names the phase being drawn. Without motion it
   // stands complete, on the practice.
-  const cycle = document.querySelector(".is-cycle .app-cycle");
+  const cycle = document.querySelector(".is-cycle .app-cycle.is-flat");
   if (cycle) {
     const arcs = [...cycle.querySelectorAll(".app-cycle-arc")];
     const labels = [...cycle.querySelectorAll(".app-cycle-label")];
