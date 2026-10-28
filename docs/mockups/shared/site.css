@@ -192,7 +192,8 @@ img, svg, canvas { display: block; }
 .app-band-text { display: grid; gap: 12px; padding: 28px 26px; border: 1px dashed var(--line-strong); border-bottom: 0; transition: border-color .35s; }
 .app-card.is-band:hover .app-band-text { border-color: var(--text); }
 .app-card.is-band .app-card-more { margin: 0; }
-.app-card.is-band .app-card-more svg { margin-left: 10px; vertical-align: -3px; transition: transform .35s; }
+/* The arrow only from two columns; on a phone the band stays a plain button, as on the other cards. */
+.app-card.is-band .app-card-more svg { display: none; margin-left: 10px; transition: transform .35s; }
 .app-card.is-band:hover .app-card-more { padding-block: 16px; }
 .app-card.is-band:hover .app-card-more svg { transform: translateX(6px); }
 @media (min-width: 640px) {
@@ -200,6 +201,7 @@ img, svg, canvas { display: block; }
   /* The frame runs over the gap of the grid, up to the button. */
   .app-band-text { grid-column: 1 / -2; margin-right: -16px; border-bottom: 1px dashed var(--line-strong); border-right: 0; }
   .app-card.is-band .app-card-more { grid-column: -2 / -1; display: flex; align-items: center; justify-content: center; }
+  .app-card.is-band .app-card-more svg { display: block; flex: none; }
 }
 
 /* ── Header ─────────────────────────────────────────────────────────────────────── */
