@@ -153,7 +153,7 @@ The cards share `--card-padding-block` (`--space-7`) and `--card-padding-inline`
 
 ## Components
 
-- **Header**: fixed, transparent over the top of the page, then `--header-bg` with a blur and a bottom rule once the page scrolls; it hides while scrolling down and comes back when scrolling up. Navigation: Formations, À propos (Articles after the launch); no Contact link, since the white « Me contacter » button leads there.
+- **Header**: fixed, transparent over the top of the page, then `--header-bg` with a blur and a bottom rule once the page scrolls; it hides while scrolling down and comes back when scrolling up. Navigation: Formations, À propos; no Contact link, since the white « Me contacter » button leads there.
 - **Mobile menu**: full screen, opened by a circle that grows from the burger; large uppercase links, the button, the motto at the bottom; Escape closes it.
 - **Buttons**: white and sharp (`--accent`); outlined variant with `--line-strong`, white border on hover. No glow, no arrow. The main buttons are magnetic under the mouse.
 - **Text link**: Manrope 700 with a 1 px underline in `--line-strong`, white on hover.

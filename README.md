@@ -1,6 +1,6 @@
 # sylent.art
 
-Website of Sylent (Aunim Hassan), freelance trainer in software development: the training offers, the articles, the trusted partners, an about page and a contact form. A static site deployed to GitHub Pages at [sylent.art](https://sylent.art).
+Website of Sylent (Aunim Hassan), freelance trainer in software development: the training offers, the trusted partners, an about page and a contact form. A static site deployed to GitHub Pages at [sylent.art](https://sylent.art).
 
 ## Documentation
 

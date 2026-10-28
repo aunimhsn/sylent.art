@@ -8,7 +8,7 @@
 ## Project
 
 - `sylent.art` is the website of Sylent (Aunim Hassan), a freelance trainer in software development. It replaces a former Laravel site with a static site hosted on GitHub Pages, at the custom domain `sylent.art`.
-- The site is focused on training only: the training courses, the articles, the trusted partners (schools and training organizations such as YNOV, IGENSIA Tech, EPSI, CESI, OpenClassrooms), an about page and a way to get in touch.
+- The site is focused on training only: the training courses, the trusted partners (schools and training organizations such as YNOV, IGENSIA Tech, EPSI, CESI, OpenClassrooms), an about page and a way to get in touch.
 - Out of scope: the former "Créations" section (photography and artwork), user accounts (sign-up, login) and any back-end or back-office. Everything must work without a server.
 - Keep the URLs of the former site (`/courses/<id>`, `/articles/<id>`, `/about`, `/contact`, `/policy`), or provide a redirect for each one, so the existing links and search ranking are not lost.
 - The `CNAME` file at the root of the published site contains `sylent.art`. Never remove it.
@@ -24,7 +24,7 @@
 ## Language
 
 - Everything in the project (code, identifiers, comments, documentation, commit messages) must be written in English.
-- Exception: the content of the site (pages, training courses, articles, metadata shown to visitors) is written in French. It lives in content or translation files, never hard-coded in the layout or components, so that a translation can be added later.
+- Exception: the content of the site (pages, training courses, metadata shown to visitors) is written in French. It lives in content or translation files, never hard-coded in the layout or components, so that a translation can be added later.
 - Exception: the code review notes in `outputs/` are written in French.
 - French content follows French typography: a non-breaking space before `?`, `!`, `:`, `;` and inside « », and correct accents and capitals (e.g. « À propos »).
   - Exception, accepted by the owner on 2026-10-28: the large uppercase section titles and the large faded words behind them are shown without accents (« PEDAGOGIE », « Echanger »), because the mask of their animation would cut the accents. Their accessible name keeps the accents (`aria-label`); everywhere else, accents stay.
@@ -95,7 +95,7 @@ Follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.
 | `chore` | Other maintenance (tooling, `.gitignore`, Claude Code agents). |
 | `revert` | Reverting a previous commit. |
 
-- Scope: optional, the page or area concerned (e.g. `feat(courses): ...`, `content(articles): ...`).
+- Scope: optional, the page or area concerned (e.g. `feat(courses): ...`, `content(about): ...`).
 - Description: imperative mood, lowercase, no final period, 72 characters max (e.g. `feat(courses): add the course list page`).
 - Breaking change: add `!` after the type or scope (e.g. `feat(urls)!: ...`) and explain it in a `BREAKING CHANGE:` footer. Changing a public URL is a breaking change.
 
