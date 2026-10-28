@@ -42,22 +42,64 @@ const current = page => page === currentPage ? ' aria-current="page"' : "";
 const external = (href, label) => `<a href="${href}" target="_blank" rel="noopener">${label}<span class="app-hidden"> [nouvel onglet]</span></a>`;
 
 // The domains of the offers (specs.md, Training offers): the slug of their page, the title, the
-// summary, the 3D scene of their cover (shared/covers.js) and whether the offer is new.
+// summary, the 3D scene of their cover (shared/covers.js), whether the offer is new, and their
+// modules: title, indicative duration in days, summary and scene. Sample content until step 8.
 const DOMAINS = [
-  { slug: "initiation-a-la-programmation", title: "Initiation à la programmation", summary: "Les bases de la logique et de l’algorithmique, en douceur.", scene: "steps" },
-  { slug: "developpement-web", title: "Développement web", summary: `Du HTML aux frameworks${NB}: construire des sites et des applications web.`, scene: "web" },
-  { slug: "python-et-donnees", title: "Python et données", summary: "Programmer en Python, du script au machine learning.", scene: "chart" },
-  { slug: "bases-de-donnees", title: "Bases de données", summary: "Modéliser, concevoir et interroger des données.", scene: "database" },
-  { slug: "methodologie-et-tests", title: "Méthodologie et tests", summary: "Versionner, tester et livrer avec méthode.", scene: "branch" },
-  { slug: "ia-pour-le-developpement", title: "IA pour le développement", summary: "Utiliser l’IA avec méthode et rigueur, au quotidien.", scene: "network", isNew: true },
-  { slug: "gestion-de-projet", title: "Gestion de projet", summary: "S’initier à l’agilité avec Scrum.", scene: "board" },
+  { slug: "initiation-a-la-programmation", title: "Initiation à la programmation", summary: "Les bases de la logique et de l’algorithmique, en douceur.", scene: "steps", modules: [
+    ["Algorithmique", 3, "Variables, conditions, boucles et fonctions, en pseudo-code.", "flowchart"],
+    ["Robomind", 1, "Programmer un robot virtuel pour découvrir la logique en jouant.", "steps"],
+  ] },
+  { slug: "developpement-web", title: "Développement web", summary: `Du HTML aux frameworks${NB}: construire des sites et des applications web.`, scene: "web", modules: [
+    ["HTML 5", 1, "Balises, sémantique, formulaires, tableaux et médias.", "markup"],
+    ["CSS 3", 2, "Sélecteurs, modèle de boîte, Flexbox, Grid et responsive.", "layout"],
+    ["JavaScript", 3, "Variables, fonctions, DOM, événements et fetch.", "event"],
+    ["PHP", 3, "Syntaxe, formulaires, sessions et PDO.", "server"],
+    ["Vue", 2, "Composants, réactivité et routage.", "tree"],
+    ["Alpine", 1, "Des directives et des composants légers, dans le HTML.", "peaks"],
+    ["Laravel", 4, "Routes, contrôleurs, Eloquent, Blade et authentification.", "mvc"],
+  ] },
+  { slug: "python-et-donnees", title: "Python et données", summary: "Programmer en Python, du script au machine learning.", scene: "chart", modules: [
+    ["Python", 3, "Syntaxe, structures de données, fonctions, modules et fichiers.", "snake"],
+    ["Django", 3, "Modèles, vues, gabarits, formulaires et administration.", "form"],
+    ["Initiation au machine learning", 2, "Préparer des données, entraîner et évaluer un modèle.", "fit"],
+  ] },
+  { slug: "bases-de-donnees", title: "Bases de données", summary: "Modéliser, concevoir et interroger des données.", scene: "database", modules: [
+    ["Merise", 2, "Dictionnaire de données, MCD, MLD et MPD.", "entities"],
+    ["UML", 2, "Cas d’utilisation, diagrammes de classes et de séquence.", "classes"],
+    ["MySQL", 2, "Tables, requêtes, jointures et index.", "table"],
+    ["PostgreSQL", 2, "Types avancés, vues, transactions et droits.", "join"],
+  ] },
+  { slug: "methodologie-et-tests", title: "Méthodologie et tests", summary: "Versionner, tester et livrer avec méthode.", scene: "branch", modules: [
+    ["Git et GitHub", 2, "Commits, branches, fusions, pull requests et revue de code.", "branch"],
+    ["Cypress", 2, "Des tests de bout en bout, fiables et lisibles.", "checks"],
+    ["Intégration continue", 1, `GitHub Actions${NB}: les tests et les vérifications à chaque pull request.`, "pipeline"],
+    ["Déploiement continu", 1, `Vercel et Render${NB}: mettre en ligne à chaque fusion.`, "deploy"],
+  ] },
+  { slug: "ia-pour-le-developpement", title: "IA pour le développement", summary: "Utiliser l’IA avec méthode et rigueur, au quotidien.", scene: "network", isNew: true, modules: [
+    ["Claude Code", 2, `Un assistant de code en ligne de commande${NB}: contexte, instructions, relecture.`, "terminal"],
+    ["Prompt engineering", 1, `Formuler, découper, itérer${NB}: obtenir des réponses utiles et fiables.`, "chat"],
+    ["Intégrer l’IA avec méthode", 1, "Règles d’équipe, sécurité des données, relecture et mesure des gains.", "orbit"],
+  ] },
+  { slug: "gestion-de-projet", title: "Gestion de projet", summary: "S’initier à l’agilité avec Scrum.", scene: "board", modules: [
+    ["Initiation à l’agilité avec Scrum", 2, "Valeurs, rôles, événements et artefacts, sur un projet fil rouge.", "sprint"],
+  ] },
 ];
+// « 2 jours, adaptable »: the durations are indicative, always adaptable.
+const duration = days => `${days}${NB}jour${days > 1 ? "s" : ""}, adaptable`;
+
 // The offer pages are not in the mock-up yet: the cards lead nowhere for now.
 const domainCard = domain => `
   <li class="app-card app-glass app-reveal app-tilt">
     <div class="app-cover" data-scene="${domain.scene}" aria-hidden="true"><canvas></canvas>${domain.isNew ? '<span class="app-new">Nouveau</span>' : ""}</div>
     <h3>${domain.title}</h3><p>${domain.summary}</p>
     <a class="app-card-more" href="#" aria-label="${domain.title}${NB}: voir les modules">Voir les modules</a>
+  </li>`;
+// The card of one module, on the offer list.
+const moduleCard = ([title, days, summary, scene]) => `
+  <li class="app-card app-glass app-reveal app-tilt">
+    <div class="app-cover" data-scene="${scene}" aria-hidden="true"><canvas></canvas></div>
+    <h3>${title}</h3><p class="app-card-duration">${duration(days)}</p><p>${summary}</p>
+    <a class="app-card-more" href="#" aria-label="${title}${NB}: voir le détail">Voir le détail</a>
   </li>`;
 // The last card, after the domains: a module built for the request.
 const customCard = () => `
@@ -185,17 +227,19 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll('a[href^="tel:"]').forEach(link => { link.tabIndex = -1; });
 });
 
-// The footer grid: under the pointer, an orange fluid runs along its lines. Each crossing of the
-// grid holds some energy: the pointer pours energy into the crossings around it as it moves, the
-// energy spreads to the neighbor crossings and fades, and each line glows with the energy of its
-// two ends. Nothing moves when the visitor asked to reduce motion.
-document.addEventListener("DOMContentLoaded", () => {
-  const footer = document.querySelector(".app-footer");
-  if (!footer || reduced) return;
-  const CELL = 40;
-  const canvas = Object.assign(document.createElement("canvas"), { className: "app-footer-fluid" });
-  canvas.setAttribute("aria-hidden", "true");
-  footer.prepend(canvas);
+// The grids of the footer and of the tops of page: under the pointer, an orange fluid runs along
+// their lines. Each crossing of a grid holds some energy: the pointer pours energy into the
+// crossings around it as it moves, the energy spreads to the neighbor crossings and fades, and
+// each line glows with the energy of its two ends. The fluid is drawn in a layer that the page
+// places exactly over its grid (className), with the same mask, so that it fades out where the
+// grid fades out. Nothing moves when the visitor asked to reduce motion.
+function gridFluid(host, CELL, className) {
+  const layer = document.createElement("div");
+  layer.className = `app-fluid ${className}`;
+  layer.setAttribute("aria-hidden", "true");
+  const canvas = document.createElement("canvas");
+  layer.appendChild(canvas);
+  host.prepend(layer);
   const context = canvas.getContext("2d");
   const orange = getComputedStyle(document.documentElement).getPropertyValue("--signal").trim() || "#d3450e";
   const [red, green, blue] = [1, 3, 5].map(index => parseInt(orange.slice(index, index + 2), 16));
@@ -204,8 +248,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function resize() {
     const ratio = Math.min(devicePixelRatio, 2);
-    width = footer.clientWidth;
-    height = footer.clientHeight;
+    width = canvas.clientWidth;
+    height = canvas.clientHeight;
     canvas.width = Math.round(width * ratio);
     canvas.height = Math.round(height * ratio);
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
@@ -214,13 +258,15 @@ document.addEventListener("DOMContentLoaded", () => {
     energy = new Float32Array(columns * rows);
     next = new Float32Array(columns * rows);
   }
-  new ResizeObserver(resize).observe(footer);
-  new IntersectionObserver(([entry]) => { seen = entry.isIntersecting; }).observe(footer);
+  new ResizeObserver(resize).observe(canvas);
+  new IntersectionObserver(([entry]) => { seen = entry.isIntersecting; }).observe(canvas);
 
-  // Pour energy into the crossings within 1.6 cells of the pointer, more as it moves faster.
-  footer.addEventListener("pointermove", event => {
-    const box = footer.getBoundingClientRect();
+  // Pour energy into the crossings within 1.6 cells of the pointer, more as it moves faster. The
+  // pointer is followed over the whole page, since the layer of a page top lies under its content.
+  addEventListener("pointermove", event => {
+    const box = canvas.getBoundingClientRect();
     const x = event.clientX - box.left, y = event.clientY - box.top;
+    if (x < 0 || y < 0 || x > box.width || y > box.height) { pointer = null; return; }
     const moved = pointer ? Math.hypot(x - pointer.x, y - pointer.y) : 0;
     pointer = { x, y };
     const amount = Math.min(0.9, 0.12 + moved / 60);
@@ -236,7 +282,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     if (!running) { running = true; requestAnimationFrame(step); }
   });
-  footer.addEventListener("pointerleave", () => { pointer = null; });
+  document.addEventListener("pointerleave", () => { pointer = null; });
 
   function line(x1, y1, x2, y2, a, b) {
     if (a + b < 0.02) return;
@@ -289,6 +335,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (total > 0.01 || pointer) requestAnimationFrame(step);
     else { running = false; context.clearRect(0, 0, width, height); }
   }
+}
+// The footer has cells of 40 px; a page top marks its grid with data-grid (cells of 32 px).
+document.addEventListener("DOMContentLoaded", () => {
+  if (reduced) return;
+  const footer = document.querySelector(".app-footer");
+  if (footer) gridFluid(footer, 40, "app-footer-fluid");
+  document.querySelectorAll("[data-grid]").forEach(host => gridFluid(host, 32, "app-grid-fluid"));
 });
 
 // The reveals start hidden; if the animations don't start (a library that doesn't load), show

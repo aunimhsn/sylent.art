@@ -39,13 +39,18 @@
     padding: calc(var(--header-height) + 40px) 0 56px;
     background: radial-gradient(55% 50% at 78% 45%, var(--glow), transparent 70%), var(--bg);
   }
-  .app-hero::before {
+  .app-hero::before,
+  .app-hero > .app-grid-fluid {
     content: "";
     position: absolute;
     inset: 0;
+    mask-image: radial-gradient(80% 70% at 70% 40%, #000 30%, transparent 75%);
+  }
+  /* The orange fluid of the grid (site.js) lies in a layer at the same place, with the same mask,
+     under the cube. */
+  .app-hero::before {
     background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
     background-size: 32px 32px;
-    mask-image: radial-gradient(80% 70% at 70% 40%, #000 30%, transparent 75%);
   }
   .app-hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
   .app-hero .app-wrap { position: relative; display: grid; gap: 8px; }
@@ -149,7 +154,7 @@
   const PARTNERS = [["YNOV", "ynov", 0.638], ["IGENSIA Tech", null], ["EPSI", "epsi", 0.8], ["CESI", "cesi", 1], ["OpenClassrooms", "openclassrooms", 0.277]];
 
   const hero = `
-    <section class="app-hero" id="hero" aria-labelledby="hero-title">
+    <section class="app-hero" id="hero" aria-labelledby="hero-title" data-grid>
       <canvas class="app-hero-canvas" id="cube-canvas" aria-hidden="true"></canvas>
       <div class="app-wrap">
         <div class="app-hero-text">

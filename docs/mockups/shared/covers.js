@@ -35,6 +35,22 @@ if (coverRenderer) {
     camera.lookAt(...look);
     return camera;
   };
+  const clamp = x => Math.min(1, Math.max(0, x));
+  // The point at the fraction f of the length of a path.
+  const along = (points, f) => {
+    const lengths = points.slice(1).map((point, k) => point.distanceTo(points[k]));
+    let left = f * lengths.reduce((sum, length) => sum + length, 0);
+    for (let k = 0; k < lengths.length; k++) {
+      if (left <= lengths[k]) return points[k].clone().lerp(points[k + 1], lengths[k] ? left / lengths[k] : 0);
+      left -= lengths[k];
+    }
+    return points[points.length - 1].clone();
+  };
+  const circle = (radius, opacity = 1, segments = 64) => polyline(Array.from({ length: segments + 1 }, (_, k) => v(Math.cos(k / segments * Math.PI * 2) * radius, Math.sin(k / segments * Math.PI * 2) * radius)), opacity);
+  // A fixed pseudo-random number between 0 and 1, so that a scene looks the same at each visit.
+  const random = k => { const x = Math.sin(k * 12.9898) * 43758.5453; return x - Math.floor(x); };
+  // The lines of a block, to light it up.
+  const edges = mesh => mesh.children[0].material;
 
   const SCENES = {
     // Initiation: a little robot finds its way on a grid, step by step, as in Robomind.
@@ -227,6 +243,601 @@ if (coverRenderer) {
         const gap = 0.36 + 0.32 * (0.5 + 0.5 * Math.sin(t * 1.2));
         parts.forEach(([part, direction]) => part.position.copy(direction).multiplyScalar(gap));
         group.rotation.set(0.3, t * 0.4, 0);
+      } };
+    },
+    // ── The modules of the offer list ──
+
+    // Algorithmique: a flowchart, where a token goes through a test, to one side then the other.
+    flowchart() {
+      const scene = new THREE.Scene();
+      const chart = new THREE.Group();
+      scene.add(chart);
+      const start = block(new THREE.BoxGeometry(1.2, 0.42, 0.12));
+      start.position.set(0, 1.2, 0);
+      const test = block(new THREE.BoxGeometry(0.6, 0.6, 0.12));
+      test.rotation.z = Math.PI / 4;
+      test.position.set(0, 0.15, 0);
+      const ends = [-1.3, 1.3].map(x => {
+        const end = block(new THREE.BoxGeometry(1.0, 0.42, 0.12));
+        end.position.set(x, -1.0, 0);
+        return end;
+      });
+      chart.add(start, test, ...ends);
+      chart.add(polyline([v(0, 0.99), v(0, 0.57)], 0.6));
+      [-1, 1].forEach(side => chart.add(polyline([v(side * 0.43, 0.15), v(side * 1.3, 0.15), v(side * 1.3, -0.79)], 0.6)));
+      const paths = [-1, 1].map(side => [v(0, 1.2, 0.1), v(0, 0.15, 0.1), v(side * 1.3, 0.15, 0.1), v(side * 1.3, -1.0, 0.1)]);
+      const token = dot(0.08);
+      chart.add(token);
+      const flash = (node, center) => node.scale.setScalar(1 + Math.max(0, 1 - token.position.distanceTo(center) * 3) * 0.2);
+      return { scene, camera: view(0, 0.2, 6.2, [0, 0.05, 0]), update(t) {
+        const p = t * 0.45;
+        token.position.copy(along(paths[Math.floor(p) % 2], ease(Math.min(1, (p % 1) * 1.25))));
+        flash(test, v(0, 0.15, 0.1));
+        ends.forEach(end => flash(end, v(end.position.x, -1.0, 0.1)));
+        chart.rotation.set(0.05, Math.sin(t * 0.4) * 0.3, 0);
+      } };
+    },
+    // HTML: the blocks of a page (header, aside, main, article, footer) come in one by one.
+    markup() {
+      const scene = new THREE.Scene();
+      const page = new THREE.Group();
+      scene.add(page);
+      page.add(outline(new THREE.PlaneGeometry(3.4, 2.3), 0.45));
+      const parts = [[0, 0.86, 3.1, 0.3], [-1.12, -0.1, 0.86, 1.36], [0.45, 0.24, 2.1, 0.68], [0.45, -0.44, 2.1, 0.44], [0, -0.92, 3.1, 0.2]].map(([x, y, w, h]) => {
+        const part = block(new THREE.BoxGeometry(w, h, 0.06));
+        part.position.set(x, y, 0);
+        page.add(part);
+        return part;
+      });
+      return { scene, camera: view(0, 0, 6.6), update(t) {
+        const p = (t * 0.6) % (parts.length + 3);
+        const out = ease(clamp(p - parts.length - 1.5));
+        parts.forEach((part, k) => {
+          const f = ease(clamp(p - k)) * (1 - out);
+          part.scale.setScalar(Math.max(0.001, f));
+          part.position.z = f * 0.3;
+        });
+        page.rotation.set(-0.12, -0.45 + Math.sin(t * 0.4) * 0.15, 0);
+      } };
+    },
+    // CSS: four boxes go from a row (Flexbox) to a grid (Grid), and back.
+    layout() {
+      const scene = new THREE.Scene();
+      const group = new THREE.Group();
+      scene.add(group);
+      const frame = outline(new THREE.PlaneGeometry(1, 1), 0.45);
+      group.add(frame);
+      const boxes = [0, 1, 2, 3].map(() => {
+        const box = block(new THREE.BoxGeometry(0.8, 0.8, 0.14));
+        group.add(box);
+        return box;
+      });
+      const row = k => v((k - 1.5) * 1.0, 0, 0.07);
+      const grid = k => v((k % 2 - 0.5) * 1.0, (0.5 - Math.floor(k / 2)) * 1.0, 0.07);
+      return { scene, camera: view(0, 0.4, 6.4), update(t) {
+        const f = ease(clamp(0.5 + Math.sin(t * 0.8) * 0.9));
+        boxes.forEach((box, k) => {
+          box.position.lerpVectors(row(k), grid(k), f);
+          box.rotation.z = Math.sin(f * Math.PI) * 0.25 * (k % 2 ? 1 : -1);
+        });
+        frame.scale.set(4.3 - 2.0 * f, 1.2 + 1.1 * f, 1);
+        group.rotation.set(-0.15, Math.sin(t * 0.4) * 0.35, 0);
+      } };
+    },
+    // JavaScript: the pointer clicks a button, and the event spreads in waves.
+    event() {
+      const scene = new THREE.Scene();
+      const group = new THREE.Group();
+      scene.add(group);
+      const button = block(new THREE.BoxGeometry(1.7, 0.56, 0.24));
+      group.add(button);
+      const waves = [0, 1].map(() => {
+        const wave = circle(0.5);
+        group.add(wave);
+        return wave;
+      });
+      const pointer = polyline([v(0, 0), v(0, -0.5), v(0.13, -0.38), v(0.24, -0.6), v(0.33, -0.56), v(0.22, -0.34), v(0.38, -0.34), v(0, 0)]);
+      group.add(pointer);
+      return { scene, camera: view(0, 0.2, 5.6), update(t) {
+        const p = (t * 0.55) % 3;
+        const move = ease(clamp(p * 1.4));
+        const press = Math.max(0, 1 - Math.abs(p - 0.9) * 8);
+        pointer.position.set(1.9 - 1.65 * move, -1.3 + 1.35 * move, 0.3 - press * 0.1);
+        button.position.z = -press * 0.12;
+        waves.forEach((wave, k) => {
+          const age = clamp((p - 0.9 - k * 0.25) / 1.4);
+          wave.scale.set(1.9 + age * 2, 0.6 + age * 1.6, 1);
+          wave.material.opacity = age > 0 && age < 1 ? (1 - age) * 0.8 : 0;
+        });
+        group.rotation.set(-0.1, Math.sin(t * 0.4) * 0.3, 0);
+      } };
+    },
+    // PHP: a page sends a request to the server, which answers; its lights blink.
+    server() {
+      const scene = new THREE.Scene();
+      const group = new THREE.Group();
+      scene.add(group);
+      const lights = [];
+      [-0.55, 0, 0.55].forEach((y, k) => {
+        const unit = block(new THREE.BoxGeometry(1.8, 0.42, 1.2));
+        unit.position.set(0.7, y, 0);
+        group.add(unit, polyline([v(0.8, y, 0.61), v(1.45, y, 0.61)], 0.4));
+        [0, 1].forEach(j => {
+          const light = dot(0.045);
+          light.position.set(0.05 + j * 0.16, y, 0.61);
+          group.add(light);
+          lights.push([light, k * 2 + j]);
+        });
+      });
+      const page = outline(new THREE.PlaneGeometry(0.9, 1.2), 0.7);
+      page.position.set(-1.8, 0, 0.3);
+      group.add(page);
+      [0.3, 0.1, -0.1].forEach(y => group.add(polyline([v(-2.1, y, 0.3), v(-1.5, y, 0.3)], 0.5)));
+      const go = new THREE.CatmullRomCurve3([v(-1.3, 0.25, 0.3), v(-0.6, 0.6, 0.5), v(0.1, 0.3, 0.62)]);
+      const back = new THREE.CatmullRomCurve3([v(0.1, -0.3, 0.62), v(-0.6, -0.6, 0.5), v(-1.3, -0.25, 0.3)]);
+      group.add(polyline(go.getPoints(24), 0.25), polyline(back.getPoints(24), 0.25));
+      const request = dot(0.06), answer = dot(0.06);
+      group.add(request, answer);
+      return { scene, camera: view(1.6, 1.2, 6.2, [-0.2, 0, 0]), update(t) {
+        const p = (t * 0.5) % 2;
+        request.position.copy(go.getPoint(clamp(p)));
+        request.visible = p < 1;
+        answer.position.copy(back.getPoint(clamp(p - 1)));
+        answer.visible = p >= 1;
+        lights.forEach(([light, k]) => { light.material.opacity = Math.sin(t * 6 + k * 2.1) > 0.2 ? 1 : 0.3; });
+        group.rotation.y = Math.sin(t * 0.35) * 0.2;
+      } };
+    },
+    // Vue: a tree of components; a change runs from the root down to the leaves.
+    tree() {
+      const scene = new THREE.Scene();
+      const group = new THREE.Group();
+      scene.add(group);
+      const nodes = [[0], [-1.1, 1.1], [-1.65, -0.55, 0.55, 1.65]].map((xs, level) => xs.map(x => {
+        const node = block(new THREE.BoxGeometry(0.62, 0.34, 0.12));
+        node.position.set(x, 1.05 - level * 1.05, 0);
+        group.add(node);
+        return node;
+      }));
+      const links = [];
+      nodes.slice(1).forEach((level, l) => level.forEach((child, k) => {
+        const a = nodes[l][Math.floor(k / 2)].position.clone().add(v(0, -0.17)), b = child.position.clone().add(v(0, 0.17));
+        const signal = dot(0.055);
+        group.add(polyline([a, b], 0.4), signal);
+        links.push({ a, b, l, signal });
+      }));
+      return { scene, camera: view(0, 0, 6.2), update(t) {
+        const p = (t * 0.6) % 2.6;
+        links.forEach(({ a, b, l, signal }) => {
+          const f = clamp(p - l);
+          signal.position.lerpVectors(a, b, ease(f));
+          signal.visible = f > 0 && f < 1;
+        });
+        nodes.forEach((level, l) => level.forEach(node => node.scale.setScalar(1 + Math.max(0, 1 - Math.abs(p - l) * 5) * 0.22)));
+        group.rotation.set(0.1, Math.sin(t * 0.4) * 0.4, 0);
+      } };
+    },
+    // Alpine: a range of mountains in lines; a climber goes up the highest peak, under a sun.
+    peaks() {
+      const scene = new THREE.Scene();
+      const terrain = new THREE.Group();
+      scene.add(terrain);
+      const height = (x, z) => 1.5 * Math.exp(-((x + 0.7) ** 2 + (z + 0.2) ** 2) / 0.7) + Math.exp(-((x - 1.1) ** 2 + (z - 0.3) ** 2) / 0.5) + 0.5 * Math.exp(-((x - 0.3) ** 2 + (z + 0.9) ** 2) / 0.4);
+      for (let z = -1.4; z <= 1.41; z += 0.28) terrain.add(polyline(Array.from({ length: 41 }, (_, k) => { const x = -2 + k * 0.1; return v(x, height(x, z), z); }), 0.4));
+      for (let x = -2; x <= 2.01; x += 0.4) terrain.add(polyline(Array.from({ length: 29 }, (_, k) => { const z = -1.4 + k * 0.1; return v(x, height(x, z), z); }), 0.2));
+      const climber = dot(0.07);
+      terrain.add(climber);
+      const sun = dot(0.13);
+      scene.add(sun);
+      return { scene, camera: view(0, 2.8, 6.2, [0, 0.4, 0]), update(t) {
+        const f = ease(clamp(((t * 0.3) % 1.3) / 1.1));
+        const x = -1.95 + f * 1.25;
+        climber.position.set(x, height(x, -0.2) + 0.07, -0.2);
+        terrain.rotation.y = Math.sin(t * 0.3) * 0.5;
+        sun.position.set(Math.cos(t * 0.5) * 2, 1.8 + Math.sin(t * 0.5) * 0.35, -1.5);
+      } };
+    },
+    // Laravel: a request goes from the route to the controller, the model, then the view.
+    mvc() {
+      const scene = new THREE.Scene();
+      const group = new THREE.Group();
+      scene.add(group);
+      const route = block(new THREE.BoxGeometry(0.55, 0.55, 0.55));
+      route.position.set(-1.9, 0, 0);
+      const controller = block(new THREE.BoxGeometry(0.8, 0.8, 0.8));
+      const model = block(new THREE.CylinderGeometry(0.38, 0.38, 0.6, 40));
+      model.position.set(1.6, 0.85, 0);
+      const page = block(new THREE.BoxGeometry(0.95, 0.7, 0.06));
+      page.position.set(1.6, -0.85, 0);
+      group.add(route, controller, model, page);
+      [[route, controller], [controller, model], [controller, page]].forEach(([a, b]) => group.add(polyline([a.position, b.position], 0.3)));
+      const stops = [route, controller, model, controller, page].map(node => node.position);
+      const request = dot(0.08);
+      group.add(request);
+      return { scene, camera: view(0.4, 1.2, 6.4), update(t) {
+        request.position.copy(along(stops, ease((t * 0.35) % 1)));
+        [route, controller, model, page].forEach(node => node.scale.setScalar(1 + Math.max(0, 1 - request.position.distanceTo(node.position) * 2.5) * 0.15));
+        group.rotation.y = Math.sin(t * 0.4) * 0.35;
+      } };
+    },
+    // Python: a snake of dots slides along a figure of eight on a grid.
+    snake() {
+      const scene = new THREE.Scene();
+      scene.add(new THREE.GridHelper(6, 6, 0x4a4a4a, 0x262626));
+      const body = Array.from({ length: 22 }, (_, k) => {
+        const part = dot(0.13 - k * 0.004, 1 - k * 0.03);
+        scene.add(part);
+        return part;
+      });
+      return { scene, camera: view(0, 4.6, 5.2, [0, 0, 0.2]), update(t) {
+        body.forEach((part, k) => {
+          const s = t * 0.7 - k * 0.09;
+          part.position.set(Math.sin(s) * 2, 0.13, Math.sin(s * 2) * 0.9);
+        });
+      } };
+    },
+    // Django: a form fills itself in, field after field, then it is sent and checked.
+    form() {
+      const scene = new THREE.Scene();
+      const group = new THREE.Group();
+      scene.add(group);
+      group.add(outline(new THREE.PlaneGeometry(2.6, 2.6), 0.45));
+      const lengths = [1.1, 1.5, 0.8];
+      const texts = [0.7, 0.15, -0.4].map(y => {
+        const field = outline(new THREE.PlaneGeometry(2.0, 0.36), 0.7);
+        field.position.set(0, y, 0.02);
+        const text = polyline([v(0, 0), v(1, 0)]);
+        text.position.set(-0.85, y, 0.03);
+        group.add(field, text);
+        return text;
+      });
+      const button = block(new THREE.BoxGeometry(0.9, 0.32, 0.14));
+      button.position.set(-0.55, -0.95, 0.07);
+      const check = polyline([v(-0.18, 0), v(-0.05, -0.13), v(0.2, 0.16)]);
+      check.position.set(0.55, -0.95, 0.1);
+      group.add(button, check);
+      return { scene, camera: view(0, 0, 6.2), update(t) {
+        const p = (t * 0.7) % 6;
+        const out = 1 - clamp(p - 5.2);
+        texts.forEach((text, k) => { text.scale.x = Math.max(0.001, ease(clamp(p - k)) * lengths[k] * out); });
+        button.position.z = 0.07 - Math.max(0, 1 - Math.abs(p - 3.4) * 6) * 0.1;
+        check.material.opacity = clamp((p - 3.6) * 3) * out;
+        group.rotation.set(-0.1, -0.3 + Math.sin(t * 0.4) * 0.2, 0);
+      } };
+    },
+    // Machine learning: a cloud of points, and a line that learns their trend.
+    fit() {
+      const scene = new THREE.Scene();
+      const group = new THREE.Group();
+      scene.add(group);
+      group.add(polyline([v(-2, -1.6), v(2, -1.6)], 0.5), polyline([v(-2, -1.6), v(-2, 1.5)], 0.5));
+      const slope = 0.55;
+      for (let k = 0; k < 26; k++) {
+        const x = -1.8 + random(k) * 3.6;
+        const point = dot(0.05, 0.9);
+        point.position.set(x, x * slope + (random(k + 40) - 0.5) * 0.9, (random(k + 80) - 0.5) * 0.6);
+        group.add(point);
+      }
+      const model = polyline([v(-2.1, 0), v(2.1, 0)]);
+      group.add(model);
+      return { scene, camera: view(0, 0, 6.8), update(t) {
+        const p = (t * 0.45) % 3;
+        const learned = 1 - Math.exp(-p * 1.8) * Math.cos(p * 5);
+        model.rotation.z = Math.atan(slope) * learned * (1 - ease(clamp((p - 2.5) * 2)));
+        group.rotation.y = Math.sin(t * 0.35) * 0.4;
+      } };
+    },
+    // Merise: two entities and the association between them.
+    entities() {
+      const scene = new THREE.Scene();
+      const group = new THREE.Group();
+      scene.add(group);
+      [-1.7, 1.7].forEach(x => {
+        group.add(polyline([v(x - 0.55, 0.25, 0.06), v(x + 0.55, 0.25, 0.06)], 0.7));
+        [-0.02, -0.25].forEach(y => group.add(polyline([v(x - 0.38, y, 0.06), v(x + 0.22, y, 0.06)], 0.4)));
+        const entity = block(new THREE.BoxGeometry(1.1, 1.0, 0.1));
+        entity.position.set(x, 0, 0);
+        group.add(entity);
+      });
+      const association = circle(0.5, 0.9);
+      group.add(association, polyline([v(-1.15, 0), v(-0.5, 0)], 0.6), polyline([v(0.5, 0), v(1.15, 0)], 0.6));
+      const tokens = [dot(0.06), dot(0.06)];
+      group.add(...tokens);
+      return { scene, camera: view(0, 0.6, 6.3), update(t) {
+        const p = (t * 0.6) % 2;
+        const f = ease(p < 1 ? p : 2 - p);
+        tokens[0].position.set(-1.15 + f * 0.65, 0, 0.05);
+        tokens[1].position.set(1.15 - f * 0.65, 0, 0.05);
+        const pulse = 1 + Math.max(0, 1 - Math.abs(f - 1) * 5) * 0.12;
+        association.scale.set(pulse, 0.6 * pulse, 1);
+        group.rotation.set(0.1, Math.sin(t * 0.4) * 0.4, 0);
+      } };
+    },
+    // UML: a class diagram, two classes that inherit from a third one.
+    classes() {
+      const scene = new THREE.Scene();
+      const group = new THREE.Group();
+      scene.add(group);
+      const umlClass = (x, y) => {
+        const box = new THREE.Group();
+        box.add(block(new THREE.BoxGeometry(1.2, 0.95, 0.08)));
+        box.add(polyline([v(-0.6, 0.2, 0.05), v(0.6, 0.2, 0.05)], 0.7), polyline([v(-0.6, -0.15, 0.05), v(0.6, -0.15, 0.05)], 0.7));
+        box.add(polyline([v(-0.3, 0.34, 0.05), v(0.3, 0.34, 0.05)], 0.9));
+        [0.04, -0.3].forEach(line => box.add(polyline([v(-0.45, line, 0.05), v(0.2, line, 0.05)], 0.35)));
+        box.position.set(x, y, 0);
+        group.add(box);
+        return box;
+      };
+      umlClass(0, 0.85);
+      umlClass(-1.4, -0.85);
+      umlClass(1.4, -0.85);
+      // Inheritance: the lines of the children meet under a hollow triangle.
+      group.add(polyline([v(0, 0.375), v(-0.13, 0.17), v(0.13, 0.17), v(0, 0.375)]));
+      group.add(polyline([v(-1.4, -0.375), v(-1.4, -0.05), v(1.4, -0.05), v(1.4, -0.375)], 0.6), polyline([v(0, -0.05), v(0, 0.17)], 0.6));
+      const paths = [-1.4, 1.4].map(x => [v(x, -0.375, 0.05), v(x, -0.05, 0.05), v(0, -0.05, 0.05), v(0, 0.17, 0.05)]);
+      const tokens = paths.map(() => { const token = dot(0.055); group.add(token); return token; });
+      return { scene, camera: view(0, 0.3, 6.0), update(t) {
+        const f = ease((t * 0.45) % 1);
+        tokens.forEach((token, k) => token.position.copy(along(paths[k], f)));
+        group.rotation.set(0.05, Math.sin(t * 0.4) * 0.4, 0);
+      } };
+    },
+    // MySQL: a query scans a table row by row and marks the rows it keeps.
+    table() {
+      const scene = new THREE.Scene();
+      const group = new THREE.Group();
+      scene.add(group);
+      const columns = 4, rows = 6, w = 3.2, h = 2.4, rowHeight = h / rows;
+      for (let r = 0; r <= rows; r++) group.add(polyline([v(-w / 2, h / 2 - r * rowHeight), v(w / 2, h / 2 - r * rowHeight)], r <= 1 || r === rows ? 0.7 : 0.25));
+      for (let c = 0; c <= columns; c++) group.add(polyline([v(-w / 2 + c * w / columns, h / 2), v(-w / 2 + c * w / columns, -h / 2)], c === 0 || c === columns ? 0.7 : 0.25));
+      const rowY = index => h / 2 - (index + 1.5) * rowHeight;
+      const cursor = outline(new THREE.PlaneGeometry(w + 0.12, rowHeight + 0.06));
+      group.add(cursor);
+      const marks = [1, 3, 4].map(index => {
+        const mark = dot(0.06);
+        mark.position.set(-w / 2 - 0.25, rowY(index), 0);
+        group.add(mark);
+        return [mark, index];
+      });
+      return { scene, camera: view(0, 0.3, 6.0), update(t) {
+        const q = (t * 1.1) % 7;
+        const index = Math.min(4, Math.floor(q));
+        const place = Math.min(4, index + ease(clamp((q - index - 0.6) * 2.5)));
+        cursor.position.set(0, h / 2 - (place + 1.5) * rowHeight, 0.02);
+        cursor.visible = q < 5.2;
+        marks.forEach(([mark, row]) => { mark.visible = q > row + 0.3 && q < 6.6; });
+        group.rotation.set(-0.1, Math.sin(t * 0.4) * 0.35, 0);
+      } };
+    },
+    // PostgreSQL: a join links the rows of two tables, pair after pair.
+    join() {
+      const scene = new THREE.Scene();
+      const group = new THREE.Group();
+      scene.add(group);
+      const rowsAt = x => [0, 1, 2, 3, 4].map(k => {
+        const row = block(new THREE.BoxGeometry(1.0, 0.3, 0.08));
+        row.position.set(x, 0.9 - k * 0.45, 0);
+        group.add(row);
+        return row;
+      });
+      const left = rowsAt(-1.4), right = rowsAt(1.4);
+      const pairs = [[0, 2], [1, 0], [2, 4], [3, 1], [4, 3]];
+      const links = pairs.map(([a, b]) => {
+        const ya = left[a].position.y, yb = right[b].position.y;
+        const link = polyline(new THREE.CatmullRomCurve3([v(-0.9, ya, 0.05), v(0, (ya + yb) / 2, 0.45), v(0.9, yb, 0.05)]).getPoints(32), 0);
+        group.add(link);
+        return link;
+      });
+      return { scene, camera: view(0, 0.3, 6.0), update(t) {
+        const p = (t * 0.8) % (pairs.length + 2);
+        links.forEach((link, k) => { link.material.opacity = clamp(p - k) * (1 - clamp((p - pairs.length - 1) * 2)) * 0.8; });
+        pairs.forEach(([a, b], k) => {
+          const on = Math.max(0, 1 - Math.abs(p - k - 0.5) * 3);
+          left[a].position.z = right[b].position.z = on * 0.15;
+        });
+        group.rotation.set(0.05, Math.sin(t * 0.4) * 0.35, 0);
+      } };
+    },
+    // Cypress: the tests of a suite run one after the other and pass.
+    checks() {
+      const scene = new THREE.Scene();
+      const group = new THREE.Group();
+      scene.add(group);
+      const rows = [0, 1, 2, 3, 4].map(k => {
+        const y = 0.9 - k * 0.45;
+        const frame = outline(new THREE.PlaneGeometry(2.8, 0.34), 0.3);
+        frame.position.y = y;
+        const ring = circle(0.11, 0.3);
+        ring.position.set(-1.15, y, 0.01);
+        const check = polyline([v(-0.1, 0), v(-0.03, -0.07), v(0.12, 0.09)], 0);
+        check.position.set(-1.15, y, 0.02);
+        group.add(frame, polyline([v(-0.8, y), v(-0.2 + random(k) * 1.2, y)], 0.45), ring, check);
+        return { ring, check };
+      });
+      const spinner = polyline(Array.from({ length: 17 }, (_, k) => v(Math.cos(k / 16 * Math.PI * 1.4) * 0.11, Math.sin(k / 16 * Math.PI * 1.4) * 0.11)));
+      group.add(spinner);
+      return { scene, camera: view(0, 0.2, 5.4), update(t) {
+        const p = (t * 0.9) % (rows.length + 2);
+        rows.forEach(({ ring, check }, k) => {
+          const done = p > k + 1 && p < rows.length + 1.6;
+          check.material.opacity = done ? 1 : 0;
+          ring.material.opacity = done ? 0.9 : 0.3;
+        });
+        const current = Math.floor(p);
+        spinner.visible = current < rows.length;
+        spinner.position.set(-1.15, 0.9 - Math.min(current, rows.length - 1) * 0.45, 0.02);
+        spinner.rotation.z = -t * 6;
+        group.rotation.set(-0.08, -0.3 + Math.sin(t * 0.4) * 0.2, 0);
+      } };
+    },
+    // Continuous integration: a change goes through the stages of the pipeline, then passes.
+    pipeline() {
+      const scene = new THREE.Scene();
+      const group = new THREE.Group();
+      scene.add(group);
+      group.add(polyline([v(-2.4, 0), v(2.4, 0)], 0.25));
+      const stages = [-1.8, -0.6, 0.6, 1.8].map(x => {
+        const stage = block(new THREE.BoxGeometry(0.7, 0.7, 0.7), 0.35);
+        stage.position.x = x;
+        group.add(stage);
+        return stage;
+      });
+      const token = dot(0.07);
+      const check = polyline([v(-0.2, 0), v(-0.06, -0.15), v(0.24, 0.2)], 0);
+      check.position.set(1.8, 0.75, 0);
+      group.add(token, check);
+      return { scene, camera: view(1.2, 1.6, 6.2), update(t) {
+        const p = (t * 0.4) % 1.4;
+        const x = -2.4 + clamp(p) * 4.8;
+        token.position.x = x;
+        token.visible = p < 1;
+        stages.forEach(stage => {
+          edges(stage).opacity = x > stage.position.x - 0.35 ? 1 : 0.35;
+          stage.scale.setScalar(1 + Math.max(0, 1 - Math.abs(x - stage.position.x) * 3) * 0.12);
+        });
+        check.material.opacity = p > 1 ? 1 : 0;
+        group.rotation.y = Math.sin(t * 0.35) * 0.25;
+      } };
+    },
+    // Continuous deployment: a package rises from its base and docks in production.
+    deploy() {
+      const scene = new THREE.Scene();
+      const base = outline(new THREE.CylinderGeometry(1.0, 1.0, 0.08, 48), 0.6);
+      base.position.y = -1.1;
+      const target = outline(new THREE.BoxGeometry(1.0, 1.0, 1.0), 0.5);
+      target.position.y = 1.0;
+      const box = block(new THREE.BoxGeometry(0.62, 0.62, 0.62));
+      const wave = circle(0.8, 0);
+      wave.rotation.x = -Math.PI / 2;
+      wave.position.y = 1.0;
+      const trail = [0, 1, 2].map(() => dot(0.04, 0.6));
+      scene.add(base, target, box, wave, ...trail);
+      return { scene, camera: view(2.9, 1.5, 6.3), update(t) {
+        const p = (t * 0.5) % 2;
+        const rise = ease(clamp(p * 1.2));
+        box.position.y = -0.75 + rise * 1.75;
+        box.rotation.y = rise * Math.PI / 2;
+        box.scale.setScalar(Math.max(0.001, ease(clamp(p * 4)) * (1 - ease(clamp((p - 1.7) / 0.3)))));
+        const docked = clamp((p - 0.85) * 2);
+        wave.scale.setScalar(1 + docked * 1.2);
+        wave.material.opacity = docked > 0 && docked < 1 ? 1 - docked : 0;
+        trail.forEach((spark, k) => {
+          spark.position.set(0, box.position.y - 0.45 - k * 0.22, 0);
+          spark.visible = rise > 0.05 && rise < 0.98;
+        });
+        target.rotation.y = t * 0.3;
+      } };
+    },
+    // Claude Code: a terminal, where the lines of a session appear after the prompt.
+    terminal() {
+      const scene = new THREE.Scene();
+      const group = new THREE.Group();
+      scene.add(group);
+      group.add(block(new THREE.BoxGeometry(3.4, 2.3, 0.06), 0.8), polyline([v(-1.7, 0.85, 0.04), v(1.7, 0.85, 0.04)], 0.5));
+      [0, 1, 2].forEach(k => {
+        const light = dot(0.045, 0.8);
+        light.position.set(-1.5 + k * 0.15, 1.0, 0.04);
+        group.add(light);
+      });
+      const lines = [1.6, 2.4, 1.1, 2.0, 1.4].map((length, k) => {
+        const y = 0.55 - k * 0.32;
+        const prompt = polyline([v(-1.45, y + 0.06, 0.04), v(-1.37, y, 0.04), v(-1.45, y - 0.06, 0.04)], 0.8);
+        const text = polyline([v(0, 0, 0.04), v(1, 0, 0.04)], 0.75);
+        text.position.set(-1.25, y, 0);
+        group.add(prompt, text);
+        return { prompt, text, length, y };
+      });
+      const caret = new THREE.Mesh(new THREE.PlaneGeometry(0.1, 0.18), new THREE.MeshBasicMaterial({ color: WHITE }));
+      group.add(caret);
+      return { scene, camera: view(0, 0, 5.4), update(t) {
+        const p = (t * 0.8) % (lines.length + 2);
+        const shown = p < lines.length + 1.5;
+        lines.forEach(({ prompt, text, length }, k) => {
+          const f = clamp(p - k);
+          text.scale.x = Math.max(0.001, f * length);
+          text.visible = prompt.visible = f > 0 && shown;
+        });
+        const k = Math.min(lines.length - 1, Math.floor(p));
+        const f = clamp(p - k);
+        caret.position.set(-1.25 + f * lines[k].length + 0.08, lines[k].y, 0.05);
+        caret.visible = shown && (f < 1 || Math.sin(t * 8) > 0);
+        group.rotation.set(-0.08, -0.25 + Math.sin(t * 0.4) * 0.15, 0);
+      } };
+    },
+    // Prompt engineering: a conversation, bubble after bubble, each one typed first.
+    chat() {
+      const scene = new THREE.Scene();
+      const group = new THREE.Group();
+      scene.add(group);
+      const bubbles = [[-0.5, 0.95, 2.0, 0.42], [0.55, 0.38, 1.6, 0.42], [-0.35, -0.24, 2.3, 0.62], [0.65, -0.88, 1.4, 0.42]].map(([x, y, w, h], k) => {
+        const bubble = new THREE.Group();
+        bubble.add(block(new THREE.BoxGeometry(w, h, 0.08), k % 2 ? 1 : 0.6));
+        (h > 0.5 ? [0.1, -0.1] : [0]).forEach((line, j) => bubble.add(polyline([v(-w / 2 + 0.18, line, 0.05), v(w / 2 - 0.18 - j * 0.5, line, 0.05)], 0.6)));
+        bubble.position.set(x, y, 0);
+        group.add(bubble);
+        return bubble;
+      });
+      const typing = [0, 1, 2].map(() => { const point = dot(0.05); group.add(point); return point; });
+      return { scene, camera: view(0, 0, 5.6), update(t) {
+        const p = (t * 0.7) % (bubbles.length + 2);
+        const out = ease(clamp(p - bubbles.length - 1));
+        bubbles.forEach((bubble, k) => bubble.scale.setScalar(Math.max(0.001, ease(clamp((p - k - 0.5) * 3)) * (1 - out))));
+        const next = Math.floor(p);
+        const isTyping = next < bubbles.length && p - next < 0.5;
+        typing.forEach((point, j) => {
+          point.visible = isTyping;
+          if (isTyping) point.position.set(bubbles[next].position.x - 0.16 + j * 0.16, bubbles[next].position.y + Math.max(0, Math.sin(t * 10 - j)) * 0.06, 0.05);
+        });
+        group.rotation.set(-0.05, Math.sin(t * 0.4) * 0.3, 0);
+      } };
+    },
+    // Integrating AI with method: a core, with the tools that orbit around it, each on its track.
+    orbit() {
+      const scene = new THREE.Scene();
+      const core = outline(new THREE.IcosahedronGeometry(0.62, 0), 0.9);
+      scene.add(core);
+      const orbits = [[1.0, 0.3, 0], [1.3, -0.5, 0.6], [1.6, 0.9, -0.4]].map(([radius, tiltX, tiltZ], k) => {
+        const track = new THREE.Group();
+        track.rotation.set(Math.PI / 2 + tiltX, 0, tiltZ);
+        const satellite = dot(0.07);
+        track.add(circle(radius, 0.3), satellite);
+        scene.add(track);
+        return { radius, satellite, speed: 0.9 - k * 0.2, phase: k * 2 };
+      });
+      return { scene, camera: view(0, 0.8, 7.4), update(t) {
+        core.rotation.set(t * 0.3, t * 0.45, 0);
+        orbits.forEach(({ radius, satellite, speed, phase }) => satellite.position.set(Math.cos(t * speed + phase) * radius, Math.sin(t * speed + phase) * radius, 0));
+      } };
+    },
+    // Scrum: each sprint goes once around the loop and adds an increment to the product.
+    sprint() {
+      const scene = new THREE.Scene();
+      const group = new THREE.Group();
+      scene.add(group);
+      const radius = 1.6;
+      const loop = circle(radius, 0.35);
+      loop.rotation.x = -Math.PI / 2;
+      loop.position.y = -0.5;
+      const runner = dot(0.08);
+      group.add(loop, runner);
+      const layers = [0, 1, 2, 3].map(() => {
+        const layer = block(new THREE.BoxGeometry(0.9, 0.18, 0.9));
+        group.add(layer);
+        return layer;
+      });
+      return { scene, camera: view(0, 2.6, 6.4, [0, -0.1, 0]), update(t) {
+        const laps = (t * 0.45) % 5;
+        const built = Math.floor(laps), lap = laps - built;
+        const a = lap * Math.PI * 2;
+        runner.position.set(Math.cos(a) * radius, -0.5, -Math.sin(a) * radius);
+        const out = built === 4 ? ease(clamp((lap - 0.7) / 0.3)) : 0;
+        layers.forEach((layer, k) => {
+          const drop = k === built - 1 ? ease(clamp(lap * 3)) : 1;
+          layer.visible = k < built;
+          layer.position.y = -0.41 + k * 0.24 + (1 - drop) * 0.6;
+          layer.scale.setScalar(Math.max(0.001, 1 - out));
+        });
+        group.rotation.y = t * 0.15;
       } };
     },
   };
