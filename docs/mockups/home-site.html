@@ -357,14 +357,9 @@
     const geometry = new THREE.BoxGeometry(2, 2, 2);
     const cube = new THREE.Mesh(geometry, FACES.map(face => new THREE.MeshBasicMaterial({ map: faceTexture(face), transparent: true, opacity: 0.95 })));
     cube.add(new THREE.LineSegments(new THREE.EdgesGeometry(geometry), new THREE.LineBasicMaterial({ color: white, transparent: true, opacity: 0.9 })));
-    // The shell around the cube: a box of translucent orange, with orange edges. It is drawn after
-    // the cube and doesn't hide it: its front veils the cube, its back stays behind it.
-    const signal = new THREE.Color(css("--signal") || "#d3450e");
-    const shellBox = new THREE.BoxGeometry(2.7, 2.7, 2.7);
-    const shell = new THREE.Mesh(shellBox, new THREE.MeshBasicMaterial({ color: signal, transparent: true, opacity: 0.07, side: THREE.DoubleSide, depthWrite: false }));
-    const shellEdges = new THREE.LineSegments(new THREE.EdgesGeometry(shellBox), new THREE.LineBasicMaterial({ color: signal, transparent: true, opacity: 0.55, depthWrite: false }));
-    shell.add(shellEdges);
-    shell.renderOrder = shellEdges.renderOrder = 1;
+    // The shell around the cube: its edges only, in translucent orange, so that the cube shows
+    // clearly inside.
+    const shell = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(2.7, 2.7, 2.7)), new THREE.LineBasicMaterial({ color: new THREE.Color(css("--signal") || "#d3450e"), transparent: true, opacity: 0.4 }));
     const rig = new THREE.Group();
     rig.add(cube, shell);
     scene.add(rig);
