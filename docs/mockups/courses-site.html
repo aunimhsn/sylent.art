@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="fr" data-theme="night">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Formations · Sylent</title>
+<meta name="description" content="Sept domaines de formation en informatique, des modules indépendants et des durées adaptables, sur site ou à distance, pour les écoles, les organismes de formation et les entreprises.">
+<!--
+  The offer list of sylent.art (/courses, mock-up, step 4 of roadmap.md), shown at phone and
+  desktop width by home.html (?page=courses). The parts shared by every page are in shared/.
+  Layout: the « Formations » section of the home page, chosen by the owner instead of
+  courses.excalidraw: the same heading, text and cards (shared/site.js, shared/covers.js), under
+  the top of page of the contact page (the grid of the hero, fading out).
+-->
+<script src="shared/head.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Anaheim:wght@500&display=block">
+<link rel="stylesheet" href="shared/site.css">
+<style>
+  /* ── Page ──────────────────────────────────────────────────────────────────────── */
+
+  .app-courses { padding: calc(var(--header-height) + clamp(48px, 7vw, 96px)) 0 clamp(80px, 11vw, 140px); }
+  /* Texture: the grid of the hero of the home page, from the top of the page; it fades out
+     before the cards. */
+  .app-courses-head { position: relative; }
+  .app-courses-head::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: 50%;
+    width: 100vw;
+    translate: -50% 0;
+    top: calc(-1 * (var(--header-height) + clamp(48px, 7vw, 96px)));
+    bottom: 0;
+    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mask-image: linear-gradient(#000 35%, transparent);
+    pointer-events: none;
+  }
+</style>
+</head>
+<body data-page="courses">
+<script src="shared/site.js"></script>
+
+<main id="content"></main>
+
+<script>
+  document.getElementById("content").innerHTML = `
+    <section class="app-courses" aria-labelledby="courses-title">
+      <div class="app-wrap">
+        <div class="app-courses-head">
+          ${heading("Formations", "Apprendre", "courses-title", 1)}
+          <p class="app-lead app-reveal">Sept domaines, des modules indépendants et des durées toujours adaptables, sur site ou à distance.</p>
+        </div>
+        <ul class="app-cards is-domains">
+          ${DOMAINS.map(domainCard).join("")}${customCard()}
+        </ul>
+      </div>
+    </section>
+    ${siteCta()}
+    ${siteFooter()}`;
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="shared/motion.js"></script>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }</script>
+<script type="module" src="shared/covers.js"></script>
+</body>
+</html>

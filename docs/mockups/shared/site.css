@@ -1,6 +1,6 @@
 /* The styles shared by every page of the mock-up: the tokens of the style, the base, the
-   header and the mobile menu, the call to action, the footer, the back-to-top button and the
-   starting state of the animations. Each page adds the styles of its own blocks. */
+   cards of the domains, the header and the mobile menu, the call to action, the footer, the
+   back-to-top button and the starting state of the animations. Each page adds the styles of its own blocks. */
 
 /* ── Style: tokens only ──────────────────────────────────────────────────────────── */
 
@@ -131,6 +131,54 @@ img, svg, canvas { display: block; }
   backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
 }
+
+/* ── Cards of the domains, with their 3D cover (shared/covers.js) ─────────────────── */
+
+.app-cards { position: relative; display: grid; gap: 16px; margin: 0; padding: 0; list-style: none; }
+@media (min-width: 640px) { .app-cards.is-domains { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1100px) { .app-cards.is-domains { grid-template-columns: repeat(4, 1fr); } }
+.app-card {
+  --mx: 50%;
+  --my: 50%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 28px 26px;
+  overflow: hidden;
+  border: 0;
+  background-image: radial-gradient(380px circle at var(--mx) var(--my), var(--spot), transparent 50%);
+  transition: background-color .35s;
+}
+.app-card:hover { background-color: var(--glass-hover); }
+.app-card h3 { margin: 0; font: 700 21px/1.2 var(--font-title); letter-spacing: -0.025em; }
+.app-card p { margin: 0; color: var(--secondary); font-size: 15.5px; line-height: 1.55; }
+.app-card > p { margin-bottom: 18px; }
+/* Cover: a small 3D scene of the domain, drawn by Three.js, across the top of the card. */
+.app-cover {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  margin: -28px -26px 8px;
+  background-color: #101010;
+  background-image: linear-gradient(rgb(255 255 255 / .035) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / .035) 1px, transparent 1px);
+  background-size: 24px 24px;
+  border-bottom: 1px solid rgb(255 255 255 / .06);
+}
+.app-cover canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.app-new { position: absolute; left: 16px; top: 16px; padding: 6px 10px; background: var(--new-bg); color: var(--new-text); font: 800 11px/1 var(--font-title); letter-spacing: .1em; text-transform: uppercase; }
+/* "Voir les modules": a white band across the bottom of the card; the whole card is the link. */
+.app-card-more {
+  display: block;
+  margin: auto -26px -28px;
+  padding: 16px;
+  background: var(--accent);
+  color: var(--on-accent);
+  text-align: center;
+  font: 700 15px/1 var(--font-title);
+  transition: padding .35s;
+}
+.app-card-more::after { content: ""; position: absolute; inset: 0; }
+.app-card:hover .app-card-more { padding-block: 19px; }
 
 /* ── Header ─────────────────────────────────────────────────────────────────────── */
 

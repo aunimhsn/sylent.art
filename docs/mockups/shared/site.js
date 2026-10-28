@@ -1,7 +1,8 @@
 // The parts shared by every page of the mock-up, loaded at the start of <body>, before the
-// script of the page: the brand, the icons and the helpers the pages use to build their content,
-// then the header, the mobile menu and the back-to-top button, and their behavior. A page sets
-// data-page on <body> (home, contact) to mark its link in the navigation.
+// script of the page: the brand, the icons, the domains and the helpers the pages use to build
+// their content, then the header, the mobile menu and the back-to-top button, and their
+// behavior. A page sets data-page on <body> (home, courses, contact) to mark its link in the
+// navigation.
 
 const NB = "\u00a0";
 
@@ -16,6 +17,7 @@ const ICONS = {
   close: '<path d="M6 6l12 12M18 6L6 18"/>',
   up: '<path d="M6 15l6-6 6 6"/>',
   down: '<path d="M6 9l6 6 6-6"/>',
+  check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
 };
 const icon = (name, size = 22) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]}</svg>`;
 
@@ -27,9 +29,9 @@ const heading = (title, ghost, id, level = 2) => `
   </div>`;
 
 // The pages of the mock-up, and the links of the navigation.
-const PAGES = { home: "home-site.html", contact: "contact-site.html" };
+const PAGES = { home: "home-site.html", courses: "courses-site.html", contact: "contact-site.html" };
 // The articles are left out of the first release.
-const NAVIGATION = [["Formations", `${PAGES.home}#formations`, "courses"], ["À propos", "#", "about"], ["Contact", PAGES.contact, "contact"]];
+const NAVIGATION = [["Formations", PAGES.courses, "courses"], ["À propos", "#", "about"], ["Contact", PAGES.contact, "contact"]];
 // The header and the menu leave out Contact: their « Me contacter » button leads there. The
 // footer keeps the full list.
 const MENU = NAVIGATION.filter(([, , page]) => page !== "contact");
@@ -39,12 +41,40 @@ const current = page => page === currentPage ? ' aria-current="page"' : "";
 // A link to another site opens in a new tab, which a screen reader announces.
 const external = (href, label) => `<a href="${href}" target="_blank" rel="noopener">${label}<span class="app-hidden"> [nouvel onglet]</span></a>`;
 
-// The call to action and the footer, which a page places at its end.
-const siteCta = () => `
+// The domains of the offers (specs.md, Training offers): the slug of their page, the title, the
+// summary, the 3D scene of their cover (shared/covers.js) and whether the offer is new.
+const DOMAINS = [
+  { slug: "initiation-a-la-programmation", title: "Initiation à la programmation", summary: "Les bases de la logique et de l’algorithmique, en douceur.", scene: "steps" },
+  { slug: "developpement-web", title: "Développement web", summary: `Du HTML aux frameworks${NB}: construire des sites et des applications web.`, scene: "web" },
+  { slug: "python-et-donnees", title: "Python et données", summary: "Programmer en Python, du script au machine learning.", scene: "chart" },
+  { slug: "bases-de-donnees", title: "Bases de données", summary: "Modéliser, concevoir et interroger des données.", scene: "database" },
+  { slug: "methodologie-et-tests", title: "Méthodologie et tests", summary: "Versionner, tester et livrer avec méthode.", scene: "branch" },
+  { slug: "ia-pour-le-developpement", title: "IA pour le développement", summary: "Utiliser l’IA avec méthode et rigueur, au quotidien.", scene: "network", isNew: true },
+  { slug: "gestion-de-projet", title: "Gestion de projet", summary: "S’initier à l’agilité avec Scrum.", scene: "board" },
+];
+// The offer pages are not in the mock-up yet: the cards lead nowhere for now.
+const domainCard = domain => `
+  <li class="app-card app-glass app-reveal app-tilt">
+    <div class="app-cover" data-scene="${domain.scene}" aria-hidden="true"><canvas></canvas>${domain.isNew ? '<span class="app-new">Nouveau</span>' : ""}</div>
+    <h3>${domain.title}</h3><p>${domain.summary}</p>
+    <a class="app-card-more" href="#" aria-label="${domain.title}${NB}: voir les modules">Voir les modules</a>
+  </li>`;
+// The last card, after the domains: a module built for the request.
+const customCard = () => `
+  <li class="app-card app-glass app-reveal app-tilt">
+    <div class="app-cover" data-scene="custom" aria-hidden="true"><canvas></canvas></div>
+    <h3>Un besoin sur mesure${NB}?</h3>
+    <p>Décrivez vos apprenants et vos objectifs${NB}: je construis le module.</p>
+    <a class="app-card-more" href="${PAGES.contact}">Me contacter</a>
+  </li>`;
+
+// The call to action and the footer, which a page places at its end; an offer page asks its own
+// question.
+const siteCta = (question = `Un module à confier${NB}?<br>Parlons de vos apprenants.`) => `
   <section class="app-cta" aria-labelledby="cta-title">
     <span class="app-cta-ghost" aria-hidden="true">Echanger</span>
     <div class="app-wrap">
-      <h2 class="app-reveal" id="cta-title">Un module à confier${NB}?<br>Parlons de vos apprenants.</h2>
+      <h2 class="app-reveal" id="cta-title">${question}</h2>
       <a class="app-button app-magnetic app-reveal" href="${PAGES.contact}">Me contacter</a>
     </div>
   </section>`;

@@ -6,8 +6,9 @@
 <title>Home Mock-up</title>
 <!--
   Mock-up of the pages (step 4 of roadmap.md): the layout of set 1 of docs/wireframes in the
-  chosen style, at phone and desktop width. The page itself is home-site.html, shown here in
-  frames; switch the view with the bar at the top, or open it directly, e.g. ?view=desktop.
+  chosen style, at phone and desktop width. This page is only the viewer: the pages themselves
+  are the *-site.html files (FILES below), shown here in frames; switch the page and the view
+  with the bar at the top, or open it directly, e.g. ?page=courses&view=desktop.
 
   Serve the repository root, so that the frames load even in a sandboxed browser:
     python3 docs/mockups/serve.py 8781
@@ -44,7 +45,7 @@
   const VARIANTS = {
     page: {
       label: "Page",
-      options: { home: "Home", contact: "Contact" },
+      options: { home: "Home", courses: "Formations", contact: "Contact" },
       fallback: "home",
     },
     // The states of the contact form (only for the contact page).
@@ -63,7 +64,7 @@
   // The Console style chosen by the owner, in white instead of green, with Manrope for the titles
   // and Anaheim medium for the text, and the headings of the former site. Atelier was set aside.
   const NOTE = "Night style: neutral blacks and white, Manrope for the titles, Anaheim medium for the text, the SYLENT logo, the headings of the former site.";
-  const FILES = { home: "home-site.html", contact: "contact-site.html" };
+  const FILES = { home: "home-site.html", courses: "courses-site.html", contact: "contact-site.html" };
 
   const params = new URLSearchParams(location.search);
   const chosen = Object.fromEntries(Object.entries(VARIANTS).map(([key, variant]) =>
