@@ -38,9 +38,10 @@
   .app-lost .app-heading-title { top: auto; bottom: 18%; }
   .app-lost .app-lead { margin-top: 0; }
   /* The title of the former site, « Oups, perdu dans l’espace », from 640 px; a phone has room
-     for a shorter one. The hidden title is hidden from screen readers too. */
+     for a shorter one. The hidden title is hidden from screen readers too. The text goes to the
+     line after its first sentence from 640 px too: on a phone, that sentence already wraps. */
   .app-lost-wide { display: none; }
-  @media (min-width: 640px) { .app-lost-wide { display: inline; } .app-lost-narrow { display: none; } }
+  @media (min-width: 640px) { span.app-lost-wide { display: inline; } br.app-lost-wide { display: initial; } .app-lost-narrow { display: none; } }
   .app-lost-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
 </style>
 </head>
@@ -57,7 +58,7 @@
           <span class="app-heading-ghost" aria-hidden="true">404</span>
           <h1 class="app-heading-title" id="lost-title"><span class="app-lost-wide">Oups, perdu dans l’espace</span><span class="app-lost-narrow">Page introuvable</span></h1>
         </div>
-        <p class="app-lead app-reveal">Cette page n’existe pas ou a changé d’adresse.<br>Les formations, elles, sont toujours là.</p>
+        <p class="app-lead app-reveal">Cette page n’existe pas ou a changé d’adresse.<br class="app-lost-wide"> Les formations, elles, sont toujours là.</p>
         <div class="app-lost-actions app-reveal">
           <a class="app-button app-magnetic" href="${PAGES.home}">Retour à l’accueil</a>
           <a class="app-button is-outline" href="${PAGES.courses}">Voir les formations</a>
