@@ -206,7 +206,7 @@ function spinPartners() {
 }
 
 // A text page (legal notice, privacy policy): a heading over the grid, the date of the last update,
-// then numbered sections beside their table of contents, which follows the scroll on a computer.
+// then sections beside their table of contents, which follows the scroll on a computer.
 // Each section is [id, title, html].
 const docPage = ({ title, ghost, lead, updated, sections }) => `
   <article class="app-doc" aria-labelledby="doc-title">
@@ -220,9 +220,9 @@ const docPage = ({ title, ghost, lead, updated, sections }) => `
         <nav class="app-doc-toc" aria-label="Sommaire">
           <ol>${sections.map(([id, section]) => `<li><a href="#${id}">${section}</a></li>`).join("")}</ol>
         </nav>
-        <div class="app-doc-main">${sections.map(([id, section, html], index) => `
+        <div class="app-doc-main">${sections.map(([id, section, html]) => `
           <section class="app-doc-section app-reveal" id="${id}" aria-labelledby="${id}-title">
-            <h2 id="${id}-title"><span class="app-doc-number" aria-hidden="true">${String(index + 1).padStart(2, "0")}</span>${section}</h2>
+            <h2 id="${id}-title">${section}</h2>
             ${html}
           </section>`).join("")}
         </div>

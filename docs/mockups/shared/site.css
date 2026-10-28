@@ -284,19 +284,18 @@ html[data-motion="off"] .app-partner-list .is-copy { display: none; }
 .app-doc-toc a[aria-current] { border-left-color: var(--signal); color: var(--text); }
 .app-doc-section { padding-top: 32px; border-top: 1px solid var(--line); scroll-margin-top: calc(var(--header-height) + 24px); }
 .app-doc-section + .app-doc-section { margin-top: clamp(48px, 5vw, 64px); }
-.app-doc-section h2 { display: flex; align-items: baseline; gap: 18px; margin: 0 0 22px; font: var(--title-weight) clamp(24px, 2.6vw, 32px)/1.15 var(--font-title); letter-spacing: var(--title-tracking); }
-.app-doc-number { flex: none; color: var(--dim); font-weight: 200; }
+.app-doc-section h2 { margin: 0 0 22px; font: var(--title-weight) clamp(24px, 2.6vw, 32px)/1.15 var(--font-title); letter-spacing: var(--title-tracking); }
 .app-doc-section p, .app-doc-section li { max-width: 68ch; color: var(--secondary); text-wrap: pretty; }
 .app-doc-section p { margin: 0 0 14px; }
 .app-doc-section ul { margin: 0 0 14px; padding-left: 20px; }
 .app-doc-section li + li { margin-top: 6px; }
 .app-doc-section strong { color: var(--text); font-weight: inherit; }
-.app-doc-section a { color: var(--text); text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 4px; transition: text-decoration-color .3s; }
-.app-doc-section a:hover { text-decoration-color: var(--text); }
-/* Facts as label and value, under thin rules. */
+/* Links in white among the gray text, orange under the pointer as on the contact page. */
+.app-doc-section a { color: var(--text); transition: color .3s; }
+.app-doc-section a:hover { color: var(--signal); }
+/* Facts as a label over its value, under thin rules. */
 .app-doc-facts { margin: 0 0 14px; }
 .app-doc-facts div { display: grid; gap: 4px; padding: 14px 0; border-bottom: 1px solid var(--line); }
-@media (min-width: 640px) { .app-doc-facts div { grid-template-columns: 200px 1fr; gap: 24px; } }
 .app-doc-facts dt { color: var(--dim); font: 800 12px/1.6 var(--font-title); letter-spacing: .14em; text-transform: uppercase; }
 .app-doc-facts dd { margin: 0; color: var(--text); }
 /* A detail still to provide (SIRET, NDA). */
