@@ -9,9 +9,8 @@
   The page of one module of sylent.art (mock-up, step 4 of roadmap.md), shown at phone and
   desktop width by home.html (?page=module); ?module=<slug> opens another module (the slugs come
   from slugOf in shared/site.js). The parts shared by every page are in shared/.
-  Layout, in the style of the home page: a hero with the grid and its fluid, the text on the left
-  and the 3D scene of the module in large on the right (shared/covers.js); the key facts under a
-  rule; the prerequisites, the objectives and the program, numbered as the pedagogy of the home
+  Layout, in the style of the home page: a hero with the grid and its fluid, and the text on the
+  left; the key facts under a rule; the prerequisites, the objectives and the program, numbered as the pedagogy of the home
   page, beside a card that follows the scroll on a computer; the other modules of the domain.
   Sample content: JavaScript (after its page on the former site) and Claude Code have a program;
   the other modules show theirs as to come.
@@ -22,7 +21,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Anaheim:wght@500&display=block">
 <link rel="stylesheet" href="shared/site.css">
 <style>
-  /* ── Hero: the text and the scene of the module, over the grid ──────────────────── */
+  /* ── Hero: the text of the module, over the grid ───────────────────────────────── */
 
   .app-module-hero { position: relative; padding: calc(var(--header-height) + clamp(36px, 5vw, 72px)) 0 clamp(48px, 6vw, 80px); }
   .app-module-hero::before,
@@ -38,19 +37,8 @@
     background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
     background-size: 32px 32px;
   }
-  .app-module-hero .app-wrap { position: relative; display: grid; gap: 8px; }
-  .app-module-text { position: relative; z-index: 2; }
-  /* On a computer the text and the scene share one place: the scene, large, sits toward the right
-     and passes well behind the text, which stays above it. */
-  @media (min-width: 900px) {
-    .app-module-hero .app-wrap { align-items: center; }
-    .app-module-text, .app-cover.is-large { grid-area: 1 / 1; }
-    .app-module-text { max-width: 640px; }
-    .app-cover.is-large { justify-self: end; width: min(68%, 820px); margin-right: 4%; }
-    /* The scene fades out toward the left, under the text, so that its lines don't compete with
-       the title. */
-    .app-cover.is-large { mask-image: linear-gradient(90deg, transparent 5%, rgb(0 0 0 / 0.35) 30%, #000 60%); }
-  }
+  .app-module-hero .app-wrap { position: relative; }
+  .app-module-text { max-width: 640px; }
 
   .app-crumbs ol { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 0 0 32px; padding: 0; list-style: none; color: var(--dim); font: 600 14px/1.3 var(--font-title); }
   .app-crumbs li + li::before { content: "/"; margin-right: 10px; color: var(--line-strong); }
@@ -65,8 +53,6 @@
   .app-module-lead + .app-module-lead { margin-top: 14px; }
   .app-module-note { margin: 24px 0 0; max-width: 52ch; padding: 12px 18px; border-left: 3px solid var(--signal); background: color-mix(in srgb, var(--signal) 8%, transparent); color: var(--text); font-size: 16px; }
   .app-module-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
-  /* The scene of the module, the same as on its card, in large, without the frame of the card. */
-  .app-cover.is-large { position: relative; z-index: 1; margin: 0; border: 0; background: none; pointer-events: none; }
 
   /* ── Key facts: plain columns under a rule ──────────────────────────────────────── */
 
@@ -163,7 +149,7 @@
   // The module asked for (?module=<slug>), with its domain; JavaScript by default.
   const MODULES = DOMAINS.flatMap(domain => domain.modules.map(module => ({ domain, module, slug: slugOf(module[0]) })));
   const { domain, module } = MODULES.find(({ slug }) => slug === query.get("module")) || MODULES.find(({ slug }) => slug === "javascript");
-  const [title, days, summary, scene] = module;
+  const [title, days, summary] = module;
   const program = PROGRAMS[slugOf(title)];
   document.title = `${title} · Formations · Sylent`;
   document.querySelector('meta[name="description"]').content = `${summary} Un module de ${duration(days)}, sur site ou à distance.`;
@@ -183,7 +169,6 @@
             <a class="app-button is-outline" href="#programme">Voir le programme</a>
           </div>
         </div>
-        <div class="app-cover is-large app-reveal" data-scene="${scene}" aria-hidden="true"><canvas></canvas></div>
       </div>
     </section>`;
 
