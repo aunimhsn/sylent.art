@@ -2,7 +2,7 @@
 
 The detail of the steps of [roadmap.md](../roadmap.md) once their pull request is merged, newest first.
 
-## 8b. Module content
+## 8b. Module content (#11)
 
 Written on 2026-10-28 with the owner, module by module, then aligned on the course material of the private `sylent-courses` repository (chapters and exercise names only):
 
