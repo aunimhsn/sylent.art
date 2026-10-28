@@ -33,7 +33,7 @@ const heading = (title, ghost, id, level = 2) => `
   </div>`;
 
 // The pages of the mock-up, and the links of the navigation.
-const PAGES = { home: "home-site.html", courses: "courses-site.html", module: "module-site.html", contact: "contact-site.html" };
+const PAGES = { home: "home-site.html", courses: "courses-site.html", module: "module-site.html", contact: "contact-site.html", legal: "legal-site.html", privacy: "privacy-site.html", notFound: "not-found-site.html" };
 // The slug of a module, for its page: « Intégrer l’IA avec méthode » gives integrer-l-ia-avec-methode.
 const slugOf = text => text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 // The articles are left out of the first release.
@@ -138,6 +138,46 @@ const siteCta = (question = `Un module à confier${NB}?<br>Parlons de vos appren
       <a class="app-button app-magnetic app-reveal" href="${PAGES.contact}">Me contacter</a>
     </div>
   </section>`;
+// A text page (legal notice, privacy policy): a heading over the grid, the date of the last update,
+// then numbered sections beside their table of contents, which follows the scroll on a computer.
+// Each section is [id, title, html].
+const docPage = ({ title, ghost, lead, updated, sections }) => `
+  <article class="app-doc" aria-labelledby="doc-title">
+    <div class="app-wrap">
+      <header class="app-doc-head" data-grid>
+        ${heading(title, ghost, "doc-title", 1)}
+        <p class="app-lead app-reveal">${lead}</p>
+        <p class="app-doc-updated app-reveal">Mis à jour le ${updated}</p>
+      </header>
+      <div class="app-doc-body">
+        <nav class="app-doc-toc" aria-label="Sommaire">
+          <ol>${sections.map(([id, section]) => `<li><a href="#${id}">${section}</a></li>`).join("")}</ol>
+        </nav>
+        <div class="app-doc-main">${sections.map(([id, section, html], index) => `
+          <section class="app-doc-section app-reveal" id="${id}" aria-labelledby="${id}-title">
+            <h2 id="${id}-title"><span class="app-doc-number" aria-hidden="true">${String(index + 1).padStart(2, "0")}</span>${section}</h2>
+            ${html}
+          </section>`).join("")}
+        </div>
+      </div>
+    </div>
+  </article>`;
+// The table of contents marks, with the signal color, the section being read: the last one whose
+// top has passed the upper third of the window.
+function followDoc() {
+  const links = [...document.querySelectorAll(".app-doc-toc a")];
+  const sections = links.map(link => document.querySelector(link.hash));
+  const mark = () => {
+    const passed = sections.filter(section => section.getBoundingClientRect().top < innerHeight / 3);
+    const current = passed.length ? passed[passed.length - 1] : sections[0];
+    links.forEach((link, index) => link.toggleAttribute("aria-current", sections[index] === current));
+  };
+  addEventListener("scroll", mark, { passive: true });
+  mark();
+}
+// A detail still to provide, shown as such.
+const pending = text => `<span class="app-pending">${text}</span>`;
+
 const siteFooter = () => `
   <footer class="app-footer">
     <div class="app-footer-logo" role="img" aria-label="Sylent">${WORDMARK}</div>
@@ -146,7 +186,7 @@ const siteFooter = () => `
         <div><p class="app-motto">Une vie, mille leçons</p><p>Formateur en informatique, sur site ou à distance.</p></div>
         <div><h2>Navigation</h2><ul>${NAVIGATION.map(([label, href]) => `<li><a href="${href}">${label}</a></li>`).join("")}</ul></div>
         <div><h2>Contact</h2><ul><li><a href="mailto:aunim.hassan@gmail.com">aunim.hassan@gmail.com</a></li><li><a href="tel:+33613449424">06${NB}13${NB}44${NB}94${NB}24</a></li><li>${external("https://www.linkedin.com/in/aunimhsn/", "linkedin.com/in/aunimhsn")}</li><li>${external("https://github.com/aunimhsn", "github.com/aunimhsn")}</li></ul></div>
-        <div><h2>Informations</h2><ul><li><a href="#">Mentions légales</a></li><li><a href="#">Confidentialité</a></li><li>NDA${NB}: à fournir</li></ul></div>
+        <div><h2>Informations</h2><ul><li><a href="${PAGES.legal}">Mentions légales</a></li><li><a href="${PAGES.privacy}">Confidentialité</a></li><li>NDA${NB}: à fournir</li></ul></div>
       </div>
       <p class="app-footer-bottom">© 2026 Aunim Hassan · Micro-entreprise</p>
     </div>

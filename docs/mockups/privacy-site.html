@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="fr" data-theme="night">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Confidentialité · Sylent</title>
+<meta name="description" content="Comment sylent.art traite vos données : le formulaire de contact, la mesure d’audience sans cookie et vos droits.">
+<!--
+  The privacy policy of sylent.art (mock-up, step 4 of roadmap.md), shown at phone and desktop
+  width by home.html (?page=privacy). No wireframe: a text page (docPage in shared/site.js), shared
+  with the legal notice. The facts come from specs.md and docs/external-services.md (Formspree,
+  GoatCounter, GitHub Pages); the retention of the e-mails is a proposal to validate.
+-->
+<script src="shared/head.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Anaheim:wght@500;700&display=block">
+<link rel="stylesheet" href="shared/site.css">
+</head>
+<body data-page="privacy">
+<script src="shared/site.js"></script>
+
+<main id="content"></main>
+
+<script>
+  // ── Content ───────────────────────────────────────────────────────────────────────
+  const facts = rows => `<dl class="app-doc-facts">${rows.map(([label, value]) => `<div><dt>${label}</dt><dd>${value}</dd></div>`).join("")}</dl>`;
+  const SECTIONS = [
+    ["essentiel", "L’essentiel", `
+      <ul>
+        <li>Aucun cookie, aucun bandeau à accepter.</li>
+        <li>Vos données ne servent qu’à répondre à votre demande${NB}: jamais de prospection, jamais de revente.</li>
+        <li>Vous pouvez à tout moment demander à les consulter ou à les supprimer.</li>
+      </ul>`],
+    ["responsable", "Responsable du traitement", `
+      <p>Aunim Hassan, formateur indépendant, joignable à <a href="mailto:aunim.hassan@gmail.com">aunim.hassan@gmail.com</a>.</p>`],
+    ["formulaire", "Le formulaire de contact", `
+      ${facts([
+        ["Données", "Votre adresse email et votre message"],
+        ["Finalité", "Répondre à votre demande et, le cas échéant, préparer une formation"],
+        ["Base légale", "Les mesures précontractuelles prises à votre demande"],
+        ["Destinataire", `Formspree, Inc., qui reçoit le formulaire et me le transmet par email`],
+        ["Conservation", "30 jours chez Formspree, puis 3 ans après notre dernier échange dans ma messagerie"],
+      ])}
+      <p>Formspree est situé aux États-Unis${NB}: vos données y sont donc transférées, hors de l’Union européenne. Sa ${external("https://formspree.io/legal/privacy-policy/", "politique de confidentialité")} décrit son traitement. Si vous préférez l’éviter, écrivez-moi directement à <a href="mailto:aunim.hassan@gmail.com">aunim.hassan@gmail.com</a>.</p>`],
+    ["audience", "La mesure d’audience", `
+      <p>Le site compte ses visites avec GoatCounter, un outil sans cookie, hébergé dans l’Union européenne. Il ne conserve ni votre adresse IP ni aucun identifiant${NB}: seulement des totaux (pages vues, sites d’origine, navigateurs, tailles d’écran, pays), qui ne permettent pas de vous reconnaître.</p>`],
+    ["hebergement", "L’hébergement", `
+      <p>Le site est hébergé par GitHub Pages (GitHub, Inc., États-Unis), qui peut enregistrer l’adresse IP des visiteurs pour la sécurité de son service. Les liens vers LinkedIn et GitHub mènent à des sites qui appliquent leur propre politique.</p>`],
+    ["droits", "Vos droits", `
+      <p>Vous pouvez demander l’accès à vos données, leur rectification ou leur effacement, vous opposer à leur traitement ou en demander la limitation et la portabilité. Écrivez à <a href="mailto:aunim.hassan@gmail.com">aunim.hassan@gmail.com</a>${NB}: je réponds dans un délai d’un mois.</p>
+      <p>Si vous estimez que vos droits ne sont pas respectés, vous pouvez adresser une réclamation à la ${external("https://www.cnil.fr/fr/plaintes", "CNIL")}.</p>`],
+  ];
+
+  document.getElementById("content").innerHTML = docPage({
+    title: "Confidentialité",
+    ghost: "Proteger",
+    lead: `Ce que deviennent vos données sur ce site${NB}: peu de choses, et uniquement pour vous répondre.`,
+    updated: `28${NB}octobre 2026`,
+    sections: SECTIONS,
+  }) + siteFooter();
+  followDoc();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="shared/motion.js"></script>
+</body>
+</html>

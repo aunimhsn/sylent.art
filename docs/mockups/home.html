@@ -45,7 +45,7 @@
   const VARIANTS = {
     page: {
       label: "Page",
-      options: { home: "Home", courses: "Formations", module: "Module", contact: "Contact" },
+      options: { home: "Home", courses: "Formations", module: "Module", contact: "Contact", legal: "Mentions légales", privacy: "Confidentialité", "not-found": "404" },
       fallback: "home",
     },
     // The states of the contact form (only for the contact page).
@@ -71,7 +71,7 @@
   // The Console style chosen by the owner, in white instead of green, with Manrope for the titles
   // and Anaheim medium for the text, and the headings of the former site. Atelier was set aside.
   const NOTE = "Night style: neutral blacks and white, Manrope for the titles, Anaheim medium for the text, the SYLENT logo, the headings of the former site.";
-  const FILES = { home: "home-site.html", courses: "courses-site.html", module: "module-site.html", contact: "contact-site.html" };
+  const FILES = { home: "home-site.html", courses: "courses-site.html", module: "module-site.html", contact: "contact-site.html", legal: "legal-site.html", privacy: "privacy-site.html", "not-found": "not-found-site.html" };
 
   const params = new URLSearchParams(location.search);
   const chosen = Object.fromEntries(Object.entries(VARIANTS).map(([key, variant]) =>

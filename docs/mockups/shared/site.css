@@ -204,6 +204,61 @@ img, svg, canvas { display: block; }
   .app-card.is-band .app-card-more svg { display: block; flex: none; }
 }
 
+/* ── Text pages: legal notice and privacy policy (docPage in site.js) ─────────────── */
+
+/* Room at the bottom for the wordmark of the footer, which straddles its top edge. */
+.app-doc { padding: calc(var(--header-height) + clamp(48px, 7vw, 96px)) 0 clamp(150px, 17vw, 230px); }
+/* The grid of the hero of the home page, from the top of the page, fading out above the text. */
+.app-doc-head { position: relative; padding-bottom: clamp(48px, 6vw, 80px); }
+.app-doc-head::before,
+.app-doc-head > .app-grid-fluid {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  width: 100vw;
+  translate: -50% 0;
+  top: calc(-1 * (var(--header-height) + clamp(48px, 7vw, 96px)));
+  bottom: 0;
+  mask-image: linear-gradient(#000 35%, transparent);
+  pointer-events: none;
+}
+.app-doc-head::before {
+  background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+/* The long titles (« CONFIDENTIALITE ») hold on one line at phone width. */
+.app-doc .app-heading-title { font-size: clamp(27px, 5.4vw, 68px); }
+.app-doc-updated { margin: 16px 0 0; color: var(--dim); font-size: 15px; }
+.app-doc-body { display: grid; gap: 48px; }
+@media (min-width: 960px) { .app-doc-body { grid-template-columns: 3fr 8fr; gap: 72px; align-items: start; } }
+/* The table of contents, on a computer only: the pages are short enough on a phone. */
+.app-doc-toc { display: none; }
+@media (min-width: 960px) { .app-doc-toc { display: block; position: sticky; top: calc(var(--header-height) + 32px); } }
+.app-doc-toc ol { margin: 0; padding: 0; list-style: none; border-left: 1px solid var(--line); }
+.app-doc-toc a { display: block; margin-left: -1px; padding: 9px 0 9px 18px; border-left: 1px solid transparent; color: var(--dim); font: 600 15px/1.35 var(--font-title); transition: color .3s, border-color .3s; }
+.app-doc-toc a:hover { color: var(--text); }
+.app-doc-toc a[aria-current] { border-left-color: var(--signal); color: var(--text); }
+.app-doc-section { padding-top: 32px; border-top: 1px solid var(--line); scroll-margin-top: calc(var(--header-height) + 24px); }
+.app-doc-section + .app-doc-section { margin-top: clamp(48px, 5vw, 64px); }
+.app-doc-section h2 { display: flex; align-items: baseline; gap: 18px; margin: 0 0 22px; font: var(--title-weight) clamp(24px, 2.6vw, 32px)/1.15 var(--font-title); letter-spacing: var(--title-tracking); }
+.app-doc-number { flex: none; color: var(--dim); font-weight: 200; }
+.app-doc-section p, .app-doc-section li { max-width: 68ch; color: var(--secondary); text-wrap: pretty; }
+.app-doc-section p { margin: 0 0 14px; }
+.app-doc-section ul { margin: 0 0 14px; padding-left: 20px; }
+.app-doc-section li + li { margin-top: 6px; }
+.app-doc-section strong { color: var(--text); font-weight: inherit; }
+.app-doc-section a { color: var(--text); text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 4px; transition: text-decoration-color .3s; }
+.app-doc-section a:hover { text-decoration-color: var(--text); }
+/* Facts as label and value, under thin rules. */
+.app-doc-facts { margin: 0 0 14px; }
+.app-doc-facts div { display: grid; gap: 4px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+@media (min-width: 640px) { .app-doc-facts div { grid-template-columns: 200px 1fr; gap: 24px; } }
+.app-doc-facts dt { color: var(--dim); font: 800 12px/1.6 var(--font-title); letter-spacing: .14em; text-transform: uppercase; }
+.app-doc-facts dd { margin: 0; color: var(--text); }
+/* A detail still to provide (SIRET, NDA). */
+.app-pending { color: var(--dim); font-style: italic; }
+
 /* ── Header ─────────────────────────────────────────────────────────────────────── */
 
 .app-header {
