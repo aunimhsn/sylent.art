@@ -12,7 +12,7 @@ Website of Sylent (Aunim Hassan), freelance trainer in software development: the
 
 ## Development
 
-Astro static site, Node.js 24 LTS and npm (available from step 6 of the roadmap):
+Astro static site, Node.js 24 LTS and npm:
 
 ```sh
 npm ci              # install the dependencies

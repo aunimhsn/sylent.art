@@ -1,0 +1,135 @@
+/* The design tokens of docs/branding.md: every color, size, font and duration of the
+   components comes from here, so that it changes in one place. Copied from the :root of the
+   mock-up (docs/mockups/shared/site.css); the fonts come from the Fonts API (astro.config.mjs). */
+:root {
+  /* Colors. Night: neutral blacks without a blue tint, white as the only accent, one orange
+     signal that always means something. */
+  --bg: #0a0a0a;
+  --bg-alt: #0d0d0d;
+  --field-bg: #050505;
+  --cover-bg: #101010;
+  --cover-grid: rgb(255 255 255 / 3.5%);
+  --cover-line: rgb(255 255 255 / 6%);
+  --text: #ffffff;
+  --secondary: #a3a3a3;
+  --dim: #858585; /* 5.4:1 on the background, 4.76:1 at least on glass, for small text */
+  --highlight: #a3a3a3;
+  --line: #262626;
+  --line-strong: #404040;
+  --accent: #ffffff;
+  --on-accent: #0a0a0a;
+  --signal: #d3450e; /* white text on it 4.5:1 */
+  --signal-text: #f07a4a; /* the same orange, lighter, for text on the backgrounds: 7.2:1 */
+  --signal-tint: color-mix(in srgb, var(--signal) 8%, transparent);
+  --new-bg: var(--signal);
+  --new-text: #ffffff;
+  --ghost-word: #181818;
+  --glass: rgb(255 255 255 / 3.5%);
+  --glass-hover: rgb(255 255 255 / 6%);
+  --glass-line: rgb(255 255 255 / 9%);
+  --glass-blur: 14px;
+  --header-blur: 16px;
+  --top-blur: 10px;
+  --spot: rgb(255 255 255 / 9%);
+  --grid-line: rgb(255 255 255 / 5%);
+  --glow: rgb(255 255 255 / 10%);
+  --mark-bg: #000000;
+  --header-bg: rgb(10 10 10 / 72%);
+  --top-bg: rgb(10 10 10 / 70%);
+
+  /* Fonts: Manrope for the titles and the interface, Anaheim for the text, Bodoni Moda for the
+     Roman numerals only. */
+  --font-title: var(--font-manrope);
+  --font-text: var(--font-anaheim);
+  --font-numeral: var(--font-bodoni-moda);
+  --text-weight: 500;
+  --title-weight: 800;
+  --label-weight: 800;
+  --tracking-title: -0.045em;
+  --tracking-ghost: -0.06em;
+  --tracking-tight: -0.04em;
+  --tracking-button: 0.01em;
+  --tracking-card: -0.025em;
+  --tracking-label: 0.14em;
+
+  /* Type: one size per role. The large titles grow with the window. */
+  --size-display: clamp(44px, 6.8vw, 92px);
+  --size-ghost: clamp(58px, 13vw, 176px);
+  --size-section: clamp(32px, 5.4vw, 68px);
+
+  /* « CONFIDENTIALITE » on one line on a phone. */
+  --size-section-long: clamp(27px, 5.4vw, 68px);
+  --size-cta: clamp(38px, 6vw, 76px);
+  --size-cta-ghost: clamp(80px, 19vw, 280px);
+  --size-ghost-404: clamp(150px, 34vw, 420px);
+  --size-h2: clamp(28px, 3vw, 36px);
+  --size-name: clamp(30px, 3.6vw, 46px);
+  --size-figure: clamp(28px, 4vw, 44px);
+  --size-figure-large: clamp(36px, 6vw, 72px);
+  --size-menu: 40px;
+  --size-numeral: 64px;
+  --size-numeral-compact: 52px;
+  --size-role: clamp(19px, 1.8vw, 24px);
+  --size-intro: clamp(17px, 1.5vw, 19px);
+  --size-link-large: clamp(17px, 1.6vw, 20px);
+  --size-card-title: 21px;
+  --size-lead: 18px;
+  --size-title-small: 18px;
+  --size-body: 17px;
+  --size-text-small: 16px;
+  --size-ui: 15px;
+  --size-caption: 14px;
+  --size-label: 12px;
+
+  /* Spacing: multiples of 4 px, --space-N being N × 4 px; the fluid ones between sections. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+  --space-9: 36px;
+  --space-10: 40px;
+  --space-11: 44px;
+  --space-12: 48px;
+  --space-14: 56px;
+  --space-18: 72px;
+  --space-fluid-1: clamp(12px, 2vw, 32px);
+  --space-fluid-2: clamp(36px, 5vw, 64px);
+  --space-fluid-3: clamp(48px, 7vw, 96px);
+  --space-section: clamp(80px, 11vw, 140px);
+  --space-wordmark: clamp(150px, 17vw, 230px);
+
+  /* Layout and shapes. The breakpoints, which CSS variables can't hold, are 640, 760, 900 and
+     1100 px (min-width). */
+  --width: 1200px;
+  --width-narrow: 760px;
+  --width-text: 640px;
+  --gutter: clamp(20px, 5vw, 80px);
+  --header-height: 76px;
+  --measure: 62ch;
+  --measure-narrow: 52ch;
+  --measure-long: 68ch;
+  --card-padding-block: var(--space-7);
+  --card-padding-inline: var(--space-6);
+  --grid-step: 32px; /* in px: also read by site.js */
+  --grid-step-footer: 40px; /* in px: also read by site.js */
+  --grid-step-cover: 24px;
+  --radius-button: 0;
+  --radius-card: 0;
+  --radius-field: 2px;
+
+  /* Motion and layers. */
+  --duration-fast: 0.3s;
+  --duration-slow: 0.45s;
+  --duration-menu: 0.7s;
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.7, 0, 0.2, 1);
+  --z-top: 35;
+  --z-header: 40;
+  --z-menu: 45;
+  --z-skip: 50;
+  --z-copied: 60;
+}

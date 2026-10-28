@@ -1,0 +1,7 @@
+{
+  "extends": ["stylelint-config-standard", "stylelint-config-html/astro"],
+  "ignoreFiles": ["dist/**", "docs/mockups/**"],
+  "rules": {
+    "color-hex-length": "long"
+  }
+}
