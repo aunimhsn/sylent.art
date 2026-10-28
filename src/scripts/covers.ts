@@ -552,68 +552,109 @@ function start(renderer: THREE.WebGLRenderer) {
         card: cover.closest(".card"),
         time: 1.3,
         visible: true,
-        /** The number of the last copy asked for, so that a late one is dropped. */
-        copy: 0,
+        /** The frame of the copy it shows, so that a copy older than it is dropped. */
+        shown: 0,
         ...make(),
       },
     ];
   });
   type Item = (typeof items)[number];
-  // The renderer grows to the largest cover, and each cover takes its part from the bottom left.
+  // The covers of a frame are drawn side by side in the renderer, in rows no wider than
+  // ROW_LIMIT, then copied in one image bitmap that each cover takes its part from. drawImage
+  // straight from a WebGL canvas swaps red and blue on some graphics cards (Firefox on Linux,
+  // seen on 2026-10-29: the orange turned blue); a bitmap keeps the colors, and takes its copy at
+  // once, in the same task as the drawing. The renderer only grows, to the largest frame.
+  const ROW_LIMIT = 4096;
   let room = [0, 0];
+  let frames = 0;
   const anchor = new THREE.Vector3();
 
-  function draw(item: Item) {
-    const width = Math.round(item.cover.clientWidth * dpr);
-    const height = Math.round(item.cover.clientHeight * dpr);
-    if (!width || !height) return;
-    if (item.canvas.width !== width || item.canvas.height !== height) {
-      item.canvas.width = width;
-      item.canvas.height = height;
-      item.camera.aspect = width / height;
-      item.camera.updateProjectionMatrix();
+  function draw(list: Item[]) {
+    const frame = ++frames;
+    const parts: {
+      item: Item;
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    }[] = [];
+    let [x, y, rowHeight, used] = [0, 0, 0, 0];
+    for (const item of list) {
+      const width = Math.round(item.cover.clientWidth * dpr);
+      const height = Math.round(item.cover.clientHeight * dpr);
+      if (!width || !height) continue;
+      if (x > 0 && x + width > ROW_LIMIT) {
+        [x, y, rowHeight] = [0, y + rowHeight, 0];
+      }
+      parts.push({ item, x, y, width, height });
+      x += width;
+      used = Math.max(used, x);
+      rowHeight = Math.max(rowHeight, height);
     }
-    if (room[0] < width || room[1] < height) {
-      room = [Math.max(room[0], width), Math.max(room[1], height)];
+    if (parts.length === 0) return;
+    const needed = [used, y + rowHeight];
+    if (room[0] < needed[0] || room[1] < needed[1]) {
+      room = [Math.max(room[0], needed[0]), Math.max(room[1], needed[1])];
       renderer.setSize(room[0], room[1], false);
     }
-    // A scene may return what it shows (the cycle of a lesson), for the text beside it: its
-    // phase and new session as data attributes, how far the phase has gone and its count as
-    // properties.
-    const state = item.update(item.time);
-    if (state) {
-      const { phase, progress, count, lap } = state;
-      if (item.cover.dataset.phase !== String(phase))
-        item.cover.dataset.phase = String(phase);
-      if (lap !== undefined && item.cover.dataset.lap !== lap)
-        item.cover.dataset.lap = lap;
-      item.cover.style.setProperty("--phase-progress", progress.toFixed(3));
-      item.cover.style.setProperty("--count", String(count));
-    }
-    renderer.setViewport(0, 0, width, height);
-    renderer.setScissor(0, 0, width, height);
     renderer.setScissorTest(true);
     renderer.setClearColor(0x000000, 0);
-    renderer.clear();
-    renderer.render(item.scene, item.camera);
-    // A scene may also name the object that its text follows: its place in the cover, in
-    // percent.
-    if (item.anchor) {
-      const point = item.anchor.getWorldPosition(anchor).project(item.camera);
-      item.cover.style.setProperty("--anchor-x", `${(point.x + 1) * 50}%`);
-      item.cover.style.setProperty("--anchor-y", `${(1 - point.y) * 50}%`);
+    for (const { item, x, y, width, height } of parts) {
+      if (item.camera.aspect !== width / height) {
+        item.camera.aspect = width / height;
+        item.camera.updateProjectionMatrix();
+      }
+      // A scene may return what it shows (the cycle of a lesson), for the text beside it: its
+      // phase and new session as data attributes, how far the phase has gone and its count as
+      // properties.
+      const state = item.update(item.time);
+      if (state) {
+        const { phase, progress, count, lap } = state;
+        if (item.cover.dataset.phase !== String(phase))
+          item.cover.dataset.phase = String(phase);
+        if (lap !== undefined && item.cover.dataset.lap !== lap)
+          item.cover.dataset.lap = lap;
+        item.cover.style.setProperty("--phase-progress", progress.toFixed(3));
+        item.cover.style.setProperty("--count", String(count));
+      }
+      // WebGL counts from the bottom of the renderer, the bitmap from its top.
+      const bottom = room[1] - y - height;
+      renderer.setViewport(x, bottom, width, height);
+      renderer.setScissor(x, bottom, width, height);
+      renderer.clear();
+      renderer.render(item.scene, item.camera);
+      // A scene may also name the object that its text follows: its place in the cover, in
+      // percent.
+      if (item.anchor) {
+        const point = item.anchor.getWorldPosition(anchor).project(item.camera);
+        item.cover.style.setProperty("--anchor-x", `${(point.x + 1) * 50}%`);
+        item.cover.style.setProperty("--anchor-y", `${(1 - point.y) * 50}%`);
+      }
     }
-    // The part of the renderer is copied into the cover through an image bitmap: drawImage
-    // straight from a WebGL canvas swaps red and blue on some graphics cards (Firefox on
-    // Linux, seen on 2026-10-29: the orange turned blue). The bitmap takes its copy at once,
-    // before the next cover is drawn in the renderer, and is drawn when ready; a copy that
-    // comes after a newer one is dropped.
-    const copy = ++item.copy;
-    createImageBitmap(renderer.domElement, 0, room[1] - height, width, height)
+    // Each cover takes its part when the bitmap is ready, unless it already shows a newer frame;
+    // its canvas takes its new size only then, since resizing a canvas clears it.
+    createImageBitmap(renderer.domElement, 0, 0, needed[0], needed[1])
       .then((bitmap) => {
-        if (copy === item.copy) {
-          item.context.clearRect(0, 0, width, height);
-          item.context.drawImage(bitmap, 0, 0);
+        for (const { item, x, y, width, height } of parts) {
+          if (frame < item.shown) continue;
+          item.shown = frame;
+          if (item.canvas.width !== width || item.canvas.height !== height) {
+            item.canvas.width = width;
+            item.canvas.height = height;
+          } else {
+            item.context.clearRect(0, 0, width, height);
+          }
+          item.context.drawImage(
+            bitmap,
+            x,
+            y,
+            width,
+            height,
+            0,
+            0,
+            width,
+            height,
+          );
         }
         bitmap.close();
       })
@@ -634,16 +675,22 @@ function start(renderer: THREE.WebGLRenderer) {
     renderer.setAnimationLoop((now) => {
       timer.update(now);
       const delta = Math.min(timer.getDelta(), 0.1);
-      items.forEach((item) => {
-        if (!item.visible) return;
+      const shown = items.filter((item) => item.visible);
+      shown.forEach((item) => {
         item.time += delta * (item.card?.matches(":hover") ? 2.2 : 1);
-        draw(item);
       });
+      draw(shown);
     });
   } else {
-    items.forEach((item) =>
-      new ResizeObserver(() => draw(item)).observe(item.cover),
+    // Still covers are drawn once, then again when their size changes.
+    const resized = new ResizeObserver((entries) =>
+      draw(
+        items.filter((item) =>
+          entries.some((entry) => entry.target === item.cover),
+        ),
+      ),
     );
+    items.forEach((item) => resized.observe(item.cover));
   }
 }
 
