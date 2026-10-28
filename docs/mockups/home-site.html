@@ -126,6 +126,8 @@
   .app-card-back { position: absolute; inset: 0 0 56px; display: flex; flex-direction: column; padding: 26px 26px 0; visibility: hidden; }
   .app-card.is-flipped > :not(.app-card-back, .app-card-more) { visibility: hidden; }
   .app-card.is-flipped .app-card-back { visibility: visible; }
+  /* The hover is decided by the place of the card, not by its turning box (see the script). */
+  .app-card.is-hovered .app-card-more { padding-block: 19px; }
   .app-card-back h4 { margin: 0 0 10px; font: 800 12px/1.3 var(--font-title); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
   /* The modules scroll up without end, as the partners on a phone. */
   .app-back-reel { position: relative; flex: 1; overflow: hidden; mask-image: linear-gradient(transparent, #000 16%, #000 84%, transparent); }
@@ -342,8 +344,20 @@
         .add(swap)
         .fromTo(card, { rotationY: open ? -90 : 90 }, { rotationY: 0, duration: 0.34, ease: "power2.out" });
     }
-    card.addEventListener("pointerenter", () => flip(true));
-    card.addEventListener("pointerleave", () => flip(false));
+    // The pointer is inside when it is over the place of the card in the grid: the turning card
+    // gets thin at its edge, so its own box would let the pointer out and in again, without end.
+    // The offsets ignore the transforms; they count from the grid, which is positioned.
+    const inside = event => {
+      const box = (card.offsetParent || card.parentElement).getBoundingClientRect();
+      const x = event.clientX - box.left - card.offsetLeft, y = event.clientY - box.top - card.offsetTop;
+      return x >= 0 && y >= 0 && x <= card.offsetWidth && y <= card.offsetHeight;
+    };
+    const hover = over => {
+      card.classList.toggle("is-hovered", over);
+      flip(over || card.contains(document.activeElement));
+    };
+    document.addEventListener("pointermove", event => { if (event.pointerType === "mouse") hover(inside(event)); });
+    document.documentElement.addEventListener("pointerleave", () => hover(false));
     card.addEventListener("focusin", () => flip(true));
     card.addEventListener("focusout", () => flip(false));
   })();
