@@ -8,7 +8,7 @@ scene: peaks
 formerId: 10
 audience: "Étudiants, développeurs, chefs de projet technique"
 level: "Intermédiaire"
-prerequisites: "Connaître les bases du HTML, du CSS et du JavaScript."
+prerequisites: "Les bases du HTML, du CSS et de JavaScript."
 objectives:
   - "Ajouter de l’interactivité à une page avec les directives"
   - "Récupérer et afficher les données d’une API"

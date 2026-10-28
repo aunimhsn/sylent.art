@@ -8,7 +8,7 @@ scene: form
 formerId: 12
 audience: "Étudiants, développeurs, chefs de projet technique"
 level: "Intermédiaire"
-prerequisites: "Connaître les bases du Python. Des notions de HTML et de SQL sont un plus."
+prerequisites: "Les bases de Python. Des notions de HTML et de SQL sont un plus."
 objectives:
   - "Comprendre l’architecture MVT d’un projet Django"
   - "Créer les vues et les templates d’une application"

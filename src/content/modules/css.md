@@ -8,7 +8,7 @@ scene: layout
 formerId: 2
 audience: "Étudiants, webmasters, développeurs, chefs de projet technique"
 level: "Débutant"
-prerequisites: "Connaître les bases du HTML."
+prerequisites: "Les bases du HTML."
 objectives:
   - "Cibler les éléments d’une page avec les sélecteurs"
   - "Comprendre le modèle de boîte, la cascade et la spécificité"

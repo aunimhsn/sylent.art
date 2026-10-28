@@ -8,7 +8,7 @@ scene: tree
 formerId: 9
 audience: "Étudiants, développeurs, chefs de projet technique"
 level: "Intermédiaire"
-prerequisites: "Connaître les bases du HTML, du CSS et du JavaScript."
+prerequisites: "Les bases du HTML, du CSS et de JavaScript."
 objectives:
   - "Découper une interface en composants"
   - "Relier les données à la page avec la réactivité"

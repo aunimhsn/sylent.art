@@ -11,22 +11,20 @@ level: "Débutant"
 prerequisites: "Aucune connaissance en programmation."
 objectives:
   - "Écrire un programme lisible : variables, conditions, boucles et fonctions"
-  - "Choisir la bonne structure de données : listes, tuples et dictionnaires"
+  - "Choisir la bonne structure de données : listes, tuples, ensembles et dictionnaires"
+  - "Comprendre la portée des variables"
   - "Gérer les erreurs et manipuler des fichiers"
-  - "Organiser son code en modules et installer des bibliothèques avec pip"
 program:
   - title: "Les bases du langage"
-    text: "L’environnement, les variables, l’affichage et la saisie, les types de données."
+    text: "L’environnement, afficher et saisir, les variables et leurs types."
   - title: "La logique"
-    text: "Les conditions, les boucles et les fonctions."
+    text: "Les conditions, les boucles, les fonctions et la portée des variables."
   - title: "Les structures de données"
-    text: "Les listes, les tuples et les dictionnaires."
+    text: "Les listes, les tuples, les ensembles et les dictionnaires."
   - title: "Un programme solide"
     text: "La gestion des exceptions et la manipulation de fichiers."
-  - title: "L’écosystème"
-    text: "Les modules, les packages et pip."
   - title: "Travaux pratiques"
-    text: "Par exemple le jeu du « Plus ou moins », le chiffre de César ou un convertisseur d’émojis, parmi d’autres exercices."
+    text: "Par exemple le jeu du « Plus ou moins », le chiffre de César, le shifumi ou FizzBuzz, parmi d’autres exercices."
 ---
 
-Python est l’un des langages les plus utilisés au monde, du script d’automatisation à l’analyse de données. Sa syntaxe simple en fait un excellent premier langage, et sa polyvalence un outil durable. Ce module en pose les bases, jusqu’à l’organisation d’un programme en modules et l’usage des bibliothèques.
+Python est l’un des langages les plus utilisés au monde, du script d’automatisation à l’analyse de données. Sa syntaxe simple en fait un excellent premier langage, et sa polyvalence un outil durable. Ce module en pose les bases, des premières variables jusqu’à un programme qui gère ses erreurs et ses fichiers.
