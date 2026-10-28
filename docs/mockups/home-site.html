@@ -124,6 +124,8 @@
      through, in the style of the « Copiée » of the email address: it fades in while rising a little when the phase starts, follows the runner, and
      fades out as the phase ends. Each phase lasts its share of the 10 s of a turn. */
   .app-cycle .app-cycle-scene { aspect-ratio: 1; width: min(100%, 560px); margin: 0 auto; border: 0; background: none; }
+  /* The spiral fades out toward the bottom and in toward the top: it climbs without end. */
+  .app-cycle-scene canvas { mask-image: linear-gradient(transparent 4%, #000 34%, #000 66%, transparent 96%); }
   .app-cycle-tag { position: absolute; left: var(--anchor-x, 50%); top: var(--anchor-y, 50%); display: none; color: var(--signal-text); font: var(--text-weight) 15px/1 var(--font-text); font-variant-numeric: tabular-nums; white-space: nowrap; pointer-events: none; animation: app-cycle-tag ease both; }
   /* Beside the name, the share of the turn done in the phase, counting up to 20, 50 or 30 % (a
      CSS counter shows the number that covers.js gives in --count). */
