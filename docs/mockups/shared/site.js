@@ -87,7 +87,7 @@ const DOMAINS = [
 
 // The offer pages are not in the mock-up yet: the cards lead nowhere for now.
 const domainCard = domain => `
-  <li class="app-card app-glass app-reveal app-tilt">
+  <li class="app-card app-glass app-reveal app-tilt" data-domain="${domain.slug}">
     <div class="app-cover" data-scene="${domain.scene}" aria-hidden="true"><canvas></canvas>${domain.isNew ? '<span class="app-new">Nouveau</span>' : ""}</div>
     <h3>${domain.title}</h3><p>${domain.summary}</p>
     <a class="app-card-more" href="#" aria-label="${domain.title}${NB}: voir les modules">Voir les modules</a>
