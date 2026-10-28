@@ -255,7 +255,7 @@ const siteFooter = () => `
         <div><p class="app-motto">Une vie, mille leçons</p><p>Formateur en informatique, sur site ou à distance.</p></div>
         <div><h2>Navigation</h2><ul>${NAVIGATION.map(([label, href]) => `<li><a href="${href}">${label}</a></li>`).join("")}</ul></div>
         <div><h2>Contact</h2><ul><li><a href="mailto:aunim.hassan@gmail.com">aunim.hassan@gmail.com</a></li><li><a href="tel:+33613449424">06${NB}13${NB}44${NB}94${NB}24</a></li><li>${external("https://www.linkedin.com/in/aunimhsn/", "linkedin.com/in/aunimhsn")}</li><li>${external("https://github.com/aunimhsn", "github.com/aunimhsn")}</li></ul></div>
-        <div><h2>Informations</h2><ul><li><a href="${PAGES.legal}">Mentions légales</a></li><li><a href="${PAGES.privacy}">Confidentialité</a></li><li>NDA${NB}: à fournir</li></ul></div>
+        <div><h2>Informations</h2><ul><li><a href="${PAGES.legal}">Mentions légales</a></li><li><a href="${PAGES.privacy}">Confidentialité</a></li><li>NDA${NB}: 76311138131</li></ul></div>
       </div>
       <p class="app-footer-bottom">© 2026 Aunim Hassan · Micro-entreprise</p>
     </div>
