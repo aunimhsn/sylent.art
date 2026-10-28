@@ -51,6 +51,35 @@ if (coverRenderer) {
   const random = k => { const x = Math.sin(k * 12.9898) * 43758.5453; return x - Math.floor(x); };
   // The lines of a block, to light it up.
   const edges = mesh => mesh.children[0].material;
+  // The orange of the site, for a few elements of each scene: what moves, what is aimed at, what
+  // succeeds. On a block, its lines take the color; a line or a dot takes it whole.
+  const ORANGE = new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue("--signal").trim() || "#d3450e");
+  const PLAIN = new THREE.Color(WHITE);
+  const tinted = object => (object.isMesh && object.children[0] ? object.children[0] : object).material;
+  const orange = object => { tinted(object).color.copy(ORANGE); return object; };
+  // From white (0) to orange (1): an element lights up when something reaches it.
+  const glow = (object, amount) => tinted(object).color.copy(PLAIN).lerp(ORANGE, clamp(amount));
+  // A trail of orange dots that fade behind a moving point, given in the space of the parent; it
+  // starts again after a jump (the start of a new loop).
+  const trail = (parent, count = 7, radius = 0.05, spacing = 2) => {
+    const points = Array.from({ length: count }, (_, k) => {
+      const point = orange(dot(radius * (1 - k / count * 0.6), 0.6 * (1 - k / count)));
+      point.visible = false;
+      parent.add(point);
+      return point;
+    });
+    const history = [];
+    return (position, visible = true) => {
+      if (history.length && history[0].distanceTo(position) > 0.5) history.length = 0;
+      history.unshift(position.clone());
+      if (history.length > count * spacing) history.length = count * spacing;
+      points.forEach((point, k) => {
+        const at = history[k * spacing];
+        point.visible = visible && k > 0 && Boolean(at);
+        if (at) point.position.copy(at);
+      });
+    };
+  };
 
   const SCENES = {
     // Initiation: a little robot finds its way on a grid, step by step, as in Robomind.
@@ -59,14 +88,15 @@ if (coverRenderer) {
       scene.add(new THREE.GridHelper(6, 6, 0x5a5a5a, 0x2a2a2a));
       const path = [[-1.5, -1.5], [-0.5, -1.5], [0.5, -1.5], [0.5, -0.5], [0.5, 0.5], [1.5, 0.5], [1.5, 1.5]];
       scene.add(polyline(path.map(([x, z]) => v(x, 0.01, z)), 0.35));
-      const goal = outline(new THREE.CylinderGeometry(0.34, 0.34, 0.02, 40), 0.9);
+      const goal = orange(outline(new THREE.CylinderGeometry(0.34, 0.34, 0.02, 40), 0.9));
       goal.position.set(1.5, 0.02, 1.5);
       scene.add(goal);
       const robot = block(new THREE.BoxGeometry(0.6, 0.6, 0.6));
-      const eye = dot(0.06);
+      const eye = orange(dot(0.06));
       eye.position.set(0, 0.1, 0.31);
       robot.add(eye);
       scene.add(robot);
+      const crumbs = trail(scene, 8, 0.035, 4);
       const last = path.length - 1;
       return { scene, camera: view(3.8, 4.9, 5.7), update(t) {
         const p = (t * 1.1) % (last + 2);
@@ -77,6 +107,8 @@ if (coverRenderer) {
         robot.position.set(ax + (bx - ax) * f, 0.3 + (done ? 0 : Math.sin(f * Math.PI) * 0.25), az + (bz - az) * f);
         robot.rotation.y = Math.atan2(bx - ax, bz - az);
         goal.scale.setScalar(done ? 1 + Math.sin((p - last) / 2 * Math.PI) * 0.5 : 1);
+        glow(robot, done ? Math.sin((p - last) / 2 * Math.PI) : 0);
+        crumbs(v(robot.position.x, 0.03, robot.position.z), !done);
       } };
     },
     // Web: the layers of a page (structure, style, behavior) pulled apart.
@@ -84,13 +116,14 @@ if (coverRenderer) {
       const scene = new THREE.Scene();
       const stack = new THREE.Group();
       scene.add(stack);
+      let behavior;
       const pages = [0, 1, 2].map(index => {
         const page = new THREE.Group();
         const w = 3.2, h = 2.1, front = index === 2;
         page.add(block(new THREE.PlaneGeometry(w, h), front ? 1 : 0.45));
         page.add(polyline([v(-w / 2, h / 2 - 0.3, 0.01), v(w / 2, h / 2 - 0.3, 0.01)], front ? 0.6 : 0.3));
         [0, 1, 2].forEach(k => {
-          const light = dot(0.045, front ? 0.9 : 0.4);
+          const light = front && k === 0 ? orange(dot(0.05)) : dot(0.045, front ? 0.9 : 0.4);
           light.position.set(-w / 2 + 0.2 + k * 0.15, h / 2 - 0.15, 0.01);
           page.add(light);
         });
@@ -98,12 +131,14 @@ if (coverRenderer) {
         const box = outline(new THREE.PlaneGeometry(1.1, 0.6), front ? 0.8 : 0.35);
         box.position.set(0.85, -0.6, 0.01);
         page.add(box);
+        if (front) behavior = box;
         stack.add(page);
         return page;
       });
       return { scene, camera: view(0, 0.5, 6.4, [0, 0, -0.6]), update(t) {
         const spread = 0.6 + Math.sin(t * 0.9) * 0.3;
         pages.forEach((page, i) => page.position.set((i - 1) * 0.35, (i - 1) * -0.2, (i - 2) * spread));
+        glow(behavior, (spread - 0.6) / 0.3);
         stack.rotation.set(-0.12, -0.55 + Math.sin(t * 0.5) * 0.2, 0);
       } };
     },
@@ -121,7 +156,10 @@ if (coverRenderer) {
         bars.push([bar, i, j]);
       }
       return { scene, camera: view(4.3, 3.8, 5.5, [0, 0.55, 0]), update(t) {
-        bars.forEach(([bar, i, j]) => { bar.scale.y = 0.2 + 1.6 * (0.5 + 0.5 * Math.sin(t * 1.4 + i * 0.7 + j * 1.1)) * (0.4 + (i + j) / 10); });
+        bars.forEach(([bar, i, j]) => {
+          bar.scale.y = 0.2 + 1.6 * (0.5 + 0.5 * Math.sin(t * 1.4 + i * 0.7 + j * 1.1)) * (0.4 + (i + j) / 10);
+          glow(bar, (bar.scale.y - 1.45) / 0.3);
+        });
       } };
     },
     // Databases: a stack of disks, with a ring of records moving around it.
@@ -130,17 +168,22 @@ if (coverRenderer) {
       const disk = new THREE.CylinderGeometry(1.2, 1.2, 0.42, 64);
       const disks = [0, 1, 2].map(() => { const mesh = block(disk, 0.95); scene.add(mesh); return mesh; });
       const ring = new THREE.Group();
+      let found;
       for (let k = 0; k < 16; k++) {
-        const record = dot(0.045, 0.9);
+        const record = k === 0 ? (found = orange(dot(0.065))) : dot(0.045, 0.9);
         const angle = k / 16 * Math.PI * 2;
         record.position.set(Math.cos(angle) * 1.75, 0, Math.sin(angle) * 1.75);
         ring.add(record);
       }
       scene.add(ring);
+      const wake = trail(scene, 9, 0.05, 2);
+      const where = v(0, 0, 0);
       return { scene, camera: view(0, 2.5, 7, [0, 0.25, 0]), update(t) {
         disks.forEach((mesh, i) => { mesh.position.y = (i - 1) * 0.62 + Math.sin(t * 1.6 + i) * 0.06; });
         ring.rotation.y = -t * 0.6;
         ring.position.y = Math.sin(t * 0.8) * 0.7;
+        ring.updateMatrixWorld(true);
+        wake(found.getWorldPosition(where));
       } };
     },
     // Method and tests: a Git graph, a branch that leaves the main line and merges back, tested.
@@ -157,15 +200,20 @@ if (coverRenderer) {
         graph.add(commit);
         return commit;
       });
-      const pulses = [dot(0.06, 0.8), dot(0.06, 0.8)];
+      const pulses = [dot(0.06, 0.8), orange(dot(0.07))];
       graph.add(...pulses);
-      const check = polyline([v(-0.2, 0), v(-0.06, -0.15), v(0.24, 0.2)]);
+      const wake = trail(graph, 7, 0.05, 2);
+      const check = orange(polyline([v(-0.2, 0), v(-0.06, -0.15), v(0.24, 0.2)]));
       check.position.set(2.2, 0.05, 0);
       graph.add(check);
       return { scene, camera: view(0, 0.4, 6.6), update(t) {
         pulses[0].position.copy(main.getPoint((t * 0.25) % 1));
-        pulses[1].position.copy(feature.getPoint((t * 0.32) % 1));
+        const u = (t * 0.32) % 1;
+        pulses[1].position.copy(feature.getPoint(u));
+        wake(pulses[1].position);
         commits.forEach((commit, k) => commit.scale.setScalar(1 + Math.max(0, Math.sin(t * 2 - k * 0.7)) * 0.4));
+        glow(commits[1], 1 - u * 8);
+        glow(commits[4], (u - 0.88) / 0.12);
         check.material.opacity = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * 1.5));
         graph.rotation.set(0.15, Math.sin(t * 0.4) * 0.35, 0);
       } };
@@ -180,16 +228,26 @@ if (coverRenderer) {
       const geometry = new THREE.BufferGeometry();
       geometry.setAttribute("position", new THREE.Float32BufferAttribute(links.flatMap(([a, b]) => [a.x, a.y, a.z, b.x, b.y, b.z]), 3));
       net.add(new THREE.LineSegments(geometry, lineMaterial(0.18)));
-      layers.flat().forEach(point => { const neuron = dot(0.09); neuron.position.copy(point); net.add(neuron); });
+      const neurons = new Map(layers.flat().map(point => { const neuron = dot(0.09); neuron.position.copy(point); net.add(neuron); return [point, neuron]; }));
+      const outputs = layers[3].map(point => neurons.get(point));
       // Each signal crosses the network layer by layer, on links chosen by a fixed sequence.
-      const signals = Array.from({ length: 8 }, (_, k) => { const mesh = dot(0.05); net.add(mesh); return { mesh, seed: k * 5 + 3 }; });
+      const signals = Array.from({ length: 8 }, (_, k) => {
+        const lit = k % 4 === 0;
+        const mesh = lit ? orange(dot(0.06)) : dot(0.05);
+        net.add(mesh);
+        return { mesh, seed: k * 5 + 3, wake: lit ? trail(net, 6, 0.045, 2) : null };
+      });
       return { scene, camera: view(0, 0, 6.4), update(t) {
+        outputs.forEach(neuron => glow(neuron, 0));
         signals.forEach(signal => {
           const p = (t * 0.7 + signal.seed * 0.37) % 3;
           const l = Math.floor(p);
           const choices = links.filter(link => link[2] === l);
           const [a, b] = choices[(signal.seed * 7 + Math.floor(t * 0.7 + signal.seed * 0.37) * 3) % choices.length];
           signal.mesh.position.lerpVectors(a, b, p - l);
+          if (!signal.wake) return;
+          signal.wake(signal.mesh.position);
+          if (l === 2 && p - l > 0.8) glow(neurons.get(b), (p - l - 0.8) * 5);
         });
         net.rotation.y = Math.sin(t * 0.35) * 0.5;
       } };
@@ -216,6 +274,7 @@ if (coverRenderer) {
       const stops = [v(columns[0], -0.3, 0.05), v(columns[1], -0.3, 0.05), v(columns[2], -0.75, 0.05)];
       return { scene, camera: view(0.7, 0.5, 5.7), update(t) {
         const p = (t * 0.5) % 3, leg = Math.floor(p), f = ease(Math.min(1, (p - leg) * 1.5));
+        glow(mover, leg < 2 ? 0.3 + 0.7 * Math.sin(f * Math.PI) : 1 - (p - 2));
         if (leg < 2) {
           mover.position.lerpVectors(stops[leg], stops[leg + 1], f);
           mover.position.z += Math.sin(f * Math.PI) * 0.5;
@@ -237,11 +296,14 @@ if (coverRenderer) {
       for (const x of [-1, 1]) for (const y of [-1, 1]) for (const z of [-1, 1]) {
         const part = block(piece, 0.9);
         group.add(part);
-        parts.push([part, v(x, y, z)]);
+        parts.push([part, v(x, y, z), x > 0 && y > 0 && z > 0]);
       }
       return { scene, camera: view(2.9, 2.3, 4.7), update(t) {
         const gap = 0.36 + 0.32 * (0.5 + 0.5 * Math.sin(t * 1.2));
-        parts.forEach(([part, direction]) => part.position.copy(direction).multiplyScalar(gap));
+        parts.forEach(([part, direction, key]) => {
+          part.position.copy(direction).multiplyScalar(gap);
+          glow(part, key ? 1 : (0.43 - gap) / 0.07 * 0.6);
+        });
         group.rotation.set(0.3, t * 0.4, 0);
       } };
     },
@@ -266,12 +328,19 @@ if (coverRenderer) {
       chart.add(polyline([v(0, 0.99), v(0, 0.57)], 0.6));
       [-1, 1].forEach(side => chart.add(polyline([v(side * 0.43, 0.15), v(side * 1.3, 0.15), v(side * 1.3, -0.79)], 0.6)));
       const paths = [-1, 1].map(side => [v(0, 1.2, 0.1), v(0, 0.15, 0.1), v(side * 1.3, 0.15, 0.1), v(side * 1.3, -1.0, 0.1)]);
-      const token = dot(0.08);
+      const token = orange(dot(0.08));
       chart.add(token);
-      const flash = (node, center) => node.scale.setScalar(1 + Math.max(0, 1 - token.position.distanceTo(center) * 3) * 0.2);
+      const wake = trail(chart, 7, 0.06, 2);
+      const flash = (node, center) => {
+        const near = Math.max(0, 1 - token.position.distanceTo(center) * 3);
+        node.scale.setScalar(1 + near * 0.2);
+        glow(node, near * 1.5);
+      };
       return { scene, camera: view(0, 0.2, 6.2, [0, 0.05, 0]), update(t) {
         const p = t * 0.45;
         token.position.copy(along(paths[Math.floor(p) % 2], ease(Math.min(1, (p % 1) * 1.25))));
+        wake(token.position);
+        flash(start, v(0, 1.2, 0.1));
         flash(test, v(0, 0.15, 0.1));
         ends.forEach(end => flash(end, v(end.position.x, -1.0, 0.1)));
         chart.rotation.set(0.05, Math.sin(t * 0.4) * 0.3, 0);
@@ -296,6 +365,7 @@ if (coverRenderer) {
           const f = ease(clamp(p - k)) * (1 - out);
           part.scale.setScalar(Math.max(0.001, f));
           part.position.z = f * 0.3;
+          glow(part, Math.sin(clamp(p - k) * Math.PI) * 1.2);
         });
         page.rotation.set(-0.12, -0.45 + Math.sin(t * 0.4) * 0.15, 0);
       } };
@@ -319,6 +389,7 @@ if (coverRenderer) {
         boxes.forEach((box, k) => {
           box.position.lerpVectors(row(k), grid(k), f);
           box.rotation.z = Math.sin(f * Math.PI) * 0.25 * (k % 2 ? 1 : -1);
+          glow(box, Math.sin(f * Math.PI) * (k >= 2 ? 1.1 : 0.4));
         });
         frame.scale.set(4.3 - 2.0 * f, 1.2 + 1.1 * f, 1);
         group.rotation.set(-0.15, Math.sin(t * 0.4) * 0.35, 0);
@@ -332,7 +403,7 @@ if (coverRenderer) {
       const button = block(new THREE.BoxGeometry(1.7, 0.56, 0.24));
       group.add(button);
       const waves = [0, 1].map(() => {
-        const wave = circle(0.5);
+        const wave = orange(circle(0.5));
         group.add(wave);
         return wave;
       });
@@ -344,6 +415,7 @@ if (coverRenderer) {
         const press = Math.max(0, 1 - Math.abs(p - 0.9) * 8);
         pointer.position.set(1.9 - 1.65 * move, -1.3 + 1.35 * move, 0.3 - press * 0.1);
         button.position.z = -press * 0.12;
+        glow(button, p > 0.82 ? 1 - (p - 0.9) * 1.1 : 0);
         waves.forEach((wave, k) => {
           const age = clamp((p - 0.9 - k * 0.25) / 1.4);
           wave.scale.set(1.9 + age * 2, 0.6 + age * 1.6, 1);
@@ -363,7 +435,7 @@ if (coverRenderer) {
         unit.position.set(0.7, y, 0);
         group.add(unit, polyline([v(0.8, y, 0.61), v(1.45, y, 0.61)], 0.4));
         [0, 1].forEach(j => {
-          const light = dot(0.045);
+          const light = j === 1 ? orange(dot(0.045)) : dot(0.045);
           light.position.set(0.05 + j * 0.16, y, 0.61);
           group.add(light);
           lights.push([light, k * 2 + j]);
@@ -376,14 +448,16 @@ if (coverRenderer) {
       const go = new THREE.CatmullRomCurve3([v(-1.3, 0.25, 0.3), v(-0.6, 0.6, 0.5), v(0.1, 0.3, 0.62)]);
       const back = new THREE.CatmullRomCurve3([v(0.1, -0.3, 0.62), v(-0.6, -0.6, 0.5), v(-1.3, -0.25, 0.3)]);
       group.add(polyline(go.getPoints(24), 0.25), polyline(back.getPoints(24), 0.25));
-      const request = dot(0.06), answer = dot(0.06);
+      const request = orange(dot(0.065)), answer = orange(dot(0.065));
       group.add(request, answer);
+      const wake = trail(group, 7, 0.05, 2);
       return { scene, camera: view(1.6, 1.2, 6.2, [-0.2, 0, 0]), update(t) {
         const p = (t * 0.5) % 2;
         request.position.copy(go.getPoint(clamp(p)));
         request.visible = p < 1;
         answer.position.copy(back.getPoint(clamp(p - 1)));
         answer.visible = p >= 1;
+        wake(p < 1 ? request.position : answer.position);
         lights.forEach(([light, k]) => { light.material.opacity = Math.sin(t * 6 + k * 2.1) > 0.2 ? 1 : 0.3; });
         group.rotation.y = Math.sin(t * 0.35) * 0.2;
       } };
@@ -402,7 +476,7 @@ if (coverRenderer) {
       const links = [];
       nodes.slice(1).forEach((level, l) => level.forEach((child, k) => {
         const a = nodes[l][Math.floor(k / 2)].position.clone().add(v(0, -0.17)), b = child.position.clone().add(v(0, 0.17));
-        const signal = dot(0.055);
+        const signal = orange(dot(0.06));
         group.add(polyline([a, b], 0.4), signal);
         links.push({ a, b, l, signal });
       }));
@@ -413,7 +487,11 @@ if (coverRenderer) {
           signal.position.lerpVectors(a, b, ease(f));
           signal.visible = f > 0 && f < 1;
         });
-        nodes.forEach((level, l) => level.forEach(node => node.scale.setScalar(1 + Math.max(0, 1 - Math.abs(p - l) * 5) * 0.22)));
+        nodes.forEach((level, l) => level.forEach(node => {
+          const reached = Math.max(0, 1 - Math.abs(p - l) * 5);
+          node.scale.setScalar(1 + reached * 0.22);
+          glow(node, reached * 1.4);
+        }));
         group.rotation.set(0.1, Math.sin(t * 0.4) * 0.4, 0);
       } };
     },
@@ -427,12 +505,20 @@ if (coverRenderer) {
       for (let x = -2; x <= 2.01; x += 0.4) terrain.add(polyline(Array.from({ length: 29 }, (_, k) => { const z = -1.4 + k * 0.1; return v(x, height(x, z), z); }), 0.2));
       const climber = dot(0.07);
       terrain.add(climber);
-      const sun = dot(0.13);
+      const summit = v(-0.7, height(-0.7, -0.2), -0.2);
+      const flag = new THREE.Group();
+      flag.add(polyline([v(0, 0), v(0, 0.45)], 0.9), orange(polyline([v(0, 0.45), v(0.24, 0.36), v(0, 0.27)])));
+      flag.position.copy(summit);
+      terrain.add(flag);
+      const sun = orange(dot(0.13));
       scene.add(sun);
       return { scene, camera: view(0, 2.8, 6.2, [0, 0.4, 0]), update(t) {
         const f = ease(clamp(((t * 0.3) % 1.3) / 1.1));
         const x = -1.95 + f * 1.25;
         climber.position.set(x, height(x, -0.2) + 0.07, -0.2);
+        const planted = ease(clamp((f - 0.96) * 25));
+        flag.scale.set(1, Math.max(0.001, planted), 1);
+        glow(climber, planted);
         terrain.rotation.y = Math.sin(t * 0.3) * 0.5;
         sun.position.set(Math.cos(t * 0.5) * 2, 1.8 + Math.sin(t * 0.5) * 0.35, -1.5);
       } };
@@ -452,11 +538,17 @@ if (coverRenderer) {
       group.add(route, controller, model, page);
       [[route, controller], [controller, model], [controller, page]].forEach(([a, b]) => group.add(polyline([a.position, b.position], 0.3)));
       const stops = [route, controller, model, controller, page].map(node => node.position);
-      const request = dot(0.08);
+      const request = orange(dot(0.08));
       group.add(request);
+      const wake = trail(group, 7, 0.06, 2);
       return { scene, camera: view(0.4, 1.2, 6.4), update(t) {
         request.position.copy(along(stops, ease((t * 0.35) % 1)));
-        [route, controller, model, page].forEach(node => node.scale.setScalar(1 + Math.max(0, 1 - request.position.distanceTo(node.position) * 2.5) * 0.15));
+        wake(request.position);
+        [route, controller, model, page].forEach(node => {
+          const near = Math.max(0, 1 - request.position.distanceTo(node.position) * 2.5);
+          node.scale.setScalar(1 + near * 0.15);
+          glow(node, near * 1.6);
+        });
         group.rotation.y = Math.sin(t * 0.4) * 0.35;
       } };
     },
@@ -469,11 +561,18 @@ if (coverRenderer) {
         scene.add(part);
         return part;
       });
+      const at = s => v(Math.sin(s) * 2, 0.13, Math.sin(s * 2) * 0.9);
+      const apple = orange(dot(0.11));
+      scene.add(apple);
+      let next = null, eaten = -10, meals = 0;
       return { scene, camera: view(0, 4.6, 5.2, [0, 0, 0.2]), update(t) {
-        body.forEach((part, k) => {
-          const s = t * 0.7 - k * 0.09;
-          part.position.set(Math.sin(s) * 2, 0.13, Math.sin(s * 2) * 0.9);
-        });
+        body.forEach((part, k) => part.position.copy(at(t * 0.7 - k * 0.09)));
+        const head = t * 0.7;
+        if (next === null || head < next - 4) next = head + 1.2;
+        if (head >= next) { eaten = t; meals++; next = head + 1.4 + random(meals) * 1.6; }
+        apple.position.copy(at(next));
+        apple.scale.setScalar(Math.max(0.001, ease(clamp((t - eaten) * 2))));
+        glow(body[0], 1 - (t - eaten) * 1.5);
       } };
     },
     // Django: a form fills itself in, field after field, then it is sent and checked.
@@ -483,9 +582,11 @@ if (coverRenderer) {
       scene.add(group);
       group.add(outline(new THREE.PlaneGeometry(2.6, 2.6), 0.45));
       const lengths = [1.1, 1.5, 0.8];
+      const fields = [];
       const texts = [0.7, 0.15, -0.4].map(y => {
         const field = outline(new THREE.PlaneGeometry(2.0, 0.36), 0.7);
         field.position.set(0, y, 0.02);
+        fields.push(field);
         const text = polyline([v(0, 0), v(1, 0)]);
         text.position.set(-0.85, y, 0.03);
         group.add(field, text);
@@ -493,14 +594,17 @@ if (coverRenderer) {
       });
       const button = block(new THREE.BoxGeometry(0.9, 0.32, 0.14));
       button.position.set(-0.55, -0.95, 0.07);
-      const check = polyline([v(-0.18, 0), v(-0.05, -0.13), v(0.2, 0.16)]);
+      const check = orange(polyline([v(-0.18, 0), v(-0.05, -0.13), v(0.2, 0.16)]));
       check.position.set(0.55, -0.95, 0.1);
       group.add(button, check);
       return { scene, camera: view(0, 0, 6.2), update(t) {
         const p = (t * 0.7) % 6;
         const out = 1 - clamp(p - 5.2);
         texts.forEach((text, k) => { text.scale.x = Math.max(0.001, ease(clamp(p - k)) * lengths[k] * out); });
-        button.position.z = 0.07 - Math.max(0, 1 - Math.abs(p - 3.4) * 6) * 0.1;
+        const press = Math.max(0, 1 - Math.abs(p - 3.4) * 6);
+        button.position.z = 0.07 - press * 0.1;
+        glow(button, press * 1.5);
+        fields.forEach((field, k) => glow(field, Math.sin(clamp(p - k) * Math.PI) * 1.3));
         check.material.opacity = clamp((p - 3.6) * 3) * out;
         group.rotation.set(-0.1, -0.3 + Math.sin(t * 0.4) * 0.2, 0);
       } };
@@ -512,18 +616,22 @@ if (coverRenderer) {
       scene.add(group);
       group.add(polyline([v(-2, -1.6), v(2, -1.6)], 0.5), polyline([v(-2, -1.6), v(-2, 1.5)], 0.5));
       const slope = 0.55;
-      for (let k = 0; k < 26; k++) {
+      const points = Array.from({ length: 26 }, (_, k) => {
         const x = -1.8 + random(k) * 3.6;
         const point = dot(0.05, 0.9);
         point.position.set(x, x * slope + (random(k + 40) - 0.5) * 0.9, (random(k + 80) - 0.5) * 0.6);
         group.add(point);
-      }
-      const model = polyline([v(-2.1, 0), v(2.1, 0)]);
+        return [point, Math.abs(point.position.y - x * slope) < 0.14];
+      });
+      const model = orange(polyline([v(-2.1, 0), v(2.1, 0)]));
       group.add(model);
       return { scene, camera: view(0, 0, 6.8), update(t) {
         const p = (t * 0.45) % 3;
         const learned = 1 - Math.exp(-p * 1.8) * Math.cos(p * 5);
-        model.rotation.z = Math.atan(slope) * learned * (1 - ease(clamp((p - 2.5) * 2)));
+        const reset = ease(clamp((p - 2.5) * 2));
+        model.rotation.z = Math.atan(slope) * learned * (1 - reset);
+        const fitted = clamp((p - 1.1) * 2) * (1 - reset);
+        points.forEach(([point, close]) => glow(point, close ? fitted : 0));
         group.rotation.y = Math.sin(t * 0.35) * 0.4;
       } };
     },
@@ -541,7 +649,7 @@ if (coverRenderer) {
       });
       const association = circle(0.5, 0.9);
       group.add(association, polyline([v(-1.15, 0), v(-0.5, 0)], 0.6), polyline([v(0.5, 0), v(1.15, 0)], 0.6));
-      const tokens = [dot(0.06), dot(0.06)];
+      const tokens = [orange(dot(0.065)), orange(dot(0.065))];
       group.add(...tokens);
       return { scene, camera: view(0, 0.6, 6.3), update(t) {
         const p = (t * 0.6) % 2;
@@ -550,6 +658,7 @@ if (coverRenderer) {
         tokens[1].position.set(1.15 - f * 0.65, 0, 0.05);
         const pulse = 1 + Math.max(0, 1 - Math.abs(f - 1) * 5) * 0.12;
         association.scale.set(pulse, 0.6 * pulse, 1);
+        glow(association, (f - 0.8) * 5);
         group.rotation.set(0.1, Math.sin(t * 0.4) * 0.4, 0);
       } };
     },
@@ -568,17 +677,18 @@ if (coverRenderer) {
         group.add(box);
         return box;
       };
-      umlClass(0, 0.85);
+      const parent = umlClass(0, 0.85);
       umlClass(-1.4, -0.85);
       umlClass(1.4, -0.85);
       // Inheritance: the lines of the children meet under a hollow triangle.
       group.add(polyline([v(0, 0.375), v(-0.13, 0.17), v(0.13, 0.17), v(0, 0.375)]));
       group.add(polyline([v(-1.4, -0.375), v(-1.4, -0.05), v(1.4, -0.05), v(1.4, -0.375)], 0.6), polyline([v(0, -0.05), v(0, 0.17)], 0.6));
       const paths = [-1.4, 1.4].map(x => [v(x, -0.375, 0.05), v(x, -0.05, 0.05), v(0, -0.05, 0.05), v(0, 0.17, 0.05)]);
-      const tokens = paths.map(() => { const token = dot(0.055); group.add(token); return token; });
+      const tokens = paths.map(() => { const token = orange(dot(0.06)); group.add(token); return token; });
       return { scene, camera: view(0, 0.3, 6.0), update(t) {
         const f = ease((t * 0.45) % 1);
         tokens.forEach((token, k) => token.position.copy(along(paths[k], f)));
+        glow(parent.children[0], (f - 0.82) / 0.18);
         group.rotation.set(0.05, Math.sin(t * 0.4) * 0.4, 0);
       } };
     },
@@ -594,7 +704,7 @@ if (coverRenderer) {
       const cursor = outline(new THREE.PlaneGeometry(w + 0.12, rowHeight + 0.06));
       group.add(cursor);
       const marks = [1, 3, 4].map(index => {
-        const mark = dot(0.06);
+        const mark = orange(dot(0.065));
         mark.position.set(-w / 2 - 0.25, rowY(index), 0);
         group.add(mark);
         return [mark, index];
@@ -605,6 +715,8 @@ if (coverRenderer) {
         const place = Math.min(4, index + ease(clamp((q - index - 0.6) * 2.5)));
         cursor.position.set(0, h / 2 - (place + 1.5) * rowHeight, 0.02);
         cursor.visible = q < 5.2;
+        const row = Math.round(place);
+        glow(cursor, [1, 3, 4].includes(row) ? 1 - Math.abs(place - row) * 4 : 0);
         marks.forEach(([mark, row]) => { mark.visible = q > row + 0.3 && q < 6.6; });
         group.rotation.set(-0.1, Math.sin(t * 0.4) * 0.35, 0);
       } };
@@ -624,7 +736,7 @@ if (coverRenderer) {
       const pairs = [[0, 2], [1, 0], [2, 4], [3, 1], [4, 3]];
       const links = pairs.map(([a, b]) => {
         const ya = left[a].position.y, yb = right[b].position.y;
-        const link = polyline(new THREE.CatmullRomCurve3([v(-0.9, ya, 0.05), v(0, (ya + yb) / 2, 0.45), v(0.9, yb, 0.05)]).getPoints(32), 0);
+        const link = orange(polyline(new THREE.CatmullRomCurve3([v(-0.9, ya, 0.05), v(0, (ya + yb) / 2, 0.45), v(0.9, yb, 0.05)]).getPoints(32), 0));
         group.add(link);
         return link;
       });
@@ -634,6 +746,8 @@ if (coverRenderer) {
         pairs.forEach(([a, b], k) => {
           const on = Math.max(0, 1 - Math.abs(p - k - 0.5) * 3);
           left[a].position.z = right[b].position.z = on * 0.15;
+          glow(left[a], on * 1.4);
+          glow(right[b], on * 1.4);
         });
         group.rotation.set(0.05, Math.sin(t * 0.4) * 0.35, 0);
       } };
@@ -654,7 +768,7 @@ if (coverRenderer) {
         group.add(frame, polyline([v(-0.8, y), v(-0.2 + random(k) * 1.2, y)], 0.45), ring, check);
         return { ring, check };
       });
-      const spinner = polyline(Array.from({ length: 17 }, (_, k) => v(Math.cos(k / 16 * Math.PI * 1.4) * 0.11, Math.sin(k / 16 * Math.PI * 1.4) * 0.11)));
+      const spinner = orange(polyline(Array.from({ length: 17 }, (_, k) => v(Math.cos(k / 16 * Math.PI * 1.4) * 0.11, Math.sin(k / 16 * Math.PI * 1.4) * 0.11))));
       group.add(spinner);
       return { scene, camera: view(0, 0.2, 5.4), update(t) {
         const p = (t * 0.9) % (rows.length + 2);
@@ -662,6 +776,8 @@ if (coverRenderer) {
           const done = p > k + 1 && p < rows.length + 1.6;
           check.material.opacity = done ? 1 : 0;
           ring.material.opacity = done ? 0.9 : 0.3;
+          glow(check, 1 - (p - k - 1) * 1.5);
+          glow(ring, 1 - Math.abs(p - rows.length - 0.4) * 2.5);
         });
         const current = Math.floor(p);
         spinner.visible = current < rows.length;
@@ -682,8 +798,9 @@ if (coverRenderer) {
         group.add(stage);
         return stage;
       });
-      const token = dot(0.07);
-      const check = polyline([v(-0.2, 0), v(-0.06, -0.15), v(0.24, 0.2)], 0);
+      const token = orange(dot(0.075));
+      const wake = trail(group, 7, 0.055, 2);
+      const check = orange(polyline([v(-0.2, 0), v(-0.06, -0.15), v(0.24, 0.2)], 0));
       check.position.set(1.8, 0.75, 0);
       group.add(token, check);
       return { scene, camera: view(1.2, 1.6, 6.2), update(t) {
@@ -691,9 +808,12 @@ if (coverRenderer) {
         const x = -2.4 + clamp(p) * 4.8;
         token.position.x = x;
         token.visible = p < 1;
+        wake(token.position, p < 1);
         stages.forEach(stage => {
           edges(stage).opacity = x > stage.position.x - 0.35 ? 1 : 0.35;
-          stage.scale.setScalar(1 + Math.max(0, 1 - Math.abs(x - stage.position.x) * 3) * 0.12);
+          const inside = Math.max(0, 1 - Math.abs(x - stage.position.x) * 3);
+          stage.scale.setScalar(1 + inside * 0.12);
+          glow(stage, p < 1 ? inside * 1.5 : 0);
         });
         check.material.opacity = p > 1 ? 1 : 0;
         group.rotation.y = Math.sin(t * 0.35) * 0.25;
@@ -707,11 +827,11 @@ if (coverRenderer) {
       const target = outline(new THREE.BoxGeometry(1.0, 1.0, 1.0), 0.5);
       target.position.y = 1.0;
       const box = block(new THREE.BoxGeometry(0.62, 0.62, 0.62));
-      const wave = circle(0.8, 0);
+      const wave = orange(circle(0.8, 0));
       wave.rotation.x = -Math.PI / 2;
       wave.position.y = 1.0;
-      const trail = [0, 1, 2].map(() => dot(0.04, 0.6));
-      scene.add(base, target, box, wave, ...trail);
+      const flame = [0, 1, 2, 3].map(k => orange(dot(0.05 - k * 0.009, 0.9 - k * 0.2)));
+      scene.add(base, target, box, wave, ...flame);
       return { scene, camera: view(2.9, 1.5, 6.3), update(t) {
         const p = (t * 0.5) % 2;
         const rise = ease(clamp(p * 1.2));
@@ -721,10 +841,11 @@ if (coverRenderer) {
         const docked = clamp((p - 0.85) * 2);
         wave.scale.setScalar(1 + docked * 1.2);
         wave.material.opacity = docked > 0 && docked < 1 ? 1 - docked : 0;
-        trail.forEach((spark, k) => {
-          spark.position.set(0, box.position.y - 0.45 - k * 0.22, 0);
+        flame.forEach((spark, k) => {
+          spark.position.set(Math.sin(t * 23 + k * 2) * 0.03, box.position.y - 0.42 - k * (0.16 + Math.sin(t * 17 + k) * 0.03), Math.cos(t * 19 + k) * 0.03);
           spark.visible = rise > 0.05 && rise < 0.98;
         });
+        glow(target, Math.sin(docked * Math.PI) * 1.2);
         target.rotation.y = t * 0.3;
       } };
     },
@@ -741,13 +862,13 @@ if (coverRenderer) {
       });
       const lines = [1.6, 2.4, 1.1, 2.0, 1.4].map((length, k) => {
         const y = 0.55 - k * 0.32;
-        const prompt = polyline([v(-1.45, y + 0.06, 0.04), v(-1.37, y, 0.04), v(-1.45, y - 0.06, 0.04)], 0.8);
+        const prompt = orange(polyline([v(-1.45, y + 0.06, 0.04), v(-1.37, y, 0.04), v(-1.45, y - 0.06, 0.04)], 0.9));
         const text = polyline([v(0, 0, 0.04), v(1, 0, 0.04)], 0.75);
         text.position.set(-1.25, y, 0);
         group.add(prompt, text);
         return { prompt, text, length, y };
       });
-      const caret = new THREE.Mesh(new THREE.PlaneGeometry(0.1, 0.18), new THREE.MeshBasicMaterial({ color: WHITE }));
+      const caret = orange(new THREE.Mesh(new THREE.PlaneGeometry(0.1, 0.18), new THREE.MeshBasicMaterial({ color: WHITE })));
       group.add(caret);
       return { scene, camera: view(0, 0, 5.4), update(t) {
         const p = (t * 0.8) % (lines.length + 2);
@@ -777,11 +898,14 @@ if (coverRenderer) {
         group.add(bubble);
         return bubble;
       });
-      const typing = [0, 1, 2].map(() => { const point = dot(0.05); group.add(point); return point; });
+      const typing = [0, 1, 2].map(() => { const point = orange(dot(0.05)); group.add(point); return point; });
       return { scene, camera: view(0, 0, 5.6), update(t) {
         const p = (t * 0.7) % (bubbles.length + 2);
         const out = ease(clamp(p - bubbles.length - 1));
-        bubbles.forEach((bubble, k) => bubble.scale.setScalar(Math.max(0.001, ease(clamp((p - k - 0.5) * 3)) * (1 - out))));
+        bubbles.forEach((bubble, k) => {
+          bubble.scale.setScalar(Math.max(0.001, ease(clamp((p - k - 0.5) * 3)) * (1 - out)));
+          glow(bubble.children[0], p > k + 0.5 ? 1 - (p - k - 0.5) * 1.2 : 0);
+        });
         const next = Math.floor(p);
         const isTyping = next < bubbles.length && p - next < 0.5;
         typing.forEach((point, j) => {
@@ -799,14 +923,18 @@ if (coverRenderer) {
       const orbits = [[1.0, 0.3, 0], [1.3, -0.5, 0.6], [1.6, 0.9, -0.4]].map(([radius, tiltX, tiltZ], k) => {
         const track = new THREE.Group();
         track.rotation.set(Math.PI / 2 + tiltX, 0, tiltZ);
-        const satellite = dot(0.07);
+        const satellite = k === 1 ? orange(dot(0.085)) : dot(0.07);
         track.add(circle(radius, 0.3), satellite);
         scene.add(track);
-        return { radius, satellite, speed: 0.9 - k * 0.2, phase: k * 2 };
+        return { radius, satellite, speed: 0.9 - k * 0.2, phase: k * 2, wake: k === 1 ? trail(track, 9, 0.06, 2) : null };
       });
       return { scene, camera: view(0, 0.8, 7.4), update(t) {
         core.rotation.set(t * 0.3, t * 0.45, 0);
-        orbits.forEach(({ radius, satellite, speed, phase }) => satellite.position.set(Math.cos(t * speed + phase) * radius, Math.sin(t * speed + phase) * radius, 0));
+        orbits.forEach(({ radius, satellite, speed, phase, wake }) => {
+          satellite.position.set(Math.cos(t * speed + phase) * radius, Math.sin(t * speed + phase) * radius, 0);
+          if (wake) wake(satellite.position);
+        });
+        glow(core, 0.2 + 0.25 * Math.sin(t * 1.6));
       } };
     },
     // Scrum: each sprint goes once around the loop and adds an increment to the product.
@@ -818,8 +946,9 @@ if (coverRenderer) {
       const loop = circle(radius, 0.35);
       loop.rotation.x = -Math.PI / 2;
       loop.position.y = -0.5;
-      const runner = dot(0.08);
+      const runner = orange(dot(0.085));
       group.add(loop, runner);
+      const wake = trail(group, 9, 0.06, 2);
       const layers = [0, 1, 2, 3].map(() => {
         const layer = block(new THREE.BoxGeometry(0.9, 0.18, 0.9));
         group.add(layer);
@@ -830,12 +959,14 @@ if (coverRenderer) {
         const built = Math.floor(laps), lap = laps - built;
         const a = lap * Math.PI * 2;
         runner.position.set(Math.cos(a) * radius, -0.5, -Math.sin(a) * radius);
+        wake(runner.position);
         const out = built === 4 ? ease(clamp((lap - 0.7) / 0.3)) : 0;
         layers.forEach((layer, k) => {
           const drop = k === built - 1 ? ease(clamp(lap * 3)) : 1;
           layer.visible = k < built;
           layer.position.y = -0.41 + k * 0.24 + (1 - drop) * 0.6;
           layer.scale.setScalar(Math.max(0.001, 1 - out));
+          glow(layer, k === built - 1 ? 1 - lap * 1.4 : 0);
         });
         group.rotation.y = t * 0.15;
       } };
