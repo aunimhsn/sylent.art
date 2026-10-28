@@ -66,7 +66,7 @@ const DOMAINS = [
   { slug: "python-et-donnees", title: "Python et données", summary: "Programmer en Python, du script au machine learning.", scene: "chart", modules: [
     ["Python", 3, "Syntaxe, structures de données, fonctions, modules et fichiers.", "snake"],
     ["Django", 3, "Modèles, vues, gabarits, formulaires et administration.", "form"],
-    ["Initiation au machine learning", 2, "Préparer des données, entraîner et évaluer un modèle.", "fit"],
+    ["Machine learning", 2, "Préparer des données, entraîner et évaluer un modèle.", "fit"],
   ] },
   { slug: "bases-de-donnees", title: "Bases de données", summary: "Modéliser, concevoir et interroger des données.", scene: "database", modules: [
     ["Merise", 2, "Dictionnaire de données, MCD, MLD et MPD.", "entities"],
