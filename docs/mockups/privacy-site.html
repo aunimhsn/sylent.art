@@ -27,10 +27,10 @@
   const facts = rows => `<dl class="app-doc-facts">${rows.map(([label, value]) => `<div><dt>${label}</dt><dd>${value}</dd></div>`).join("")}</dl>`;
   const SECTIONS = [
     ["essentiel", "L’essentiel", `
-      <ul>
-        <li>Aucun cookie, aucun bandeau à accepter.</li>
-        <li>Vos données ne servent qu’à répondre à votre demande${NB}: jamais de prospection, jamais de revente.</li>
-        <li>Vous pouvez à tout moment demander à les consulter ou à les supprimer.</li>
+      <ul class="app-doc-cards">
+        <li class="app-glass"><h3>Aucun cookie</h3><p>Rien n’est déposé dans votre navigateur, donc aucun bandeau à accepter.</p></li>
+        <li class="app-glass"><h3>Un seul usage</h3><p>Vos données servent à répondre à votre demande${NB}: jamais de prospection, jamais de revente.</p></li>
+        <li class="app-glass"><h3>Vos droits</h3><p>Vous pouvez à tout moment demander à les consulter ou à les supprimer.</p></li>
       </ul>`],
     ["responsable", "Responsable du traitement", `
       <p>Aunim Hassan, formateur indépendant, joignable à <a href="mailto:aunim.hassan@gmail.com">aunim.hassan@gmail.com</a>.</p>`],

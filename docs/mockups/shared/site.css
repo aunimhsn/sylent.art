@@ -298,6 +298,12 @@ html[data-motion="off"] .app-partner-list .is-copy { display: none; }
 .app-doc-facts div { display: grid; gap: 4px; padding: 14px 0; border-bottom: 1px solid var(--line); }
 .app-doc-facts dt { color: var(--dim); font: 800 12px/1.6 var(--font-title); letter-spacing: .14em; text-transform: uppercase; }
 .app-doc-facts dd { margin: 0; color: var(--text); }
+/* Small glass cards for the essentials: one under the other on a phone, side by side from 760 px. */
+.app-doc-section .app-doc-cards { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+@media (min-width: 760px) { .app-doc-section .app-doc-cards { grid-template-columns: repeat(3, 1fr); } }
+.app-doc-section .app-doc-cards li { display: grid; align-content: start; gap: 8px; margin: 0; padding: 22px 22px 24px; }
+.app-doc-cards h3 { margin: 0; font: 700 18px/1.25 var(--font-title); letter-spacing: -0.02em; }
+.app-doc-section .app-doc-cards p { margin: 0; font-size: 15.5px; line-height: 1.55; }
 /* A detail still to provide (SIRET, NDA). */
 .app-pending { color: var(--dim); font-style: italic; }
 
