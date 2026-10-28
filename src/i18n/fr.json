@@ -76,5 +76,21 @@
   },
   "dates": {
     "firstDay": "1er"
+  },
+  "form": {
+    "email": "Email",
+    "emailPlaceholder": "camille.martin@ecole.fr",
+    "message": "Message",
+    "messagePlaceholder": "Votre organisation, vos apprenants, la formation souhaitée, les dates envisagées…",
+    "trap": "Ne pas remplir",
+    "send": "Envoyer",
+    "sending": "Envoi en cours…",
+    "emailMissing": "Indiquez votre adresse email.",
+    "emailInvalid": "Cette adresse email n’est pas valide.",
+    "messageMissing": "Écrivez quelques mots sur votre besoin.",
+    "failed": "L’envoi n’a pas abouti. Votre message est conservé : réessayez dans un instant, ou écrivez-moi directement à [{email}](mailto:{email})",
+    "sentTitle": "Merci, votre message est bien envoyé.",
+    "sentText": "Je reviens vers vous rapidement.",
+    "again": "Envoyer un autre message"
   }
 }

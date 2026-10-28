@@ -1,0 +1,135 @@
+---
+// The contact page (docs/mockups/contact-site.html), at the URL of the former site: the form,
+// and the other ways to reach the trainer beside it, under a section heading over the grid of
+// the hero. Its texts are in src/content/contact.json, those of the form in src/i18n/fr.json.
+import ContactForm from "../components/contact-form.astro";
+import SectionHeading from "../components/section-heading.astro";
+import page from "../content/contact.json";
+import contact from "../data/contact.json";
+import fr from "../i18n/fr.json";
+import SiteLayout from "../layouts/site-layout.astro";
+
+const { ways } = page;
+// A link to another site opens in a new tab, which a screen reader announces.
+const links = [
+  { label: ways.email, text: contact.email, url: `mailto:${contact.email}` },
+  { label: ways.phone, text: contact.phoneLabel, url: `tel:${contact.phone}` },
+  { label: ways.linkedin, text: contact.linkedinLabel, url: contact.linkedin },
+  { label: ways.github, text: contact.githubLabel, url: contact.github },
+];
+---
+
+<SiteLayout title={page.title} description={page.description}>
+  <section class="contact" aria-labelledby="contact-title">
+    <div class="wrap">
+      <div
+        class="contact-head grid-texture is-page-top"
+        data-fluid="--grid-step"
+      >
+        <SectionHeading
+          title={page.heading}
+          ghost={page.ghost}
+          id="contact-title"
+          level={1}
+        />
+        <p class="lead reveal">{page.lead}</p>
+      </div>
+      <div class="contact-grid">
+        <ContactForm />
+        <aside class="ways reveal" aria-labelledby="ways-title">
+          <h2 id="ways-title">{ways.title}</h2>
+          <ul>
+            {links.map(({ label, text, url }) => (
+              <li>
+                <span>{label}</span>
+                {url.startsWith("https:") ? (
+                  <a href={url} target="_blank" rel="noopener">
+                    {text}
+                    <span class="visually-hidden">{fr.links.newTab}</span>
+                  </a>
+                ) : (
+                  <a href={url}>{text}</a>
+                )}
+              </li>
+            ))}
+          </ul>
+        </aside>
+      </div>
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  /* Room at the bottom for the wordmark of the footer, which straddles its top edge. */
+  .contact {
+    padding: calc(var(--header-height) + var(--space-fluid-3)) 0
+      var(--space-wordmark);
+  }
+
+  /* The grid of the hero of the home page and its orange fluid (global.css), from the top of
+     the page; it fades out just before the first field of the form. */
+  .contact-head {
+    --grid-below: 34px;
+
+    padding-bottom: var(--space-fluid-2);
+  }
+
+  .contact-head .lead {
+    margin-bottom: 0;
+  }
+
+  .contact-grid {
+    display: grid;
+    gap: var(--space-14);
+  }
+
+  @media (width >= 900px) {
+    .contact-grid {
+      grid-template-columns: 7fr 4fr;
+      gap: var(--space-18);
+      align-items: start;
+    }
+  }
+
+  /* The other ways to reach the trainer: a label over each link, under thin rules. */
+  .ways h2 {
+    margin: 0 0 var(--space-4);
+    color: var(--dim);
+    font: var(--label-weight) var(--size-label) / 1 var(--font-title);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+
+  .ways ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ways li {
+    padding: var(--space-5) 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .ways li:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .ways li > span {
+    display: block;
+    margin-bottom: var(--space-2);
+    color: var(--dim);
+    font-size: var(--size-ui);
+  }
+
+  .ways a {
+    font: 700 var(--size-link-large) / 1.3 var(--font-title);
+    letter-spacing: var(--tracking-card);
+    overflow-wrap: anywhere;
+    transition: color var(--duration-fast);
+  }
+
+  .ways a:hover {
+    color: var(--signal-text);
+  }
+</style>

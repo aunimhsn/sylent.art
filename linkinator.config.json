@@ -2,9 +2,6 @@
   "recurse": true,
   "checkCss": true,
   "checkFragments": true,
-  "skip": [
-    "^https?://(?!127\\.0\\.0\\.1)",
-    "^http://127\\.0\\.0\\.1(:\\d+)?/(sylent\\.art/)?contact/(#.*)?$"
-  ],
+  "skip": ["^https?://(?!127\\.0\\.0\\.1)"],
   "verbosity": "error"
 }

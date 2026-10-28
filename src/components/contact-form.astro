@@ -1,0 +1,312 @@
+---
+// The contact form (docs/mockups/contact-site.html, specs.md, Conversion): two flat fields, the
+// email and the message, sent to Formspree (src/data/contact.json). The script checks each
+// field, sends it with fetch so that the visitor stays on the page, and shows the outcome: the
+// confirmation, or the failure with the email address, the text being kept. Without JavaScript,
+// the browser checks the fields and the form posts to Formspree, which shows its own page.
+// Robots fill every field: the honeypot `_gotcha` makes Formspree ignore what they send.
+import contact from "../data/contact.json";
+import fr from "../i18n/fr.json";
+import Icon from "./icon.astro";
+import RichText from "./rich-text.astro";
+
+const { form } = fr;
+---
+
+<div class="contact-form reveal">
+  <form id="contact-form" action={contact.form} method="POST">
+    <div class="fields">
+      <div class="field">
+        <label for="email">{form.email}</label>
+        <input
+          class="input"
+          id="email"
+          name="email"
+          type="email"
+          inputmode="email"
+          autocomplete="email"
+          autocapitalize="off"
+          spellcheck="false"
+          placeholder={form.emailPlaceholder}
+          required
+          aria-describedby="email-error"
+          data-missing={form.emailMissing}
+          data-invalid={form.emailInvalid}
+        />
+        <p class="error" id="email-error" aria-live="polite"></p>
+      </div>
+      <div class="field">
+        <label for="message">{form.message}</label>
+        <textarea
+          class="input"
+          id="message"
+          name="message"
+          placeholder={form.messagePlaceholder}
+          required
+          aria-describedby="message-error"
+          data-missing={form.messageMissing}
+        ></textarea>
+        <p class="error" id="message-error" aria-live="polite"></p>
+      </div>
+    </div>
+    <div class="trap" aria-hidden="true">
+      <label for="gotcha">{form.trap}</label>
+      <input id="gotcha" name="_gotcha" tabindex="-1" autocomplete="off" />
+    </div>
+    <div id="form-alert" role="alert"></div>
+    <div class="form-end">
+      <button
+        class="button magnetic"
+        type="submit"
+        id="send"
+        data-sending={form.sending}
+      >
+        {form.send}
+      </button>
+    </div>
+  </form>
+  <template id="form-failed">
+    <p class="alert note">
+      <RichText text={form.failed} />
+    </p>
+  </template>
+  <div class="sent" id="form-sent" hidden>
+    <span class="sent-mark">
+      <Icon name="check" size={28} />
+    </span>
+    <h2 tabindex="-1">{form.sentTitle}</h2>
+    <p>{form.sentText}</p>
+    <button class="link" type="button" id="send-again">
+      {form.again}
+    </button>
+  </div>
+</div>
+
+<style>
+  /* No panel: the fields sit on the page itself, aligned with the text above. */
+  .fields {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  /* The label lights up with the focus of its field. */
+  .field {
+    position: relative;
+  }
+
+  label {
+    display: block;
+    margin-bottom: var(--space-2);
+    color: var(--secondary);
+    font: 600 var(--size-caption) / 1.2 var(--font-title);
+    transition: color var(--duration-fast);
+  }
+
+  .field:focus-within label {
+    color: var(--text);
+  }
+
+  /* Flat fields, a gray darker than the page. No outline on focus: the white caret shows where
+     to type, and the label lights up. The signal color stays for the errors, which are only a
+     message under the field. */
+  .input {
+    display: block;
+    width: 100%;
+    padding: var(--space-4);
+    border: 0;
+    border-radius: var(--radius-field);
+    background: var(--field-bg);
+    color: var(--text);
+    font: var(--text-weight) var(--size-body) / 1.4 var(--font-text);
+    caret-color: var(--text);
+    appearance: none;
+  }
+
+  .input::placeholder {
+    color: var(--dim);
+  }
+
+  .input:focus {
+    outline: none;
+  }
+
+  textarea.input {
+    min-height: 190px;
+    resize: none;
+  }
+
+  /* A thicker caret, drawn by src/scripts/thick-caret.ts since browsers only let the caret
+     change color. The native caret is hidden only while the script runs it (.has-caret), and
+     comes back for touch screens, the text being composed (accents, other alphabets) and the
+     forced colors of high contrast modes. */
+  :global(.has-caret) .input {
+    caret-color: transparent;
+  }
+
+  :global(.has-caret) .input.is-composing {
+    caret-color: var(--text);
+  }
+
+  .field :global(.caret) {
+    position: absolute;
+    z-index: 1;
+    width: 3px;
+    border-radius: 1px;
+    background: var(--text);
+    pointer-events: none;
+  }
+
+  .field :global(.caret[hidden]) {
+    display: none;
+  }
+
+  .field :global(.caret.is-blinking) {
+    animation: caret-blink 1.06s steps(1) infinite;
+  }
+
+  @keyframes caret-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  :global(html[data-motion="off"]) .field :global(.caret.is-blinking) {
+    animation: none;
+  }
+
+  @media (forced-colors: active) {
+    :global(.has-caret) .input {
+      caret-color: auto;
+    }
+
+    .field :global(.caret) {
+      display: none;
+    }
+  }
+
+  /* The scrollbar of the message shows only while it scrolls (.is-scrolling, set by the
+     script): a thin white bar on no track, flush with the right edge from top to bottom. Chrome,
+     Edge and Safari take the ::-webkit-scrollbar rules, which allow the finest drawing; Firefox
+     takes the standard properties. */
+  textarea.input::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  textarea.input::-webkit-scrollbar-track,
+  textarea.input::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  textarea.input::-webkit-scrollbar-thumb {
+    border-radius: 0;
+    background: transparent;
+  }
+
+  textarea.input.is-scrolling::-webkit-scrollbar-thumb {
+    background: var(--text);
+  }
+
+  @supports (-moz-appearance: none) {
+    textarea.input {
+      scrollbar-width: thin;
+      scrollbar-color: transparent transparent;
+    }
+
+    textarea.input.is-scrolling {
+      scrollbar-color: var(--text) transparent;
+    }
+  }
+
+  /* A field to fill: the message just under it, in the signal color for text. */
+  .error {
+    margin: var(--space-2) 0 0;
+    color: var(--signal-text);
+    font-size: var(--size-ui);
+  }
+
+  .error:empty {
+    display: none;
+  }
+
+  /* The honeypot: out of sight, and out of the keyboard path. */
+  .trap {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .form-end {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-top: var(--space-8);
+  }
+
+  .button[aria-disabled="true"] {
+    cursor: progress;
+    opacity: 0.7;
+  }
+
+  /* The failure, cloned from its template by the script. */
+  #form-alert :global(.alert) {
+    margin: var(--space-7) 0 0;
+    padding: var(--space-4) var(--space-5);
+  }
+
+  /* The confirmation: a white check in an orange outlined square on black. */
+  .sent {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-5);
+    padding: clamp(var(--space-2), 3vw, var(--space-6)) 0;
+  }
+
+  .sent[hidden] {
+    display: none;
+  }
+
+  .sent-mark {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    border: 1px solid var(--signal);
+    background: var(--mark-bg);
+    color: var(--text);
+  }
+
+  .sent h2 {
+    margin: 0;
+    font: var(--title-weight) var(--size-h2) / 1.1 var(--font-title);
+    letter-spacing: var(--tracking-title);
+  }
+
+  /* The focus goes to the title once the message is sent, so that a screen reader reads it;
+     it is not a control, so it shows no ring. */
+  .sent h2:focus {
+    outline: none;
+  }
+
+  .sent p {
+    margin: 0;
+    color: var(--secondary);
+    font-size: var(--size-lead);
+  }
+
+  .sent .link {
+    margin-top: var(--space-3);
+    border-width: 0 0 1px;
+    background: none;
+    color: var(--text);
+    cursor: pointer;
+    padding: 0 0 var(--space-1);
+  }
+</style>
+
+<script>
+  import "../scripts/contact-form";
+</script>
