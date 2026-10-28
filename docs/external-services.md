@@ -31,6 +31,8 @@ Sources: [plans](https://formspree.io/plans), [privacy policy](https://formspree
 
 - 50 requests a month is far above the expected volume of a freelance trainer. Past the limit, the visitor sees the error message and the e-mail fallback (see `specs.md`).
 - Personal data: the form fields are processed by Formspree, Inc. in the United States. Its privacy policy names no transfer mechanism (no Standard Contractual Clauses or Data Privacy Framework mentioned). The privacy policy of the site states this transfer.
+- Setup of the form: reCAPTCHA is on by default, and would show a Google page, with its cookies, to a visitor without JavaScript after sending; it is turned off in the settings of the form (Spam protection), which every plan allows ([reCAPTCHA settings](https://help.formspree.io/articles/form-and-project-settings/recaptcha-settings/)). The site sends the form with `fetch` and `Accept: application/json`; without JavaScript, Formspree shows its own thank-you page. A robot that fills the honeypot `_gotcha` is silently ignored ([honeypot](https://help.formspree.io/hc/en-us/articles/360013580813-Honeypot-spam-filtering)).
+- The address of the form (`https://formspree.io/f/<id>`) is public by nature, in the HTML of the page: it lives in `src/data/contact.json`.
 - Rejected: Web3Forms (250 submissions a month, but its own documentation contradicts itself on whether submissions are stored).
 - Chosen by the owner on 2026-10-27.
 

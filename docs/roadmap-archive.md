@@ -2,6 +2,24 @@
 
 The detail of the steps of [roadmap.md](../roadmap.md) once their pull request is merged, newest first.
 
+## 9b. Contact page (#14)
+
+Built on 2026-10-29 from the mock-up (`docs/mockups/contact-site.html`):
+
+- The contact page (`/contact/`, the URL of the former site): the form beside « Autres moyens », its texts in `src/content/contact.json` and in the `form` group of `src/i18n/fr.json`, the address of the Formspree form in `src/data/contact.json`.
+- The form (`src/components/contact-form.astro`, `src/scripts/contact-form.ts`): two fields checked when the visitor leaves them, then as they correct them; sent with `fetch` (`Accept: application/json`), and posted to Formspree without JavaScript, the browser checking the fields; the honeypot `_gotcha`; the confirmation, whose title takes the focus; the failure with the email address as an `.inline-link`, the text kept; the button stays focusable while sending (`aria-disabled`).
+- The thick caret and the scrollbar of the message (`src/scripts/thick-caret.ts`).
+- `/contact` out of the `pending` list of `scripts/check-former-urls.mjs`, and the skipped internal links of `linkinator.config.json` gone: every page of the first release exists.
+
+## 9a. About and legal pages (#13)
+
+Built on 2026-10-28 from the mock-up (`docs/mockups/about-site.html`, `legal-site.html`, `privacy-site.html`):
+
+- The about page (`/about/`, figures larger), the legal notice (`/legal/`) and the privacy policy (`/policy/`) on a shared `text-page.astro` with its table of contents; their texts in `src/content/about.json`, `legal.json` and `policy.json`.
+- Links and stressed text written `[text](url)` and `**text**` in the content files (`src/lib/rich-text.ts`), the contact details read from `src/data/contact.json` (SIRET and the sentence on the agrément added); links in running text underlined (`.inline-link`, decided with the owner on 2026-10-28).
+- The « Qui suis-je ? » block stays on the home page; the sentence on the agrément after the NDA of the footer.
+- The grid textures written once in `global.css` (`.grid-lines`, `.grid-texture`, `.is-page-top`); the dates through `src/lib/dates.ts`.
+
 ## 8b. Module content (#11)
 
 Written on 2026-10-28 with the owner, module by module, then aligned on the course material of the private `sylent-courses` repository (chapters and exercise names only):

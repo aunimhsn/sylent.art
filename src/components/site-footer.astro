@@ -7,13 +7,14 @@ import contact from "../data/contact.json";
 import fr from "../i18n/fr.json";
 import { fill } from "../lib/rich-text";
 import { href } from "../lib/url";
+import ExternalLink from "./external-link.astro";
 
 const navigation = [
   { label: fr.navigation.courses, path: "/courses/" },
   { label: fr.navigation.about, path: "/about/" },
   { label: fr.navigation.contact, path: "/contact/" },
 ];
-// A link to another site opens in a new tab, which a screen reader announces.
+// The links to other sites (src/components/external-link.astro).
 const external = [
   { url: contact.linkedin, label: contact.linkedinLabel },
   { url: contact.github, label: contact.githubLabel },
@@ -52,10 +53,7 @@ const year = new Date().getFullYear();
           </li>
           {external.map(({ url, label }) => (
             <li>
-              <a href={url} target="_blank" rel="noopener">
-                {label}
-                <span class="visually-hidden">{fr.links.newTab}</span>
-              </a>
+              <ExternalLink href={url}>{label}</ExternalLink>
             </li>
           ))}
         </ul>
