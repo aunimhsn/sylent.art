@@ -84,17 +84,17 @@ The former « Créations » section (photography, artwork), the user accounts an
 
 ## Training offers
 
-One page per **module**, grouped by **domain**. Pedagogical teams look for a speaker on a domain, and the technology matters less and less: the domains organize the home page and the offer list, but the first release has no domain pages. They can come later at `/courses/<domain>` without changing any URL. The domains below are a first grouping, refined with the owner when the content is written.
+One page per **module**, grouped by **domain**. Pedagogical teams look for a speaker on a domain, and the technology matters less and less: the domains organize the home page and the offer list, but the first release has no domain pages. They can come later at `/courses/<domain>` without changing any URL. The domains below are a first grouping, refined with the owner when the content is written. They are shown in the order of the table, on the home page and the offer list alike: the new offers first, since they matter most today (decided by the owner on 2026-10-29), then from the first steps in programming to project management.
 
 | Domain | Slug | Modules | Former courses |
 |---|---|---|---|
+| IA pour le développement | `ia-pour-le-developpement` | Claude Code, prompt engineering, intégrer l'IA avec méthode et rigueur | — |
 | Initiation à la programmation | `initiation-a-la-programmation` | Algorithmique, Robomind | 7 |
 | Développement web | `developpement-web` | HTML, CSS, JavaScript, PHP, Vue, Alpine, Laravel | 1, 2, 3, 4, 9, 10, 11 |
 | Python et données | `python-et-donnees` | Python, Django, machine learning | 6, 12 |
 | Bases de données | `bases-de-donnees` | Merise, MySQL, PostgreSQL | 5 |
 | Conception logicielle | `conception-logicielle` | Programmation orientée objet, UML, principes SOLID, design patterns | — |
 | Méthodologie et tests | `methodologie-et-tests` | Git et GitHub, Cypress, intégration continue (GitHub Actions), déploiement continu (Vercel, Render) | 8 |
-| IA pour le développement | `ia-pour-le-developpement` | Claude Code, prompt engineering, intégrer l'IA avec méthode et rigueur | — |
 | Gestion de projet | `gestion-de-projet` | Initiation à l'agilité avec Scrum | — |
 
 All the former courses are kept, as modules:
