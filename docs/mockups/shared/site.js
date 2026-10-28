@@ -114,12 +114,17 @@ const moduleCard = (domain, [title, , summary, scene]) => `
   </li>`;
 // The last card, after the domains or the modules: a module built for the request. After the
 // domains of the home page it is a band across its own row (isBand), without glass or scene.
-const customCard = (isBand = false) => `
-  <li class="app-card app-reveal ${isBand ? "is-band" : "app-glass app-tilt"}">
-    ${isBand ? "" : '<div class="app-cover" data-scene="custom" aria-hidden="true"><canvas></canvas></div>'}
-    <h3>Un besoin sur mesure${NB}?</h3>
-    <p>Décrivez vos apprenants et vos objectifs${NB}: je construis le module.</p>
-    <a class="app-card-more" href="${PAGES.contact}">${isBand ? `<span>Me contacter</span>${icon("right", 18)}` : "Me contacter"}</a>
+const customText = `<h3>Un besoin sur mesure${NB}?</h3>
+    <p>Décrivez vos apprenants et vos objectifs${NB}: je construis le module.</p>`;
+const customCard = (isBand = false) => isBand ? `
+  <li class="app-card app-reveal is-band">
+    <div class="app-band-text">${customText}</div>
+    <a class="app-card-more" href="${PAGES.contact}"><span>Me contacter</span>${icon("right", 18)}</a>
+  </li>` : `
+  <li class="app-card app-glass app-reveal app-tilt">
+    <div class="app-cover" data-scene="custom" aria-hidden="true"><canvas></canvas></div>
+    ${customText}
+    <a class="app-card-more" href="${PAGES.contact}">Me contacter</a>
   </li>`;
 
 // The call to action and the footer, which a page places at its end; an offer page asks its own
