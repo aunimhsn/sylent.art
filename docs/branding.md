@@ -1,6 +1,6 @@
 # Branding
 
-The visual identity of sylent.art and its design system: every design decision taken with the owner during the mock-up (step 4 of [roadmap.md](../roadmap.md)) and the design tokens written from it (step 5). The build (steps 6 to 11) implements exactly these tokens and rules, in one place, so that a color or a size changes in one file.
+The visual identity of sylent.art and its design system: every design decision taken with the owner during the mock-up (step 4 of [roadmap.md](../roadmap.md)) and the design tokens written from it (step 5). The build (steps 6 to 10) implements exactly these tokens and rules, in one place, so that a color or a size changes in one file.
 
 A **design token** is a named value that the components use instead of a raw value: a button writes `padding: var(--space-4) var(--space-7)`, not `16px 28px`, so that the spacing of every button changes in one line. The tokens are the CSS variables of `:root` in `docs/mockups/shared/site.css`; the build copies them into one stylesheet.
 
@@ -153,7 +153,7 @@ The cards share `--card-padding-block` (`--space-7`) and `--card-padding-inline`
 
 ## Components
 
-- **Header**: fixed, transparent over the top of the page, then `--header-bg` with a blur and a bottom rule once the page scrolls; it hides while scrolling down and comes back when scrolling up. Navigation: Formations, À propos (Articles after the launch); no Contact link, since the white « Me contacter » button leads there.
+- **Header**: fixed, transparent over the top of the page, then `--header-bg` with a blur and a bottom rule once the page scrolls; it hides while scrolling down and comes back when scrolling up. Navigation: Formations, À propos; no Contact link, since the white « Me contacter » button leads there.
 - **Mobile menu**: full screen, opened by a circle that grows from the burger; large uppercase links, the button, the motto at the bottom; Escape closes it.
 - **Buttons**: white and sharp (`--accent`); outlined variant with `--line-strong`, white border on hover. No glow, no arrow. The main buttons are magnetic under the mouse.
 - **Text link**: Manrope 700 with a 1 px underline in `--line-strong`, white on hover.

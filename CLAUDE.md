@@ -8,7 +8,7 @@
 ## Project
 
 - `sylent.art` is the website of Sylent (Aunim Hassan), a freelance trainer in software development. It replaces a former Laravel site with a static site hosted on GitHub Pages, at the custom domain `sylent.art`.
-- The site is focused on training only: the training courses, the articles, the trusted partners (schools and training organizations such as YNOV, IGENSIA Tech, EPSI, CESI, OpenClassrooms), an about page and a way to get in touch.
+- The site is focused on training only: the training courses, the trusted partners (schools and training organizations such as YNOV, IGENSIA Tech, EPSI, CESI, OpenClassrooms), an about page and a way to get in touch.
 - Out of scope: the former "Créations" section (photography and artwork), user accounts (sign-up, login) and any back-end or back-office. Everything must work without a server.
 - Keep the URLs of the former site (`/courses/<id>`, `/articles/<id>`, `/about`, `/contact`, `/policy`), or provide a redirect for each one, so the existing links and search ranking are not lost.
 - The `CNAME` file at the root of the published site contains `sylent.art`. Never remove it.
@@ -24,7 +24,7 @@
 ## Language
 
 - Everything in the project (code, identifiers, comments, documentation, commit messages) must be written in English.
-- Exception: the content of the site (pages, training courses, articles, metadata shown to visitors) is written in French. It lives in content or translation files, never hard-coded in the layout or components, so that a translation can be added later.
+- Exception: the content of the site (pages, training courses, metadata shown to visitors) is written in French. It lives in content or translation files, never hard-coded in the layout or components, so that a translation can be added later.
 - Exception: the code review notes in `outputs/` are written in French.
 - French content follows French typography: a non-breaking space before `?`, `!`, `:`, `;` and inside « », and correct accents and capitals (e.g. « À propos »).
   - Exception, accepted by the owner on 2026-10-28: the large uppercase section titles and the large faded words behind them are shown without accents (« PEDAGOGIE », « Echanger »), because the mask of their animation would cut the accents. Their accessible name keeps the accents (`aria-label`); everywhere else, accents stay.
@@ -50,12 +50,12 @@ Two folders are the exchange area between the owner and Claude Code. They are ig
 
 - `inputs/`: what the owner gives for context: screenshots, examples, references, copied texts (e.g. the content of the former site). Read them when the owner points to them; never commit, move or delete them unless asked.
 - `outputs/`: what Claude Code produces for the owner: reports, code review notes, previews, screenshots. Name them `<YYYY-MM-DD>-<subject>.<ext>` when they are meant to be kept for a while.
-- Anything meant to last goes elsewhere and is committed: documentation in `docs/`, images used by the site in the assets folder chosen in `docs/technical-choices.md`, course and article content in its content folder.
+- Anything meant to last goes elsewhere and is committed: documentation in `docs/`, images used by the site in the assets folder chosen in `docs/technical-choices.md`, course content in its content folder.
 
 ## Process
 
 - Follow the phases of `process.md`: specifications, wireframes, mock-up, design system, then the build, one pull request per step.
-- For each page type (home, course list, course, article, about, contact), start with editable Excalidraw wireframes in `docs/wireframes/` (grayscale, one group per block; `excalidraw-wireframes` skill), and build the HTML mock-up only once the owner has approved the layout (`html-mockups` skill).
+- For each page type (home, course list, course, about, contact), start with editable Excalidraw wireframes in `docs/wireframes/` (grayscale, one group per block; `excalidraw-wireframes` skill), and build the HTML mock-up only once the owner has approved the layout (`html-mockups` skill).
 - During the specifications, check the documentation, limits and terms of use of every external service (GitHub Pages, a form service if any, analytics if any), and record its limits and the risks the owner accepts, with their date, in a note of `docs/` linked from `roadmap.md` (e.g. `docs/github-pages-usage.md`).
 - For the mock-up, compare 3 or 4 styles that explore new directions for this site. The site must read as professional and trustworthy for schools and training organizations. `design-journal.md` records the past design experiences: use it as a source of ideas for one style at most, never as default rules. Give each open decision its own tab group on the mock-up page, and remove it once decided.
 
@@ -85,7 +85,7 @@ Follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.
 | `feat` | A new page, section or feature for the visitor. |
 | `fix` | A bug fix (broken link, layout issue, wrong content). |
 | `docs` | Documentation only (`README.md`, `specs.md`, `roadmap.md`, `CLAUDE.md`). |
-| `content` | Site content only: a training course, an article, a text change. |
+| `content` | Site content only: a training course, a text change. |
 | `style` | Formatting with no behavior change. |
 | `refactor` | A change that neither fixes a bug nor adds a feature. |
 | `perf` | A performance improvement (image weight, loading). |
@@ -95,7 +95,7 @@ Follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.
 | `chore` | Other maintenance (tooling, `.gitignore`, Claude Code agents). |
 | `revert` | Reverting a previous commit. |
 
-- Scope: optional, the page or area concerned (e.g. `feat(courses): ...`, `content(articles): ...`).
+- Scope: optional, the page or area concerned (e.g. `feat(courses): ...`, `content(about): ...`).
 - Description: imperative mood, lowercase, no final period, 72 characters max (e.g. `feat(courses): add the course list page`).
 - Breaking change: add `!` after the type or scope (e.g. `feat(urls)!: ...`) and explain it in a `BREAKING CHANGE:` footer. Changing a public URL is a breaking change.
 

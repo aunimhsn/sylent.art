@@ -20,7 +20,7 @@ Primary audiences, those who sign or approve a mission:
 
 The wording of the site never addresses schools only: it speaks of « vos apprenants », which fits the three audiences.
 
-Secondary audience: the learners (students, career changers, employees) who read the articles or look up their trainer. The site doesn't sell to them directly.
+Secondary audience: the learners (students, career changers, employees) who look up their trainer. The site doesn't sell to them directly.
 
 What the primary audiences must find before getting in touch:
 
@@ -70,17 +70,15 @@ Proofs:
 | Home | `/` | State the promise, the audiences, the domains, the differentiators, the proofs (partners, figure) and lead to the contact form. |
 | Offer list | `/courses` | Present every module, one card per module in a single grid, domain after domain, without headings: cover, name, domain, summary, and a link to the page of the module. The home page keeps one card per domain, whose « Voir les modules » leads to the offer list at that domain (`/courses#<domain>`). |
 | Module page | `/courses/<module>` | Detail one module (see [Training offers](#training-offers)). |
-| Article list | `/articles` | List the articles, newest first. After the first release. |
-| Article page | `/articles/<slug>` | Show one article, with a call to action at the end. After the first release. |
 | About | `/about` | Present the trainer: background, approach, references, NDA. No photo in the first release. |
 | Contact | `/contact` | The contact form and the other ways to reach the trainer. |
 | Legal notice | `/legal` | The publisher, the training activity declaration, the host, the intellectual property and the credits. |
 | Privacy policy | `/policy` | How the form and audience data are handled. |
 | Not found | `404.html` | A page « Oups, perdu dans l’espace », as on the former site (« Page introuvable » at phone width), with links to the home page and the offers. |
 
-Every page has a header with the navigation (Formations, Articles, À propos) and a visible « Me contacter » button, which leads to the contact page (so the navigation has no separate « Contact » link), and a footer with the navigation, the contact details, the legal page and the signature.
+Every page has a header with the navigation (Formations, À propos) and a visible « Me contacter » button, which leads to the contact page (so the navigation has no separate « Contact » link), and a footer with the navigation, the contact details, the legal page and the signature.
 
-**First release**: the articles are left out, to meet the deadline of the old server (see `roadmap.md`). The navigation has no « Articles » link until they come back, and their former URLs redirect to the home page (see [URLs and redirects](#urls-and-redirects)).
+The site has no articles: the owner removed them (decided on 2026-10-28). Their former URLs redirect to the home page (see [URLs and redirects](#urls-and-redirects)).
 
 The former « Créations » section (photography, artwork), the user accounts and any back-office are out of scope.
 
@@ -138,9 +136,9 @@ Each module is a content file in the repository, named after its slug, which giv
 
 The paths of the former site are kept when the page still exists, so the existing links and the search ranking are not lost:
 
-- `/`, `/courses`, `/articles`, `/about`, `/contact`, `/policy`: the same paths; `/policy` is the privacy policy, as on the former site. The legal notice is a new page, `/legal`.
+- `/`, `/courses`, `/about`, `/contact`, `/policy`: the same paths; `/policy` is the privacy policy, as on the former site. The legal notice is a new page, `/legal`.
 - `/courses/1` to `/courses/12`: redirect to the page of the module that the course became (see the table above).
-- `/articles/1` and `/articles/2`: redirect to the same articles at their new readable URL. In the first release, without articles, `/articles`, `/articles/1` and `/articles/2` redirect to the home page.
+- `/articles`, `/articles/1` and `/articles/2`: redirect to the home page, since the site has no articles.
 - `/creations`, `/register`, `/login`: no redirect; they show the not-found page.
 
 GitHub Pages has no server-side redirects: a redirect is a static page with a canonical link and an immediate redirection. Each page is served at its path with a final slash (`/about/`); GitHub Pages redirects the path without it (`/about`) there, so the former URLs keep resolving. Changing a public URL is a breaking change.
@@ -149,7 +147,6 @@ GitHub Pages has no server-side redirects: a redirect is a static page with a ca
 
 - The site content is in French, with French typography, in content files: never hard-coded in the layout or the components, so that a translation can be added later.
 - The content of the former site is the starting point; it is rewritten for the new audiences.
-- The two former articles (« Découverte d'Alpine JS », « Découverte de Tailwind CSS ») are kept for a later release, rewritten or replaced by new ones.
 - The partners are shown by their logo, with their name as alternative text.
 
 ## Contact details and legal information

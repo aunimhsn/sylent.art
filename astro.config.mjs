@@ -17,8 +17,8 @@ export default defineConfig({
   // canonical URLs end with a slash, in the development server too.
   trailingSlash: "always",
   // The former URLs that must keep resolving; the redirects of /courses/<id> are written by the
-  // module pages (src/pages/courses/[slug].astro). Without articles in the first release, they
-  // go to the home page.
+  // module pages (src/pages/courses/[slug].astro). The site has no articles: their
+  // former URLs go to the home page.
   redirects: {
     "/articles": to("/"),
     "/articles/1": to("/"),
