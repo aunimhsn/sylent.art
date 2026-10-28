@@ -1169,7 +1169,7 @@ if (coverRenderer) {
 
   const items = [...document.querySelectorAll(".app-cover")].map(cover => {
     const canvas = cover.querySelector("canvas");
-    return { cover, canvas, context: canvas.getContext("2d"), card: cover.closest(".app-card"), time: 1.3, visible: true, ...SCENES[cover.dataset.scene]() };
+    return { cover, canvas, context: canvas.getContext("2d"), card: cover.closest(".app-card"), time: 1.3, visible: true, copy: 0, ...SCENES[cover.dataset.scene]() };
   });
   let room = [0, 0];
   function drawCover(item) {
@@ -1208,8 +1208,16 @@ if (coverRenderer) {
       item.cover.style.setProperty("--anchor-x", `${(point.x + 1) * 50}%`);
       item.cover.style.setProperty("--anchor-y", `${(1 - point.y) * 50}%`);
     }
-    item.context.clearRect(0, 0, width, height);
-    item.context.drawImage(coverRenderer.domElement, 0, room[1] - height, width, height, 0, 0, width, height);
+    // Copied through an image bitmap: drawImage straight from a WebGL canvas swaps red and blue
+    // on some graphics cards (Firefox on Linux). A copy that comes after a newer one is dropped.
+    const copy = ++item.copy;
+    createImageBitmap(coverRenderer.domElement, 0, room[1] - height, width, height).then(bitmap => {
+      if (copy === item.copy) {
+        item.context.clearRect(0, 0, width, height);
+        item.context.drawImage(bitmap, 0, 0);
+      }
+      bitmap.close();
+    }).catch(() => {});
   }
   if (motion) {
     // Only the covers on screen move; a card under the pointer plays faster.

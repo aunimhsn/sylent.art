@@ -552,6 +552,8 @@ function start(renderer: THREE.WebGLRenderer) {
         card: cover.closest(".card"),
         time: 1.3,
         visible: true,
+        /** The number of the last copy asked for, so that a late one is dropped. */
+        copy: 0,
         ...make(),
       },
     ];
@@ -601,18 +603,21 @@ function start(renderer: THREE.WebGLRenderer) {
       item.cover.style.setProperty("--anchor-x", `${(point.x + 1) * 50}%`);
       item.cover.style.setProperty("--anchor-y", `${(1 - point.y) * 50}%`);
     }
-    item.context.clearRect(0, 0, width, height);
-    item.context.drawImage(
-      renderer.domElement,
-      0,
-      room[1] - height,
-      width,
-      height,
-      0,
-      0,
-      width,
-      height,
-    );
+    // The part of the renderer is copied into the cover through an image bitmap: drawImage
+    // straight from a WebGL canvas swaps red and blue on some graphics cards (Firefox on
+    // Linux, seen on 2026-10-29: the orange turned blue). The bitmap takes its copy at once,
+    // before the next cover is drawn in the renderer, and is drawn when ready; a copy that
+    // comes after a newer one is dropped.
+    const copy = ++item.copy;
+    createImageBitmap(renderer.domElement, 0, room[1] - height, width, height)
+      .then((bitmap) => {
+        if (copy === item.copy) {
+          item.context.clearRect(0, 0, width, height);
+          item.context.drawImage(bitmap, 0, 0);
+        }
+        bitmap.close();
+      })
+      .catch(() => {});
   }
 
   if (motion) {
