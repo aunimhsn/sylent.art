@@ -52,23 +52,5 @@ export default defineConfig({
       display: "block",
       fallbacks: ["system-ui", "sans-serif"],
     },
-    {
-      // Only the letters of the Roman numerals of the pedagogy, a file of a few kilobytes,
-      // with the optical size axis: at their large size the browser draws the high-contrast
-      // letters, as in the mock-up.
-      provider: fontProviders.google(),
-      name: "Bodoni Moda",
-      cssVariable: "--font-bodoni-moda",
-      weights: [400],
-      styles: ["normal"],
-      display: "block",
-      fallbacks: ["serif"],
-      options: {
-        experimental: {
-          glyphs: ["I", "V", "X"],
-          variableAxis: { opsz: [["6", "96"]] },
-        },
-      },
-    },
   ],
 });
