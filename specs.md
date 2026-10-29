@@ -88,14 +88,14 @@ One page per **module**, grouped by **domain**. Pedagogical teams look for a spe
 
 | Domain | Slug | Modules | Former courses |
 |---|---|---|---|
-| IA pour le développement | `ia-pour-le-developpement` | Claude Code, prompt engineering, intégrer l'IA avec méthode et rigueur | — |
-| Initiation à la programmation | `initiation-a-la-programmation` | Algorithmique, Robomind | 7 |
+| Développement IA | `ia-pour-le-developpement` | Claude Code, prompt engineering, méthode et IA | — |
+| Initiation à la prog | `initiation-a-la-programmation` | Algorithmique, Robomind | 7 |
 | Développement web | `developpement-web` | HTML, CSS, JavaScript, PHP, Vue, Alpine, Laravel | 1, 2, 3, 4, 9, 10, 11 |
-| Python et données | `python-et-donnees` | Python, Django, machine learning | 6, 12 |
+| Python | `python-et-donnees` | Python, Django, machine learning | 6, 12 |
 | Bases de données | `bases-de-donnees` | Merise, MySQL, PostgreSQL | 5 |
-| Conception logicielle | `conception-logicielle` | Programmation orientée objet, UML, principes SOLID, design patterns | — |
-| Méthodologie et tests | `methodologie-et-tests` | Git et GitHub, Cypress, intégration continue (GitHub Actions), déploiement continu (Vercel, Render) | 8 |
-| Gestion de projet | `gestion-de-projet` | Initiation à l'agilité avec Scrum | — |
+| Conception logicielle | `conception-logicielle` | prog orientée objet, UML, principes SOLID, design patterns | — |
+| Méthodologie et tests | `methodologie-et-tests` | Git / GitHub, Cypress, intégration continue (GitHub Actions), déploiement continu (Vercel, Render) | 8 |
+| Gestion de projet | `gestion-de-projet` | Méthode agile | — |
 
 All the former courses are kept, as modules:
 
@@ -128,7 +128,7 @@ Each module page shows:
 
 The modules are independent: a client takes one or several, in any order, so the site never presents them as a sequence to follow (no module numbers). Each module has a summary of one short sentence that says what it is for, not a list of notions, shown on its card.
 
-**IA pour le développement** has not been taught yet: its modules say honestly that it is a new offer (a « Nouveau » label and a short note), centered on method and good practices, to help employees use AI tools to be more productive and more satisfied in their daily work.
+**Développement IA** has not been taught yet: its modules say honestly that it is a new offer (a « Nouveau » label and a short note), centered on method and good practices, to help employees use AI tools to be more productive and more satisfied in their daily work.
 
 Each module is a content file in the repository, named after its slug, which gives its domain and, for a former course, its former id (e.g. `formerId: 3`). The redirects are generated from these ids.
 

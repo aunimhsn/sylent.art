@@ -1,5 +1,5 @@
 ---
-title: "Intégrer l’IA avec méthode"
+title: "Méthode et IA"
 domain: ia-pour-le-developpement
 order: 3
 days: 1

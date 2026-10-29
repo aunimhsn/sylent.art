@@ -1,5 +1,5 @@
 ---
-title: "IA pour le développement"
+title: "Développement IA"
 summary: "Utiliser l’IA avec méthode et rigueur, au quotidien."
 order: 1
 scene: network

@@ -25,13 +25,13 @@ Read only by the steps that need them:
 - [x] **9. About and contact**: 9a about and legal pages (#13), 9b contact page (#14).
 - [ ] **10. Feedback on the preview**: the owner reviews the site online at `aunimhsn.github.io/sylent.art` and gives a series of small remarks; each one is written below, then fixed in a small pull request (several close ones may share one), checked here with its number. The remarks that would delay the launch past its deadline (between 5 and 19 November 2026) wait until after it.
   Remarks of 2026-10-29 (the slugs, hence the URLs, stay as they are):
-  - [ ] Rename the domain « IA pour le développement » to « Développement IA ».
-  - [ ] Rename the domain « Initiation à la programmation » to « Initiation à la prog ».
-  - [ ] Rename the domain « Python et données » to « Python ».
-  - [ ] Rename the module « Intégrer l’IA avec méthode » to « Méthode et IA ».
-  - [ ] Rename the module « Programmation orientée objet » to « Prog orientée objet », so that it holds on one line.
-  - [ ] Rename the module « Git et GitHub » to « Git / GitHub ».
-  - [ ] Rename the module « Initiation à l’agilité avec Scrum » to « Méthode agile ».
+  - [x] Rename the domain « IA pour le développement » to « Développement IA ». (#18)
+  - [x] Rename the domain « Initiation à la programmation » to « Initiation à la prog ». (#18)
+  - [x] Rename the domain « Python et données » to « Python ». (#18)
+  - [x] Rename the module « Intégrer l’IA avec méthode » to « Méthode et IA ». (#18)
+  - [x] Rename the module « Programmation orientée objet » to « Prog orientée objet », so that it holds on one line. (#18)
+  - [x] Rename the module « Git et GitHub » to « Git / GitHub ». (#18)
+  - [x] Rename the module « Initiation à l’agilité avec Scrum » to « Méthode agile ». (#18)
   - [ ] The back of a domain card shows only the names of its modules, without their line of program.
   - [ ] The Roman numerals of the pedagogy section in Manrope.
   - [ ] The columns Navigation, Contact and Informations of the footer a little closer, so that « Cet enregistrement ne vaut pas agrément de l’État » holds on one line.
