@@ -252,8 +252,9 @@ const { Content } = await render(module);
     letter-spacing: var(--tracking-title);
     text-wrap: balance;
 
-    /* « Programmation » is wider than a 320 px screen at the smallest size. */
-    hyphens: auto;
+    /* No hyphenation, which split « Prompt engineering » mid-word: a word wider than the
+       screen breaks without a hyphen rather than overflow. */
+    overflow-wrap: break-word;
   }
 
   .module-lead :global(p) {
