@@ -2,8 +2,8 @@
 // The cards of the domains, each leading to the page of its domain: on the home page and the
 // domains page, then a band for a custom request; under a domain page, the other domains only.
 //
-// Under the pointer (or with the keyboard focus) a card turns half a turn and shows its modules
-// on its back (docs/branding.md, Components). The back is decorative, hidden from screen readers:
+// Under the pointer (or with the keyboard focus) the content of a card slides up and its modules
+// come up in its place, on its back (docs/branding.md, Components). The back is decorative, hidden from screen readers:
 // the modules are listed on the page of the domain.
 import fr from "../i18n/fr.json";
 import { domainPath, getOffers } from "../lib/offers";
@@ -77,15 +77,15 @@ const offers = (await getOffers()).filter(({ domain }) => domain.id !== except);
 
 <script>
   import "../scripts/covers";
-  import { gsap } from "gsap";
 
-  // The card turns in one smooth movement, from wherever it stands. Its glass flattens 3D, so
-  // the sides are swapped when the card passes its edge, instead of turning a real back face.
-  // Only on pointer devices: touch screens don't turn the cards.
+  // Under the pointer or with the keyboard focus, the content above the band goes up and out,
+  // and the list of the modules comes up from under it at the same pace: the card keeps its
+  // shape (it turned half a turn until 2026-10-29, which jerked when the pointer passed fast).
+  // Only on pointer devices: touch screens keep the cards still.
   const motion = document.documentElement.dataset.motion === "on";
   const clamp = (x: number) => Math.min(1, Math.max(0, x));
 
-  function flipCard(card: HTMLElement) {
+  function slideCard(card: HTMLElement) {
     const back = card.querySelector(".card-back") as HTMLElement;
     const reel = back.querySelector(".back-reel") as HTMLElement;
     const list = reel.querySelector(".back-list") as HTMLElement;
@@ -120,7 +120,7 @@ const offers = (await getOffers()).filter(({ domain }) => domain.id !== except);
 
     // Each module comes in at the bottom, and near the top moves away toward the back.
     function spin(now: number) {
-      if (!card.classList.contains("is-flipped")) {
+      if (!card.classList.contains("is-open")) {
         spinning = false;
         return;
       }
@@ -142,71 +142,43 @@ const offers = (await getOffers()).filter(({ domain }) => domain.id !== except);
       });
     }
 
-    // The sides follow the angle: past the edge (90°), the card shows its back.
-    const sides = (showBack: boolean) => {
-      if (showBack === card.classList.contains("is-flipped")) return;
-      card.classList.toggle("is-flipped", showBack);
-      if (showBack && !still && !spinning && motion) {
+    // Both go by the distance from the top of the card to the band, so that the list, which
+    // fills the back, comes up only under the content leaving it.
+    const band = card.querySelector(".card-more") as HTMLElement;
+    new ResizeObserver(() =>
+      card.style.setProperty("--slide", `${band.offsetTop}px`),
+    ).observe(card);
+    card.classList.add("can-open");
+
+    const open = (shown: boolean) => {
+      if (shown === card.classList.contains("is-open")) return;
+      card.classList.toggle("is-open", shown);
+      if (shown && !still && !spinning && motion) {
         spinning = true;
         before = 0;
         requestAnimationFrame(spin);
       }
     };
-    let flipped = false;
-    let turn: gsap.core.Tween | null = null;
-    function flip(open: boolean) {
-      if (open === flipped) return;
-      flipped = open;
-      turn?.kill();
-      if (!motion) {
-        card.style.transform = open ? "rotateY(180deg)" : "";
-        sides(open);
-        return;
-      }
-      turn = gsap.to(card, {
-        rotationY: open ? 180 : 0,
-        transformPerspective: 1000,
-        duration: 0.8,
-        ease: "power2.inOut",
-        onUpdate: () => sides(Number(gsap.getProperty(card, "rotationY")) > 90),
-      });
-    }
-
-    // The pointer is inside when it is over the place of the card in the grid: the turning card
-    // gets thin at its edge, so its own box would let the pointer out and in again, without end.
-    // The offsets ignore the transforms; they count from the grid, which is positioned.
-    const inside = (event: PointerEvent) => {
-      const box = (card.offsetParent ??
-        card.parentElement)!.getBoundingClientRect();
-      const x = event.clientX - box.left - card.offsetLeft;
-      const y = event.clientY - box.top - card.offsetTop;
-      return (
-        x >= 0 && y >= 0 && x <= card.offsetWidth && y <= card.offsetHeight
-      );
-    };
-    const hover = (over: boolean) => {
-      card.classList.toggle("is-hovered", over);
-      flip(over || card.contains(document.activeElement));
-    };
-    document.addEventListener("pointermove", (event) => {
-      if (event.pointerType === "mouse") hover(inside(event));
+    card.addEventListener("pointerenter", (event) => {
+      if (event.pointerType === "mouse") open(true);
     });
-    document.documentElement.addEventListener("pointerleave", () =>
-      hover(false),
-    );
-    card.addEventListener("focusin", () => flip(true));
-    card.addEventListener("focusout", () => flip(false));
+    card.addEventListener("pointerleave", (event) => {
+      if (event.pointerType === "mouse")
+        open(card.contains(document.activeElement));
+    });
+    card.addEventListener("focusin", () => open(true));
+    card.addEventListener("focusout", () => open(card.matches(":hover")));
   }
 
   if (matchMedia("(hover: hover)").matches) {
-    document.querySelectorAll<HTMLElement>("[data-domain]").forEach(flipCard);
+    document.querySelectorAll<HTMLElement>("[data-domain]").forEach(slideCard);
   }
 </script>
 
 <style>
-  /* The back covers the card above its white band, which stays in place on both sides and
-     keeps growing a little under the pointer. It lets the pointer through to the link of the
-     card, which covers the whole card. */
+  /* The back covers the card above its white band, which stays in place and keeps growing a
+     little under the pointer. It clips the list of the modules, which waits under it, and lets
+     the pointer through to the link of the card, which covers the whole card. */
   .card-back {
     position: absolute;
     pointer-events: none;
@@ -214,31 +186,12 @@ const offers = (await getOffers()).filter(({ domain }) => domain.id !== except);
     display: flex;
     flex-direction: column;
     padding: var(--space-6) var(--card-padding-inline);
+    overflow: hidden;
     visibility: hidden;
   }
 
-  .card.is-flipped > :not(.card-back, .card-more) {
-    visibility: hidden;
-  }
-
-  .card.is-flipped .card-back {
+  .card.can-open .card-back {
     visibility: visible;
-  }
-
-  .card-more span {
-    display: inline-block;
-  }
-
-  /* The card turns half a turn: its back and the text of its band are mirrored back, so that
-     they read the right way once the card shows its back. */
-  .card.is-flipped .card-back,
-  .card.is-flipped .card-more span {
-    transform: scaleX(-1);
-  }
-
-  /* The hover is decided by the place of the card, not by its turning box (see the script). */
-  .card.is-hovered .card-more {
-    padding-block: var(--space-5);
   }
 
   /* The modules scroll up without end over the whole height of the back, so that the reel is
@@ -253,6 +206,29 @@ const offers = (await getOffers()).filter(({ domain }) => domain.id !== except);
       #000000 84%,
       transparent
     );
+  }
+
+  /* The slide: the content above the band goes up by --slide, and the reel of the modules comes
+     up from as far below (see the script). */
+  .card.can-open > :not(.card-back, .card-more),
+  .card.can-open .back-reel {
+    transition: translate 0.6s var(--ease-in-out);
+  }
+
+  .card.can-open .back-reel {
+    translate: 0 var(--slide);
+  }
+
+  .card.is-open > :not(.card-back, .card-more) {
+    translate: 0 calc(-1 * var(--slide));
+  }
+
+  .card.is-open .back-reel {
+    translate: none;
+  }
+
+  :global(html[data-motion="off"]) .card.can-open * {
+    transition: none;
   }
 
   .back-list {

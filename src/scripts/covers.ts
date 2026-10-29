@@ -5,7 +5,7 @@
 // their shapes in src/scripts/cover-kit.ts.
 //
 // A single renderer draws every scene, then each frame is copied into the canvas of its cover:
-// one WebGL context for all the covers, and the covers follow their cards (reveal, flip, tilt).
+// one WebGL context for all the covers, and the covers follow their cards (reveal, slide, tilt).
 // Only the covers on screen move, and a card under the pointer plays faster. Without motion,
 // each scene draws one still frame. Without WebGL, the covers keep their grid.
 import { gsap } from "gsap";
@@ -703,7 +703,7 @@ if (document.querySelector(".cover[data-scene]")) {
 }
 
 // Pointer devices: the module cards tilt and light up under the pointer (the domain cards of the
-// home page turn instead, domain-cards.astro).
+// home page slide their content up instead, domain-cards.astro).
 if (motion && matchMedia("(hover: hover)").matches) {
   document.querySelectorAll<HTMLElement>(".tilt").forEach((card) => {
     const rotateX = gsap.quickTo(card, "rotationX", {
