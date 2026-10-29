@@ -1,6 +1,6 @@
 ---
 // The cards of the domains on the home page, then a band for a custom request. No domain pages
-// in the first release: a card leads to the offer list, at the first module of its domain.
+// yet (step 12 of roadmap.md): a card leads to the offer list, at the first module of its domain.
 //
 // Under the pointer (or with the keyboard focus) a card turns half a turn and shows its modules
 // on its back (docs/branding.md, Components). The back is decorative, hidden from screen readers:
@@ -29,7 +29,7 @@ const offers = await getOffers();
       <p>{data.summary}</p>
       <a
         class="card-more"
-        href={href(`/courses/#${id}`)}
+        href={href(`/domaines/#${id}`)}
         aria-label={fr.cards.domainLabel.replace("{title}", data.title)}
       >
         <span>{fr.cards.domainMore}</span>

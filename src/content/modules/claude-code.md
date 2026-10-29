@@ -1,6 +1,6 @@
 ---
 title: "Claude Code"
-domain: ia-pour-le-developpement
+domain: developpement-ia
 order: 1
 days: 2
 summary: "Programmer avec un assistant d’IA, en gardant la main sur le code."

@@ -1,6 +1,6 @@
 ---
 title: "Python"
-domain: python-et-donnees
+domain: python
 order: 1
 days: 3
 summary: "Apprendre à programmer avec un langage simple et polyvalent."

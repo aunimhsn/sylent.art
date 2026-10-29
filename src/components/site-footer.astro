@@ -10,8 +10,8 @@ import { href } from "../lib/url";
 import ExternalLink from "./external-link.astro";
 
 const navigation = [
-  { label: fr.navigation.courses, path: "/courses/" },
-  { label: fr.navigation.about, path: "/about/" },
+  { label: fr.navigation.courses, path: "/domaines/" },
+  { label: fr.navigation.about, path: "/a-propos/" },
   { label: fr.navigation.contact, path: "/contact/" },
 ];
 // The links to other sites (src/components/external-link.astro).
@@ -62,10 +62,10 @@ const year = new Date().getFullYear();
         <h2>{fr.footer.information}</h2>
         <ul>
           <li>
-            <a href={href("/legal/")}>{fr.footer.legal}</a>
+            <a href={href("/mentions-legales/")}>{fr.footer.legal}</a>
           </li>
           <li>
-            <a href={href("/policy/")}>{fr.footer.privacy}</a>
+            <a href={href("/confidentialite/")}>{fr.footer.privacy}</a>
           </li>
           <li>
             {fill(fr.footer.nda)}

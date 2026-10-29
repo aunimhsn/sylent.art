@@ -1,0 +1,25 @@
+---
+// The courses of the former site (/courses/<id>/), each redirected to the page of the module it
+// became, from the formerId of the module (specs.md, URLs and redirects). The former URL of a
+// draft leads to the offer list, at its domain, until the module is published.
+import type { GetStaticPaths } from "astro";
+import { getDrafts, getOffers, modulePath } from "../../lib/offers";
+import { href } from "../../lib/url";
+
+export const getStaticPaths = (async () => {
+  const modules = (await getOffers()).flatMap(({ modules }) => modules);
+  return [...modules, ...(await getDrafts())].flatMap((module) => {
+    const { formerId, draft, domain } = module.data;
+    if (!formerId) return [];
+    const target = draft ? `/domaines/#${domain.id}` : modulePath(module);
+    return [{ params: { id: String(formerId) }, props: { target } }];
+  });
+}) satisfies GetStaticPaths;
+
+interface Props {
+  target: string;
+}
+
+// 301 as the others: GitHub Pages only serves a page that leads on at once (a 302 waits 2 s).
+return Astro.redirect(href(Astro.props.target), 301);
+---

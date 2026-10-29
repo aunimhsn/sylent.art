@@ -1,6 +1,6 @@
 ---
 title: "Machine learning"
-domain: python-et-donnees
+domain: python
 order: 3
 days: 2
 summary: "Apprendre à un programme à faire des prédictions à partir de données réelles."

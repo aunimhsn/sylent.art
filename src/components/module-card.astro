@@ -3,7 +3,7 @@
 // name, its domain and its summary; the whole card leads to its page. The modules of a new
 // domain are new too. It tilts under the pointer (src/scripts/covers.ts).
 import fr from "../i18n/fr.json";
-import type { Domain, Module } from "../lib/offers";
+import { modulePath, type Domain, type Module } from "../lib/offers";
 import { href } from "../lib/url";
 
 interface Props {
@@ -34,7 +34,7 @@ const { isNew } = domain.data;
   <p>{summary}</p>
   <a
     class="card-more"
-    href={href(`/courses/${module.id}/`)}
+    href={href(modulePath(module))}
     aria-label={fr.cards.moduleLabel.replace("{title}", title)}
   >
     {fr.cards.moduleMore}
