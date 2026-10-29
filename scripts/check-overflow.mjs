@@ -2,7 +2,9 @@
 // past the right edge (a large faded word, a grid) lets Chrome on Android widen the page to show
 // it, which leaves a black band beside the grids (step 10 of roadmap.md). Each page is loaded in
 // Chromium as on a phone, then scrolled to the bottom, since the faded words slide with the
-// scroll. Run after `npm run build`: `node scripts/check-overflow.mjs [dist]`.
+// scroll. It also checks that the large white titles of the module, domain and section headings
+// hold on one line, as the owner asked. Run after `npm run build`:
+// `node scripts/check-overflow.mjs [dist]`.
 import {
   createReadStream,
   existsSync,
@@ -16,8 +18,9 @@ import { chromium } from "playwright";
 
 const [dist = "dist"] = process.argv.slice(2);
 
-// The narrowest common Android screen, and a wider one (the owner's phone is about 393 px).
-const widths = [360, 412];
+// The narrowest screen still met, the narrowest common Android one, and a wider one (the owner's
+// phone is about 393 px).
+const widths = [320, 360, 412];
 
 const types = {
   ".html": "text/html",
@@ -65,7 +68,7 @@ const origin = `http://127.0.0.1:${server.address().port}`;
 // Scrolls the page down to the bottom and returns the largest width it reached. It runs in the
 // page, with the globals of the browser. Each step jumps at once: the smooth scrolling of the
 // site would only start a scroll that the next step interrupts.
-/* global document, innerHeight, scrollTo */
+/* global document, getComputedStyle, innerHeight, scrollTo */
 const widest = async () => {
   await document.fonts.ready;
   const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -78,6 +81,19 @@ const widest = async () => {
   }
   return width;
 };
+
+// The large white titles on more than one line, with their number of lines: their line height
+// is at most their font size. Runs in the page.
+const wrappedTitles = () =>
+  [...document.querySelectorAll(".page-title, .heading-title")].flatMap(
+    (title) => {
+      const size = parseFloat(getComputedStyle(title).fontSize);
+      const lines = Math.round(title.getBoundingClientRect().height / size);
+      return lines > 1
+        ? [`« ${title.textContent.trim()} » on ${lines} lines`]
+        : [];
+    },
+  );
 
 const pages = pagesOf(dist);
 if (pages.length === 0) {
@@ -114,6 +130,9 @@ try {
           if (reached > width) {
             errors.push(`${path}: ${reached} px wide on a ${width} px screen`);
           }
+          for (const title of await page.evaluate(wrappedTitles)) {
+            errors.push(`${path}: ${title} at ${width} px`);
+          }
         } catch (error) {
           errors.push(`${path}: not checked at ${width} px, ${error.message}`);
         }
@@ -129,9 +148,11 @@ try {
 
 if (errors.length > 0) {
   const report = errors.sort().join("\n- ");
-  console.error(`Pages wider than the screen, or not checked:\n- ${report}`);
+  console.error(
+    `Pages wider than the screen, titles on several lines, or pages not checked:\n- ${report}`,
+  );
   process.exit(1);
 }
 console.log(
-  `${pages.length} pages fit a screen of ${widths.join(" and ")} px.`,
+  `${pages.length} pages and their titles fit a screen of ${widths.join(", ")} px.`,
 );

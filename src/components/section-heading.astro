@@ -52,8 +52,10 @@ const Title = `h${level}` as const;
     top: 0;
     left: 0;
     margin: 0;
-    font: var(--title-weight) min(var(--size-section), 8.5cqi) / 1
-      var(--font-title);
+    font: var(--title-weight) var(--size-section) / 1 var(--font-title);
+
+    /* Apart from the shorthand: a browser without the cqi unit keeps the font and the size. */
+    font-size: min(var(--size-section), 8.5cqi);
     letter-spacing: var(--tracking-title);
     text-transform: uppercase;
   }
