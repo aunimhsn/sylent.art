@@ -6,7 +6,11 @@ days: 3
 summary: "Apprendre à programmer avec un langage simple et polyvalent."
 scene: snake
 formerId: 6
-audience: "Étudiants, data scientists, développeurs, chefs de projet technique"
+audience:
+  - "Étudiants"
+  - "Data scientists"
+  - "Développeurs"
+  - "Chefs de projet technique"
 level: "Débutant"
 prerequisites: "Aucune connaissance en programmation."
 objectives:

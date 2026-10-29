@@ -102,7 +102,9 @@ const { Content } = await render(module);
     <dl class="facts reveal">
       <div>
         <dt>{page.facts.audience}</dt>
-        <dd>{audience}</dd>
+        {audience.map((item) => (
+          <dd>{item}</dd>
+        ))}
       </div>
       <div>
         <dt>{page.facts.level}</dt>
@@ -307,6 +309,12 @@ const { Content } = await render(module);
     margin: var(--space-3) 0 0;
     font: 700 var(--size-title-small) / 1.35 var(--font-title);
     letter-spacing: var(--tracking-card);
+  }
+
+  /* One audience per line, as a list without bullets: a small gap tells a wrapped audience
+     from the next one on a phone. */
+  .facts dd + dd {
+    margin-top: var(--space-1);
   }
 
   /* ── Body: prerequisites, objectives and program, beside the card to organize ── */

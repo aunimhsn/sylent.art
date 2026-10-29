@@ -5,7 +5,10 @@ order: 1
 days: 2
 summary: "Modéliser les données d’un projet avant de créer la base."
 scene: entities
-audience: "Étudiants, développeurs, chefs de projet technique"
+audience:
+  - "Étudiants"
+  - "Développeurs"
+  - "Chefs de projet technique"
 level: "Débutant"
 prerequisites: "Aucun."
 objectives:

@@ -6,7 +6,10 @@ days: 2
 summary: "Construire une interface réactive à partir de composants."
 scene: tree
 formerId: 9
-audience: "Étudiants, développeurs, chefs de projet technique"
+audience:
+  - "Étudiants"
+  - "Développeurs"
+  - "Chefs de projet technique"
 level: "Intermédiaire"
 prerequisites: "Les bases du HTML, du CSS et de JavaScript."
 objectives:

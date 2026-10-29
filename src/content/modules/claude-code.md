@@ -5,7 +5,9 @@ order: 1
 days: 2
 summary: "Programmer avec un assistant d’IA, en gardant la main sur le code."
 scene: terminal
-audience: "Développeurs, équipes techniques"
+audience:
+  - "Développeurs"
+  - "Équipes techniques"
 level: "Intermédiaire"
 prerequisites: "Les bases d’un langage de programmation et de Git."
 objectives:
@@ -25,7 +27,7 @@ program:
   - title: "Automatiser"
     text: "Commandes, agents et intégration dans le flux de travail de l’équipe."
   - title: "Travaux pratiques"
-    text: "Dans un projet existant, par exemple corriger un bug et écrire ses tests, puis relire le travail de l’assistant comme celui d’un collègue."
+    text: "Concevoir une application de zéro avec Claude Code : écrire ses spécifications, la découper en étapes, livrer chaque étape dans une pull request vérifiée par l’intégration continue, et relire le travail de l’assistant comme celui d’un collègue."
 ---
 
 Claude Code est un assistant de programmation qui travaille directement dans le projet. Ce module apprend à vos équipes à s’en servir avec méthode : lui donner le bon contexte, relire ce qu’il produit et garder la main sur la qualité.

@@ -5,7 +5,8 @@ order: 3
 days: 1
 summary: "Adopter l’IA en équipe, avec des règles claires et sûres."
 scene: orbit
-audience: "Tout public"
+audience:
+  - "Tout public"
 level: "Débutant"
 prerequisites: "Aucun."
 objectives:

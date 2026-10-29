@@ -6,7 +6,10 @@ days: 3
 summary: "Développer une application web complète avec un framework Python."
 scene: form
 formerId: 12
-audience: "Étudiants, développeurs, chefs de projet technique"
+audience:
+  - "Étudiants"
+  - "Développeurs"
+  - "Chefs de projet technique"
 level: "Intermédiaire"
 prerequisites: "Les bases de Python. Des notions de HTML et de SQL sont un plus."
 objectives:

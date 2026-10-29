@@ -6,7 +6,11 @@ days: 2
 summary: "Tester une application comme le ferait un utilisateur."
 scene: checks
 formerId: 8
-audience: "Étudiants, testeurs, développeurs, chefs de projet technique"
+audience:
+  - "Étudiants"
+  - "Testeurs"
+  - "Développeurs"
+  - "Chefs de projet technique"
 level: "Intermédiaire"
 prerequisites: "Les bases de JavaScript."
 objectives:
