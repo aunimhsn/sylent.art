@@ -4,7 +4,7 @@ The visual identity of sylent.art and its design system: every design decision t
 
 A **design token** is a named value that the components use instead of a raw value: a button writes `padding: var(--space-4) var(--space-7)`, not `16px 28px`, so that the spacing of every button changes in one line. The tokens are the CSS variables of `:root` in `docs/mockups/shared/site.css`; the build copies them into one stylesheet.
 
-- **Reference**: the mock-up in [docs/mockups/](mockups/) (`python3 docs/mockups/serve.py 8781`, then http://127.0.0.1:8781/docs/mockups/home.html). The wireframes only fixed the first layout; where this file and the mock-up disagree, the mock-up wins and this file is fixed.
+- **Reference**: the mock-up in [docs/mockups/](mockups/) (`python3 docs/mockups/serve.py 8781`, then http://127.0.0.1:8781/docs/mockups/home.html). The wireframes only fixed the first layout; where this file and the mock-up disagree, the mock-up wins and this file is fixed, except for the decisions taken after it on the built site, which win over the mock-up (it is not updated for them): the underlined links in running text (2026-10-28); the back of the domain cards with the names of the modules only, the Roman numerals in Manrope instead of Bodoni Moda, and the wider column Informations of the footer (2026-10-29).
 - **Status**: every page of the first release decided on 2026-10-27 and 2026-10-28; the tokens written on 2026-10-28, and the mock-up rewritten to use them only.
 - **Content rules** (audiences, wording, French typography, no rates) are in [specs.md](../specs.md); this file covers the look and the behavior only.
 
