@@ -2,7 +2,7 @@
 
 The detail of the steps of [roadmap.md](../roadmap.md) once their pull request is merged, newest first.
 
-## 12. Domain pages (#PR)
+## 12. Domain pages (#31)
 
 Asked by the owner on 2026-10-29, before the launch; the layout agreed on the wireframe `docs/wireframes/domain-page.excalidraw`, removed once the page was built (it stays in the history):
 
