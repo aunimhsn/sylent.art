@@ -8,12 +8,12 @@
     "courses": "Voir les formations"
   },
   "cube": [
+    { "label": "Votre formateur", "photo": true },
     { "label": "Le sens", "value": "Pourquoi ?" },
     { "label": "Par an depuis 2023", "figure": "hours" },
     { "label": "Pas à pas", "value": "Patience" },
-    { "label": "Formateur depuis", "figure": "since" },
     { "label": "En toute sérénité", "value": "Bienveillance" },
-    { "label": "Écoles et organismes", "figure": "partners" }
+    { "label": "Organismes", "figure": "partners" }
   ],
   "partners": {
     "title": "Partenaires",
@@ -53,7 +53,7 @@
   },
   "about": {
     "title": "Qui suis-je ?",
-    "ghost": "Transmettre",
+    "ghost": "Connaitre",
     "name": "Aunim Hassan",
     "lead": "J’aime apprendre et enseigner ce qui me passionne. C’est pourquoi, aujourd’hui, je mets à profit mes connaissances et mon savoir-faire afin de vous fournir les meilleurs outils et les compétences nécessaires à la réalisation de vos projets.",
     "more": "En savoir plus"

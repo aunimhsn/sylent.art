@@ -71,7 +71,7 @@ Proofs:
 | Domains | `/domaines` | The entry to the offers, the « Formations » link of the header: one card per domain, as on the home page, each leading to its page. The site has no flat list of every module: the offers follow one tree, domain, then collection, then module (decided by the owner on 2026-10-29). |
 | Domain page | `/domaines/<domain>` | Present one domain and its modules, then lead to the other domains (see [Domain pages](#domain-pages)). |
 | Module page | `/domaines/<domain>/modules/<module>` | Detail one module (see [Training offers](#training-offers)). |
-| About | `/a-propos` | Present the trainer: background, approach, references, NDA. No photo in the first release. |
+| About | `/a-propos` | Present the trainer: background, approach, references, NDA, over a photo of the trainer, large and faded (decided by the owner on 2026-10-29; the home page shows it too, behind « Qui suis-je ? » and on the first face of the hero cube). |
 | Contact | `/contact` | The contact form and the other ways to reach the trainer. |
 | Legal notice | `/mentions-legales` | The publisher, the training activity declaration, the host, the intellectual property and the credits. |
 | Privacy policy | `/confidentialite` | How the form and audience data are handled. |

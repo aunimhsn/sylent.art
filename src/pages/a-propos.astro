@@ -1,9 +1,10 @@
 ---
 // The about page (docs/mockups/about-site.html): the name and the background on the left, over
-// the grid, without a portrait in the first release; the key figures, larger than on the home
+// the grid, over the owner's photo, large and faded; the key figures, larger than on the home
 // page; the pedagogy; the partners; the administrative information; the call to action. The
 // figures, the steps and the partners are shared with the home page.
 import KeyFigures from "../components/key-figures.astro";
+import OwnerPhoto from "../components/owner-photo.astro";
 import PartnerReel from "../components/partner-reel.astro";
 import PedagogySteps from "../components/pedagogy-steps.astro";
 import RichText from "../components/rich-text.astro";
@@ -21,6 +22,7 @@ const { pedagogy, partners, admin } = about;
     aria-labelledby="about-title"
     data-fluid="--grid-step"
   >
+    <OwnerPhoto class="about-photo" />
     <div class="wrap">
       <h1 class="about-title reveal" id="about-title">
         {about.name}
@@ -94,6 +96,12 @@ const { pedagogy, partners, admin } = about;
 
   .about-hero .wrap {
     position: relative;
+  }
+
+  /* The photo, from under the header down to the bottom of the hero. */
+  .about-hero :global(.about-photo) {
+    top: var(--header-height);
+    bottom: 0;
   }
 
   .about-title {
