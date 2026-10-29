@@ -18,7 +18,7 @@
     "cta": ["Un domaine qui vous intéresse ?", "Parlons-en."]
   },
   "module": {
-    "title": "{title} · Formations · Sylent",
+    "title": "{title} · {domain} · Formations · Sylent",
     "description": "{summary} Un module de {duration}, sur site ou à distance.",
     "domain": "Domaine : {domain}",
     "seeProgram": "Voir le programme",

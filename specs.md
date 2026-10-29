@@ -92,7 +92,7 @@ One page per **module**, grouped by **domain**, with one page per domain too (se
 | Développement IA | `developpement-ia` | Claude Code, prompt engineering | — |
 | Initiation à la prog. | `initiation-a-la-programmation` | Algorithmique, Robomind | 7 |
 | Développement web | `developpement-web` | HTML, CSS, JavaScript, PHP, Vue, Alpine, Laravel | 1, 2, 3, 4, 9, 10, 11 |
-| Python | `python` | Python, Django, machine learning | 6, 12 |
+| Python | `python` | Fondamentaux, Django, machine learning | 6, 12 |
 | Bases de données | `bases-de-donnees` | Merise, MySQL, PostgreSQL | 5 |
 | Conception logicielle | `conception-logicielle` | POO, UML, principes SOLID, design patterns | — |
 | Méthodologie et tests | `methodologie-et-tests` | Git / GitHub, Cypress, CI/CD (GitHub Actions, Vercel, Render) | 8 |
@@ -130,6 +130,8 @@ Each module page shows:
 
 The modules are independent: a client takes one or several, in any order, so the site never presents them as a sequence to follow (no module numbers), except for the advised order of a collection (see [Collections](#collections)). Each module has a summary of one short sentence that says what it is for, not a list of notions, shown on its card.
 
+A module has a short name that relies on its context rather than repeating it: its domain is written under it on its card and behind its title on its page, so the first module of Python is « Fondamentaux », not « Python » (decided by the owner on 2026-10-29; the same rule names the modules of a collection). The title of its tab, which search engines show, names its domain: « Fondamentaux · Python · Formations · Sylent ».
+
 **Développement IA** has not been taught yet: its modules say honestly that it is a new offer (a « Nouveau » label and a short note), centered on method and good practices, to help employees use AI tools to be more productive and more satisfied in their daily work.
 
 Each module is a content file in the repository, named after its slug, which gives its domain and, for a former course, its former id (e.g. `formerId: 3`). The redirects are generated from these ids. A module may be a draft (`draft: true`): its file stays in the repository, but the site shows it nowhere (no page, no card, not on the back of its domain card, and a domain whose modules are all drafts is left out) until the owner publishes it; its former URL leads to the page of its domain meanwhile (decided on 2026-10-29). Vue, Django and PostgreSQL are drafts for now: Django waits for the collections of modules (step 13 of `roadmap.md`).
@@ -147,7 +149,7 @@ A domain whose modules are all drafts has no page. Its URL never changes once pu
 
 ### Collections
 
-Inside a domain, a collection gathers a few modules on one technology, close to each other, in an advised order: for example JavaScript (the language, then « JavaScript et le DOM »), PHP (the basics, then a database with PDO) or Python (the basics, machine learning, data visualization). Not modules of different technologies: no « back-end » of PHP, MySQL and Laravel. The site keeps one tree, domain, then collection, then module (decided by the owner on 2026-10-29); the collection is an optional level, and a module outside any collection stays directly in its domain. The modules stay independent: a client takes one or several, in any order; the advised order of a collection is the only place where the site shows modules in sequence. The rest (how the site shows a collection, whether one with a single published module shows, the names of its modules) is decided with the owner at step 13 of `roadmap.md`, before the launch.
+Inside a domain, a collection gathers a few modules on one technology, close to each other, in an advised order: for example JavaScript (the language, then « JavaScript et le DOM »), PHP (the basics, then a database with PDO) or Python (the basics, machine learning, data visualization). Not modules of different technologies: no « back-end » of PHP, MySQL and Laravel. The site keeps one tree, domain, then collection, then module (decided by the owner on 2026-10-29); the collection is an optional level, and a module outside any collection stays directly in its domain. The modules stay independent: a client takes one or several, in any order; the advised order of a collection is the only place where the site shows modules in sequence. The names of its modules follow the rule of the short names (see [Training offers](#training-offers)). The rest (how the site shows a collection, whether one with a single published module shows) is decided with the owner at step 13 of `roadmap.md`, before the launch.
 
 ## URLs and redirects
 

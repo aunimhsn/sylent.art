@@ -1,5 +1,5 @@
 ---
-title: "Python"
+title: "Fondamentaux"
 domain: python
 order: 1
 days: 3
