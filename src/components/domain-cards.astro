@@ -162,11 +162,13 @@ const offers = (await getOffers()).filter(({ domain }) => domain.id !== except);
     card.addEventListener("pointerenter", (event) => {
       if (event.pointerType === "mouse") open(true);
     });
+    // Only the focus of the keyboard holds it open: the link of a card clicked, then found again
+    // with the back button, keeps a focus that would hold it open under no pointer.
+    const focused = () => card.matches(":has(:focus-visible)");
     card.addEventListener("pointerleave", (event) => {
-      if (event.pointerType === "mouse")
-        open(card.contains(document.activeElement));
+      if (event.pointerType === "mouse") open(focused());
     });
-    card.addEventListener("focusin", () => open(true));
+    card.addEventListener("focusin", () => open(focused()));
     card.addEventListener("focusout", () => open(card.matches(":hover")));
   }
 
@@ -209,26 +211,35 @@ const offers = (await getOffers()).filter(({ domain }) => domain.id !== except);
   }
 
   /* The slide: the content above the band goes up by --slide, and the reel of the modules comes
-     up from as far below (see the script). */
-  .card.can-open > :not(.card-back, .card-more),
-  .card.can-open .back-reel {
-    transition: translate 0.6s var(--ease-in-out);
+     up from as far below (see the script). Both follow one animated value, --card-open, from 0
+     to 1: two transitions of their own drifted apart when the pointer left during the slide, and
+     the list ran over the content. */
+  @property --card-open {
+    syntax: "<number>";
+    inherits: true;
+    initial-value: 0;
+  }
+
+  .card.can-open {
+    transition:
+      background-color var(--duration-fast),
+      --card-open 0.6s var(--ease-in-out);
+  }
+
+  .card.is-open {
+    --card-open: 1;
+  }
+
+  :global(html[data-motion="off"]) .card.can-open {
+    transition: background-color var(--duration-fast);
+  }
+
+  .card.can-open > :not(.card-back, .card-more) {
+    translate: 0 calc(-1 * var(--slide) * var(--card-open));
   }
 
   .card.can-open .back-reel {
-    translate: 0 var(--slide);
-  }
-
-  .card.is-open > :not(.card-back, .card-more) {
-    translate: 0 calc(-1 * var(--slide));
-  }
-
-  .card.is-open .back-reel {
-    translate: none;
-  }
-
-  :global(html[data-motion="off"]) .card.can-open * {
-    transition: none;
+    translate: 0 calc(var(--slide) * (1 - var(--card-open)));
   }
 
   .back-list {
