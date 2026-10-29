@@ -10,8 +10,8 @@ const [dist = "dist", base = ""] = process.argv.slice(2);
 const web = "/domaines/developpement-web/modules";
 
 // Each former URL, with the path it redirects to (without the base), or null for a page at the
-// same path. A draft's former course leads to the offer list, at the card of its domain, until
-// the module is published (specs.md, Training offers).
+// same path. A draft's former course leads to the page of its domain, until the module is
+// published (specs.md, Training offers).
 const formerUrls = new Map([
   ["/", null],
   ["/courses", "/domaines/"],
@@ -23,10 +23,10 @@ const formerUrls = new Map([
   ["/courses/6", "/domaines/python/modules/python/"],
   ["/courses/7", "/domaines/initiation-a-la-programmation/modules/robomind/"],
   ["/courses/8", "/domaines/methodologie-et-tests/modules/cypress/"],
-  ["/courses/9", "/domaines/#developpement-web"], // Vue, a draft
+  ["/courses/9", "/domaines/developpement-web/"], // Vue, a draft
   ["/courses/10", `${web}/alpine/`],
   ["/courses/11", `${web}/laravel/`],
-  ["/courses/12", "/domaines/#python"], // Django, a draft
+  ["/courses/12", "/domaines/python/"], // Django, a draft
   ["/articles", "/"],
   ["/articles/1", "/"],
   ["/articles/2", "/"],

@@ -2,6 +2,15 @@
 
 The detail of the steps of [roadmap.md](../roadmap.md) once their pull request is merged, newest first.
 
+## 12. Domain pages (#PR)
+
+Asked by the owner on 2026-10-29, before the launch; the layout agreed on the wireframe `docs/wireframes/domain-page.excalidraw`, removed once the page was built (it stays in the history):
+
+- One page per domain at `/domaines/<domain>/` (`src/pages/domaines/[domain]/index.astro`, `domainPath` in `src/lib/offers.ts`): the hero of the module page, now shared (`src/components/page-hero.astro`), over the faded word « Domaine », chosen by the owner; the cards of its published modules and of a custom request; « Autres domaines » over « Explorer », the cards of the other domains; the call to action « Un domaine qui vous intéresse ? ».
+- `/domaines/` shows one card per domain, as the home page, instead of the former list of every module. The band of a domain card reads « Explorer le domaine » (asked by the owner) and leads to its page.
+- `/domaines/<domain>/modules/` redirects to the domain page. The former courses of the drafts (Vue `/courses/9`, Django `/courses/12`) lead to the page of their domain.
+- No link of its own from a module page to its domain page: the section « Dans le même domaine » is enough (decided by the owner).
+
 ## 11. French URLs in a tree (#30)
 
 Decided by the owner on 2026-10-29, before the launch, while changing the paths costs nothing:

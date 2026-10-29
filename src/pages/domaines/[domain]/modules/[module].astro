@@ -9,12 +9,11 @@ import { render } from "astro:content";
 import CustomCard from "../../../../components/custom-card.astro";
 import Icon from "../../../../components/icon.astro";
 import ModuleCard from "../../../../components/module-card.astro";
+import PageHero from "../../../../components/page-hero.astro";
 import SectionHeading from "../../../../components/section-heading.astro";
 import courses from "../../../../content/courses.json";
-import fr from "../../../../i18n/fr.json";
 import SiteLayout from "../../../../layouts/site-layout.astro";
 import { durationOf, getOffers, type Offer } from "../../../../lib/offers";
-import { withoutAccents } from "../../../../lib/text";
 import { href } from "../../../../lib/url";
 
 export const getStaticPaths = (async () =>
@@ -36,8 +35,6 @@ const page = courses.module;
 const { title, summary, days, audience, level, prerequisites } = module.data;
 const { objectives, program } = module.data;
 const duration = durationOf(days);
-// The domain, as the large faded word behind the title; screen readers get its real name.
-const ghost = withoutAccents(domain.data.title);
 const others = offer.modules.filter(({ id }) => id !== module.id);
 const hasText = Boolean(module.body?.trim());
 const { Content } = await render(module);
@@ -50,43 +47,19 @@ const { Content } = await render(module);
     .replace("{duration}", duration)}
   cta={page.cta}
 >
-  <section
-    class="module-hero grid-texture"
-    aria-labelledby="module-title"
-    data-fluid="--grid-step"
+  <PageHero
+    title={title}
+    ghost={domain.data.title}
+    id="module-title"
+    label={page.domain.replace("{domain}", domain.data.title)}
+    isNew={domain.data.isNew}
+    note={domain.data.note}
   >
-    <div class="wrap">
-      <div class="module-text">
-        {domain.data.isNew && (
-          <p class="module-new reveal">
-            <span class="new">{fr.cards.new}</span>
-          </p>
-        )}
-        <div class="module-heading">
-          <span class="ghost-word heading-ghost" aria-hidden="true">
-            {ghost}
-          </span>
-          <h1 class="module-title reveal" id="module-title">
-            {title}
-          </h1>
-        </div>
-        <p class="visually-hidden">
-          {page.domain.replace("{domain}", domain.data.title)}
-        </p>
-        <div class="module-lead reveal">
-          {hasText ? <Content /> : <p>{summary}</p>}
-        </div>
-        {domain.data.note && (
-          <p class="module-note note reveal">{domain.data.note}</p>
-        )}
-        <div class="module-actions reveal">
-          <a class="button is-outline" href="#programme">
-            {page.seeProgram}
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
+    {hasText ? <Content /> : <p>{summary}</p>}
+    <a slot="actions" class="button is-outline" href="#programme">
+      {page.seeProgram}
+    </a>
+  </PageHero>
 
   <div class="wrap">
     <dl class="facts reveal">
@@ -172,91 +145,6 @@ const { Content } = await render(module);
 </SiteLayout>
 
 <style>
-  /* ── Hero: the text of the module, over the grid and its orange fluid (global.css) ── */
-  .module-hero {
-    --grid-mask: radial-gradient(
-      80% 75% at 70% 40%,
-      #000000 30%,
-      transparent 75%
-    );
-
-    padding: calc(var(--header-height) + var(--space-fluid-2)) 0
-      var(--space-fluid-3);
-  }
-
-  .module-hero .wrap {
-    position: relative;
-  }
-
-  .module-text {
-    max-width: var(--width-text);
-  }
-
-  .module-new {
-    margin: 0 0 var(--space-6);
-  }
-
-  .module-new .new {
-    position: static;
-    display: inline-block;
-  }
-
-  /* The title over the domain, as a large faded word a little lower and to the right, as in
-     the section headings (src/components/section-heading.astro): both in the same cell of a
-     grid, so that the taller of the two sets the height. The word slides with the scroll
-     (src/scripts/motion.ts). */
-  .module-heading {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .module-heading > * {
-    grid-area: 1 / 1;
-  }
-
-  .heading-ghost {
-    margin: var(--space-fluid-1) 0 0 0.12em;
-  }
-
-  .module-title {
-    position: relative;
-    align-self: start;
-    margin: 0;
-    font: var(--title-weight) var(--size-display) / 0.98 var(--font-title);
-    letter-spacing: var(--tracking-title);
-    text-wrap: balance;
-
-    /* No hyphenation, which split « Prompt engineering » mid-word: a word wider than the
-       screen breaks without a hyphen rather than overflow. */
-    overflow-wrap: break-word;
-  }
-
-  .module-lead :global(p) {
-    margin: var(--space-7) 0 0;
-    max-width: var(--measure);
-    color: var(--secondary);
-    font-size: var(--size-intro);
-    text-wrap: pretty;
-  }
-
-  .module-lead :global(p + p) {
-    margin-top: var(--space-4);
-  }
-
-  .module-note {
-    margin: var(--space-6) 0 0;
-    max-width: var(--measure-narrow);
-    padding: var(--space-3) var(--space-4);
-    font-size: var(--size-text-small);
-  }
-
-  .module-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3);
-    margin-top: var(--space-9);
-  }
-
   /* ── Key facts: plain columns under a rule ── */
   .facts {
     display: grid;

@@ -1,0 +1,140 @@
+---
+// The hero of a module page and of a domain page, over the grid and its orange fluid
+// (global.css): the « Nouveau » label of a new domain, the title over a large faded word, the
+// lead (the slot), the note of a new domain, then the actions, if any (the slot "actions").
+import fr from "../i18n/fr.json";
+import { withoutAccents } from "../lib/text";
+
+interface Props {
+  title: string;
+  /** The large faded word behind the title, hidden from screen readers. */
+  ghost: string;
+  id: string;
+  /** Said to screen readers after the title, e.g. the domain of a module. */
+  label?: string;
+  isNew?: boolean;
+  note?: string;
+}
+
+const { title, ghost, id, label, isNew = false, note } = Astro.props;
+---
+
+<section
+  class="page-hero grid-texture"
+  aria-labelledby={id}
+  data-fluid="--grid-step"
+>
+  <div class="wrap">
+    <div class="page-text">
+      {isNew && (
+        <p class="page-new reveal">
+          <span class="new">{fr.cards.new}</span>
+        </p>
+      )}
+      <div class="page-heading">
+        <span class="ghost-word heading-ghost" aria-hidden="true">
+          {withoutAccents(ghost)}
+        </span>
+        <h1 class="page-title reveal" id={id}>
+          {title}
+        </h1>
+      </div>
+      {label && <p class="visually-hidden">{label}</p>}
+      <div class="page-lead reveal">
+        <slot />
+      </div>
+      {note && <p class="page-note note reveal">{note}</p>}
+      {Astro.slots.has("actions") && (
+        <div class="page-actions reveal">
+          <slot name="actions" />
+        </div>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    --grid-mask: radial-gradient(
+      80% 75% at 70% 40%,
+      #000000 30%,
+      transparent 75%
+    );
+
+    padding: calc(var(--header-height) + var(--space-fluid-2)) 0
+      var(--space-fluid-3);
+  }
+
+  .page-hero .wrap {
+    position: relative;
+  }
+
+  .page-text {
+    max-width: var(--width-text);
+  }
+
+  .page-new {
+    margin: 0 0 var(--space-6);
+  }
+
+  .page-new .new {
+    position: static;
+    display: inline-block;
+  }
+
+  /* The title over the faded word, a little lower and to the right, as in the section
+     headings (src/components/section-heading.astro): both in the same cell of a grid, so that
+     the taller of the two sets the height. The word slides with the scroll
+     (src/scripts/motion.ts). */
+  .page-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .page-heading > * {
+    grid-area: 1 / 1;
+  }
+
+  .heading-ghost {
+    margin: var(--space-fluid-1) 0 0 0.12em;
+  }
+
+  .page-title {
+    position: relative;
+    align-self: start;
+    margin: 0;
+    font: var(--title-weight) var(--size-display) / 0.98 var(--font-title);
+    letter-spacing: var(--tracking-title);
+    text-wrap: balance;
+
+    /* No hyphenation, which split « Prompt engineering » mid-word: a word wider than the
+       screen breaks without a hyphen rather than overflow. */
+    overflow-wrap: break-word;
+  }
+
+  .page-lead :global(p) {
+    margin: var(--space-7) 0 0;
+    max-width: var(--measure);
+    color: var(--secondary);
+    font-size: var(--size-intro);
+    text-wrap: pretty;
+  }
+
+  .page-lead :global(p + p) {
+    margin-top: var(--space-4);
+  }
+
+  .page-note {
+    margin: var(--space-6) 0 0;
+    max-width: var(--measure-narrow);
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--size-text-small);
+  }
+
+  .page-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-9);
+  }
+</style>

@@ -1,5 +1,5 @@
 // The offers, read from the domains and modules collections (src/content.config.ts) for the
-// home page, the offer list and the module pages. The checks that span several files run here,
+// home page, the domains page, the domain pages and the module pages. The checks that span several files run here,
 // so that a content error fails the build (docs/technical-choices.md, Content).
 import { getCollection, type CollectionEntry } from "astro:content";
 import courses from "../content/courses.json";
@@ -71,6 +71,9 @@ export async function getOffers(): Promise<Offer[]> {
     }))
     .filter(({ modules }) => modules.length > 0);
 }
+
+/** The path of the page of a domain, without the base: `/domaines/<domain>/`. */
+export const domainPath = (id: string) => `/domaines/${id}/`;
 
 /** The path of the page of a module, without the base: `/domaines/<domain>/modules/<module>/`. */
 export const modulePath = ({ id, data }: Module) =>

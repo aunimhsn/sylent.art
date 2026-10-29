@@ -132,18 +132,18 @@ The modules are independent: a client takes one or several, in any order, so the
 
 **Développement IA** has not been taught yet: its modules say honestly that it is a new offer (a « Nouveau » label and a short note), centered on method and good practices, to help employees use AI tools to be more productive and more satisfied in their daily work.
 
-Each module is a content file in the repository, named after its slug, which gives its domain and, for a former course, its former id (e.g. `formerId: 3`). The redirects are generated from these ids. A module may be a draft (`draft: true`): its file stays in the repository, but the site shows it nowhere (no page, no card, not on the back of its domain card, and a domain whose modules are all drafts is left out) until the owner publishes it; its former URL leads to the page of its domain meanwhile (decided on 2026-10-29), and to the offer list `/domaines`, at the card of its domain, until the domain pages exist (step 12 of `roadmap.md`). Vue, Django and PostgreSQL are drafts for now: Django waits for the collections of modules (step 13 of `roadmap.md`).
+Each module is a content file in the repository, named after its slug, which gives its domain and, for a former course, its former id (e.g. `formerId: 3`). The redirects are generated from these ids. A module may be a draft (`draft: true`): its file stays in the repository, but the site shows it nowhere (no page, no card, not on the back of its domain card, and a domain whose modules are all drafts is left out) until the owner publishes it; its former URL leads to the page of its domain meanwhile (decided on 2026-10-29). Vue, Django and PostgreSQL are drafts for now: Django waits for the collections of modules (step 13 of `roadmap.md`).
 
 ### Domain pages
 
-Each domain has its page at `/domaines/<domain>`, its slug in the table above (decided by the owner on 2026-10-29, before the launch). A visitor reaches it from the card of the domain on the home page and on the domains page, whose « Voir les modules » leads there, and from the other domain pages; the header has no link per domain. `/domaines/<domain>/modules` leads to the domain page. The page shows:
+Each domain has its page at `/domaines/<domain>`, its slug in the table above (decided by the owner on 2026-10-29, before the launch). A visitor reaches it from the card of the domain on the home page and on the domains page, whose white band « Explorer le domaine » leads there, and from the other domain pages; the header has no link per domain, and a module page has no link of its own to its domain page: its section « Dans le même domaine » is enough (decided by the owner on 2026-10-29). `/domaines/<domain>/modules` leads to the domain page. The page shows:
 
-- a hero, as on a module page: the « Nouveau » label for a new domain, the name of the domain, its summary and, for a new domain, its note;
+- a hero, as on a module page: the « Nouveau » label for a new domain, the name of the domain over the large faded word « Domaine » (chosen by the owner on 2026-10-29), its summary and, for a new domain, its note;
 - the published modules of the domain, one card each, as on the offer list, then the card « Un besoin sur mesure ? »;
-- « Explorer les autres domaines »: the cards of the other domains, as on the home page, as a module page leads to the other modules of its domain;
+- « Autres domaines », over the faded word « Explorer »: the cards of the other domains, as on the home page, as a module page leads to the other modules of its domain;
 - the call to action to the contact form.
 
-A domain whose modules are all drafts has no page. Its URL never changes once published, like a module's.
+A domain whose modules are all drafts has no page. Its URL never changes once published, like a module's. The layout was agreed on a wireframe on 2026-10-29; the built page is now the reference.
 
 ### Collections
 
