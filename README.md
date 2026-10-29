@@ -17,7 +17,7 @@ Astro static site, Node.js 24 LTS and npm:
 ```sh
 npm ci              # install the dependencies
 npm run dev         # local server at http://localhost:4321
-npm run check       # format check, lint, build and link check, before every commit
+npm run check       # format check, lint, build, links and phone width, before every commit
 ```
 
 The other commands and the reasons of each choice are in [docs/technical-choices.md](docs/technical-choices.md).

@@ -16,8 +16,9 @@ The technical choices of the [roadmap](../roadmap.md), with their reasons and th
 | Formatter | Prettier, with `prettier-plugin-astro` | The usual formatter for Astro, CSS, JavaScript, JSON, YAML and the Markdown content: one tool for every file of the site. The project documentation (`*.md` at the root, `docs/`, `.claude/`) is left out (`.prettierignore`): Prettier would pad every table to its widest cell, which makes the long tables unreadable in an editor. |
 | Linter | ESLint with `typescript-eslint`, `eslint-plugin-astro` and its strict accessibility rules (`jsx-a11y-strict`, with `eslint-plugin-jsx-a11y-x`); Stylelint with `stylelint-config-standard` and `stylelint-config-html` (the `<style>` blocks of the components); `astro check` | ESLint catches errors and missing accessibility attributes (`alt`, labels) in the templates, Stylelint invalid or duplicate CSS, `astro check` type errors and wrong component props. `eslint-plugin-jsx-a11y-x` is the maintained fork that `eslint-plugin-astro` supports: the original `eslint-plugin-jsx-a11y` has had no release since 2024 and refuses ESLint 10. Stylelint keeps the colors in six-digit hex (`color-hex-length: long`), as `docs/branding.md` writes them. |
 | Link check | linkinator on the built site, plus a script for the former URLs | See [Link check](#link-check). |
+| Phone width check | A script that loads every page in the Chromium of [Playwright](https://playwright.dev/), as on a phone | See [Phone width check](#phone-width-check). |
 | Deployment | GitHub Actions workflow (`.github/workflows/deploy.yml`) on every push to `main`, with `withastro/action` and `actions/deploy-pages` | A merged pull request is deployed without a manual step, using the actions documented by Astro and GitHub. See [Deployment](#deployment). |
-| Checks in CI | GitHub Actions workflow (`.github/workflows/ci.yml`) on every pull request | Runs the same commands as before a commit: build, format, lint, links. |
+| Checks in CI | GitHub Actions workflow (`.github/workflows/ci.yml`) on every pull request | Runs the same commands as before a commit: build, format, lint, links, phone width. |
 
 ## Astro
 
@@ -79,6 +80,13 @@ The technical choices of the [roadmap](../roadmap.md), with their reasons and th
 - **Links to pages still to build**: from step 7, the header and the footer linked to pages built by later steps; linkinator skipped them through a second pattern of `skip` in `linkinator.config.json`, removed in step 9b once every page of the first release existed. A link to a page not built yet goes there again, until its step.
 - Rejected: **lychee**, faster, but a Rust binary that the owner would install apart from npm; linkinator runs from `npm ci` locally and in CI alike.
 
+## Phone width check
+
+- **Why**: on 2026-10-29 the owner saw a black band on the right of the home page on an Android phone. The large faded words of the headings ran past the right edge of the screen; `overflow-x: hidden` on the body hid them on a computer, but the browser of the phone (Chrome on Android, or one built on Chromium) still widened the page to show them (up to 686 px for a 360 px screen on the module pages), and the grids, as wide as the screen, left a black band beside them. linkinator and the build can't see it: only a browser that lays the page out can.
+- **The rule**: `main` clips what runs past its sides (`overflow-x: clip` in `src/styles/global.css`, which makes no scroll container, so the sticky blocks keep working). Anything that may run past the edge of the screen, as a large faded word, goes inside `main`, which `src/layouts/site-layout.astro` gives every page: the not-found page of step 14 too, with its large « 404 ».
+- **`scripts/check-overflow.mjs`** serves `dist/` as GitHub Pages would, loads every page (the redirect pages left out) in the Chromium of Playwright as on a phone (`isMobile`, 360 and 412 px wide), scrolls it to the bottom, since the faded words slide with the scroll, and fails if the page got wider than the screen. Four tabs at once: about 15 seconds for the site.
+- **Playwright** (`playwright`, the library without its test runner, a development dependency only) is the usual way to drive a browser from Node.js, maintained by Microsoft. Its Chromium is downloaded apart, once: `npx playwright install chromium` locally, `npx playwright install --with-deps chromium` in CI (with the system libraries of Ubuntu). Chromium rather than Firefox: the bug showed on Android, whose browsers are mostly built on Chromium, and Playwright emulates their mobile layout. Rejected: Puppeteer, as able for this check, but Playwright also drives Firefox and WebKit (Safari), should a check need them later; a Firefox driven by hand over WebDriver BiDi (the tool of the mock-up screenshots), which needs a Firefox installed apart and doesn't lay out a page as Chrome on Android does.
+
 ## Commands
 
 Run `npm ci` first. They are also in the `scripts` of `package.json`.
@@ -92,8 +100,9 @@ Run `npm ci` first. They are also in the `scripts` of `package.json`.
 | `npm run format:check` | Checks the formatting without changing files (used in CI). |
 | `npm run lint` | `astro check`, ESLint and Stylelint. |
 | `npm run check:links` | Checks the internal links, the former URLs and the redirects of the tree on `dist/` (run after `npm run build`). |
+| `npm run check:overflow` | Checks that no page is wider than a phone screen, in the Chromium of Playwright (run after `npm run build`; install the browser once with `npx playwright install chromium`). |
 | `npm run check:base` | Builds the github.io preview (`/sylent.art` base) into `dist-base/` and checks its links; removed at the launch. |
-| `npm run check` | Everything run before a commit and in CI: format check, lint, build, links, links of the preview. |
+| `npm run check` | Everything run before a commit and in CI: format check, lint, build, links, phone width, links of the preview. |
 
 ## Exceptions to the naming conventions
 
