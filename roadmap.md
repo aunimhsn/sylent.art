@@ -35,6 +35,10 @@ Read only by the steps that need them:
   - [x] The back of a domain card shows only the names of its modules, without their line of program. (#19)
   - [x] The Roman numerals of the pedagogy section in Manrope. (#19)
   - [x] The columns Navigation, Contact and Informations of the footer a little closer, so that « Cet enregistrement ne vaut pas agrément de l’État » holds on one line. (#19)
+  Next, asked on 2026-10-29, in this order:
+  - [ ] The modules one by one with the owner: their texts as close as possible to what the owner will teach, and their layout (e.g. the title « Prompt engineering » of its module page breaks in the middle of « engineering »).
+  - [ ] Polish: the last small remarks of the owner before the release.
+  - [ ] A photo of the owner, to show a face (the site has none; `specs.md` says « No photo in the first release »: update it first). The owner chooses the photo.
 - [ ] **11. Launch**: 404 page, GoatCounter, sitemap, final checks on `github.io`, DNS records described for the owner; redirect pages in French (`experimental.redirectPage`, `src/pages/3xx.astro`, if still experimental decide with the owner), checked on the redirects of `/courses/<id>/` too, which are pages of the module route; the sitemap without those redirects (`filter: (page) => !/\/courses\/\d+\/$/.test(page)`); once the DNS points to GitHub Pages, remove `SITE_URL` and `BASE_PATH` from `deploy.yml` and the `check:base` script, set the custom domain in the Pages settings and enforce HTTPS (see [Deployment](docs/technical-choices.md#deployment)). Check the phone number of GitHub in `src/content/legal.json` on GitHub's own pages.
 - [ ] **12. Testimonials**: once the owner has collected at least three (LinkedIn recommendations, feedback from schools and learners, with consent to publish), add a testimonials section.
 - [ ] **13. More modules** (after the launch): TypeScript, C, and an advanced Python module (data classes, Pydantic), from the course material of `sylent-courses`; update the offers of `specs.md` first.
