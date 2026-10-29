@@ -131,7 +131,7 @@ The modules are independent: a client takes one or several, in any order, so the
 
 **Développement IA** has not been taught yet: its modules say honestly that it is a new offer (a « Nouveau » label and a short note), centered on method and good practices, to help employees use AI tools to be more productive and more satisfied in their daily work.
 
-Each module is a content file in the repository, named after its slug, which gives its domain and, for a former course, its former id (e.g. `formerId: 3`). The redirects are generated from these ids. A module may be a draft (`draft: true`): its file stays in the repository, but the site shows it nowhere (no page, no card, not on the back of its domain card, and a domain whose modules are all drafts is left out) until the owner publishes it; its former URL leads to the offer list meanwhile (decided on 2026-10-29). Vue and Django are drafts for the first release: Django waits for the collections of modules (step 15 of `roadmap.md`).
+Each module is a content file in the repository, named after its slug, which gives its domain and, for a former course, its former id (e.g. `formerId: 3`). The redirects are generated from these ids. A module may be a draft (`draft: true`): its file stays in the repository, but the site shows it nowhere (no page, no card, not on the back of its domain card, and a domain whose modules are all drafts is left out) until the owner publishes it; its former URL leads to the offer list meanwhile (decided on 2026-10-29). Vue, Django and PostgreSQL are drafts for the first release: Django waits for the collections of modules (step 15 of `roadmap.md`).
 
 ## URLs and redirects
 
