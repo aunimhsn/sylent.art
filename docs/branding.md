@@ -193,6 +193,7 @@ GSAP (ScrollTrigger, SplitText) and Three.js; the site bundles them.
 
 - **Reveals**: blocks rise 36 px and fade in, in small batches, as they enter the screen.
 - **Headings**: the words of a title rise from behind a mask; the faded word slides slowly with the scroll.
+- **Call to action**: its faded word « Echanger » slides with the scroll from the moment the band comes into view to the bottom of the page, where it always stops at the same place, whatever the length of the page and the height of the screen (asked by the owner on 2026-10-29).
 - **Hero**: the headline rises line by line, then the text, the buttons and the motto.
 - **Hero cube**: a figure or a quality on each face (« Pourquoi ? », « 900+ h », « Patience », « 2021 », « Bienveillance », « 5 »). It presents its faces one after the other, squarely; under the mouse it follows the pointer, then resumes from the nearest face; a drag spins it; the scroll turns it a little more. Around it, a larger shell turns on its own: its edges only, in translucent orange (40 %), so that the cube shows clearly inside.
 - **Figures** count up; **pedagogy rules** draw themselves.
