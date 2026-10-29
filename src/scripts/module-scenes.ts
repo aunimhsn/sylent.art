@@ -937,7 +937,7 @@ export const MODULE_SCENES = {
       },
     };
   },
-  // Continuous integration: a change goes through the stages of the pipeline, then passes.
+  // CI/CD: a change goes through the stages of the pipeline, then passes.
   pipeline() {
     const scene = new THREE.Scene();
     const group = new THREE.Group();
@@ -973,51 +973,6 @@ export const MODULE_SCENES = {
         });
         tinted(check).opacity = p > 1 ? 1 : 0;
         group.rotation.y = Math.sin(t * 0.35) * 0.25;
-      },
-    };
-  },
-  // Continuous deployment: a package rises from its base and docks in production.
-  deploy() {
-    const scene = new THREE.Scene();
-    const base = outline(new THREE.CylinderGeometry(1.0, 1.0, 0.08, 48), 0.6);
-    base.position.y = -1.1;
-    const target = outline(new THREE.BoxGeometry(1.0, 1.0, 1.0), 0.5);
-    target.position.y = 1.0;
-    const box = block(new THREE.BoxGeometry(0.62, 0.62, 0.62));
-    const wave = accent(circle(0.8, 0));
-    wave.rotation.x = -Math.PI / 2;
-    wave.position.y = 1.0;
-    const flame = [0, 1, 2, 3].map((k) =>
-      accent(dot(0.05 - k * 0.009, 0.9 - k * 0.2)),
-    );
-    scene.add(base, target, box, wave, ...flame);
-    return {
-      scene,
-      camera: view(2.9, 1.5, 6.3),
-      update(t) {
-        const p = (t * 0.5) % 2;
-        const rise = ease(clamp(p * 1.2));
-        box.position.y = -0.75 + rise * 1.75;
-        box.rotation.y = (rise * Math.PI) / 2;
-        box.scale.setScalar(
-          Math.max(
-            0.001,
-            ease(clamp(p * 4)) * (1 - ease(clamp((p - 1.7) / 0.3))),
-          ),
-        );
-        const docked = clamp((p - 0.85) * 2);
-        wave.scale.setScalar(1 + docked * 1.2);
-        tinted(wave).opacity = docked > 0 && docked < 1 ? 1 - docked : 0;
-        flame.forEach((spark, k) => {
-          spark.position.set(
-            Math.sin(t * 23 + k * 2) * 0.03,
-            box.position.y - 0.42 - k * (0.16 + Math.sin(t * 17 + k) * 0.03),
-            Math.cos(t * 19 + k) * 0.03,
-          );
-          spark.visible = rise > 0.05 && rise < 0.98;
-        });
-        glow(target, Math.sin(docked * Math.PI) * 1.2);
-        target.rotation.y = t * 0.3;
       },
     };
   },

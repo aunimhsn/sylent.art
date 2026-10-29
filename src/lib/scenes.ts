@@ -38,7 +38,6 @@ const moduleScenes = [
   "join",
   "checks",
   "pipeline",
-  "deploy",
   "terminal",
   "chat",
   "sprint",

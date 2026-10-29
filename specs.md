@@ -94,7 +94,7 @@ One page per **module**, grouped by **domain**. Pedagogical teams look for a spe
 | Python | `python-et-donnees` | Python, Django, machine learning | 6, 12 |
 | Bases de données | `bases-de-donnees` | Merise, MySQL, PostgreSQL | 5 |
 | Conception logicielle | `conception-logicielle` | POO, UML, principes SOLID, design patterns | — |
-| Méthodologie et tests | `methodologie-et-tests` | Git / GitHub, Cypress, intégration continue (GitHub Actions), déploiement continu (Vercel, Render) | 8 |
+| Méthodologie et tests | `methodologie-et-tests` | Git / GitHub, Cypress, CI/CD (GitHub Actions, Vercel, Render) | 8 |
 | Gestion de projet | `gestion-de-projet` | Méthode agile | — |
 
 All the former courses are kept, as modules:
