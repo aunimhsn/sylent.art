@@ -22,6 +22,14 @@ interface Props {
 const { except, band = true, headingLevel = 3 } = Astro.props;
 const Heading = `h${headingLevel}` as const;
 const offers = (await getOffers()).filter(({ domain }) => domain.id !== except);
+// A tag: the short name of a module in lowercase kebab-case, accents kept (« Git / GitHub »
+// becomes « git-github », « Méthode agile » « méthode-agile »).
+const tagOf = (name: string) =>
+  name
+    .toLowerCase()
+    .split(/[^\p{L}\p{N}]+/u)
+    .filter(Boolean)
+    .join("-");
 ---
 
 <ul class="cards">
@@ -38,6 +46,14 @@ const offers = (await getOffers()).filter(({ domain }) => domain.id !== except);
         )}
       </Heading>
       <p>{data.summary}</p>
+      <ul class="card-tags" aria-label={fr.cards.domainModules}>
+        {modules.map(({ data: module }) => (
+          <li>
+            <span aria-hidden="true">#</span>
+            {tagOf(module.shortTitle ?? module.title)}
+          </li>
+        ))}
+      </ul>
       <a
         class="card-more"
         href={href(domainPath(id))}
@@ -191,6 +207,26 @@ const offers = (await getOffers()).filter(({ domain }) => domain.id !== except);
 </script>
 
 <style>
+  /* The modules of the domain, at the bottom of the card, aligned from one card to the next:
+     plain text in lowercase kebab-case, smaller and grayer than the sentence, as the tags
+     under a post, not links (asked by the
+     owner on 2026-10-29: a school finds its module without passing the pointer). */
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-3);
+    margin: auto 0 0;
+    padding: 0;
+    color: var(--dim);
+    font-size: var(--size-caption);
+    line-height: 1.55;
+    list-style: none;
+  }
+
+  .card-tags + .card-more {
+    margin-top: var(--space-5);
+  }
+
   /* The back covers the card above its white band, which stays in place and keeps growing a
      little under the pointer. It clips the list of the modules, which waits under it, and lets
      the pointer through to the link of the card, which covers the whole card. */

@@ -283,7 +283,7 @@ canvas {
   text-transform: uppercase;
 }
 
-/* The white band across the bottom of a card (« Explorer le domaine »); the whole card is
+/* The white band across the bottom of a card (« Voir les modules »); the whole card is
    the link. Under the pointer it grows a little. */
 .card-more {
   display: block;
