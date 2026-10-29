@@ -64,6 +64,7 @@ Read only by the steps that need them:
     - [x] JavaScript: the practice keeps only the Caesar cipher; the DOM and fetch are left out until the owner's course covers them (a module « JavaScript et le DOM » to come, see the collections, step 13). (#25)
   - [ ] Polish: the last small remarks of the owner before the release.
     - [x] The faded word « Echanger » of the call to action ends its slide at the bottom of every page, whatever its length and the height of the screen. (#22)
+    - [x] A black band on the right of the home page on the owner's Android phone: the faded words of the headings made the page wider than the screen (about 460 px for 393 on the home and about pages, up to 686 px on the module pages); the content now clips them, and `npm run check` loads every page in Chromium at phone width (Playwright). (#32)
   - [ ] A photo of the owner, to show a face (the site has none; `specs.md` says « No photo in the first release »: update it first). The owner chooses the photo.
 - [x] **11. French URLs in a tree** (#30): `/domaines/<domain>/modules/<module>/`, `/a-propos/`, `/confidentialite/`, `/mentions-legales/`, redirects from every former path.
 - [x] **12. Domain pages** (#31): `/domaines/<domain>/` over the faded word « Domaine », reached from the domain cards (« Explorer le domaine »); `/domaines/` shows the domain cards; the former courses of the drafts lead to their domain page.
