@@ -31,7 +31,7 @@ program:
   - title: "Contribuer"
     text: "Le fork et la contribution à un projet extérieur, et un dépôt présentable."
   - title: "Les outils"
-    text: "La ligne de commande, l’interface de VS Code, GitHub Desktop, Fork et Fourchette."
+    text: "La ligne de commande, l’interface de VS Code et GitHub Desktop."
   - title: "Travaux pratiques"
     text: "Par exemple Burgit, le site d’un restaurant et son menu, en deux parties : le dépôt local, puis les branches. Ou Pixel Forge, le site d’un studio de jeu monté à deux sur un vrai flux de branches."
 ---
