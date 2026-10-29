@@ -51,6 +51,8 @@ Read only by the steps that need them:
     - [x] A module may be a draft (`draft: true`), kept out of the site until the owner publishes it; Vue is one for now. (#26)
     - [x] Alpine: approved by the owner as it is. (#26)
     - [x] Laravel: no tests and deployment; the program follows the router, the data, the controllers, then the views with Blade. (#26)
+    - [x] Python: the basics of the language only, as it is; Django is a draft until the collections of modules (step 15); Machine learning stays, its course being ready. (#27)
+    - [x] Merise: approved by the owner as it is. (#27)
     - [x] JavaScript: the practice keeps only the Caesar cipher; the DOM and fetch are left out until the owner's course covers them (a module « JavaScript et le DOM » after the launch, see step 15). (#25)
   - [ ] Polish: the last small remarks of the owner before the release.
     - [x] The faded word « Echanger » of the call to action ends its slide at the bottom of every page, whatever its length and the height of the screen. (#22)

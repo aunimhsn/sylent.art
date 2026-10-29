@@ -5,6 +5,7 @@ order: 2
 days: 3
 summary: "Développer une application web complète avec un framework Python."
 scene: form
+draft: true
 formerId: 12
 audience:
   - "Étudiants"
