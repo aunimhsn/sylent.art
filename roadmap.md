@@ -40,6 +40,8 @@ Read only by the steps that need them:
     - [x] The module titles are no longer hyphenated: « Prompt engineering » broke in the middle of « engineering ». (#20)
     - [x] Claude Code: the practice designs an application from scratch; on every module page, the public is shown one audience per line. (#21)
     - [x] « Méthode et IA » removed, too vague: the owner builds with AI rather than governs it, which the module Claude Code already covers. (#23)
+    - [x] Module pages: no breadcrumb, the badge « Nouveau » at the very top, the domain as the large faded word behind the title. (#24)
+    - [x] Algorithmique: approved by the owner as it is. (#24)
   - [ ] Polish: the last small remarks of the owner before the release.
     - [x] The faded word « Echanger » of the call to action ends its slide at the bottom of every page, whatever its length and the height of the screen. (#22)
   - [ ] A photo of the owner, to show a face (the site has none; `specs.md` says « No photo in the first release »: update it first). The owner chooses the photo.

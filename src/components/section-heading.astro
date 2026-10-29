@@ -4,6 +4,8 @@
 // The title is in capitals and drops its accents, which the mask of its animation would cut
 // (« PEDAGOGIE »): an exception to French typography accepted by the owner (CLAUDE.md). Screen
 // readers keep the real words through aria-label.
+import { withoutAccents } from "../lib/text";
+
 interface Props {
   title: string;
   ghost: string;
@@ -12,12 +14,12 @@ interface Props {
 }
 
 const { title, ghost, id, level = 2 } = Astro.props;
-const shown = title.normalize("NFD").replace(/\p{M}/gu, "");
+const shown = withoutAccents(title);
 const Title = `h${level}` as const;
 ---
 
 <div class="heading">
-  <span class="heading-ghost" aria-hidden="true">
+  <span class="ghost-word heading-ghost" aria-hidden="true">
     {ghost}
   </span>
   <Title
@@ -39,12 +41,6 @@ const Title = `h${level}` as const;
   .heading-ghost {
     display: block;
     margin-left: 0.12em;
-    color: var(--ghost-word);
-    font: var(--title-weight) var(--size-ghost) / 0.8 var(--font-title);
-    letter-spacing: var(--tracking-ghost);
-    text-transform: uppercase;
-    white-space: nowrap;
-    user-select: none;
   }
 
   .heading-title {

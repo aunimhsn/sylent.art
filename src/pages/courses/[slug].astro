@@ -13,6 +13,7 @@ import courses from "../../content/courses.json";
 import fr from "../../i18n/fr.json";
 import SiteLayout from "../../layouts/site-layout.astro";
 import { durationOf, getOffers, type Offer } from "../../lib/offers";
+import { withoutAccents } from "../../lib/text";
 import { href } from "../../lib/url";
 
 export const getStaticPaths = (async () => {
@@ -46,6 +47,8 @@ const page = courses.module;
 const { title, summary, days, audience, level, prerequisites } = module.data;
 const { objectives, program } = module.data;
 const duration = durationOf(days);
+// The domain, as the large faded word behind the title; screen readers get its real name.
+const ghost = withoutAccents(domain.data.title);
 const others = offer.modules.filter(({ id }) => id !== module.id);
 const hasText = Boolean(module.body?.trim());
 const { Content } = await render(module);
@@ -65,24 +68,22 @@ const { Content } = await render(module);
   >
     <div class="wrap">
       <div class="module-text">
-        <nav class="crumbs reveal" aria-label={page.crumbs}>
-          <ol>
-            <li>
-              <a href={href("/")}>{page.home}</a>
-            </li>
-            <li>
-              <a href={href("/courses/")}>{page.courses}</a>
-            </li>
-            <li aria-current="page">{title}</li>
-          </ol>
-        </nav>
-        <p class="module-domain reveal">
-          {domain.data.title}
-          {domain.data.isNew && <span class="new">{fr.cards.new}</span>}
+        {domain.data.isNew && (
+          <p class="module-new reveal">
+            <span class="new">{fr.cards.new}</span>
+          </p>
+        )}
+        <div class="module-heading">
+          <span class="ghost-word heading-ghost" aria-hidden="true">
+            {ghost}
+          </span>
+          <h1 class="module-title reveal" id="module-title">
+            {title}
+          </h1>
+        </div>
+        <p class="visually-hidden">
+          {page.domain.replace("{domain}", domain.data.title)}
         </p>
-        <h1 class="module-title reveal" id="module-title">
-          {title}
-        </h1>
         <div class="module-lead reveal">
           {hasText ? <Content /> : <p>{summary}</p>}
         </div>
@@ -202,54 +203,36 @@ const { Content } = await render(module);
     max-width: var(--width-text);
   }
 
-  .crumbs ol {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2) var(--space-3);
-    margin: 0 0 var(--space-8);
-    padding: 0;
-    list-style: none;
-    color: var(--dim);
-    font: 600 var(--size-caption) / 1.3 var(--font-title);
+  .module-new {
+    margin: 0 0 var(--space-6);
   }
 
-  /* The separator is not read by screen readers. */
-  .crumbs li + li::before {
-    content: "/" / "";
-    margin-right: var(--space-3);
-    color: var(--line-strong);
-  }
-
-  .crumbs a {
-    transition: color var(--duration-fast);
-  }
-
-  .crumbs a:hover {
-    color: var(--text);
-  }
-
-  .crumbs [aria-current] {
-    color: var(--secondary);
-  }
-
-  .module-domain {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-3) var(--space-4);
-    margin: 0;
-    color: var(--dim);
-    font: var(--label-weight) var(--size-label) / 1.3 var(--font-title);
-    letter-spacing: var(--tracking-label);
-    text-transform: uppercase;
-  }
-
-  .module-domain .new {
+  .module-new .new {
     position: static;
+    display: inline-block;
+  }
+
+  /* The title over the domain, as a large faded word a little lower and to the right, as in
+     the section headings (src/components/section-heading.astro): both in the same cell of a
+     grid, so that the taller of the two sets the height. The word slides with the scroll
+     (src/scripts/motion.ts). */
+  .module-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .module-heading > * {
+    grid-area: 1 / 1;
+  }
+
+  .heading-ghost {
+    margin: var(--space-fluid-1) 0 0 0.12em;
   }
 
   .module-title {
-    margin: var(--space-4) 0 0;
+    position: relative;
+    align-self: start;
+    margin: 0;
     font: var(--title-weight) var(--size-display) / 0.98 var(--font-title);
     letter-spacing: var(--tracking-title);
     text-wrap: balance;
