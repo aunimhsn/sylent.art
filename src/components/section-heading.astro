@@ -34,6 +34,7 @@ const Title = `h${level}` as const;
 <style>
   .heading {
     position: relative;
+    container-type: inline-size;
     margin-bottom: var(--space-fluid-2);
     padding-top: var(--space-fluid-1);
   }
@@ -43,12 +44,18 @@ const Title = `h${level}` as const;
     margin-left: 0.12em;
   }
 
+  /* On a phone the title holds on one line (asked by the owner on 2026-10-29): its size follows
+     the width of the heading, so that the longest one, « DANS LE MEME DOMAINE » (11.2 em),
+     fits; on a wider screen the section size is the smaller of the two. */
   .heading-title {
     position: absolute;
     top: 0;
     left: 0;
     margin: 0;
     font: var(--title-weight) var(--size-section) / 1 var(--font-title);
+
+    /* Apart from the shorthand: a browser without the cqi unit keeps the font and the size. */
+    font-size: min(var(--size-section), 8.5cqi);
     letter-spacing: var(--tracking-title);
     text-transform: uppercase;
   }

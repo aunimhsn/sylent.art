@@ -89,6 +89,7 @@ const { title, ghost, id, label, isNew = false, note } = Astro.props;
   .page-heading {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
+    container-type: inline-size;
   }
 
   .page-heading > * {
@@ -103,15 +104,22 @@ const { title, ghost, id, label, isNew = false, note } = Astro.props;
     position: relative;
     align-self: start;
     margin: 0;
-    font: var(--title-weight) min(var(--size-display), 11.2vw) / 0.98
-      var(--font-title);
+    font: var(--title-weight) var(--size-display) / 0.98 var(--font-title);
     letter-spacing: var(--tracking-title);
     text-wrap: balance;
 
     /* No hyphenation, which split « Prompt engineering » mid-word: a word wider than the
-       screen breaks without a hyphen rather than overflow. Below 393 px the title shrinks with
-       the screen, so that the longest word, « Développement », still holds on one line. */
+       screen breaks without a hyphen rather than overflow. */
     overflow-wrap: break-word;
+  }
+
+  /* On a phone, the title holds on one line (asked by the owner on 2026-10-29): its size
+     follows the width of the heading, so that the longest title, « Méthodologie et tests »
+     (9.9 em), fits. From 640 px the display size is small enough beside the width. */
+  @media (width < 640px) {
+    .page-title {
+      font-size: min(var(--size-display), 9.6cqi);
+    }
   }
 
   .page-lead :global(p) {

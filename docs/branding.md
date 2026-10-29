@@ -73,8 +73,8 @@ On 2026-10-28 three redder colors were compared, for fear of looking like the br
 
 | Role | Token | Font | Size / line height | Notes |
 |---|---|---|---|---|
-| Hero headline, module, domain and about titles | `--size-display` | Manrope 800 | `clamp(44px, 6.8vw, 92px)` / 0.98 | Balanced lines; the end of the hero headline in `--highlight`; the module and domain titles at most `11.2vw`, so that « Développement » holds on one line down to 320 px |
-| Section title | `--size-section` | Manrope 800 | `clamp(32px, 5.4vw, 68px)` / 1 | Uppercase, over its faded word, without accents: the mask of its animation would cut them (« DANS LE MEME DOMAINE »); its accessible name keeps them |
+| Hero headline, module, domain and about titles | `--size-display` | Manrope 800 | `clamp(44px, 6.8vw, 92px)` / 0.98 | Balanced lines; the end of the hero headline in `--highlight`; below 640 px the module and domain titles at most `9.6cqi` (of the width of their heading), so that each one holds on one line on a phone, the longest being « Méthodologie et tests », with about 5 % to spare (asked by the owner on 2026-10-29: about 34 px instead of 44 px at 393 px); `npm run check` fails on a title on two lines |
+| Section title | `--size-section` | Manrope 800 | `clamp(32px, 5.4vw, 68px)` / 1 | Uppercase, over its faded word, without accents: the mask of its animation would cut them (« DANS LE MEME DOMAINE »); its accessible name keeps them; at most `8.5cqi` (of the width of the heading), so that each one holds on one line on a phone, the longest being « DANS LE MEME DOMAINE » (asked by the owner on 2026-10-29: 30 px instead of 32 px at 393 px); the faded word may run past the screen; `npm run check` fails on a title on two lines |
 | Section title of a text page | `--size-section-long` | Manrope 800 | `clamp(27px, 5.4vw, 68px)` / 1 | « CONFIDENTIALITE » holds on one line on a phone |
 | Faded word | `--size-ghost` | Manrope 800 | `clamp(58px, 13vw, 176px)` / 0.8 | Uppercase, `--tracking-ghost`, `--ghost-word` |
 | Faded word of the call to action | `--size-cta-ghost` | Manrope 800 | `clamp(80px, 19vw, 280px)` / 0.8 | |
