@@ -8,8 +8,8 @@
     "cta": ["Un domaine qui n’est pas dans la liste ?", "Parlons-en."]
   },
   "domain": {
-    "title": "{title} · Formations · Sylent",
-    "description": "{summary} Des modules indépendants, aux durées toujours adaptables, sur site ou à distance.",
+    "title": "Domaine {title} · Formations · Sylent",
+    "description": "{summary} Des formations aux durées toujours adaptables, sur site ou à distance.",
     "ghost": "Domaine",
     "modules": "Les modules",
     "others": {

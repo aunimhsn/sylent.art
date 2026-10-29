@@ -1,8 +1,10 @@
 // Checks that every URL of the former site still resolves in the built site (dist/): either a
 // page, or a redirect to the page that specs.md gives it (URLs and redirects), which exists; and
-// that the dropped ones show the not-found page. Run after `npm run build`, or on the preview
-// built under its base: `node scripts/check-former-urls.mjs dist-base/sylent.art /sylent.art`.
-import { existsSync, readFileSync } from "node:fs";
+// that the dropped ones show the not-found page. Also checks the redirects of the tree of the
+// URLs, which no page links to: /domaines/<domain>/modules/ leads to the page of its domain.
+// Run after `npm run build`, or on the preview built under its base:
+// `node scripts/check-former-urls.mjs dist-base/sylent.art /sylent.art`.
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const [dist = "dist", base = ""] = process.argv.slice(2);
@@ -35,6 +37,14 @@ const formerUrls = new Map([
   ["/policy", "/confidentialite/"],
 ]);
 
+// The parent of the module pages of each domain built, which leads to the domain page (specs.md,
+// Domain pages).
+const treeRedirects = new Map(
+  readdirSync(join(dist, "domaines"), { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map(({ name }) => [`/domaines/${name}/modules`, `/domaines/${name}/`]),
+);
+
 // The former URLs that specs.md drops: no page and no redirect.
 const droppedUrls = ["/creations", "/register", "/login"];
 
@@ -59,7 +69,7 @@ const redirectOf = (html) => {
 const errors = [];
 const waiting = [];
 
-for (const [url, expected] of formerUrls) {
+for (const [url, expected] of [...formerUrls, ...treeRedirects]) {
   const file = fileOf(url);
   if (!existsSync(file)) {
     if (pending.has(url)) waiting.push(`${url} (step ${pending.get(url)})`);
@@ -112,9 +122,10 @@ if (waiting.length > 0) {
   console.log(`Former URLs left to later steps: ${waiting.join(", ")}`);
 }
 if (errors.length > 0) {
-  console.error(`Former URLs that don't resolve:\n- ${errors.join("\n- ")}`);
+  console.error(`URLs that don't resolve:\n- ${errors.join("\n- ")}`);
   process.exit(1);
 }
 console.log(
-  `${formerUrls.size - waiting.length} former URLs resolve in ${dist}/.`,
+  `${formerUrls.size - waiting.length} former URLs and ` +
+    `${treeRedirects.size} redirects of the tree resolve in ${dist}/.`,
 );

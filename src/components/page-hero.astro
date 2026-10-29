@@ -103,12 +103,14 @@ const { title, ghost, id, label, isNew = false, note } = Astro.props;
     position: relative;
     align-self: start;
     margin: 0;
-    font: var(--title-weight) var(--size-display) / 0.98 var(--font-title);
+    font: var(--title-weight) min(var(--size-display), 11.2vw) / 0.98
+      var(--font-title);
     letter-spacing: var(--tracking-title);
     text-wrap: balance;
 
     /* No hyphenation, which split « Prompt engineering » mid-word: a word wider than the
-       screen breaks without a hyphen rather than overflow. */
+       screen breaks without a hyphen rather than overflow. Below 393 px the title shrinks with
+       the screen, so that the longest word, « Développement », still holds on one line. */
     overflow-wrap: break-word;
   }
 

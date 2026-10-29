@@ -73,7 +73,7 @@ On 2026-10-28 three redder colors were compared, for fear of looking like the br
 
 | Role | Token | Font | Size / line height | Notes |
 |---|---|---|---|---|
-| Hero headline, module and about titles | `--size-display` | Manrope 800 | `clamp(44px, 6.8vw, 92px)` / 0.98 | Balanced lines; the end of the hero headline in `--highlight` |
+| Hero headline, module, domain and about titles | `--size-display` | Manrope 800 | `clamp(44px, 6.8vw, 92px)` / 0.98 | Balanced lines; the end of the hero headline in `--highlight`; the module and domain titles at most `11.2vw`, so that « Développement » holds on one line down to 320 px |
 | Section title | `--size-section` | Manrope 800 | `clamp(32px, 5.4vw, 68px)` / 1 | Uppercase, over its faded word, without accents: the mask of its animation would cut them (« DANS LE MEME DOMAINE »); its accessible name keeps them |
 | Section title of a text page | `--size-section-long` | Manrope 800 | `clamp(27px, 5.4vw, 68px)` / 1 | « CONFIDENTIALITE » holds on one line on a phone |
 | Faded word | `--size-ghost` | Manrope 800 | `clamp(58px, 13vw, 176px)` / 0.8 | Uppercase, `--tracking-ghost`, `--ghost-word` |
@@ -181,7 +181,7 @@ The cards share `--card-padding-block` (`--space-7`) and `--card-padding-inline`
 
 ## Textures
 
-- **Grid**: 1 px lines in `--grid-line`, every 32 px at the top of the pages (the hero of the home page, the top of the offer list, module, about, contact, legal notice, privacy policy and not-found pages), every 40 px in the footer. At the top of the pages it fades out with a mask (radial in the hero, downward elsewhere), before the first content block.
+- **Grid**: 1 px lines in `--grid-line`, every 32 px at the top of the pages (the hero of the home page, the top of the domains page, domain, module, about, contact, legal notice, privacy policy and not-found pages), every 40 px in the footer. At the top of the pages it fades out with a mask (radial in the hero, downward elsewhere), before the first content block.
 - **Orange fluid**: under the pointer, an orange fluid runs along the lines of each grid. Each crossing holds some energy: the pointer pours it into the crossings around it, more as it moves faster, the energy spreads to the neighbors and fades. On the page tops the fluid lies under the same mask as the grid, so it fades out with it.
 - No gradients, no colored lights behind the sections, no turning glows.
 

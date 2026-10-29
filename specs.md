@@ -119,7 +119,7 @@ The URLs follow the tree of the offers, each level named in French (decided by t
 
 Each module page shows:
 
-- the « Nouveau » label at the very top for a module of a new domain, then the name of the module over its domain, shown only as the large faded word behind the title, as in the section headings, and given in full to screen readers (decided by the owner on 2026-10-29, although the faded word is barely legible and cut when long: the domain is also on the cards of the offer list); no breadcrumb, the navigation leads back to the offers;
+- the « Nouveau » label at the very top for a module of a new domain, then the name of the module over its domain, shown only as the large faded word behind the title, as in the section headings, and given in full to screen readers (decided by the owner on 2026-10-29, although the faded word is barely legible and cut when long: the domain is also on the module cards); no breadcrumb, the navigation leads back to the offers;
 - a short paragraph that says what the subject is and why it matters, written for pedagogical teams rather than as a list of notions;
 - the key facts: audience (one per line, e.g. « Étudiants », « Développeurs », « Chefs de projet technique »), level, indicative duration (« 3 jours, adaptable »), formats (on-site or remote);
 - the prerequisites and the objectives;
@@ -139,7 +139,7 @@ Each module is a content file in the repository, named after its slug, which giv
 Each domain has its page at `/domaines/<domain>`, its slug in the table above (decided by the owner on 2026-10-29, before the launch). A visitor reaches it from the card of the domain on the home page and on the domains page, whose white band « Explorer le domaine » leads there, and from the other domain pages; the header has no link per domain, and a module page has no link of its own to its domain page: its section « Dans le même domaine » is enough (decided by the owner on 2026-10-29). `/domaines/<domain>/modules` leads to the domain page. The page shows:
 
 - a hero, as on a module page: the « Nouveau » label for a new domain, the name of the domain over the large faded word « Domaine » (chosen by the owner on 2026-10-29), its summary and, for a new domain, its note;
-- the published modules of the domain, one card each, as on the offer list, then the card « Un besoin sur mesure ? »;
+- the published modules of the domain, one card each, as under a module page, then the card « Un besoin sur mesure ? »;
 - « Autres domaines », over the faded word « Explorer »: the cards of the other domains, as on the home page, as a module page leads to the other modules of its domain;
 - the call to action to the contact form.
 
