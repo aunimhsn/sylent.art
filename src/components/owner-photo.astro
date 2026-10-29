@@ -8,13 +8,21 @@ import hips from "../assets/portrait/hips.png";
 
 interface Props {
   class?: string;
+  /** "eager" at the top of a page, where the photo is the largest block of a phone screen. */
+  loading?: "eager" | "lazy";
 }
 
-const { class: className } = Astro.props;
+const { class: className, loading = "lazy" } = Astro.props;
 ---
 
 <figure class:list={["owner-photo", className]} aria-hidden="true">
-  <Image src={hips} alt="" widths={[hips.width]} sizes={`${hips.width}px`} />
+  <Image
+    src={hips}
+    alt=""
+    widths={[hips.width]}
+    sizes={`${hips.width}px`}
+    loading={loading}
+  />
 </figure>
 
 <style>
@@ -34,6 +42,15 @@ const { class: className } = Astro.props;
     width: auto;
     height: 100%;
     mask-image: linear-gradient(to bottom, #000000 72%, transparent 98%);
+  }
+
+  /* On a tablet, the text is wider and shorter, so is the photo: 30 % of the window would push
+     it out of sight. It goes by its own width instead, its face on the right of the text. */
+  @media (width >= 640px) and (width < 900px) {
+    .owner-photo {
+      right: 0;
+      translate: 30% 0;
+    }
   }
 
   /* Even behind the gray text, where the window is narrow, the white of the photo keeps the
