@@ -2,6 +2,16 @@
 
 The detail of the steps of [roadmap.md](../roadmap.md) once their pull request is merged, newest first.
 
+## 11. French URLs in a tree (#30)
+
+Decided by the owner on 2026-10-29, before the launch, while changing the paths costs nothing:
+
+- Every page at a French path following the tree of the offers: `/domaines/<domain>/modules/<module>/` (`src/pages/domaines/[domain]/modules/[module].astro`, `modulePath` in `src/lib/offers.ts`), `/a-propos/`, `/confidentialite/`, `/mentions-legales/`.
+- `/domaines/` holds the former offer list until the domain pages of step 12; the domain cards of the home page lead there, to the first module of their domain (`/domaines/#<domain>`).
+- The domain slugs `developpement-ia` and `python`; the module slugs after their short names, `git-github`, `methode-agile`, `poo`. A slug is unique within its domain only (the module `python` of the domain `python`).
+- Redirects: `/courses`, `/about` and `/policy` to their French paths (`astro.config.mjs`), `/courses/<id>` to its module (`src/pages/courses/[id].astro`), a draft's to `/domaines/#<domain>`. The module pages and the legal notice of the preview moved without a redirect: they were never on `sylent.art`.
+- `scripts/check-former-urls.mjs` checks the exact destination of each redirect and its anchor, on `dist/` and on the github.io preview (`npm run check:base`).
+
 ## 9b. Contact page (#14)
 
 Built on 2026-10-29 from the mock-up (`docs/mockups/contact-site.html`):
