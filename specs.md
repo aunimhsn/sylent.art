@@ -115,7 +115,7 @@ All the former courses are kept, as modules:
 | `/courses/11` | `/domaines/developpement-web/modules/laravel` |
 | `/courses/12` | `/domaines/python/modules/django` |
 
-The URLs follow the tree of the offers, each level named in French (decided by the owner on 2026-10-29): `/domaines/<domain>/modules/<module>`, and `/domaines/<domain>/collections/<collection>` for a collection; a module stays under `/modules/` whether it belongs to a collection or not, so that joining or leaving one never changes its URL. A slug is the name in kebab-case, in French, without accents or version numbers (`html`, `prompt-engineering`, `developpement-web`); it is unique within its parent only (the domain `python` and its module `python`), never a number, and never changes once published: a module that moves to another domain gets a redirect from its old URL.
+The URLs follow the tree of the offers, each level named in French (decided by the owner on 2026-10-29): `/domaines/<domain>/modules/<module>`, and `/domaines/<domain>/collections/<collection>` for a collection; a module stays under `/modules/` whether it belongs to a collection or not, so that joining or leaving one never changes its URL. A slug is the name in kebab-case, in French, without accents or version numbers (`html`, `prompt-engineering`, `developpement-web`), the short name when the module has one (`git-github`, `methode-agile`, `poo`, decided by the owner on 2026-10-29); it is unique within its parent only (the domain `python` and its module `python`), never a number, and never changes once published: a module that moves to another domain gets a redirect from its old URL.
 
 Each module page shows:
 
