@@ -68,12 +68,13 @@ Proofs:
 | Page | URL | Purpose |
 |---|---|---|
 | Home | `/` | State the promise, the audiences, the domains, the differentiators, the proofs (partners, figure) and lead to the contact form. |
-| Offer list | `/courses` | Present every module, one card per module in a single grid, domain after domain, without headings: cover, name, domain, summary, and a link to the page of the module. The home page keeps one card per domain, whose « Voir les modules » leads to the offer list at that domain (`/courses#<domain>`). |
-| Module page | `/courses/<module>` | Detail one module (see [Training offers](#training-offers)). |
-| About | `/about` | Present the trainer: background, approach, references, NDA. No photo in the first release. |
+| Domains | `/domaines` | The entry to the offers, the « Formations » link of the header: one card per domain, as on the home page, each leading to its page. The site has no flat list of every module: the offers follow one tree, domain, then collection, then module (decided by the owner on 2026-10-29). |
+| Domain page | `/domaines/<domain>` | Present one domain and its modules, then lead to the other domains (see [Domain pages](#domain-pages)). |
+| Module page | `/domaines/<domain>/modules/<module>` | Detail one module (see [Training offers](#training-offers)). |
+| About | `/a-propos` | Present the trainer: background, approach, references, NDA. No photo in the first release. |
 | Contact | `/contact` | The contact form and the other ways to reach the trainer. |
-| Legal notice | `/legal` | The publisher, the training activity declaration, the host, the intellectual property and the credits. |
-| Privacy policy | `/policy` | How the form and audience data are handled. |
+| Legal notice | `/mentions-legales` | The publisher, the training activity declaration, the host, the intellectual property and the credits. |
+| Privacy policy | `/confidentialite` | How the form and audience data are handled. |
 | Not found | `404.html` | A page « Oups, perdu dans l’espace », as on the former site (« Page introuvable » at phone width), with links to the home page and the offers. |
 
 Every page has a header with the navigation (Formations, À propos) and a visible « Me contacter » button, which leads to the contact page (so the navigation has no separate « Contact » link), and a footer with the navigation, the contact details, the legal page and the signature.
@@ -84,14 +85,14 @@ The former « Créations » section (photography, artwork), the user accounts an
 
 ## Training offers
 
-One page per **module**, grouped by **domain**. Pedagogical teams look for a speaker on a domain, and the technology matters less and less: the domains organize the home page and the offer list, but the first release has no domain pages. They can come later at `/courses/<domain>` without changing any URL. The domains below are a first grouping, refined with the owner when the content is written. They are shown in the order of the table, on the home page and the offer list alike: the new offers first, since they matter most today (decided by the owner on 2026-10-29), then from the first steps in programming to project management.
+One page per **module**, grouped by **domain**, with one page per domain too (see [Domain pages](#domain-pages)). Pedagogical teams look for a speaker on a domain, and the technology matters less and less: the domains organize the home page and the offers. Inside a domain, the modules of one technology may form a **collection** (see [Collections](#collections)). The domains below are a first grouping, refined with the owner when the content is written. They are shown in the order of the table, on the home page and the domains page alike: the new offers first, since they matter most today (decided by the owner on 2026-10-29), then from the first steps in programming to project management.
 
 | Domain | Slug | Modules | Former courses |
 |---|---|---|---|
-| Développement IA | `ia-pour-le-developpement` | Claude Code, prompt engineering | — |
+| Développement IA | `developpement-ia` | Claude Code, prompt engineering | — |
 | Initiation à la prog. | `initiation-a-la-programmation` | Algorithmique, Robomind | 7 |
 | Développement web | `developpement-web` | HTML, CSS, JavaScript, PHP, Vue, Alpine, Laravel | 1, 2, 3, 4, 9, 10, 11 |
-| Python | `python-et-donnees` | Python, Django, machine learning | 6, 12 |
+| Python | `python` | Python, Django, machine learning | 6, 12 |
 | Bases de données | `bases-de-donnees` | Merise, MySQL, PostgreSQL | 5 |
 | Conception logicielle | `conception-logicielle` | POO, UML, principes SOLID, design patterns | — |
 | Méthodologie et tests | `methodologie-et-tests` | Git / GitHub, Cypress, CI/CD (GitHub Actions, Vercel, Render) | 8 |
@@ -101,20 +102,20 @@ All the former courses are kept, as modules:
 
 | Former course | Module page |
 |---|---|
-| `/courses/1` | `/courses/html` |
-| `/courses/2` | `/courses/css` |
-| `/courses/3` | `/courses/javascript` |
-| `/courses/4` | `/courses/php` |
-| `/courses/5` | `/courses/mysql` |
-| `/courses/6` | `/courses/python` |
-| `/courses/7` | `/courses/robomind` |
-| `/courses/8` | `/courses/cypress` |
-| `/courses/9` | `/courses/vue` |
-| `/courses/10` | `/courses/alpine` |
-| `/courses/11` | `/courses/laravel` |
-| `/courses/12` | `/courses/django` |
+| `/courses/1` | `/domaines/developpement-web/modules/html` |
+| `/courses/2` | `/domaines/developpement-web/modules/css` |
+| `/courses/3` | `/domaines/developpement-web/modules/javascript` |
+| `/courses/4` | `/domaines/developpement-web/modules/php` |
+| `/courses/5` | `/domaines/bases-de-donnees/modules/mysql` |
+| `/courses/6` | `/domaines/python/modules/python` |
+| `/courses/7` | `/domaines/initiation-a-la-programmation/modules/robomind` |
+| `/courses/8` | `/domaines/methodologie-et-tests/modules/cypress` |
+| `/courses/9` | `/domaines/developpement-web/modules/vue` |
+| `/courses/10` | `/domaines/developpement-web/modules/alpine` |
+| `/courses/11` | `/domaines/developpement-web/modules/laravel` |
+| `/courses/12` | `/domaines/python/modules/django` |
 
-The slug of a module is its name in kebab-case, without version numbers (`html`, `css`, `prompt-engineering`). It is unique among the modules and the domains, never a number, and never changes once published: a module that moves to another domain keeps its URL.
+The URLs follow the tree of the offers, each level named in French (decided by the owner on 2026-10-29): `/domaines/<domain>/modules/<module>`, and `/domaines/<domain>/collections/<collection>` for a collection; a module stays under `/modules/` whether it belongs to a collection or not, so that joining or leaving one never changes its URL. A slug is the name in kebab-case, in French, without accents or version numbers (`html`, `prompt-engineering`, `developpement-web`); it is unique within its parent only (the domain `python` and its module `python`), never a number, and never changes once published: a module that moves to another domain gets a redirect from its old URL.
 
 Each module page shows:
 
@@ -127,22 +128,38 @@ Each module page shows:
 - the other modules of the same domain, then a card for a custom request; this part is left out when the domain has a single module;
 - a call to action to the contact form.
 
-The modules are independent: a client takes one or several, in any order, so the site never presents them as a sequence to follow (no module numbers). Each module has a summary of one short sentence that says what it is for, not a list of notions, shown on its card.
+The modules are independent: a client takes one or several, in any order, so the site never presents them as a sequence to follow (no module numbers), except for the advised order of a collection (see [Collections](#collections)). Each module has a summary of one short sentence that says what it is for, not a list of notions, shown on its card.
 
 **Développement IA** has not been taught yet: its modules say honestly that it is a new offer (a « Nouveau » label and a short note), centered on method and good practices, to help employees use AI tools to be more productive and more satisfied in their daily work.
 
-Each module is a content file in the repository, named after its slug, which gives its domain and, for a former course, its former id (e.g. `formerId: 3`). The redirects are generated from these ids. A module may be a draft (`draft: true`): its file stays in the repository, but the site shows it nowhere (no page, no card, not on the back of its domain card, and a domain whose modules are all drafts is left out) until the owner publishes it; its former URL leads to the offer list meanwhile (decided on 2026-10-29). Vue, Django and PostgreSQL are drafts for the first release: Django waits for the collections of modules (step 15 of `roadmap.md`).
+Each module is a content file in the repository, named after its slug, which gives its domain and, for a former course, its former id (e.g. `formerId: 3`). The redirects are generated from these ids. A module may be a draft (`draft: true`): its file stays in the repository, but the site shows it nowhere (no page, no card, not on the back of its domain card, and a domain whose modules are all drafts is left out) until the owner publishes it; its former URL leads to the offer list meanwhile (decided on 2026-10-29). Vue, Django and PostgreSQL are drafts for now: Django waits for the collections of modules (step 13 of `roadmap.md`).
+
+### Domain pages
+
+Each domain has its page at `/domaines/<domain>`, its slug in the table above (decided by the owner on 2026-10-29, before the launch). A visitor reaches it from the card of the domain on the home page and on the domains page, whose « Voir les modules » leads there, and from the other domain pages; the header has no link per domain. `/domaines/<domain>/modules` leads to the domain page. The page shows:
+
+- a hero, as on a module page: the « Nouveau » label for a new domain, the name of the domain, its summary and, for a new domain, its note;
+- the published modules of the domain, one card each, as on the offer list, then the card « Un besoin sur mesure ? »;
+- « Explorer les autres domaines »: the cards of the other domains, as on the home page, as a module page leads to the other modules of its domain;
+- the call to action to the contact form.
+
+A domain whose modules are all drafts has no page. Its URL never changes once published, like a module's.
+
+### Collections
+
+Inside a domain, a collection gathers a few modules on one technology, close to each other, in an advised order: for example JavaScript (the language, then « JavaScript et le DOM »), PHP (the basics, then a database with PDO) or Python (the basics, machine learning, data visualization). Not modules of different technologies: no « back-end » of PHP, MySQL and Laravel. The site keeps one tree, domain, then collection, then module (decided by the owner on 2026-10-29); the collection is an optional level, and a module outside any collection stays directly in its domain. The modules stay independent: a client takes one or several, in any order; the advised order of a collection is the only place where the site shows modules in sequence. The rest (how the site shows a collection, whether one with a single published module shows, the names of its modules) is decided with the owner at step 13 of `roadmap.md`, before the launch.
 
 ## URLs and redirects
 
-The paths of the former site are kept when the page still exists, so the existing links and the search ranking are not lost:
+Every path is in French and follows the tree of the offers (see [Training offers](#training-offers)), decided by the owner on 2026-10-29: the paths change before the launch, while it costs nothing, rather than after it. Every path of the former site still resolves, so the existing links and the search ranking are not lost:
 
-- `/`, `/courses`, `/about`, `/contact`, `/policy`: the same paths; `/policy` is the privacy policy, as on the former site. The legal notice is a new page, `/legal`.
-- `/courses/1` to `/courses/12`: redirect to the page of the module that the course became (see the table above).
+- `/` and `/contact`: the same paths.
+- `/courses` redirects to `/domaines`, `/about` to `/a-propos`, `/policy` (the privacy policy) to `/confidentialite`. The legal notice is a new page, `/mentions-legales`.
+- `/courses/1` to `/courses/12`: redirect to the page of the module that the course became (see the table above); the former URL of a draft leads to the page of its domain.
 - `/articles`, `/articles/1` and `/articles/2`: redirect to the home page, since the site has no articles.
 - `/creations`, `/register`, `/login`: no redirect; they show the not-found page.
 
-GitHub Pages has no server-side redirects: a redirect is a static page with a canonical link and an immediate redirection. Each page is served at its path with a final slash (`/about/`); GitHub Pages redirects the path without it (`/about`) there, so the former URLs keep resolving. Changing a public URL is a breaking change.
+GitHub Pages has no server-side redirects: a redirect is a static page with a canonical link and an immediate redirection. Each page is served at its path with a final slash (`/a-propos/`); GitHub Pages redirects the path without it (`/a-propos`) there, so the former URLs keep resolving. Changing a public URL is a breaking change.
 
 ## Content
 
