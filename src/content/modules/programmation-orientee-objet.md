@@ -1,5 +1,5 @@
 ---
-title: "Prog orientée objet"
+title: "POO"
 domain: conception-logicielle
 order: 1
 days: 3
@@ -30,4 +30,4 @@ program:
     text: "En Python ou en PHP, par exemple un mini RPG : la fiche d’un personnage, puis sa compagnie, puis sa sauvegarde, parmi d’autres exercices."
 ---
 
-La programmation orientée objet est la façon d’organiser le code de la plupart des applications d’aujourd’hui. Elle découpe un programme en objets qui réunissent des données et les actions sur ces données, pour un code plus clair et plus facile à faire évoluer. Ce module en enseigne les notions en Python ou en PHP : elles se transposent ensuite dans tous les langages objet.
+La programmation orientée objet (POO) est la façon d’organiser le code de la plupart des applications d’aujourd’hui. Elle découpe un programme en objets qui réunissent des données et les actions sur ces données, pour un code plus clair et plus facile à faire évoluer. Ce module en enseigne les notions en Python ou en PHP : elles se transposent ensuite dans tous les langages objet.

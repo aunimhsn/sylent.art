@@ -16,7 +16,7 @@ objectives:
   - "Découper une interface en composants"
   - "Relier les données à la page avec la réactivité"
   - "Créer une application de plusieurs pages avec Vue Router"
-  - "Partager l’état de l’application et le relier à une base de données"
+  - "Partager l’état de l’application avec Pinia et le relier à une base de données"
 program:
   - title: "Prise en main"
     text: "L’environnement, une démonstration et la structure d’un projet."
@@ -25,7 +25,7 @@ program:
   - title: "Les pages"
     text: "La navigation entre les pages avec Vue Router."
   - title: "Les données"
-    text: "L’état partagé de l’application, et une base de données en ligne avec Cloud Firestore."
+    text: "L’état partagé de l’application avec Pinia, et une base de données en ligne avec Firebase."
   - title: "Travaux pratiques"
     text: "Par exemple une liste de courses ou un forum, parmi d’autres exercices."
 ---

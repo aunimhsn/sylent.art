@@ -3,7 +3,7 @@ title: "PHP"
 domain: developpement-web
 order: 4
 days: 3
-summary: "Construire un site dynamique, relié à une base de données."
+summary: "Apprendre les bases du langage serveur du web, du formulaire à la page dynamique."
 scene: server
 formerId: 4
 audience:
@@ -31,4 +31,4 @@ program:
     text: "Par exemple un gabarit de page dynamique ou le jeu du « Plus ou moins », parmi d’autres exercices."
 ---
 
-PHP est le langage côté serveur d’une grande partie du web, de WordPress aux applications Laravel. Il permet de traiter un formulaire, de reconnaître un visiteur et de construire une page à partir de données. Ce module en donne les bases, pour comprendre ce qui se passe entre le navigateur et le serveur.
+PHP est le langage côté serveur d’une grande partie du web, de WordPress aux applications Laravel. Il permet de traiter un formulaire, de reconnaître un visiteur et de construire une page à partir de données. Ce module se concentre sur les bases du langage, pour comprendre ce qui se passe entre le navigateur et le serveur.

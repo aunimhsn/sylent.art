@@ -24,6 +24,10 @@ program:
     text: "Les conditions et les boucles, pour un robot qui s’adapte à son terrain."
   - title: "Entraînement"
     text: "Des cartes de difficulté croissante, du premier trajet aux labyrinthes."
+  - title: "Travaux pratiques"
+    text: "Manipuler le robot."
 ---
 
-RoboMind est un petit environnement où l’on programme un robot virtuel pour le faire avancer, contourner des obstacles et atteindre un but. Sans syntaxe à mémoriser, les apprenants découvrent en douceur ce qu’est un algorithme : une suite d’instructions, des conditions et des répétitions. Une première marche idéale avant un vrai langage.
+RoboMind est un petit environnement où l’on programme un robot virtuel pour le faire avancer, contourner des obstacles et atteindre un but.
+
+Sans syntaxe à mémoriser, les apprenants découvrent en douceur ce qu’est un algorithme : une suite d’instructions, des conditions et des répétitions. Une première marche idéale avant un vrai langage.
