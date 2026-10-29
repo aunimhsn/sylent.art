@@ -5,7 +5,10 @@ order: 2
 days: 2
 summary: "Représenter un logiciel en diagrammes pour mieux le concevoir."
 scene: classes
-audience: "Étudiants, développeurs, chefs de projet technique"
+audience:
+  - "Étudiants"
+  - "Développeurs"
+  - "Chefs de projet technique"
 level: "Intermédiaire"
 prerequisites: "Les bases de la programmation orientée objet."
 objectives:

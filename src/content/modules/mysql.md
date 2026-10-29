@@ -6,7 +6,11 @@ days: 3
 summary: "Créer une base de données et l’interroger avec le langage SQL."
 scene: table
 formerId: 5
-audience: "Étudiants, administrateurs de bases de données, développeurs, chefs de projet technique"
+audience:
+  - "Étudiants"
+  - "Administrateurs de bases de données"
+  - "Développeurs"
+  - "Chefs de projet technique"
 level: "Débutant"
 prerequisites: "Aucune connaissance des bases de données. Une première expérience de la programmation est un plus."
 objectives:

@@ -5,7 +5,10 @@ order: 4
 days: 1
 summary: "Mettre en ligne automatiquement chaque nouvelle version."
 scene: deploy
-audience: "Étudiants, développeurs, chefs de projet technique"
+audience:
+  - "Étudiants"
+  - "Développeurs"
+  - "Chefs de projet technique"
 level: "Intermédiaire"
 prerequisites: "Les bases de Git et GitHub."
 objectives:

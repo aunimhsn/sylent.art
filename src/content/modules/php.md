@@ -6,7 +6,11 @@ days: 3
 summary: "Construire un site dynamique, relié à une base de données."
 scene: server
 formerId: 4
-audience: "Étudiants, webmasters, développeurs, chefs de projet technique"
+audience:
+  - "Étudiants"
+  - "Webmasters"
+  - "Développeurs"
+  - "Chefs de projet technique"
 level: "Débutant"
 prerequisites: "Les bases du HTML. Une première expérience de la programmation est un plus."
 objectives:

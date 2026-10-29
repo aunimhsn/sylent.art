@@ -6,7 +6,11 @@ days: 3
 summary: "Rendre une page interactive et la faire dialoguer avec un serveur."
 scene: event
 formerId: 3
-audience: "Étudiants, webmasters, développeurs, chefs de projet technique"
+audience:
+  - "Étudiants"
+  - "Webmasters"
+  - "Développeurs"
+  - "Chefs de projet technique"
 level: "Débutant"
 prerequisites: "Les bases du HTML et du CSS. Aucune connaissance en programmation."
 objectives:

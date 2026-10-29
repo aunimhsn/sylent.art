@@ -6,7 +6,11 @@ days: 2
 summary: "Mettre en forme une page et l’adapter à tous les écrans."
 scene: layout
 formerId: 2
-audience: "Étudiants, webmasters, développeurs, chefs de projet technique"
+audience:
+  - "Étudiants"
+  - "Webmasters"
+  - "Développeurs"
+  - "Chefs de projet technique"
 level: "Débutant"
 prerequisites: "Les bases du HTML."
 objectives:

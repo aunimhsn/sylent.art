@@ -5,7 +5,11 @@ order: 3
 days: 3
 summary: "Apprendre SQL avec une base de données robuste et complète."
 scene: join
-audience: "Étudiants, administrateurs de bases de données, développeurs, chefs de projet technique"
+audience:
+  - "Étudiants"
+  - "Administrateurs de bases de données"
+  - "Développeurs"
+  - "Chefs de projet technique"
 level: "Débutant"
 prerequisites: "Aucune connaissance des bases de données. Une première expérience de la programmation est un plus."
 objectives:

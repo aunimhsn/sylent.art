@@ -119,7 +119,7 @@ The slug of a module is its name in kebab-case, without version numbers (`html`,
 Each module page shows:
 
 - the domain (with a « Nouveau » label for a new one), the name of the module, and a short paragraph that says what the subject is and why it matters, written for pedagogical teams rather than as a list of notions;
-- the key facts: audience (e.g. « Étudiants, développeurs, chefs de projet technique »), level, indicative duration (« 3 jours, adaptable »), formats (on-site or remote);
+- the key facts: audience (one per line, e.g. « Étudiants », « Développeurs », « Chefs de projet technique »), level, indicative duration (« 3 jours, adaptable »), formats (on-site or remote);
 - the prerequisites and the objectives;
 - the program, in parts without numbers: they are not an order, and the practice comes when it is needed. The note that the explanations are short and the exercises adapted to the group;
 - a way to organize the module (the contact page);

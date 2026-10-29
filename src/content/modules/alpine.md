@@ -6,7 +6,10 @@ days: 1
 summary: "Ajouter de l’interactivité à une page, sans quitter le HTML."
 scene: peaks
 formerId: 10
-audience: "Étudiants, développeurs, chefs de projet technique"
+audience:
+  - "Étudiants"
+  - "Développeurs"
+  - "Chefs de projet technique"
 level: "Intermédiaire"
 prerequisites: "Les bases du HTML, du CSS et de JavaScript."
 objectives:

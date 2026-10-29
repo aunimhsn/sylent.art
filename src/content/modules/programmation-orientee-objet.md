@@ -5,7 +5,9 @@ order: 1
 days: 3
 summary: "Penser un programme en objets, quel que soit le langage."
 scene: instances
-audience: "Étudiants, développeurs"
+audience:
+  - "Étudiants"
+  - "Développeurs"
 level: "Intermédiaire"
 prerequisites: "Les bases d’un langage de programmation."
 objectives:

@@ -6,7 +6,11 @@ days: 1
 summary: "Écrire des pages web bien structurées, lisibles par tous."
 scene: markup
 formerId: 1
-audience: "Étudiants, webmasters, développeurs, chefs de projet technique"
+audience:
+  - "Étudiants"
+  - "Webmasters"
+  - "Développeurs"
+  - "Chefs de projet technique"
 level: "Débutant"
 prerequisites: "Savoir utiliser un ordinateur et un navigateur. Aucune connaissance en programmation."
 objectives:

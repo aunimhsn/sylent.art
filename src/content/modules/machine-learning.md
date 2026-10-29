@@ -5,7 +5,9 @@ order: 3
 days: 2
 summary: "Apprendre à un programme à faire des prédictions à partir de données réelles."
 scene: fit
-audience: "Étudiants, développeurs Python"
+audience:
+  - "Étudiants"
+  - "Développeurs Python"
 level: "Intermédiaire"
 prerequisites: "Les bases de Python."
 objectives:

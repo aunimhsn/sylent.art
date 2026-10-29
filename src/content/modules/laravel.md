@@ -6,7 +6,10 @@ days: 4
 summary: "Développer une application web complète avec un framework PHP."
 scene: mvc
 formerId: 11
-audience: "Étudiants, développeurs, chefs de projet technique"
+audience:
+  - "Étudiants"
+  - "Développeurs"
+  - "Chefs de projet technique"
 level: "Intermédiaire"
 prerequisites: "Les bases de PHP et de SQL. La programmation orientée objet est un plus."
 objectives:

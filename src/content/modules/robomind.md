@@ -6,7 +6,8 @@ days: 1
 summary: "Programmer un robot virtuel pour découvrir la logique en jouant."
 scene: steps
 formerId: 7
-audience: "Étudiants"
+audience:
+  - "Étudiants"
 level: "Débutant"
 prerequisites: "Aucun."
 objectives:

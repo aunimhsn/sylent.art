@@ -5,7 +5,10 @@ order: 3
 days: 1
 summary: "Vérifier automatiquement le code à chaque modification."
 scene: pipeline
-audience: "Étudiants, développeurs, chefs de projet technique"
+audience:
+  - "Étudiants"
+  - "Développeurs"
+  - "Chefs de projet technique"
 level: "Intermédiaire"
 prerequisites: "Les bases de Git et GitHub."
 objectives:

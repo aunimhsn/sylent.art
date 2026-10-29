@@ -5,7 +5,8 @@ order: 1
 days: 3
 summary: "Apprendre à résoudre un problème pas à pas, avant tout langage."
 scene: flowchart
-audience: "Tout public"
+audience:
+  - "Tout public"
 level: "Débutant"
 prerequisites: "Aucun."
 objectives:

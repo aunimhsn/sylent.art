@@ -5,7 +5,9 @@ order: 3
 days: 2
 summary: "Organiser son code objet pour qu’il reste simple à faire évoluer."
 scene: solid
-audience: "Étudiants, développeurs"
+audience:
+  - "Étudiants"
+  - "Développeurs"
 level: "Intermédiaire"
 prerequisites: "Les bases de la programmation orientée objet."
 objectives:

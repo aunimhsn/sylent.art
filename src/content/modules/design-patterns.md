@@ -5,7 +5,9 @@ order: 4
 days: 2
 summary: "Reconnaître et appliquer des solutions éprouvées aux problèmes courants."
 scene: observer
-audience: "Étudiants, développeurs"
+audience:
+  - "Étudiants"
+  - "Développeurs"
 level: "Intermédiaire"
 prerequisites: "Les bases de la programmation orientée objet."
 objectives:

@@ -5,7 +5,8 @@ order: 2
 days: 1
 summary: "Formuler ses demandes pour obtenir des réponses utiles et fiables."
 scene: chat
-audience: "Tout public"
+audience:
+  - "Tout public"
 level: "Débutant"
 prerequisites: "Aucun."
 objectives:

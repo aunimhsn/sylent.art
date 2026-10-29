@@ -5,7 +5,8 @@ order: 1
 days: 2
 summary: "Découvrir l’agilité en menant un projet fil rouge avec Scrum."
 scene: sprint
-audience: "Tout public"
+audience:
+  - "Tout public"
 level: "Débutant"
 prerequisites: "Aucun."
 objectives:
