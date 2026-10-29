@@ -41,7 +41,9 @@ const { Content } = await render(module);
 ---
 
 <SiteLayout
-  title={page.title.replace("{title}", title)}
+  title={page.title
+    .replace("{title}", title)
+    .replace("{domain}", domain.data.title)}
   description={page.description
     .replace("{summary}", summary)
     .replace("{duration}", duration)}

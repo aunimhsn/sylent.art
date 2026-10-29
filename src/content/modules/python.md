@@ -1,9 +1,9 @@
 ---
-title: "Python"
+title: "Fondamentaux"
 domain: python
 order: 1
 days: 3
-summary: "Apprendre à programmer avec un langage simple et polyvalent."
+summary: "Apprendre à programmer en Python, un langage simple et polyvalent."
 scene: snake
 formerId: 6
 audience:
