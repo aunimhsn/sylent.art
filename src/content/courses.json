@@ -10,7 +10,6 @@
   "domain": {
     "title": "Domaine {title} · Formations · Sylent",
     "description": "{summary} Des formations aux durées toujours adaptables, sur site ou à distance.",
-    "ghost": "Domaine",
     "modules": "Les modules",
     "others": {
       "title": "Autres domaines",

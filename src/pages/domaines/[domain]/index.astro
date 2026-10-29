@@ -1,6 +1,6 @@
 ---
 // The page of one domain, at /domaines/<domain>/ (specs.md, Domain pages): a hero as on a module
-// page, over the word « Domaine », then the cards of its published modules and of a custom
+// page, without a faded word, then the cards of its published modules and of a custom
 // request, then the other domains. A domain whose modules are all drafts has no page.
 import type { GetStaticPaths } from "astro";
 import CustomCard from "../../../components/custom-card.astro";
@@ -32,13 +32,7 @@ const { title, summary, isNew, note } = domain.data;
   description={page.description.replace("{summary}", summary)}
   cta={page.cta}
 >
-  <PageHero
-    title={title}
-    ghost={page.ghost}
-    id="domain-title"
-    isNew={isNew}
-    note={note}
-  >
+  <PageHero title={title} id="domain-title" isNew={isNew} note={note}>
     <p>{summary}</p>
   </PageHero>
 

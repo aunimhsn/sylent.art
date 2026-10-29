@@ -138,7 +138,7 @@ Each module is a content file in the repository, named after its slug, which giv
 
 Each domain has its page at `/domaines/<domain>`, its slug in the table above (decided by the owner on 2026-10-29, before the launch). A visitor reaches it from the card of the domain on the home page and on the domains page, whose white band « Explorer le domaine » leads there, and from the other domain pages; the header has no link per domain, and a module page has no link of its own to its domain page: its section « Dans le même domaine » is enough (decided by the owner on 2026-10-29). `/domaines/<domain>/modules` leads to the domain page. The page shows:
 
-- a hero, as on a module page: the « Nouveau » label for a new domain, the name of the domain over the large faded word « Domaine » (chosen by the owner on 2026-10-29), its summary and, for a new domain, its note;
+- a hero, as on a module page: the « Nouveau » label for a new domain, the name of the domain, without a faded word behind it (the owner dropped « Domaine » on 2026-10-29: the visitor is already among the domains), on one line at every width, its summary and, for a new domain, its note;
 - the published modules of the domain, one card each, as under a module page, then the card « Un besoin sur mesure ? »;
 - « Autres domaines », over the faded word « Explorer »: the cards of the other domains, as on the home page, as a module page leads to the other modules of its domain;
 - the call to action to the contact form.

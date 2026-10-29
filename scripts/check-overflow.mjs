@@ -3,7 +3,8 @@
 // it, which leaves a black band beside the grids (step 10 of roadmap.md). Each page is loaded in
 // Chromium as on a phone, then scrolled to the bottom, since the faded words slide with the
 // scroll. It also checks that the large white titles of the module, domain and section headings
-// hold on one line, as the owner asked. Run after `npm run build`:
+// hold on one line, as the owner asked, on a phone and on a computer, where « Développement web »
+// once broke mid-word. Run after `npm run build`:
 // `node scripts/check-overflow.mjs [dist]`.
 import {
   createReadStream,
@@ -19,8 +20,9 @@ import { chromium } from "playwright";
 const [dist = "dist"] = process.argv.slice(2);
 
 // The narrowest screen still met, the narrowest common Android one, and a wider one (the owner's
-// phone is about 393 px).
+// phone is about 393 px); then a small and a large computer screen.
 const widths = [320, 360, 412];
+const desktops = [1024, 1440];
 
 const types = {
   ".html": "text/html",
@@ -104,12 +106,13 @@ const browser = await chromium.launch();
 const errors = [];
 
 try {
-  for (const width of widths) {
+  for (const width of [...widths, ...desktops]) {
+    const phone = widths.includes(width);
     const context = await browser.newContext({
       viewport: { width, height: 800 },
-      deviceScaleFactor: 3,
-      isMobile: true,
-      hasTouch: true,
+      deviceScaleFactor: phone ? 3 : 1,
+      isMobile: phone,
+      hasTouch: phone,
     });
     // A few tabs at once, each taking the next page of the list. A page that fails to load, or
     // whose scripts throw, is reported with the others instead of stopping the check.
@@ -154,5 +157,5 @@ if (errors.length > 0) {
   process.exit(1);
 }
 console.log(
-  `${pages.length} pages and their titles fit a screen of ${widths.join(", ")} px.`,
+  `${pages.length} pages and their titles fit a screen of ${[...widths, ...desktops].join(", ")} px.`,
 );

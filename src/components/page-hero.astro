@@ -1,14 +1,16 @@
 ---
 // The hero of a module page and of a domain page, over the grid and its orange fluid
-// (global.css): the « Nouveau » label of a new domain, the title over a large faded word, the
-// lead (the slot), the note of a new domain, then the actions, if any (the slot "actions").
+// (global.css): the « Nouveau » label of a new domain, the title, over a large faded word on a
+// module page, the lead (the slot), the note of a new domain, then the actions, if any (the slot
+// "actions").
 import fr from "../i18n/fr.json";
 import { withoutAccents } from "../lib/text";
 
 interface Props {
   title: string;
-  /** The large faded word behind the title, hidden from screen readers. */
-  ghost: string;
+  /** The large faded word behind the title, hidden from screen readers; none on a domain page,
+   * which the domains list already announces (asked by the owner on 2026-10-29). */
+  ghost?: string;
   id: string;
   /** Said to screen readers after the title, e.g. the domain of a module. */
   label?: string;
@@ -32,9 +34,11 @@ const { title, ghost, id, label, isNew = false, note } = Astro.props;
         </p>
       )}
       <div class="page-heading">
-        <span class="ghost-word heading-ghost" aria-hidden="true">
-          {withoutAccents(ghost)}
-        </span>
+        {ghost && (
+          <span class="ghost-word heading-ghost" aria-hidden="true">
+            {withoutAccents(ghost)}
+          </span>
+        )}
         <h1 class="page-title reveal" id={id}>
           {title}
         </h1>
@@ -67,10 +71,6 @@ const { title, ghost, id, label, isNew = false, note } = Astro.props;
 
   .page-hero .wrap {
     position: relative;
-  }
-
-  .page-text {
-    max-width: var(--width-text);
   }
 
   .page-new {
@@ -108,18 +108,15 @@ const { title, ghost, id, label, isNew = false, note } = Astro.props;
     letter-spacing: var(--tracking-title);
     text-wrap: balance;
 
+    /* The title holds on one line at every width (asked by the owner on 2026-10-29): it takes the
+       whole width of the page, not the column of the lead, where « Développement web » broke
+       mid-word on a computer, and its size follows that width, so that the longest title,
+       « Méthodologie et tests » (9.9 em), fits. */
+    font-size: min(var(--size-display), 9.6cqi);
+
     /* No hyphenation, which split « Prompt engineering » mid-word: a word wider than the
        screen breaks without a hyphen rather than overflow. */
     overflow-wrap: break-word;
-  }
-
-  /* On a phone, the title holds on one line (asked by the owner on 2026-10-29): its size
-     follows the width of the heading, so that the longest title, « Méthodologie et tests »
-     (9.9 em), fits. From 640 px the display size is small enough beside the width. */
-  @media (width < 640px) {
-    .page-title {
-      font-size: min(var(--size-display), 9.6cqi);
-    }
   }
 
   .page-lead :global(p) {
