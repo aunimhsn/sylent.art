@@ -12,13 +12,19 @@ import SectionHeading from "../../components/section-heading.astro";
 import courses from "../../content/courses.json";
 import fr from "../../i18n/fr.json";
 import SiteLayout from "../../layouts/site-layout.astro";
-import { durationOf, getOffers, type Offer } from "../../lib/offers";
+import { durationOf, getDrafts, getOffers, type Offer } from "../../lib/offers";
 import { withoutAccents } from "../../lib/text";
 import { href } from "../../lib/url";
 
 export const getStaticPaths = (async () => {
   const offers = await getOffers();
-  return offers.flatMap((offer) =>
+  // The former URL of a draft leads to the offer list until the module is published.
+  const drafts = (await getDrafts()).flatMap(({ data }) =>
+    data.formerId
+      ? [{ params: { slug: String(data.formerId) }, props: { isDraft: true } }]
+      : [],
+  );
+  const modules = offers.flatMap((offer) =>
     offer.modules.flatMap((module) => [
       { params: { slug: module.id }, props: { offer, module } },
       ...(module.data.formerId
@@ -31,15 +37,17 @@ export const getStaticPaths = (async () => {
         : []),
     ]),
   );
+  return [...modules, ...drafts];
 }) satisfies GetStaticPaths;
 
-interface Props {
-  offer: Offer;
-  module: Offer["modules"][number];
-  isFormer?: boolean;
-}
+type Props =
+  | { offer: Offer; module: Offer["modules"][number]; isFormer?: boolean }
+  | { isDraft: true };
 
-const { offer, module, isFormer = false } = Astro.props;
+const props = Astro.props;
+// 301 as the others: GitHub Pages only serves a page that leads on at once (a 302 waits 2 s).
+if ("isDraft" in props) return Astro.redirect(href("/courses/"), 301);
+const { offer, module, isFormer = false } = props;
 if (isFormer) return Astro.redirect(href(`/courses/${module.id}/`), 301);
 
 const { domain } = offer;

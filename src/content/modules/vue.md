@@ -5,6 +5,7 @@ order: 5
 days: 2
 summary: "Construire une interface réactive à partir de composants."
 scene: tree
+draft: true
 formerId: 9
 audience:
   - "Étudiants"

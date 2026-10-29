@@ -45,6 +45,11 @@ const modules = defineCollection({
     /** One short sentence that says what the module is for, not a list of notions. */
     summary: z.string(),
     scene: z.enum(SCENE_NAMES),
+    /**
+     * A draft stays in the repository but out of the site, until the owner publishes it: no
+     * page, no card. Its former URL, if any, leads to the offer list meanwhile.
+     */
+    draft: z.boolean().default(false),
     /** The id of the course of the former site, whose URL (/courses/<id>) redirects here. */
     formerId: z.number().int().positive().optional(),
     /** Who the module is for, one audience per line, e.g. « Étudiants », « Développeurs ». */
