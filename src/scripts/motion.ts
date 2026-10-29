@@ -66,7 +66,10 @@ if (root.dataset.motion === "on") {
     );
   });
 
-  // The large faded word of the call to action slides the same way.
+  // The large faded word of the call to action slides the same way, from the moment the band
+  // comes into view (or the top of a page short enough to show it at once) to the bottom of the
+  // page: the band is followed only by the footer, so its bottom never reaches the top of the
+  // screen, and the word would stop at a place that depends on the height of the screen.
   document.querySelectorAll(".cta").forEach((band) => {
     const ghost = band.querySelector(".cta-ghost");
     if (!ghost) return;
@@ -78,8 +81,8 @@ if (root.dataset.motion === "on") {
         ease: "none",
         scrollTrigger: {
           trigger: band,
-          start: "top bottom",
-          end: "bottom top",
+          start: "clamp(top bottom)",
+          end: "max",
           scrub: true,
         },
       },
