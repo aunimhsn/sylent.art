@@ -30,7 +30,7 @@ program:
   - title: "Les médias"
     text: "Les images, l’audio et la vidéo."
   - title: "Travaux pratiques"
-    text: "Par exemple l’écriture d’un premier article bien structuré, parmi d’autres exercices."
+    text: "Réaliser son propre portfolio."
 ---
 
 Le HTML est le langage qui structure toutes les pages web. Ce n’est pas un langage de programmation mais un langage de balisage : il donne à chaque contenu son sens (titre, paragraphe, lien, formulaire), ce qui rend une page lisible par les navigateurs, les moteurs de recherche et les technologies d’assistance. C’est le point de départ de tout parcours vers le développement web.

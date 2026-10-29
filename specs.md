@@ -93,7 +93,7 @@ One page per **module**, grouped by **domain**. Pedagogical teams look for a spe
 | Développement web | `developpement-web` | HTML, CSS, JavaScript, PHP, Vue, Alpine, Laravel | 1, 2, 3, 4, 9, 10, 11 |
 | Python | `python-et-donnees` | Python, Django, machine learning | 6, 12 |
 | Bases de données | `bases-de-donnees` | Merise, MySQL, PostgreSQL | 5 |
-| Conception logicielle | `conception-logicielle` | prog orientée objet, UML, principes SOLID, design patterns | — |
+| Conception logicielle | `conception-logicielle` | POO, UML, principes SOLID, design patterns | — |
 | Méthodologie et tests | `methodologie-et-tests` | Git / GitHub, Cypress, intégration continue (GitHub Actions), déploiement continu (Vercel, Render) | 8 |
 | Gestion de projet | `gestion-de-projet` | Méthode agile | — |
 
