@@ -30,7 +30,7 @@ program:
     text: "INNER JOIN, et l’ordre dans lequel une requête s’exécute."
   - title: "Écrire des données"
     text: "Insérer, modifier et supprimer des lignes avec INSERT, UPDATE et DELETE."
-  - title: "La structure"
+  - title: "Altérer la structure"
     text: "Créer les tables avec CREATE, puis les faire évoluer avec ALTER et DROP."
   - title: "Travaux pratiques"
     text: "Par exemple Pixel Arena, la base d’une ligue étudiante de jeux vidéo, ou Base Ares, le journal de bord d’une base sur Mars : d’abord la lire, puis la tenir à jour."

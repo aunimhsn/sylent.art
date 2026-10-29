@@ -36,7 +36,7 @@ Read only by the steps that need them:
   - [x] The Roman numerals of the pedagogy section in Manrope. (#19)
   - [x] The columns Navigation, Contact and Informations of the footer a little closer, so that « Cet enregistrement ne vaut pas agrément de l’État » holds on one line. (#19)
   Next, asked on 2026-10-29, in this order:
-  - [ ] The modules one by one with the owner: their texts as close as possible to what the owner will teach, and their layout (e.g. the title « Prompt engineering » of its module page breaks in the middle of « engineering »).
+  - [x] The modules one by one with the owner: their texts as close as possible to what the owner will teach, and their layout (e.g. the title « Prompt engineering » of its module page breaks in the middle of « engineering »).
     - [x] The module titles are no longer hyphenated: « Prompt engineering » broke in the middle of « engineering ». (#20)
     - [x] Claude Code: the practice designs an application from scratch; on every module page, the public is shown one audience per line. (#21)
     - [x] « Méthode et IA » removed, too vague: the owner builds with AI rather than governs it, which the module Claude Code already covers. (#23)
@@ -53,6 +53,14 @@ Read only by the steps that need them:
     - [x] Laravel: no tests and deployment; the program follows the router, the data, the controllers, then the views with Blade. (#26)
     - [x] Python: the basics of the language only, as it is; Django is a draft until the collections of modules (step 15); Machine learning stays, its course being ready. (#27)
     - [x] Merise: approved by the owner as it is. (#27)
+    - [x] Machine learning: approved as it is. MySQL: the part on the structure is named « Altérer la structure », after ALTER. PostgreSQL is a draft for now. (#28)
+    - [x] POO and UML: approved as they are, published at the launch. (#28)
+    - [x] Principes SOLID: the practice is five refactorings that show what each principle brings, in any language. Design patterns: no language named either. (#28)
+    - [x] Git / GitHub: Fork and Fourchette dropped from the tools. (#28)
+    - [x] Cypress: no API testing (maybe later); continuous integration and deployment; the practice tests the Caesar cipher and a Lightbox component. (#28)
+    - [x] « Intégration continue » and « Déploiement continu » merged into one module, « CI/CD » (`/courses/ci-cd/`; both pages were only on the preview); the scene of the deployment removed. (#28)
+    - [x] Méthode agile: approved as it is. (#28)
+    - [x] Prompt engineering: kept as it is for the launch, so that the AI offer shows; the owner reworks the AI courses for a didactic approach around Christmas 2026, then adjusts these offers to the demand. (#28)
     - [x] JavaScript: the practice keeps only the Caesar cipher; the DOM and fetch are left out until the owner's course covers them (a module « JavaScript et le DOM » after the launch, see step 15). (#25)
   - [ ] Polish: the last small remarks of the owner before the release.
     - [x] The faded word « Echanger » of the call to action ends its slide at the bottom of every page, whatever its length and the height of the screen. (#22)
@@ -60,7 +68,7 @@ Read only by the steps that need them:
 - [ ] **11. Launch**: 404 page, GoatCounter, sitemap, final checks on `github.io`, DNS records described for the owner; redirect pages in French (`experimental.redirectPage`, `src/pages/3xx.astro`, if still experimental decide with the owner), checked on the redirects of `/courses/<id>/` too, which are pages of the module route; the sitemap without those redirects (`filter: (page) => !/\/courses\/\d+\/$/.test(page)`); once the DNS points to GitHub Pages, remove `SITE_URL` and `BASE_PATH` from `deploy.yml` and the `check:base` script, set the custom domain in the Pages settings and enforce HTTPS (see [Deployment](docs/technical-choices.md#deployment)). Check the phone number of GitHub in `src/content/legal.json` on GitHub's own pages.
 - [ ] **12. Testimonials**: once the owner has collected at least three (LinkedIn recommendations, feedback from schools and learners, with consent to publish), add a testimonials section.
 - [ ] **13. More modules** (after the launch): TypeScript, C, and an advanced Python module (data classes, Pydantic), from the course material of `sylent-courses`; update the offers of `specs.md` first.
-- [ ] **14. Site in line with the course material**: the owner writes, in `sylent-courses`, the material of the 17 modules that have none yet, some of them from the owner's slides on Google Slides (HTML, CSS, PHP, Vue, Alpine, Laravel, Django, Cypress, Robomind, Machine learning, PostgreSQL, UML, Design patterns, Intégration continue, Déploiement continu, Claude Code, Prompt engineering); then each module page is updated from its lessons and exercises, as in step 8b (chapter themes and exercise names only, the repository being private).
+- [ ] **14. Site in line with the course material**: the owner writes, in `sylent-courses`, the material of the 16 modules that have none yet, some of them from the owner's slides on Google Slides (HTML, CSS, PHP, Vue, Alpine, Laravel, Django, Cypress, Robomind, Machine learning, PostgreSQL, UML, Design patterns, CI/CD, Claude Code, Prompt engineering); then each module page is updated from its lessons and exercises, as in step 8b (chapter themes and exercise names only, the repository being private).
 - [ ] **15. Collections of modules** (after the launch, to specify with the owner): a collection gathers a few modules on one technology, close to each other, e.g. JavaScript (the language, then « JavaScript et le DOM »), PHP (the basics, then a database with PDO) or Python (the basics, machine learning, data visualization); not modules of different technologies (no « back-end » of PHP, MySQL and Laravel). Each module stays independent; until then, a module announces only what the owner's course covers (decided on 2026-10-29). Open: how to show a collection on the site (its own page, a mention on the module pages, a link with the domains), whether a module may belong to several, a common practice project.
 
 The steps may be split into sub-steps when a pull request grows too large.

@@ -5,6 +5,7 @@ order: 3
 days: 3
 summary: "Apprendre SQL avec une base de données robuste et complète."
 scene: join
+draft: true
 audience:
   - "Étudiants"
   - "Administrateurs de bases de données"
