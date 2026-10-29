@@ -31,7 +31,7 @@ program:
   - title: "En pratique"
     text: "Les cinq principes ensemble, ce qui fait mal quand on les applique, et pour aller plus loin DRY, KISS, YAGNI et la loi de Déméter."
   - title: "Travaux pratiques"
-    text: "En Python ou en PHP, par exemple cinq refactorings : cinq programmes qui fonctionnent, à réécrire pour accueillir un changement à venir."
+    text: "Cinq refactorings, pour observer la plus-value de chaque principe."
 ---
 
-Un code qui fonctionne aujourd’hui peut devenir un frein demain, quand chaque modification en casse une autre. Les cinq principes SOLID donnent des repères simples pour organiser un code objet qui reste facile à comprendre, à tester et à faire évoluer. Ce module les présente un par un, en Python ou en PHP, chacun avec un exemple qui le viole puis sa correction.
+Un code qui fonctionne aujourd’hui peut devenir un frein demain, quand chaque modification en casse une autre. Les cinq principes SOLID donnent des repères simples pour organiser un code objet qui reste facile à comprendre, à tester et à faire évoluer. Ce module les présente un par un, chacun avec un exemple qui le viole puis sa correction.
