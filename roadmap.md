@@ -49,6 +49,7 @@ Read only by the steps that need them:
     - [x] PHP: the basics of the language only, its summary no longer promises a database (PDO and SQL in a later module of a PHP collection, step 15). (#25)
     - [x] Vue: Pinia and Firebase named (Firebase rather than Cloud Firestore, which speaks more). (#25)
     - [x] A module may be a draft (`draft: true`), kept out of the site until the owner publishes it; Vue is one for now. (#26)
+    - [x] Alpine: approved by the owner as it is. (#26)
     - [x] JavaScript: the practice keeps only the Caesar cipher; the DOM and fetch are left out until the owner's course covers them (a module « JavaScript et le DOM » after the launch, see step 15). (#25)
   - [ ] Polish: the last small remarks of the owner before the release.
     - [x] The faded word « Echanger » of the call to action ends its slide at the bottom of every page, whatever its length and the height of the screen. (#22)
