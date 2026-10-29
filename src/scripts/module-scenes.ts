@@ -1143,46 +1143,6 @@ export const MODULE_SCENES = {
       },
     };
   },
-  // Integrating AI with method: a core, with the tools that orbit around it, each on its track.
-  orbit() {
-    const scene = new THREE.Scene();
-    const core = outline(new THREE.IcosahedronGeometry(0.62, 0), 0.9);
-    scene.add(core);
-    const orbits = [
-      [1.0, 0.3, 0],
-      [1.3, -0.5, 0.6],
-      [1.6, 0.9, -0.4],
-    ].map(([radius, tiltX, tiltZ], k) => {
-      const track = new THREE.Group();
-      track.rotation.set(Math.PI / 2 + tiltX, 0, tiltZ);
-      const satellite = k === 1 ? accent(dot(0.085)) : dot(0.07);
-      track.add(circle(radius, 0.3), satellite);
-      scene.add(track);
-      return {
-        radius,
-        satellite,
-        speed: 0.9 - k * 0.2,
-        phase: k * 2,
-        wake: k === 1 ? trail(track, 9, 0.06, 2) : null,
-      };
-    });
-    return {
-      scene,
-      camera: view(0, 0.8, 7.4),
-      update(t) {
-        core.rotation.set(t * 0.3, t * 0.45, 0);
-        orbits.forEach(({ radius, satellite, speed, phase, wake }) => {
-          satellite.position.set(
-            Math.cos(t * speed + phase) * radius,
-            Math.sin(t * speed + phase) * radius,
-            0,
-          );
-          wake?.(satellite.position);
-        });
-        glow(core, 0.2 + 0.25 * Math.sin(t * 1.6));
-      },
-    };
-  },
   // Scrum: each sprint goes once around the loop and adds an increment to the product.
   sprint() {
     const scene = new THREE.Scene();

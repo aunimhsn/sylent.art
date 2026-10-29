@@ -41,7 +41,6 @@ const moduleScenes = [
   "deploy",
   "terminal",
   "chat",
-  "orbit",
   "sprint",
 ] as const;
 
