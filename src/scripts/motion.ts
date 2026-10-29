@@ -28,26 +28,28 @@ if (root.dataset.motion === "on") {
   });
 
   // Section headings, as on the former site: the title rises, the large word behind it slides
-  // as the page scrolls.
-  document.querySelectorAll(".heading").forEach((block) => {
+  // as the page scrolls. The title of a module page keeps its accents and only fades in
+  // (.reveal), since the mask would cut them: only its word slides.
+  document.querySelectorAll(".heading, .module-heading").forEach((block) => {
     const title = block.querySelector(".heading-title");
-    if (!title) return;
-    // SplitText names the title after its visible text; a title shown without its accents
-    // keeps its real name.
-    const label = title.getAttribute("aria-label");
-    SplitText.create(title, {
-      type: "words",
-      mask: "words",
-      onSplit: (self) =>
-        gsap.from(self.words, {
-          yPercent: 100,
-          stagger: 0.05,
-          duration: 1,
-          ease: "expo.out",
-          scrollTrigger: { trigger: block, start: "top 86%" },
-        }),
-    });
-    if (label) title.setAttribute("aria-label", label);
+    if (title) {
+      // SplitText names the title after its visible text; a title shown without its accents
+      // keeps its real name.
+      const label = title.getAttribute("aria-label");
+      SplitText.create(title, {
+        type: "words",
+        mask: "words",
+        onSplit: (self) =>
+          gsap.from(self.words, {
+            yPercent: 100,
+            stagger: 0.05,
+            duration: 1,
+            ease: "expo.out",
+            scrollTrigger: { trigger: block, start: "top 86%" },
+          }),
+      });
+      if (label) title.setAttribute("aria-label", label);
+    }
     const ghost = block.querySelector(".heading-ghost");
     if (!ghost) return;
     gsap.fromTo(

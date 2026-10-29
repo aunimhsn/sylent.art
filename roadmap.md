@@ -40,6 +40,7 @@ Read only by the steps that need them:
     - [x] The module titles are no longer hyphenated: « Prompt engineering » broke in the middle of « engineering ». (#20)
     - [x] Claude Code: the practice designs an application from scratch; on every module page, the public is shown one audience per line. (#21)
     - [x] « Méthode et IA » removed, too vague: the owner builds with AI rather than governs it, which the module Claude Code already covers. (#23)
+    - [x] Module pages: no breadcrumb, the badge « Nouveau » at the very top, the domain as the large faded word behind the title. (#24)
   - [ ] Polish: the last small remarks of the owner before the release.
   - [ ] A photo of the owner, to show a face (the site has none; `specs.md` says « No photo in the first release »: update it first). The owner chooses the photo.
 - [ ] **11. Launch**: 404 page, GoatCounter, sitemap, final checks on `github.io`, DNS records described for the owner; redirect pages in French (`experimental.redirectPage`, `src/pages/3xx.astro`, if still experimental decide with the owner), checked on the redirects of `/courses/<id>/` too, which are pages of the module route; the sitemap without those redirects (`filter: (page) => !/\/courses\/\d+\/$/.test(page)`); once the DNS points to GitHub Pages, remove `SITE_URL` and `BASE_PATH` from `deploy.yml` and the `check:base` script, set the custom domain in the Pages settings and enforce HTTPS (see [Deployment](docs/technical-choices.md#deployment)). Check the phone number of GitHub in `src/content/legal.json` on GitHub's own pages.

@@ -10,9 +10,7 @@
   "module": {
     "title": "{title} · Formations · Sylent",
     "description": "{summary} Un module de {duration}, sur site ou à distance.",
-    "crumbs": "Fil d’Ariane",
-    "home": "Accueil",
-    "courses": "Formations",
+    "domain": "Domaine : {domain}",
     "seeProgram": "Voir le programme",
     "facts": {
       "audience": "Public",
