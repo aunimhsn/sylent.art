@@ -34,7 +34,7 @@ program:
   - title: "Les données"
     text: "Le format JSON et la méthode fetch, pour échanger avec un serveur."
   - title: "Travaux pratiques"
-    text: "Par exemple le chiffre de César ou le triathlon des tableaux, parmi d’autres exercices."
+    text: "Le chiffre de César."
 ---
 
 JavaScript est le langage qui rend le web interactif. Exécuté par tous les navigateurs, il fonctionne aussi côté serveur avec Node.js : un seul langage pour tout le web, et une étape incontournable pour tout futur développeur.
