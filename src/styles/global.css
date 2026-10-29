@@ -27,6 +27,14 @@ body {
   overflow-x: hidden;
 }
 
+/* The large faded words of the headings run past the right edge of the screen. The hidden
+   overflow of the body doesn't stop a phone browser (Chrome on Android) from widening the page
+   to show them, which left a black band beside the grids: the content clips them itself.
+   `clip`, unlike `hidden`, makes no scroll container, so the sticky blocks keep working. */
+main {
+  overflow-x: clip;
+}
+
 a {
   color: inherit;
   text-decoration: none;
