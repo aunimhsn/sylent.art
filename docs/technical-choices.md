@@ -100,9 +100,9 @@ Run `npm ci` first. They are also in the `scripts` of `package.json`.
 | `npm run format:check` | Checks the formatting without changing files (used in CI). |
 | `npm run lint` | `astro check`, ESLint and Stylelint. |
 | `npm run check:links` | Checks the internal links, the former URLs and the redirects of the tree on `dist/` (run after `npm run build`). |
-| `npm run check:overflow` | Checks that no page is wider than a phone screen, in the Chromium of Playwright (run after `npm run build`; install the browser once with `npx playwright install --only-shell chromium`). |
+| `npm run check:overflow` | Checks that no page is wider than a phone screen and that the large titles hold on one line, on a phone and on a computer, in the Chromium of Playwright (run after `npm run build`; install the browser once with `npx playwright install --only-shell chromium`). |
 | `npm run check:base` | Builds the github.io preview (`/sylent.art` base) into `dist-base/` and checks its links; removed at the launch. |
-| `npm run check` | Everything run before a commit and in CI: format check, lint, build, links, phone width, links of the preview. |
+| `npm run check` | Everything run before a commit and in CI: format check, lint, build, links, phone width and titles, links of the preview. |
 
 ## Exceptions to the naming conventions
 

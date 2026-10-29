@@ -159,17 +159,30 @@ const offers = (await getOffers()).filter(({ domain }) => domain.id !== except);
         requestAnimationFrame(spin);
       }
     };
+    // Only the focus of the keyboard holds it open: the link of a card clicked, then found again
+    // with the back button, keeps a focus that would hold it open under no pointer. Escape closes
+    // it, since the list hides the name of the domain (WCAG 1.4.13), until the focus or the
+    // pointer comes back.
+    let dismissed = false;
+    const focused = () =>
+      !dismissed && card.querySelector(":focus-visible") !== null;
     card.addEventListener("pointerenter", (event) => {
+      dismissed = false;
       if (event.pointerType === "mouse") open(true);
     });
-    // Only the focus of the keyboard holds it open: the link of a card clicked, then found again
-    // with the back button, keeps a focus that would hold it open under no pointer.
-    const focused = () => card.matches(":has(:focus-visible)");
     card.addEventListener("pointerleave", (event) => {
       if (event.pointerType === "mouse") open(focused());
     });
-    card.addEventListener("focusin", () => open(focused()));
+    card.addEventListener("focusin", () => {
+      dismissed = false;
+      open(focused());
+    });
     card.addEventListener("focusout", () => open(card.matches(":hover")));
+    card.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape" || !card.classList.contains("is-open")) return;
+      dismissed = true;
+      open(false);
+    });
   }
 
   if (matchMedia("(hover: hover)").matches) {
@@ -223,7 +236,7 @@ const offers = (await getOffers()).filter(({ domain }) => domain.id !== except);
   .card.can-open {
     transition:
       background-color var(--duration-fast),
-      --card-open 0.6s var(--ease-in-out);
+      --card-open var(--duration-card) var(--ease-in-out);
   }
 
   .card.is-open {
