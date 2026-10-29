@@ -29,8 +29,10 @@ program:
     text: "L’agencement d’une page avec les boîtes flexibles (Flexbox) et la grille (Grid), pour tous les écrans."
   - title: "Les états et le mouvement"
     text: "Les pseudo-classes, les pseudo-éléments et les animations."
+  - title: "Les frameworks CSS"
+    text: "Bootstrap et Tailwind, pour comparer deux philosophies : des composants prêts à l’emploi ou des classes utilitaires."
   - title: "Travaux pratiques"
-    text: "Par exemple le carré centré, la barre de navigation ou le formulaire de connexion, parmi d’autres exercices."
+    text: "Le carré centré, puis la mise en forme de son propre portfolio, adapté à tous les écrans."
 ---
 
 Le CSS décrit l’apparence d’une page : couleurs, typographie, mise en page. Bien compris, il permet d’adapter une même page à tous les écrans sans la réécrire. Ce module en pose les principes, dont la cascade et la spécificité, souvent sources de confusion, jusqu’aux mises en page modernes avec Flexbox et Grid.

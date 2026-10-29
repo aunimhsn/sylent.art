@@ -45,6 +45,7 @@ Read only by the steps that need them:
     - [x] RoboMind: its presentation in two paragraphs; the domain « Initiation à la prog. » takes a period, the mark of an abbreviation. (#25)
     - [x] HTML, CSS and JavaScript: a part on the developer console in their program; the practice of HTML is one's own portfolio, that of RoboMind handling the robot. (#25)
     - [x] Rename the module « Prog orientée objet » to « POO », which speaks more. (#25)
+    - [x] CSS: a part on the CSS frameworks (Bootstrap and Tailwind, components or utilities); the practice keeps the centered square and styles one's own portfolio. (#25)
   - [ ] Polish: the last small remarks of the owner before the release.
     - [x] The faded word « Echanger » of the call to action ends its slide at the bottom of every page, whatever its length and the height of the screen. (#22)
   - [ ] A photo of the owner, to show a face (the site has none; `specs.md` says « No photo in the first release »: update it first). The owner chooses the photo.
