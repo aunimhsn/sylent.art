@@ -43,6 +43,7 @@ Read only by the steps that need them:
     - [x] Module pages: no breadcrumb, the badge « Nouveau » at the very top, the domain as the large faded word behind the title. (#24)
     - [x] Algorithmique: approved by the owner as it is. (#24)
     - [x] RoboMind: its presentation in two paragraphs; the domain « Initiation à la prog. » takes a period, the mark of an abbreviation. (#25)
+    - [x] HTML, CSS and JavaScript: a part on the developer console in their program. (#25)
   - [ ] Polish: the last small remarks of the owner before the release.
     - [x] The faded word « Echanger » of the call to action ends its slide at the bottom of every page, whatever its length and the height of the screen. (#22)
   - [ ] A photo of the owner, to show a face (the site has none; `specs.md` says « No photo in the first release »: update it first). The owner chooses the photo.

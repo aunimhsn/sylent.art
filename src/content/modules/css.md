@@ -21,6 +21,8 @@ objectives:
 program:
   - title: "Les fondations"
     text: "L’intégration dans une page, les sélecteurs, le modèle de boîte, la cascade et la spécificité."
+  - title: "La console développeur"
+    text: "Voir quelle règle s’applique à un élément et pourquoi, visualiser ses marges et essayer un style en direct."
   - title: "La mise en forme"
     text: "Les couleurs, les polices, les unités de mesure et les dégradés."
   - title: "La mise en page"

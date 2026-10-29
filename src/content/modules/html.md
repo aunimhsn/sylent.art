@@ -23,6 +23,8 @@ program:
     text: "Le rôle du HTML, du CSS et du JavaScript, l’environnement de travail et le modèle de départ d’une page."
   - title: "Les balises"
     text: "Les balises principales et génériques, puis les balises sémantiques du HTML5."
+  - title: "La console développeur"
+    text: "Inspecter une page dans le navigateur, retrouver une balise dans l’arbre du document et la modifier en direct."
   - title: "Les formulaires et les tableaux"
     text: "Recueillir des informations et présenter des données, de façon lisible par tous."
   - title: "Les médias"

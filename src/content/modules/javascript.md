@@ -20,7 +20,9 @@ objectives:
   - "Récupérer et afficher des données avec fetch"
 program:
   - title: "Les bases du langage"
-    text: "L’environnement, la console développeur, les variables et les constantes."
+    text: "L’environnement, les variables et les constantes."
+  - title: "La console développeur"
+    text: "Tester une ligne de code, afficher une valeur, lire un message d’erreur et suivre un programme pas à pas avec les points d’arrêt."
   - title: "Les tableaux et les objets"
     text: "Les ranger, les parcourir, et les décomposer avec la destructuration et le spread."
   - title: "La logique"
