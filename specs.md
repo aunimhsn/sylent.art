@@ -132,7 +132,7 @@ The modules are independent: a client takes one or several, in any order, so the
 
 **Développement IA** has not been taught yet: its modules say honestly that it is a new offer (a « Nouveau » label and a short note), centered on method and good practices, to help employees use AI tools to be more productive and more satisfied in their daily work.
 
-Each module is a content file in the repository, named after its slug, which gives its domain and, for a former course, its former id (e.g. `formerId: 3`). The redirects are generated from these ids. A module may be a draft (`draft: true`): its file stays in the repository, but the site shows it nowhere (no page, no card, not on the back of its domain card, and a domain whose modules are all drafts is left out) until the owner publishes it; its former URL leads to the offer list meanwhile (decided on 2026-10-29). Vue, Django and PostgreSQL are drafts for now: Django waits for the collections of modules (step 13 of `roadmap.md`).
+Each module is a content file in the repository, named after its slug, which gives its domain and, for a former course, its former id (e.g. `formerId: 3`). The redirects are generated from these ids. A module may be a draft (`draft: true`): its file stays in the repository, but the site shows it nowhere (no page, no card, not on the back of its domain card, and a domain whose modules are all drafts is left out) until the owner publishes it; its former URL leads to the page of its domain meanwhile (decided on 2026-10-29), and to the offer list `/domaines`, at the card of its domain, until the domain pages exist (step 12 of `roadmap.md`). Vue, Django and PostgreSQL are drafts for now: Django waits for the collections of modules (step 13 of `roadmap.md`).
 
 ### Domain pages
 
@@ -155,7 +155,7 @@ Every path is in French and follows the tree of the offers (see [Training offers
 
 - `/` and `/contact`: the same paths.
 - `/courses` redirects to `/domaines`, `/about` to `/a-propos`, `/policy` (the privacy policy) to `/confidentialite`. The legal notice is a new page, `/mentions-legales`.
-- `/courses/1` to `/courses/12`: redirect to the page of the module that the course became (see the table above); the former URL of a draft leads to the page of its domain.
+- `/courses/1` to `/courses/12`: redirect to the page of the module that the course became (see the table above); the former URL of a draft leads to the page of its domain (see [Training offers](#training-offers)).
 - `/articles`, `/articles/1` and `/articles/2`: redirect to the home page, since the site has no articles.
 - `/creations`, `/register`, `/login`: no redirect; they show the not-found page.
 

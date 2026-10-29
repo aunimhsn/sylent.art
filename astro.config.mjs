@@ -13,7 +13,7 @@ const to = (/** @type {string} */ path) => `${base.replace(/\/$/, "")}${path}`;
 export default defineConfig({
   site,
   base,
-  // GitHub Pages serves about/index.html at /about/ and redirects /about to it: links and
+  // GitHub Pages serves a-propos/index.html at /a-propos/ and redirects /a-propos to it: links and
   // canonical URLs end with a slash, in the development server too.
   trailingSlash: "always",
   // The former URLs that must keep resolving, toward their French paths (specs.md, URLs and
