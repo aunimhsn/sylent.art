@@ -118,7 +118,8 @@ The slug of a module is its name in kebab-case, without version numbers (`html`,
 
 Each module page shows:
 
-- the domain (with a « Nouveau » label for a new one), the name of the module, and a short paragraph that says what the subject is and why it matters, written for pedagogical teams rather than as a list of notions;
+- the « Nouveau » label at the very top for a module of a new domain, then the name of the module over its domain, shown only as the large faded word behind the title, as in the section headings, and given in full to screen readers (decided by the owner on 2026-10-29, although the faded word is barely legible and cut when long: the domain is also on the cards of the offer list); no breadcrumb, the navigation leads back to the offers;
+- a short paragraph that says what the subject is and why it matters, written for pedagogical teams rather than as a list of notions;
 - the key facts: audience (one per line, e.g. « Étudiants », « Développeurs », « Chefs de projet technique »), level, indicative duration (« 3 jours, adaptable »), formats (on-site or remote);
 - the prerequisites and the objectives;
 - the program, in parts without numbers: they are not an order, and the practice comes when it is needed. The note that the explanations are short and the exercises adapted to the group;

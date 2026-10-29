@@ -12,7 +12,7 @@ const { question = fr.cta.question } = Astro.props;
 ---
 
 <section class="cta" aria-labelledby="cta-title">
-  <span class="cta-ghost" aria-hidden="true">
+  <span class="ghost-word cta-ghost" aria-hidden="true">
     {fr.cta.ghost}
   </span>
   <div class="wrap">
@@ -46,11 +46,7 @@ const { question = fr.cta.question } = Astro.props;
     left: 50%;
     top: 50%;
     translate: -50% -58%;
-    color: var(--ghost-word);
-    font: var(--title-weight) var(--size-cta-ghost) / 0.8 var(--font-title);
-    letter-spacing: var(--tracking-ghost);
-    text-transform: uppercase;
-    white-space: nowrap;
+    font-size: var(--size-cta-ghost);
     pointer-events: none;
   }
 

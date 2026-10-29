@@ -13,6 +13,7 @@ import courses from "../../content/courses.json";
 import fr from "../../i18n/fr.json";
 import SiteLayout from "../../layouts/site-layout.astro";
 import { durationOf, getOffers, type Offer } from "../../lib/offers";
+import { withoutAccents } from "../../lib/text";
 import { href } from "../../lib/url";
 
 export const getStaticPaths = (async () => {
@@ -46,9 +47,8 @@ const page = courses.module;
 const { title, summary, days, audience, level, prerequisites } = module.data;
 const { objectives, program } = module.data;
 const duration = durationOf(days);
-// The domain, as the large faded word behind the title, without its accents (see
-// src/components/section-heading.astro); screen readers get its real name.
-const ghost = domain.data.title.normalize("NFD").replace(/\p{M}/gu, "");
+// The domain, as the large faded word behind the title; screen readers get its real name.
+const ghost = withoutAccents(domain.data.title);
 const others = offer.modules.filter(({ id }) => id !== module.id);
 const hasText = Boolean(module.body?.trim());
 const { Content } = await render(module);
@@ -74,7 +74,7 @@ const { Content } = await render(module);
           </p>
         )}
         <div class="module-heading">
-          <span class="heading-ghost" aria-hidden="true">
+          <span class="ghost-word heading-ghost" aria-hidden="true">
             {ghost}
           </span>
           <h1 class="module-title reveal" id="module-title">
@@ -227,12 +227,6 @@ const { Content } = await render(module);
 
   .heading-ghost {
     margin: var(--space-fluid-1) 0 0 0.12em;
-    color: var(--ghost-word);
-    font: var(--title-weight) var(--size-ghost) / 0.8 var(--font-title);
-    letter-spacing: var(--tracking-ghost);
-    text-transform: uppercase;
-    white-space: nowrap;
-    user-select: none;
   }
 
   .module-title {

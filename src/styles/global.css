@@ -254,6 +254,17 @@ canvas {
   height: 100%;
 }
 
+/* The large faded word behind a title (section headings, module pages, call to action): each
+   place sets its position, and its size when it differs. */
+.ghost-word {
+  color: var(--ghost-word);
+  font: var(--title-weight) var(--size-ghost) / 0.8 var(--font-title);
+  letter-spacing: var(--tracking-ghost);
+  text-transform: uppercase;
+  white-space: nowrap;
+  user-select: none;
+}
+
 .new {
   position: absolute;
   left: var(--space-4);
