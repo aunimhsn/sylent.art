@@ -74,7 +74,7 @@ The technical choices of the [roadmap](../roadmap.md), with their reasons and th
 ## Link check
 
 - **linkinator** serves the built site (`dist/`) as a static host would, so `/a-propos` resolves to `a-propos/index.html` as on GitHub Pages, and follows every internal link of every page. External links are skipped in the regular check, so that a slow third-party site doesn't break the CI.
-- **`scripts/check-former-urls.mjs`** checks that every former URL (`/`, `/courses`, `/courses/1` to `/courses/12`, `/articles`, `/articles/1`, `/articles/2`, `/about`, `/contact`, `/policy`) exists in `dist/`, that each redirect points to the path `specs.md` gives it, written in the script, and that this page, and its anchor if any, exists (a redirect whose target it can't read fails); `npm run check:base` runs it on the github.io preview too, with its folder and its base, and that the dropped URLs (`/creations`, `/register`, `/login`) are not built. The URLs whose page a later step builds go in its `pending` list, with the step: each step removes its own (the check fails if a pending URL is built). The list is empty since step 9b.
+- **`scripts/check-former-urls.mjs`** checks that every former URL (`/`, `/courses`, `/courses/1` to `/courses/12`, `/articles`, `/articles/1`, `/articles/2`, `/about`, `/contact`, `/policy`) exists in `dist/`, that each redirect points to the path `specs.md` gives it, written in the script, and that this page, and its anchor if any, exists (a redirect whose target it can't read fails); `npm run check:base` runs it on the github.io preview too, with its folder and its base, and that the dropped URLs (`/creations`, `/register`, `/login`) are not built. The URLs whose page a later step builds go in its `pending` list, with the step: each step removes its own (the check fails if a pending URL is built). The list is empty since step 9b. It also checks the redirects of the tree of the URLs, which no page links to and linkinator can't see: `/domaines/<domain>/modules/` of each domain built leads to its domain page.
 - linkinator's options are in `linkinator.config.json`: it follows the internal links, checks the URLs of the CSS (fonts) and the anchors (`#…`), and skips every address that isn't its local server.
 - **Links to pages still to build**: from step 7, the header and the footer linked to pages built by later steps; linkinator skipped them through a second pattern of `skip` in `linkinator.config.json`, removed in step 9b once every page of the first release existed. A link to a page not built yet goes there again, until its step.
 - Rejected: **lychee**, faster, but a Rust binary that the owner would install apart from npm; linkinator runs from `npm ci` locally and in CI alike.
@@ -91,7 +91,7 @@ Run `npm ci` first. They are also in the `scripts` of `package.json`.
 | `npm run format` | Formats every file with Prettier. |
 | `npm run format:check` | Checks the formatting without changing files (used in CI). |
 | `npm run lint` | `astro check`, ESLint and Stylelint. |
-| `npm run check:links` | Checks the internal links and the former URLs on `dist/` (run after `npm run build`). |
+| `npm run check:links` | Checks the internal links, the former URLs and the redirects of the tree on `dist/` (run after `npm run build`). |
 | `npm run check:base` | Builds the github.io preview (`/sylent.art` base) into `dist-base/` and checks its links; removed at the launch. |
 | `npm run check` | Everything run before a commit and in CI: format check, lint, build, links, links of the preview. |
 
