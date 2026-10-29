@@ -36,7 +36,7 @@ Read only by the steps that need them:
   - [x] The Roman numerals of the pedagogy section in Manrope. (#19)
   - [x] The columns Navigation, Contact and Informations of the footer a little closer, so that « Cet enregistrement ne vaut pas agrément de l’État » holds on one line. (#19)
   Next, asked on 2026-10-29, in this order:
-  - [ ] The modules one by one with the owner: their texts as close as possible to what the owner will teach, and their layout (e.g. the title « Prompt engineering » of its module page breaks in the middle of « engineering »).
+  - [x] The modules one by one with the owner: their texts as close as possible to what the owner will teach, and their layout (e.g. the title « Prompt engineering » of its module page breaks in the middle of « engineering »).
     - [x] The module titles are no longer hyphenated: « Prompt engineering » broke in the middle of « engineering ». (#20)
     - [x] Claude Code: the practice designs an application from scratch; on every module page, the public is shown one audience per line. (#21)
     - [x] « Méthode et IA » removed, too vague: the owner builds with AI rather than governs it, which the module Claude Code already covers. (#23)
@@ -60,6 +60,7 @@ Read only by the steps that need them:
     - [x] Cypress: no API testing (maybe later); continuous integration and deployment; the practice tests the Caesar cipher and a Lightbox component. (#28)
     - [x] « Intégration continue » and « Déploiement continu » merged into one module, « CI/CD » (`/courses/ci-cd/`; both pages were only on the preview); the scene of the deployment removed. (#28)
     - [x] Méthode agile: approved as it is. (#28)
+    - [x] Prompt engineering: kept as it is for the launch, so that the AI offer shows; the owner reworks the AI courses for a didactic approach around Christmas 2026, then adjusts these offers to the demand. (#28)
     - [x] JavaScript: the practice keeps only the Caesar cipher; the DOM and fetch are left out until the owner's course covers them (a module « JavaScript et le DOM » after the launch, see step 15). (#25)
   - [ ] Polish: the last small remarks of the owner before the release.
     - [x] The faded word « Echanger » of the call to action ends its slide at the bottom of every page, whatever its length and the height of the screen. (#22)
