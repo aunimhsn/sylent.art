@@ -68,7 +68,8 @@ Proofs:
 | Page | URL | Purpose |
 |---|---|---|
 | Home | `/` | State the promise, the audiences, the domains, the differentiators, the proofs (partners, figure) and lead to the contact form. |
-| Offer list | `/courses` | Present every module, one card per module in a single grid, domain after domain, without headings: cover, name, domain, summary, and a link to the page of the module. The home page keeps one card per domain, whose « Voir les modules » leads to the offer list at that domain (`/courses#<domain>`). |
+| Offer list | `/courses` | Present every module, one card per module in a single grid, domain after domain, without headings: cover, name, domain, summary, and a link to the page of the module. |
+| Domain page | `/courses/<domain>` | Present one domain and its modules, then lead to the other domains (see [Domain pages](#domain-pages)). |
 | Module page | `/courses/<module>` | Detail one module (see [Training offers](#training-offers)). |
 | About | `/about` | Present the trainer: background, approach, references, NDA. No photo in the first release. |
 | Contact | `/contact` | The contact form and the other ways to reach the trainer. |
@@ -84,7 +85,7 @@ The former « Créations » section (photography, artwork), the user accounts an
 
 ## Training offers
 
-One page per **module**, grouped by **domain**. Pedagogical teams look for a speaker on a domain, and the technology matters less and less: the domains organize the home page and the offer list, but the first release has no domain pages. They can come later at `/courses/<domain>` without changing any URL. The domains below are a first grouping, refined with the owner when the content is written. They are shown in the order of the table, on the home page and the offer list alike: the new offers first, since they matter most today (decided by the owner on 2026-10-29), then from the first steps in programming to project management.
+One page per **module**, grouped by **domain**, with one page per domain too (see [Domain pages](#domain-pages)). Pedagogical teams look for a speaker on a domain, and the technology matters less and less: the domains organize the home page and the offer list. Inside a domain, the modules of one technology may form a **collection** (see [Collections](#collections)). The domains below are a first grouping, refined with the owner when the content is written. They are shown in the order of the table, on the home page and the offer list alike: the new offers first, since they matter most today (decided by the owner on 2026-10-29), then from the first steps in programming to project management.
 
 | Domain | Slug | Modules | Former courses |
 |---|---|---|---|
@@ -131,7 +132,22 @@ The modules are independent: a client takes one or several, in any order, so the
 
 **Développement IA** has not been taught yet: its modules say honestly that it is a new offer (a « Nouveau » label and a short note), centered on method and good practices, to help employees use AI tools to be more productive and more satisfied in their daily work.
 
-Each module is a content file in the repository, named after its slug, which gives its domain and, for a former course, its former id (e.g. `formerId: 3`). The redirects are generated from these ids. A module may be a draft (`draft: true`): its file stays in the repository, but the site shows it nowhere (no page, no card, not on the back of its domain card, and a domain whose modules are all drafts is left out) until the owner publishes it; its former URL leads to the offer list meanwhile (decided on 2026-10-29). Vue, Django and PostgreSQL are drafts for the first release: Django waits for the collections of modules (step 15 of `roadmap.md`).
+Each module is a content file in the repository, named after its slug, which gives its domain and, for a former course, its former id (e.g. `formerId: 3`). The redirects are generated from these ids. A module may be a draft (`draft: true`): its file stays in the repository, but the site shows it nowhere (no page, no card, not on the back of its domain card, and a domain whose modules are all drafts is left out) until the owner publishes it; its former URL leads to the offer list meanwhile (decided on 2026-10-29). Vue, Django and PostgreSQL are drafts for the first release: Django waits for the collections of modules (step 12 of `roadmap.md`).
+
+### Domain pages
+
+Each domain has its page at `/courses/<domain>`, its slug in the table above (decided by the owner on 2026-10-29, before the launch). A visitor reaches it from the card of the domain on the home page, whose « Voir les modules » leads there, and from the other domain pages; it is not in the navigation of the header, whose « Formations » still leads to the offer list. The page shows:
+
+- a hero, as on a module page: the « Nouveau » label for a new domain, the name of the domain, its summary and, for a new domain, its note;
+- the published modules of the domain, one card each, as on the offer list, then the card « Un besoin sur mesure ? »;
+- « Explorer les autres domaines »: the cards of the other domains, as on the home page, as a module page leads to the other modules of its domain;
+- the call to action to the contact form.
+
+A domain whose modules are all drafts has no page. Its URL never changes once published, like a module's.
+
+### Collections
+
+Inside a domain, a collection gathers a few modules on one technology, close to each other, in an advised order: for example JavaScript (the language, then « JavaScript et le DOM »), PHP (the basics, then a database with PDO) or Python (the basics, machine learning, data visualization). Not modules of different technologies: no « back-end » of PHP, MySQL and Laravel. The site keeps one tree, domain, then collection, then module (decided by the owner on 2026-10-29); the collection is an optional level, and a module outside any collection stays directly in its domain. The modules stay independent: a client takes one or several, in any order; the advised order of a collection is the only place where the site shows modules in sequence. The rest (how the site shows a collection, whether one with a single published module shows, the names of its modules) is decided with the owner at step 12 of `roadmap.md`, before the launch.
 
 ## URLs and redirects
 
