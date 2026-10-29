@@ -28,13 +28,18 @@ const types = {
   ".woff2": "font/woff2",
 };
 
-/** Every page of the site, as its URL path: the redirect pages are left out. */
+/**
+ * Every page of the site, as its URL path, the not-found page (404.html) included: the redirect
+ * pages are left out.
+ */
 const pagesOf = (folder) =>
   readdirSync(folder).flatMap((name) => {
     const path = join(folder, name);
     if (statSync(path).isDirectory()) return pagesOf(path);
-    if (name !== "index.html") return [];
+    const notFound = name === "404.html" && folder === dist;
+    if (name !== "index.html" && !notFound) return [];
     if (/http-equiv=["']?refresh/i.test(readFileSync(path, "utf8"))) return [];
+    if (notFound) return ["/404.html"];
     const parent = relative(dist, folder).split(sep).join("/");
     return [parent ? `/${parent}/` : "/"];
   });
@@ -58,7 +63,8 @@ await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
 const origin = `http://127.0.0.1:${server.address().port}`;
 
 // Scrolls the page down to the bottom and returns the largest width it reached. It runs in the
-// page, with the globals of the browser.
+// page, with the globals of the browser. Each step jumps at once: the smooth scrolling of the
+// site would only start a scroll that the next step interrupts.
 /* global document, innerHeight, scrollTo */
 const widest = async () => {
   await document.fonts.ready;
@@ -66,7 +72,7 @@ const widest = async () => {
   const root = document.documentElement;
   let width = root.scrollWidth;
   for (let y = 0; y <= root.scrollHeight; y += innerHeight / 2) {
-    scrollTo(0, y);
+    scrollTo({ top: y, behavior: "instant" });
     await wait(50);
     width = Math.max(width, root.scrollWidth);
   }
@@ -89,15 +95,27 @@ try {
       isMobile: true,
       hasTouch: true,
     });
-    // A few tabs at once, each taking the next page of the list.
+    // A few tabs at once, each taking the next page of the list. A page that fails to load, or
+    // whose scripts throw, is reported with the others instead of stopping the check.
     const queue = [...pages];
     const tab = async () => {
       const page = await context.newPage();
+      let current = "";
+      page.on("pageerror", (error) => {
+        errors.push(
+          `${current}: script error at ${width} px, ${error.message}`,
+        );
+      });
       for (let path; (path = queue.shift());) {
-        await page.goto(`${origin}${path}`, { waitUntil: "load" });
-        const reached = await page.evaluate(widest);
-        if (reached > width) {
-          errors.push(`${path}: ${reached} px wide on a ${width} px screen`);
+        current = path;
+        try {
+          await page.goto(`${origin}${path}`, { waitUntil: "load" });
+          const reached = await page.evaluate(widest);
+          if (reached > width) {
+            errors.push(`${path}: ${reached} px wide on a ${width} px screen`);
+          }
+        } catch (error) {
+          errors.push(`${path}: not checked at ${width} px, ${error.message}`);
         }
       }
     };
@@ -110,7 +128,8 @@ try {
 }
 
 if (errors.length > 0) {
-  console.error(`Pages wider than the screen:\n- ${errors.join("\n- ")}`);
+  const report = errors.sort().join("\n- ");
+  console.error(`Pages wider than the screen, or not checked:\n- ${report}`);
   process.exit(1);
 }
 console.log(
