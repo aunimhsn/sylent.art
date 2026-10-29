@@ -1,6 +1,6 @@
 ---
 title: "Django"
-domain: python-et-donnees
+domain: python
 order: 2
 days: 3
 summary: "Développer une application web complète avec un framework Python."

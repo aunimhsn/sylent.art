@@ -1,55 +1,36 @@
 ---
-// The page of one module (docs/mockups/module-site.html), at /courses/<slug>/: a hero over the
-// grid with the presentation of the module, the key facts under a rule, the prerequisites, the
-// objectives and the program beside a card that follows the scroll on a computer, then the other
-// modules of the domain. The former courses (/courses/<id>/) redirect to the module they became.
+// The page of one module (docs/mockups/module-site.html), at /domaines/<domain>/modules/<module>/:
+// a hero over the grid with the presentation of the module, the key facts under a rule, the
+// prerequisites, the objectives and the program beside a card that follows the scroll on a
+// computer, then the other modules of the domain. The former courses (/courses/<id>/) redirect
+// here from src/pages/courses/[id].astro.
 import type { GetStaticPaths } from "astro";
 import { render } from "astro:content";
-import CustomCard from "../../components/custom-card.astro";
-import Icon from "../../components/icon.astro";
-import ModuleCard from "../../components/module-card.astro";
-import SectionHeading from "../../components/section-heading.astro";
-import courses from "../../content/courses.json";
-import fr from "../../i18n/fr.json";
-import SiteLayout from "../../layouts/site-layout.astro";
-import { durationOf, getDrafts, getOffers, type Offer } from "../../lib/offers";
-import { withoutAccents } from "../../lib/text";
-import { href } from "../../lib/url";
+import CustomCard from "../../../../components/custom-card.astro";
+import Icon from "../../../../components/icon.astro";
+import ModuleCard from "../../../../components/module-card.astro";
+import SectionHeading from "../../../../components/section-heading.astro";
+import courses from "../../../../content/courses.json";
+import fr from "../../../../i18n/fr.json";
+import SiteLayout from "../../../../layouts/site-layout.astro";
+import { durationOf, getOffers, type Offer } from "../../../../lib/offers";
+import { withoutAccents } from "../../../../lib/text";
+import { href } from "../../../../lib/url";
 
-export const getStaticPaths = (async () => {
-  const offers = await getOffers();
-  // The former URL of a draft leads to the offer list until the module is published.
-  const drafts = (await getDrafts()).flatMap(({ data }) =>
-    data.formerId
-      ? [{ params: { slug: String(data.formerId) }, props: { isDraft: true } }]
-      : [],
-  );
-  const modules = offers.flatMap((offer) =>
-    offer.modules.flatMap((module) => [
-      { params: { slug: module.id }, props: { offer, module } },
-      ...(module.data.formerId
-        ? [
-            {
-              params: { slug: String(module.data.formerId) },
-              props: { offer, module, isFormer: true },
-            },
-          ]
-        : []),
-    ]),
-  );
-  return [...modules, ...drafts];
-}) satisfies GetStaticPaths;
+export const getStaticPaths = (async () =>
+  (await getOffers()).flatMap((offer) =>
+    offer.modules.map((module) => ({
+      params: { domain: offer.domain.id, module: module.id },
+      props: { offer, module },
+    })),
+  )) satisfies GetStaticPaths;
 
-type Props =
-  | { offer: Offer; module: Offer["modules"][number]; isFormer?: boolean }
-  | { isDraft: true };
+interface Props {
+  offer: Offer;
+  module: Offer["modules"][number];
+}
 
-const props = Astro.props;
-// 301 as the others: GitHub Pages only serves a page that leads on at once (a 302 waits 2 s).
-if ("isDraft" in props) return Astro.redirect(href("/courses/"), 301);
-const { offer, module, isFormer = false } = props;
-if (isFormer) return Astro.redirect(href(`/courses/${module.id}/`), 301);
-
+const { offer, module } = Astro.props;
 const { domain } = offer;
 const page = courses.module;
 const { title, summary, days, audience, level, prerequisites } = module.data;

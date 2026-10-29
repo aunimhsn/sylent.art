@@ -28,7 +28,8 @@ const domains = defineCollection({
   }),
 });
 
-// The modules, one file per module named after its slug, which is its URL (/courses/<slug>/):
+// The modules, one file per module named after its slug, which ends its URL
+// (/domaines/<domain>/modules/<slug>/):
 // the front matter gives its domain, its key facts, its prerequisites, objectives and program,
 // the text its presentation.
 const modules = defineCollection({

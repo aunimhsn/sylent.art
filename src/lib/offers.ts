@@ -19,8 +19,9 @@ const twice = <T>(values: T[]) =>
 /**
  * The domains in their order, each with its published modules in theirs; a domain whose modules
  * are all drafts is left out. Fails the build on an order used twice, a domain without modules,
- * a module of an unknown domain, a former id used twice, or a slug that would clash with another
- * URL (a number, or the slug of a domain), drafts included.
+ * a module of an unknown domain, a former id used twice, or a module slug that is a number,
+ * drafts included. A slug is unique within its domain only (the module python of the domain
+ * python), and the file names keep the module slugs unique across the site.
  */
 export async function getOffers(): Promise<Offer[]> {
   const domains = (await getCollection("domains")).sort(
@@ -39,8 +40,8 @@ export async function getOffers(): Promise<Offer[]> {
     if (!ids.includes(module.data.domain.id)) {
       errors.push(`${module.id}: unknown domain ${module.data.domain.id}`);
     }
-    if (/^\d+$/.test(module.id) || ids.includes(module.id)) {
-      errors.push(`${module.id}: a module slug can't be a number or a domain`);
+    if (/^\d+$/.test(module.id)) {
+      errors.push(`${module.id}: a module slug can't be a number`);
     }
   }
   for (const formerId of twice(
@@ -70,6 +71,10 @@ export async function getOffers(): Promise<Offer[]> {
     }))
     .filter(({ modules }) => modules.length > 0);
 }
+
+/** The path of the page of a module, without the base: `/domaines/<domain>/modules/<module>/`. */
+export const modulePath = ({ id, data }: Module) =>
+  `/domaines/${data.domain.id}/modules/${id}/`;
 
 /** The draft modules, kept out of the site. */
 export const getDrafts = async (): Promise<Module[]> =>
