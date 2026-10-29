@@ -89,7 +89,7 @@ One page per **module**, grouped by **domain**. Pedagogical teams look for a spe
 | Domain | Slug | Modules | Former courses |
 |---|---|---|---|
 | Développement IA | `ia-pour-le-developpement` | Claude Code, prompt engineering | — |
-| Initiation à la prog | `initiation-a-la-programmation` | Algorithmique, Robomind | 7 |
+| Initiation à la prog. | `initiation-a-la-programmation` | Algorithmique, Robomind | 7 |
 | Développement web | `developpement-web` | HTML, CSS, JavaScript, PHP, Vue, Alpine, Laravel | 1, 2, 3, 4, 9, 10, 11 |
 | Python | `python-et-donnees` | Python, Django, machine learning | 6, 12 |
 | Bases de données | `bases-de-donnees` | Merise, MySQL, PostgreSQL | 5 |
