@@ -43,7 +43,6 @@ const offers = await getOffers();
             {modules.map(({ data: module }) => (
               <li>
                 <strong>{module.shortTitle ?? module.title}</strong>
-                <span class="back-summary">{module.summary}</span>
               </li>
             ))}
           </ul>
@@ -254,7 +253,7 @@ const offers = await getOffers();
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: 66px;
+    height: 48px;
     transform-origin: 50% 100%;
     will-change: transform, opacity;
   }
@@ -262,15 +261,6 @@ const offers = await getOffers();
   .back-list strong {
     font: 700 var(--size-card-title) / 1.2 var(--font-title);
     letter-spacing: var(--tracking-card);
-  }
-
-  .back-summary {
-    overflow: hidden;
-    color: var(--secondary);
-    font-size: var(--size-caption);
-    line-height: 1.4;
-    white-space: nowrap;
-    text-overflow: ellipsis;
   }
 
   /* One or two modules: simply listed, without the reel and its fades. */
@@ -287,12 +277,7 @@ const offers = await getOffers();
   }
 
   .card-back.is-still .back-list li {
-    gap: var(--space-1);
     height: auto;
-  }
-
-  .card-back.is-still .back-summary {
-    white-space: normal;
   }
 
   /* The custom request: a band across its own row, without glass or scene. Its text sits in a

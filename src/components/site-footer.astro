@@ -125,9 +125,11 @@ const year = new Date().getFullYear();
     gap: var(--space-8);
   }
 
+  /* The navigation, whose links are short, leaves room to the information, so that the sentence
+     on the agrément holds on one line from about 1200 px. */
   @media (width >= 900px) {
     .footer-grid {
-      grid-template-columns: 4fr 3fr 3fr 3fr;
+      grid-template-columns: 4fr 2fr 3fr 4fr;
     }
   }
 

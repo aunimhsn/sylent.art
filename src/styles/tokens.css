@@ -37,11 +37,9 @@
   --header-bg: rgb(10 10 10 / 72%);
   --top-bg: rgb(10 10 10 / 70%);
 
-  /* Fonts: Manrope for the titles and the interface, Anaheim for the text, Bodoni Moda for the
-     Roman numerals only. */
+  /* Fonts: Manrope for the titles, the interface and the Roman numerals, Anaheim for the text. */
   --font-title: var(--font-manrope);
   --font-text: var(--font-anaheim);
-  --font-numeral: var(--font-bodoni-moda);
   --text-weight: 500;
   --title-weight: 800;
   --label-weight: 800;

@@ -35,10 +35,10 @@ const roman = ["I", "II", "III", "IV", "V", "VI"];
     list-style: none;
   }
 
-  /* Roman numerals in Bodoni Moda, whose contrast answers the thin and bold Manrope. */
+  /* Roman numerals in Manrope, as the titles (Bodoni Moda until 2026-10-29). */
   .step-number {
-    font: 400 var(--size-numeral) / 1 var(--font-numeral);
-    letter-spacing: 0;
+    font: var(--title-weight) var(--size-numeral) / 1 var(--font-title);
+    letter-spacing: var(--tracking-title);
   }
 
   .step-rule {
