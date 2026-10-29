@@ -251,6 +251,10 @@ const { Content } = await render(module);
     font: var(--title-weight) var(--size-display) / 0.98 var(--font-title);
     letter-spacing: var(--tracking-title);
     text-wrap: balance;
+
+    /* No hyphenation, which split « Prompt engineering » mid-word: a word wider than the
+       screen breaks without a hyphen rather than overflow. */
+    overflow-wrap: break-word;
   }
 
   .module-lead :global(p) {
