@@ -1,0 +1,15 @@
+---
+// /domaines/<domain>/modules/, the parent of the module pages in the tree of the URLs, leads to
+// the page of the domain (specs.md, Domain pages).
+import type { GetStaticPaths } from "astro";
+import { domainPath, getOffers } from "../../../../lib/offers";
+import { href } from "../../../../lib/url";
+
+export const getStaticPaths = (async () =>
+  (await getOffers()).map(({ domain }) => ({
+    params: { domain: domain.id },
+  }))) satisfies GetStaticPaths;
+
+// 301 as the others: GitHub Pages only serves a page that leads on at once (a 302 waits 2 s).
+return Astro.redirect(href(domainPath(Astro.params.domain)), 301);
+---

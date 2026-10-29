@@ -59,8 +59,8 @@
   "cards": {
     "new": "Nouveau",
     "newHidden": " (nouvelle offre)",
-    "domainMore": "Voir les modules",
-    "domainLabel": "{title} : voir les modules",
+    "domainMore": "Explorer le domaine",
+    "domainLabel": "{title} : explorer le domaine",
     "moduleMore": "Voir le détail",
     "moduleLabel": "{title} : voir le détail",
     "customTitle": "Un besoin sur mesure ?",

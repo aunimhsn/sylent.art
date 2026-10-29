@@ -28,9 +28,9 @@ if (root.dataset.motion === "on") {
   });
 
   // Section headings, as on the former site: the title rises, the large word behind it slides
-  // as the page scrolls. The title of a module page keeps its accents and only fades in
+  // as the page scrolls. The title of a module or domain page keeps its accents and only fades in
   // (.reveal), since the mask would cut them: only its word slides.
-  document.querySelectorAll(".heading, .module-heading").forEach((block) => {
+  document.querySelectorAll(".heading, .page-heading").forEach((block) => {
     const title = block.querySelector(".heading-title");
     if (title) {
       // SplitText names the title after its visible text; a title shown without its accents

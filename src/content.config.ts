@@ -10,20 +10,20 @@ import { SCENE_NAMES } from "./lib/scenes";
 const text = z.string().trim().min(1);
 
 // The domains of the offers (specs.md, Training offers), one file per domain named after its
-// slug. They group the modules on the home page and the offer list; no domain pages yet.
+// slug, which ends the URL of its page (/domaines/<slug>/). They group the modules.
 const domains = defineCollection({
   loader: glob({ pattern: "*.md", base: "./src/content/domains" }),
   schema: z.object({
     title: z.string(),
     /** One short sentence that says what the domain is for, not a list of notions. */
     summary: z.string(),
-    /** The place of the domain on the home page and the offer list. */
+    /** The place of the domain on the home page and the domains page. */
     order: z.number().int(),
     /** The 3D scene of its cover (src/scripts/covers.ts). */
     scene: z.enum(SCENE_NAMES),
     /** A new offer, marked « Nouveau » with its modules. */
     isNew: z.boolean().default(false),
-    /** A short note on the page of each of its modules (a new offer says so honestly). */
+    /** A short note on its page and on each of its modules' (a new offer says so honestly). */
     note: z.string().optional(),
   }),
 });
@@ -48,7 +48,7 @@ const modules = defineCollection({
     scene: z.enum(SCENE_NAMES),
     /**
      * A draft stays in the repository but out of the site, until the owner publishes it: no
-     * page, no card. Its former URL, if any, leads to the offer list meanwhile.
+     * page, no card. Its former URL, if any, leads to the page of its domain meanwhile.
      */
     draft: z.boolean().default(false),
     /** The id of the course of the former site, whose URL (/courses/<id>) redirects here. */

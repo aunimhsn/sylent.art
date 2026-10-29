@@ -1,16 +1,27 @@
 ---
-// The cards of the domains on the home page, then a band for a custom request. No domain pages
-// yet (step 12 of roadmap.md): a card leads to the offer list, at the first module of its domain.
+// The cards of the domains, each leading to the page of its domain: on the home page and the
+// domains page, then a band for a custom request; under a domain page, the other domains only.
 //
 // Under the pointer (or with the keyboard focus) a card turns half a turn and shows its modules
 // on its back (docs/branding.md, Components). The back is decorative, hidden from screen readers:
-// the modules are listed on the offer list.
+// the modules are listed on the page of the domain.
 import fr from "../i18n/fr.json";
-import { getOffers } from "../lib/offers";
+import { domainPath, getOffers } from "../lib/offers";
 import { href } from "../lib/url";
 import Icon from "./icon.astro";
 
-const offers = await getOffers();
+interface Props {
+  /** The domain left out: the one of the page, under its other domains. */
+  except?: string;
+  /** The band for a custom request, after the cards. */
+  band?: boolean;
+  /** 2 on the domains page, right under its h1; 3 under a section heading. */
+  headingLevel?: 2 | 3;
+}
+
+const { except, band = true, headingLevel = 3 } = Astro.props;
+const Heading = `h${headingLevel}` as const;
+const offers = (await getOffers()).filter(({ domain }) => domain.id !== except);
 ---
 
 <ul class="cards">
@@ -20,16 +31,16 @@ const offers = await getOffers();
         <canvas />
         {data.isNew && <span class="new">{fr.cards.new}</span>}
       </div>
-      <h3>
+      <Heading>
         {data.title}
         {data.isNew && (
           <span class="visually-hidden">{fr.cards.newHidden}</span>
         )}
-      </h3>
+      </Heading>
       <p>{data.summary}</p>
       <a
         class="card-more"
-        href={href(`/domaines/#${id}`)}
+        href={href(domainPath(id))}
         aria-label={fr.cards.domainLabel.replace("{title}", data.title)}
       >
         <span>{fr.cards.domainMore}</span>
@@ -50,16 +61,18 @@ const offers = await getOffers();
       </div>
     </li>
   ))}
-  <li class="card reveal is-band">
-    <div class="card-text">
-      <h3>{fr.cards.customTitle}</h3>
-      <p>{fr.cards.customText}</p>
-    </div>
-    <a class="card-more" href={href("/contact/")}>
-      <span>{fr.cards.customButton}</span>
-      <Icon name="right" size={18} />
-    </a>
-  </li>
+  {band && (
+    <li class="card reveal is-band">
+      <div class="card-text">
+        <Heading>{fr.cards.customTitle}</Heading>
+        <p>{fr.cards.customText}</p>
+      </div>
+      <a class="card-more" href={href("/contact/")}>
+        <span>{fr.cards.customButton}</span>
+        <Icon name="right" size={18} />
+      </a>
+    </li>
+  )}
 </ul>
 
 <script>

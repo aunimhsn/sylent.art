@@ -1,16 +1,13 @@
 ---
-// The offer list at /domaines/ (docs/mockups/courses-site.html), until the domain pages of step 12
-// of roadmap.md: the grid of the hero at the top of the page, fading out, then one card per
-// module, all in one grid, domain after domain. The home page keeps one card per domain, whose
-// link leads here to the first module of the domain.
-import ModuleCard from "../../components/module-card.astro";
+// The domains page at /domaines/, the « Formations » link of the header: the grid of the hero at
+// the top of the page, fading out, then one card per domain, as on the home page, each leading
+// to the page of its domain (src/pages/domaines/[domain]/index.astro).
+import DomainCards from "../../components/domain-cards.astro";
 import SectionHeading from "../../components/section-heading.astro";
 import courses from "../../content/courses.json";
 import SiteLayout from "../../layouts/site-layout.astro";
-import { getOffers } from "../../lib/offers";
 
 const { list } = courses;
-const offers = await getOffers();
 ---
 
 <SiteLayout title={list.title} description={list.description} cta={list.cta}>
@@ -28,18 +25,7 @@ const offers = await getOffers();
         />
         <p class="lead reveal">{list.lead}</p>
       </div>
-      <ul class="cards">
-        {offers.map(({ domain, modules }) =>
-          modules.map((module, index) => (
-            <ModuleCard
-              module={module}
-              domain={domain}
-              anchor={index === 0}
-              headingLevel={2}
-            />
-          )),
-        )}
-      </ul>
+      <DomainCards headingLevel={2} />
     </div>
   </section>
 </SiteLayout>

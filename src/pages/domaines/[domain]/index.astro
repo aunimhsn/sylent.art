@@ -1,0 +1,69 @@
+---
+// The page of one domain, at /domaines/<domain>/ (specs.md, Domain pages): a hero as on a module
+// page, over the word « Domaine », then the cards of its published modules and of a custom
+// request, then the other domains. A domain whose modules are all drafts has no page.
+import type { GetStaticPaths } from "astro";
+import CustomCard from "../../../components/custom-card.astro";
+import DomainCards from "../../../components/domain-cards.astro";
+import ModuleCard from "../../../components/module-card.astro";
+import PageHero from "../../../components/page-hero.astro";
+import SectionHeading from "../../../components/section-heading.astro";
+import courses from "../../../content/courses.json";
+import SiteLayout from "../../../layouts/site-layout.astro";
+import { getOffers, type Offer } from "../../../lib/offers";
+
+export const getStaticPaths = (async () =>
+  (await getOffers()).map((offer) => ({
+    params: { domain: offer.domain.id },
+    props: { offer },
+  }))) satisfies GetStaticPaths;
+
+interface Props {
+  offer: Offer;
+}
+
+const { domain, modules } = Astro.props.offer;
+const page = courses.domain;
+const { title, summary, isNew, note } = domain.data;
+---
+
+<SiteLayout
+  title={page.title.replace("{title}", title)}
+  description={page.description.replace("{summary}", summary)}
+  cta={page.cta}
+>
+  <PageHero
+    title={title}
+    ghost={page.ghost}
+    id="domain-title"
+    isNew={isNew}
+    note={note}
+  >
+    <p>{summary}</p>
+  </PageHero>
+
+  <section class="domain-modules" aria-labelledby="modules-title">
+    <div class="wrap">
+      <h2 class="visually-hidden" id="modules-title">
+        {page.modules}
+      </h2>
+      <ul class="cards">
+        {modules.map((module) => (
+          <ModuleCard module={module} domain={domain} />
+        ))}
+        <CustomCard />
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="others-title">
+    <div class="wrap">
+      <SectionHeading
+        title={page.others.title}
+        ghost={page.others.ghost}
+        id="others-title"
+      />
+      <DomainCards except={domain.id} band={false} />
+    </div>
+  </section>
+</SiteLayout>

@@ -7,6 +7,17 @@
     "lead": "Des modules indépendants, à prendre seuls ou à combiner, aux durées toujours adaptables, sur site ou à distance.",
     "cta": ["Un domaine qui n’est pas dans la liste ?", "Parlons-en."]
   },
+  "domain": {
+    "title": "Domaine {title} · Formations · Sylent",
+    "description": "{summary} Des formations aux durées toujours adaptables, sur site ou à distance.",
+    "ghost": "Domaine",
+    "modules": "Les modules",
+    "others": {
+      "title": "Autres domaines",
+      "ghost": "Explorer"
+    },
+    "cta": ["Un domaine qui vous intéresse ?", "Parlons-en."]
+  },
   "module": {
     "title": "{title} · Formations · Sylent",
     "description": "{summary} Un module de {duration}, sur site ou à distance.",
