@@ -88,7 +88,7 @@ One page per **module**, grouped by **domain**. Pedagogical teams look for a spe
 
 | Domain | Slug | Modules | Former courses |
 |---|---|---|---|
-| Développement IA | `ia-pour-le-developpement` | Claude Code, prompt engineering, méthode et IA | — |
+| Développement IA | `ia-pour-le-developpement` | Claude Code, prompt engineering | — |
 | Initiation à la prog | `initiation-a-la-programmation` | Algorithmique, Robomind | 7 |
 | Développement web | `developpement-web` | HTML, CSS, JavaScript, PHP, Vue, Alpine, Laravel | 1, 2, 3, 4, 9, 10, 11 |
 | Python | `python-et-donnees` | Python, Django, machine learning | 6, 12 |
@@ -114,7 +114,7 @@ All the former courses are kept, as modules:
 | `/courses/11` | `/courses/laravel` |
 | `/courses/12` | `/courses/django` |
 
-The slug of a module is its name in kebab-case, without version numbers (`html`, `css`, `integrer-l-ia-avec-methode`). It is unique among the modules and the domains, never a number, and never changes once published: a module that moves to another domain keeps its URL.
+The slug of a module is its name in kebab-case, without version numbers (`html`, `css`, `prompt-engineering`). It is unique among the modules and the domains, never a number, and never changes once published: a module that moves to another domain keeps its URL.
 
 Each module page shows:
 
