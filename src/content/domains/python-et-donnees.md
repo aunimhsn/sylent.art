@@ -1,6 +1,6 @@
 ---
 title: "Python"
-summary: "Programmer en Python, du script au machine learning."
+summary: "Programmer en Python, un langage simple et polyvalent."
 order: 4
 scene: chart
 ---
