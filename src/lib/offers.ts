@@ -17,9 +17,10 @@ const twice = <T>(values: T[]) =>
   values.filter((value, index) => values.indexOf(value) !== index);
 
 /**
- * The domains in their order, each with its modules in theirs. Fails the build on an order used
- * twice, a domain without modules, a module of an unknown domain, a former id used twice, or a
- * slug that would clash with another URL (a number, or the slug of a domain).
+ * The domains in their order, each with its published modules in theirs; a domain whose modules
+ * are all drafts is left out. Fails the build on an order used twice, a domain without modules,
+ * a module of an unknown domain, a former id used twice, or a slug that would clash with another
+ * URL (a number, or the slug of a domain), drafts included.
  */
 export async function getOffers(): Promise<Offer[]> {
   const domains = (await getCollection("domains")).sort(
@@ -62,8 +63,17 @@ export async function getOffers(): Promise<Offer[]> {
   if (errors.length > 0) {
     throw new Error(`Invalid offers:\n- ${errors.join("\n- ")}`);
   }
-  return offers;
+  return offers
+    .map(({ domain, modules }) => ({
+      domain,
+      modules: modules.filter(({ data }) => !data.draft),
+    }))
+    .filter(({ modules }) => modules.length > 0);
 }
+
+/** The draft modules, kept out of the site. */
+export const getDrafts = async (): Promise<Module[]> =>
+  getCollection("modules", ({ data }) => data.draft);
 
 /** The indicative duration of a module: « 3 jours, adaptable ». */
 export const durationOf = (days: number) =>
