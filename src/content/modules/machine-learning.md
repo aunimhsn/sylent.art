@@ -5,7 +5,6 @@ order: 3
 days: 2
 summary: "Apprendre à un programme à faire des prédictions à partir de données réelles."
 scene: fit
-draft: true
 audience:
   - "Étudiants"
   - "Développeurs Python"
