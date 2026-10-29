@@ -1,0 +1,64 @@
+---
+// The owner's photo, large and faded behind a section, as the faded words behind the titles:
+// behind the name on the about page, behind « Qui suis-je ? » on the home page. In black and
+// white on a transparent background, down to the hips, its bottom fading into the page. It is
+// decorative: the name beside it says who it is. The page sets its top and its bottom.
+import { Image } from "astro:assets";
+import hips from "../assets/portrait/hips.png";
+
+interface Props {
+  class?: string;
+  /** "eager" at the top of a page, where the photo is the largest block of a phone screen. */
+  loading?: "eager" | "lazy";
+}
+
+const { class: className, loading = "lazy" } = Astro.props;
+---
+
+<figure class:list={["owner-photo", className]} aria-hidden="true">
+  <Image
+    src={hips}
+    alt=""
+    widths={[hips.width]}
+    sizes={`${hips.width}px`}
+    loading={loading}
+  />
+</figure>
+
+<style>
+  /* On a phone, mostly past the right edge, so that the face stays beside the name rather than
+     behind it (main clips what runs past the screen); the gray text keeps a contrast of 5.5:1
+     over the white of the photo. */
+  .owner-photo {
+    position: absolute;
+    right: -30%;
+    margin: 0;
+    opacity: 0.14;
+    pointer-events: none;
+  }
+
+  .owner-photo img {
+    display: block;
+    width: auto;
+    height: 100%;
+    mask-image: linear-gradient(to bottom, #000000 72%, transparent 98%);
+  }
+
+  /* On a tablet, the text is wider and shorter, so is the photo: 30 % of the window would push
+     it out of sight. It goes by its own width instead, its face on the right of the text. */
+  @media (width >= 640px) and (width < 900px) {
+    .owner-photo {
+      right: 0;
+      translate: 30% 0;
+    }
+  }
+
+  /* Even behind the gray text, where the window is narrow, the white of the photo keeps the
+     contrast of the text above 4.5:1 (4.8 at 18 %). */
+  @media (width >= 900px) {
+    .owner-photo {
+      right: 6%;
+      opacity: 0.18;
+    }
+  }
+</style>

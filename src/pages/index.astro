@@ -6,6 +6,7 @@ import DomainCards from "../components/domain-cards.astro";
 import HomeHero from "../components/home-hero.astro";
 import KeyFigures from "../components/key-figures.astro";
 import LessonCycle from "../components/lesson-cycle.astro";
+import OwnerPhoto from "../components/owner-photo.astro";
 import PartnerReel from "../components/partner-reel.astro";
 import PedagogySteps from "../components/pedagogy-steps.astro";
 import SectionHeading from "../components/section-heading.astro";
@@ -93,13 +94,16 @@ const lead = domains.lead.replace(
         ghost={about.ghost}
         id="about-title"
       />
-      <div class="about reveal">
-        <h3 class="about-name">{about.name}</h3>
-        <p class="lead">{about.lead}</p>
-        <KeyFigures />
-        <a class="link" href={href("/a-propos/")}>
-          {about.more}
-        </a>
+      <div class="about-body">
+        <OwnerPhoto class="about-photo" />
+        <div class="about reveal">
+          <h3 class="about-name">{about.name}</h3>
+          <p class="lead">{about.lead}</p>
+          <KeyFigures />
+          <a class="link" href={href("/a-propos/")}>
+            {about.more}
+          </a>
+        </div>
       </div>
     </div>
   </section>
@@ -142,9 +146,20 @@ const lead = domains.lead.replace(
     gap: var(--space-14);
   }
 
-  /* No photo in the first release: the text alone, aligned left. */
+  /* The text on the left, over the owner's photo, large and faded, from just above the name
+     down to the bottom of the section. */
+  .about-body,
+  .about {
+    position: relative;
+  }
+
   .about {
     max-width: var(--width-narrow);
+  }
+
+  .about-body :global(.about-photo) {
+    top: calc(-1 * var(--space-8));
+    bottom: calc(-1 * var(--space-section));
   }
 
   .about-name {

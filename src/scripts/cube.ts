@@ -1,6 +1,9 @@
 // The cube of the hero of the home page (from docs/mockups/home-site.html): a quality or a figure
 // on each face, read from data-faces on its canvas, inside a shell of orange edges.
 //
+// The first face may show the owner's face instead of a word (data-photo): the cube presents it
+// first and holds it longer.
+//
 // It presents its faces one after the other, squarely, in the order of the messages. Under the
 // mouse it follows the pointer (to the right it shows its right face, at the edges its back, top
 // and bottom), and resumes from the nearest face when the mouse leaves. A drag spins it, and the
@@ -19,6 +22,7 @@ const canvas = document.getElementById("cube-canvas") as HTMLCanvasElement;
 const area = document.getElementById("cube-area") as HTMLElement;
 const hero = document.getElementById("hero") as HTMLElement;
 const faces: [string, string][] = JSON.parse(canvas.dataset.faces ?? "[]");
+const photoSource = canvas.dataset.photo;
 
 let renderer: THREE.WebGLRenderer | undefined;
 try {
@@ -48,10 +52,11 @@ async function start(renderer: THREE.WebGLRenderer) {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
   camera.position.set(0, 0, 14);
+  const photo = photoSource ? await photoOval(photoSource) : undefined;
 
-  // A face: its small label at the top, its large word at the bottom over a short rule, on a
-  // faint grid, in the colors of the covers (src/styles/tokens.css).
-  function faceTexture([small, big]: [string, string]) {
+  // A face: its small label at the top, its large word at the bottom over a short rule, or the
+  // owner's face, on a faint grid, in the colors of the covers (src/styles/tokens.css).
+  function faceTexture([small, big]: [string, string], index: number) {
     const size = 512;
     const paint = document.createElement("canvas");
     paint.width = paint.height = size;
@@ -69,11 +74,18 @@ async function start(renderer: THREE.WebGLRenderer) {
       g.lineTo(size, x);
       g.stroke();
     }
+    const withPhoto = photoSource !== undefined && index === 0;
+    if (withPhoto && photo) {
+      const height = size * 0.84;
+      const width = (photo.width / photo.height) * height;
+      g.drawImage(photo, (size - width) / 2, size - height, width, height);
+    }
     g.fillStyle = css("--secondary");
     g.font = `700 24px ${family}`;
     g.letterSpacing = "4px";
     g.textBaseline = "top";
     g.fillText(small.toUpperCase(), 48, 52);
+    if (withPhoto) return textureOf(paint);
     g.letterSpacing = "-4px";
     g.fillStyle = css("--text");
     let fontSize = 160;
@@ -84,6 +96,10 @@ async function start(renderer: THREE.WebGLRenderer) {
     g.textBaseline = "alphabetic";
     g.fillText(big, 44, size - 70);
     g.fillRect(48, size - 50, 72, 8);
+    return textureOf(paint);
+  }
+
+  function textureOf(paint: HTMLCanvasElement) {
     const texture = new THREE.CanvasTexture(paint);
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
@@ -94,9 +110,9 @@ async function start(renderer: THREE.WebGLRenderer) {
   const cube = new THREE.Mesh(
     geometry,
     faces.map(
-      (face) =>
+      (face, index) =>
         new THREE.MeshBasicMaterial({
-          map: faceTexture(face),
+          map: faceTexture(face, index),
           transparent: true,
           opacity: 0.95,
         }),
@@ -167,8 +183,10 @@ async function start(renderer: THREE.WebGLRenderer) {
       .clone()
       .multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(x, y, 0))),
   );
+  // The photo face holds longer, the first time from the end of the scale-in (0.5 + 1.6 s).
+  const holdOf = (index: number) => (photoSource && index === 0 ? 5 : 3.2);
   let face = 0;
-  let nextFace = 3.2;
+  let nextFace = photoSource ? 2.1 + 4.5 : 3.2;
   const presented = faceViews[0].clone();
   const followed = new THREE.Quaternion();
   const scrollTurn = new THREE.Quaternion();
@@ -183,7 +201,7 @@ async function start(renderer: THREE.WebGLRenderer) {
       else if (!drag) {
         if (time >= nextFace) {
           face = (face + 1) % faceViews.length;
-          nextFace = time + 3.2;
+          nextFace = time + holdOf(face);
         }
         presented.slerp(faceViews[face], 0.06);
       }
@@ -290,4 +308,30 @@ async function start(renderer: THREE.WebGLRenderer) {
     ease: "none",
     scrollTrigger: { ...leaving, scrub: true },
   });
+}
+
+// The owner's face in an oval that fades into the grid of its face; nothing if it fails to load.
+async function photoOval(source: string) {
+  const image = new Image();
+  image.src = source;
+  try {
+    await image.decode();
+  } catch {
+    return undefined;
+  }
+  const oval = document.createElement("canvas");
+  const { naturalWidth: width, naturalHeight: height } = image;
+  oval.width = width;
+  oval.height = height;
+  const g = oval.getContext("2d")!;
+  g.drawImage(image, 0, 0);
+  const fade = g.createRadialGradient(0, 0, 0, 0, 0, 1);
+  fade.addColorStop(0.55, "#000000");
+  fade.addColorStop(1, "transparent");
+  // The unit circle stretched over the oval: centered, a little above the middle.
+  g.setTransform(width * 0.5, 0, 0, height * 0.62, width * 0.5, height * 0.38);
+  g.globalCompositeOperation = "destination-in";
+  g.fillStyle = fade;
+  g.fillRect(-1, -1, 2, 2);
+  return oval;
 }

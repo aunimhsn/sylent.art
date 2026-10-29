@@ -2,20 +2,31 @@
 // The hero of the home page: the headline, the trainer and the audiences, the two buttons and
 // the motto, beside the cube (src/scripts/cube.ts), over a grid where an orange fluid follows the
 // pointer (src/scripts/grid-fluid.ts, loaded by the footer).
+import { getImage } from "astro:assets";
+import portrait from "../assets/portrait/face.png";
 import home from "../content/home.json";
 import pedagogy from "../content/pedagogy.json";
 import fr from "../i18n/fr.json";
 import { href } from "../lib/url";
 
-// The faces of the cube: a label over a word, or over one of the key figures, written once in
-// pedagogy.json and named by its id; an unknown id fails the build.
-const faces = home.cube.map((face) => {
+// The faces of the cube: a label over a word, over one of the key figures, written once in
+// pedagogy.json and named by its id (an unknown id fails the build), or over the owner's face,
+// which the cube presents first: only the first face may show it.
+const faces = home.cube.map((face, index) => {
+  if (face.photo) {
+    if (index > 0)
+      throw new Error("home.json: the photo face of the cube comes first");
+    return [face.label, ""];
+  }
   if (face.figure === undefined) return [face.label, face.value];
   const figure = pedagogy.figures.find(({ id }) => id === face.figure);
   if (!figure)
     throw new Error(`home.json: unknown key figure "${face.figure}"`);
   return [face.label, `${figure.value}${figure.unit}`];
 });
+const photo = home.cube[0]?.photo
+  ? await getImage({ src: portrait, format: "webp" })
+  : undefined;
 ---
 
 <section
@@ -29,6 +40,7 @@ const faces = home.cube.map((face) => {
     id="cube-canvas"
     aria-hidden="true"
     data-faces={JSON.stringify(faces)}
+    data-photo={photo?.src}
   ></canvas>
   <div class="wrap">
     <div class="hero-text">
