@@ -32,4 +32,4 @@ program:
     text: "Par exemple une application CRUD ou une application de sondage, parmi d’autres exercices."
 ---
 
-Laravel est le framework PHP le plus utilisé pour construire des applications web. Il fournit une structure claire, le modèle MVC, et des outils prêts à l’emploi pour les routes, la base de données, les tests et le déploiement : on se concentre sur l’application elle-même.
+Laravel est le framework PHP le plus utilisé pour construire des applications web. Il fournit une structure claire, le modèle MVC, et des outils prêts à l’emploi pour les routes, la base de données et les vues : on se concentre sur l’application elle-même.
