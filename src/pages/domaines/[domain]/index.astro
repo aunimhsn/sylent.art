@@ -1,10 +1,10 @@
 ---
 // The page of one domain, at /domaines/<domain>/ (specs.md, Domain pages): a hero as on a module
 // page, without a faded word, then the cards of its formations, with only their modules filed
-// under it (src/components/formation-card.astro), and of a custom request, then the other
-// domains. A domain whose modules are all drafts has no page.
+// under it (src/components/formation-card.astro), then a band for a custom request across its own
+// row, then the other domains. A domain whose modules are all drafts has no page.
 import type { GetStaticPaths } from "astro";
-import CustomCard from "../../../components/custom-card.astro";
+import CustomBand from "../../../components/custom-band.astro";
 import DomainCards from "../../../components/domain-cards.astro";
 import FormationCard from "../../../components/formation-card.astro";
 import PageHero from "../../../components/page-hero.astro";
@@ -46,7 +46,7 @@ const { title, summary, isNew, note } = domain.data;
         {formations.map((filed) => (
           <FormationCard filed={filed} />
         ))}
-        <CustomCard />
+        <CustomBand />
       </ul>
     </div>
   </section>

@@ -11,7 +11,7 @@
   (?page=domain); ?domain=<slug> opens another domain. Data and cards in shared/formations.js.
   Layout, as built on the site: the hero without a faded word, then one card per formation of the
   domain (a module card for a formation of a single module, a formation card that lists its
-  modules otherwise), the custom card, the other domains and the call to action.
+  modules otherwise), the band of the custom request, the other domains and the call to action.
 -->
 <script src="shared/head.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,12 +37,12 @@
 
   const hero = offerHero({ id: "domain-title", title: domain.title, lead: `<p>${domain.summary}</p>`, isNew: domain.isNew, note: domain.isNew ? NEW_NOTE : "" });
 
-  // The formations of the domain, then the custom card; a hidden heading for screen readers.
+  // The formations of the domain, then the band of the custom request; a hidden heading for screen readers.
   const cards = `
     <section class="app-domain-cards" aria-labelledby="formations-title">
       <div class="app-wrap">
         <h2 class="app-hidden" id="formations-title">Les formations</h2>
-        <ul class="app-cards is-domains">${formationsIn(domain).map(formation => offerCard(formation, domain)).join("")}${customCard()}</ul>
+        <ul class="app-cards is-domains">${formationsIn(domain).map(formation => offerCard(formation, domain)).join("")}${customBand()}</ul>
       </div>
     </section>`;
 

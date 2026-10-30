@@ -7,7 +7,6 @@
 // from src/pages/courses/[id].astro.
 import type { GetStaticPaths } from "astro";
 import { render } from "astro:content";
-import CustomCard from "../../../components/custom-card.astro";
 import FormationCard from "../../../components/formation-card.astro";
 import Icon from "../../../components/icon.astro";
 import ModuleCard from "../../../components/module-card.astro";
@@ -205,7 +204,6 @@ const hasDescender = /[gjpqy]/.test(title);
           {otherModules.map((other) => (
             <ModuleCard module={other} />
           ))}
-          <CustomCard />
         </ul>
       </div>
     </section>

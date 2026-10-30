@@ -274,6 +274,29 @@ img, svg, canvas { display: block; }
 .app-card[id] { scroll-margin-top: calc(var(--header-height) + var(--space-6)); }
 .app-card:hover .app-card-more { padding-block: var(--space-5); }
 
+/* The custom request under the formations of a domain page: a band across its own row, without
+   glass or scene (2026-10-30). Its text
+   sits in a dashed frame, open on the side of the white button, that turns white under the
+   pointer; the arrow of the button moves forward instead of the button growing. From two columns
+   the button is a column on the right, exactly as wide as the cards above (a subgrid of the grid
+   of the cards); on a phone it is a band at the bottom. */
+.app-card.is-band { grid-column: 1 / -1; gap: 0; padding: 0; background: none; }
+.app-card.is-band:hover { background: none; }
+.app-card-text { display: grid; gap: var(--space-3); padding: var(--card-padding-block) var(--card-padding-inline); border: 1px dashed var(--line-strong); border-bottom-width: 0; transition: border-color var(--duration-fast); }
+.app-card.is-band:hover .app-card-text { border-color: var(--text); }
+.app-card.is-band .app-card-more { margin: 0; }
+/* The arrow only from two columns; on a phone the band stays a plain button, as on the other cards. */
+.app-card.is-band .app-card-more svg { display: none; margin-left: var(--space-3); transition: transform var(--duration-fast); }
+.app-card.is-band:hover .app-card-more { padding-block: var(--space-4); }
+.app-card.is-band:hover .app-card-more svg { transform: translateX(6px); }
+@media (min-width: 640px) {
+  .app-card.is-band { display: grid; grid-template-columns: subgrid; column-gap: normal; }
+  /* The frame runs over the gap of the grid, up to the button. */
+  .app-card.is-band .app-card-text { grid-column: 1 / -2; margin-right: calc(-1 * var(--cards-gap)); border-bottom-width: 1px; border-right-width: 0; }
+  .app-card.is-band .app-card-more { grid-column: -2 / -1; display: flex; align-items: center; justify-content: center; }
+  .app-card.is-band .app-card-more svg { display: block; flex: none; }
+}
+
 /* ── Partners ───────────────────────────────────────────────────────────────────── */
 
 /* Logos of equal visual weight: a wide logo is lower, a square one taller (height divided by

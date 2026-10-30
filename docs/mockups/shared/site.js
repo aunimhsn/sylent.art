@@ -114,15 +114,22 @@ const moduleCard = (domain, [title, , summary, scene], first = false) => `
     <h3>${title}</h3><p class="app-card-domain">${domain.title}</p><p>${summary}</p>
     <a class="app-card-more" href="${PAGES.module}?module=${slugOf(title)}" aria-label="${title}${NB}: voir le détail">Voir le détail</a>
   </li>`;
-// The last card, after the domains, the formations or the modules: a module built for the request.
-// After the seven domains it is their eighth card (2026-10-30, instead of a band across its own
-// row), without the tilt, which the domain cards don't have.
-const customCard = (tilt = true) => `
-  <li class="app-card app-glass app-reveal${tilt ? " app-tilt" : ""}">
+// The eighth card after the seven domains: a module built for the request (2026-10-30, instead of
+// a band across its own row), without the tilt, which the domain cards don't have.
+const customCard = () => `
+  <li class="app-card app-glass app-reveal">
     <div class="app-cover" data-scene="custom" aria-hidden="true"><canvas></canvas></div>
     <h3>Un besoin sur mesure${NB}?</h3>
     <p>Décrivez vos apprenants et vos objectifs${NB}: je construis le module.</p>
     <a class="app-card-more" href="${PAGES.contact}">Me contacter</a>
+  </li>`;
+// Under the formations of a domain page, the same request is a band across its own row, its text
+// in a dashed frame, so that it keeps its place whatever the number of formations (2026-10-30).
+const customBand = () => `
+  <li class="app-card app-reveal is-band">
+    <div class="app-card-text"><h3>Un besoin sur mesure${NB}?</h3>
+    <p>Décrivez vos apprenants et vos objectifs${NB}: je construis le module.</p></div>
+    <a class="app-card-more" href="${PAGES.contact}"><span>Me contacter</span>${icon("right", 18)}</a>
   </li>`;
 
 // The call to action and the footer, which a page places at its end; an offer page asks its own
