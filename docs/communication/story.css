@@ -173,6 +173,11 @@ body {
   white-space: nowrap;
 }
 
+/* A number of the date, which drifts up or down on its own. */
+.part {
+  display: inline-block;
+}
+
 /* The address, as it is written. */
 .hit-address {
   text-transform: none;

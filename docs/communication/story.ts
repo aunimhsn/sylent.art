@@ -409,12 +409,17 @@ async function variantCube() {
     { yPercent: 0, duration: 0.8, stagger: 0.12 },
     7.5,
   );
-  leave([title, ghostWord], 9.2);
-  endCard(9.6);
+  // The title fades away while the end card comes, so that the outro flows in.
+  tl.to(
+    [title, ghostWord],
+    { y: -60, autoAlpha: 0, duration: 0.45, ease: "sine.inOut" },
+    9.0,
+  );
+  endCard(9.4);
 
   // The epic score, in D minor at 100 beats a minute: a beat every 0.6 s, so that the turns of
   // the cube (3.3, 4.5, 5.7 s) and the title (7.5 s) fall on accented beats; the chords follow
-  // them (Dm, Bb, F, C, Dm), and the end card resolves on D major.
+  // them (Dm, Bb, F, C, Dm), and the end card resolves softly on D major.
   const chords: Record<string, number[]> = {
     Dm: [73.42, 146.83, 220, 293.66, 349.23],
     Bb: [58.27, 116.54, 174.61, 233.08, 293.66],
@@ -431,18 +436,20 @@ async function variantCube() {
       ["Bb", 3.3, 1.4, 0.3],
       ["F", 4.5, 1.4, 0.3],
       ["C", 5.7, 2.0, 0.3],
-      ["Dm", 7.5, 2.0, 0.2],
+      ["Dm", 7.5, 2.4, 0.2],
     ] as const
   ).forEach(([chord, time, length, attack]) =>
     cues.push({ time, sound: "chord", notes: chords[chord], length, attack }),
   );
-  for (let beat = 0; beat <= 12; beat++) {
+  // The drums carry on into the end card and fade, under the chords that cross from D minor to
+  // D major: no break before the outro.
+  for (let beat = 0; beat <= 14; beat++) {
     const time = Math.round((1.5 + 0.6 * beat) * 100) / 100;
     const accent = accents.includes(time);
     cues.push({
       time,
       sound: "drum",
-      gain: accent ? 1 : time > 7.5 ? 0.7 : 0.45,
+      gain: accent ? 1 : time > 9 ? 1.6 - 0.12 * time : time > 7.5 ? 0.7 : 0.45,
     });
   }
   [7.05, 7.2, 7.35].forEach((time, index) =>
@@ -450,17 +457,15 @@ async function variantCube() {
   );
   cues.push({ time: 7.0, sound: "riser", length: 0.5, gain: 0.5 });
   cues.push({ time: 7.5, sound: "impact", gain: 0.9 });
-  cues.push({ time: 9.1, sound: "riser", length: 0.5, gain: 0.6 });
-  cues.push({ time: 9.6, sound: "impact", gain: 1 });
   cues.push({
-    time: 9.6,
+    time: 9.3,
     sound: "chord",
     notes: chords.D,
-    length: 2.4,
-    attack: 0.02,
-    gain: 1.2,
+    length: 2.7,
+    attack: 0.6,
+    gain: 1.1,
   });
-  cues.push({ time: 10.7, sound: "chime", pitch: 0.75, gain: 0.7 });
+  cues.push({ time: 10.5, sound: "chime", pitch: 0.75, gain: 0.7 });
 }
 
 // ── Variant D: the impact ─────────────────────────────────────────────────────────────
@@ -591,7 +596,7 @@ function variantImpact() {
   const flash = html(`<div class="layer flash"></div>`);
   // The date of the launch, « nouveau site » as a block justified on both sides, the address.
   const words = [
-    `<div class="hit"><span class="hit-line">3/11/26</span></div>`,
+    `<div class="hit"><span class="hit-line"><span class="part">3</span>/<span class="part">11</span>/<span class="part">26</span></span></div>`,
     `<div class="hit hit-block"><span class="hit-line">Nouveau</span><span class="hit-line">site</span></div>`,
     `<div class="hit"><span class="hit-line hit-address">sylent.art</span></div>`,
   ].map(html);
@@ -641,14 +646,23 @@ function variantImpact() {
       },
       time - 0.18,
     );
-    // Then it drifts closer until the next one; the two lines of « nouveau site » slide apart.
+    // Then it drifts closer until the next one, and comes slowly apart, for a more organic
+    // look: the two lines of « nouveau site » to the left and the right, the numbers of the
+    // date up, down, up.
     tl.to(word, { scale: 1.06, duration: 1, ease: "none" }, time);
+    const until = (hits[index + 1]?.time ?? quiet) - time;
     if (word.classList.contains("hit-block")) {
       const [first, second] = word.querySelectorAll(".hit-line");
-      const until = (hits[index + 1]?.time ?? quiet) - time;
       tl.to(first, { x: -14, duration: until, ease: "power1.in" }, time);
       tl.to(second, { x: 14, duration: until, ease: "power1.in" }, time);
     }
+    word.querySelectorAll(".part").forEach((part, order) =>
+      tl.to(
+        part,
+        { y: order % 2 ? 14 : -14, duration: until, ease: "power1.in" },
+        time,
+      ),
+    );
     const next = hits[index + 1]?.time ?? quiet;
     tl.set(
       word,
