@@ -23,8 +23,10 @@ const isPreview = import.meta.env.BASE_URL !== "/";
 // the hash that GoatCounter publishes: the browser refuses a file that doesn't match it.
 const counts = import.meta.env.PROD && !isPreview;
 // The card that LinkedIn and Facebook show for a link to any page: its title, its description
-// and one image of 1200 × 630 px, a frame of the cube of the launch video (docs/branding.md,
-// Preview card). The networks want an absolute URL, and read JPEG everywhere, WebP not always.
+// and one image of 1200 × 630 px, the logo and the address over the faded photo of the owner
+// (docs/branding.md, Preview card). The networks want an absolute URL, and read JPEG
+// everywhere, WebP not always. X reads twitter:card to show the large card, and the rest from
+// the Open Graph tags.
 const card = await getImage({
   src: socialCard,
   format: "jpeg",
@@ -52,8 +54,8 @@ const cardUrl = new URL(card.src, Astro.site);
     {!noindex && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={cardUrl} />
     <meta property="og:image:type" content="image/jpeg" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
+    <meta property="og:image:width" content={String(card.attributes.width)} />
+    <meta property="og:image:height" content={String(card.attributes.height)} />
     <meta property="og:image:alt" content={fr.site.cardAlt} />
     <meta name="twitter:card" content="summary_large_image" />
     {counts && (
