@@ -63,7 +63,7 @@ const published = formation => formation.modules.filter(module => !module.draft)
 // alone in its formation (branding: a faded word is always one word). Sample summaries for the
 // renamed domains.
 const OFFER_DOMAINS = [
-  { slug: "ia-generative", title: "IA générative", ghost: "IA", scene: "network", isNew: true, summary: "Utiliser l’IA générative avec méthode et rigueur, au quotidien.", formations: ["claude-code", "prompt-engineering"] },
+  { slug: "ia-generative", title: "IA générative", ghost: "IA", scene: "network", isNew: true, summary: "Faire de l’IA un allié au quotidien.", formations: ["claude-code", "prompt-engineering"] },
   { slug: "programmation", title: "Programmation", ghost: "Programmation", scene: "steps", summary: `Apprendre à programmer${NB}: la logique, puis les langages, de la console au web.`, formations: ["algorithmique", "python", "javascript", "php"] },
   { slug: "developpement-web", title: "Développement web", ghost: "Web", scene: "web", summary: `Du HTML aux frameworks${NB}: construire des sites et des applications web.`, formations: ["html", "css", "javascript", "php", "python"] },
   { slug: "bases-de-donnees", title: "Bases de données", ghost: "Donnees", scene: "database", summary: "Modéliser, concevoir et interroger des données.", formations: ["merise", "mysql", "postgresql"] },
