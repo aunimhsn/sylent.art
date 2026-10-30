@@ -68,9 +68,10 @@ Proofs:
 | Page | URL | Purpose |
 |---|---|---|
 | Home | `/` | State the promise, the audiences, the domains, the differentiators, the proofs (partners, figure) and lead to the contact form. |
-| Domains | `/domaines` | The entry to the offers, the « Formations » link of the header: one card per domain, as on the home page, each leading to its page. The site has no flat list of every module: the offers follow one tree, domain, then collection, then module (decided by the owner on 2026-10-29). |
-| Domain page | `/domaines/<domain>` | Present one domain and its modules, then lead to the other domains (see [Domain pages](#domain-pages)). |
-| Module page | `/domaines/<domain>/modules/<module>` | Detail one module (see [Training offers](#training-offers)). |
+| Formations | `/formations` | The entry to the offers, the « Formations » link of the header: one card per domain, as on the home page, each leading to its page. The site has no flat list of every module: a visitor goes from a domain to its formations and modules (see [Training offers](#training-offers)). |
+| Domain page | `/domaines/<domain>` | Present one domain and its formations, then lead to the other domains (see [Domain pages](#domain-pages)). |
+| Formation page | `/formations/<formation>` | Present a formation of several modules (see [Formation pages](#formation-pages)). |
+| Module page | `/formations/<formation>/<module>` | Detail one module (see [Training offers](#training-offers)). |
 | About | `/a-propos` | Present the trainer: background, approach, references, NDA, over a photo of the trainer, large and faded (decided by the owner on 2026-10-29; the home page shows it too, behind « Qui suis-je ? » and on the first face of the hero cube). |
 | Contact | `/contact` | The contact form and the other ways to reach the trainer. |
 | Legal notice | `/mentions-legales` | The publisher, the training activity declaration, the host, the intellectual property and the credits. |
@@ -85,79 +86,96 @@ The former « Créations » section (photography, artwork), the user accounts an
 
 ## Training offers
 
-One page per **module**, grouped by **domain**, with one page per domain too (see [Domain pages](#domain-pages)). Pedagogical teams look for a speaker on a domain, and the technology matters less and less: the domains organize the home page and the offers. Inside a domain, the modules of one technology may form a **collection** (see [Collections](#collections)). The domains below are a first grouping, refined with the owner when the content is written. They are shown in the order of the table, on the home page and the domains page alike: the new offers first, since they matter most today (decided by the owner on 2026-10-29), then from the first steps in programming to project management.
+The offers are classified on three levels, decided with the owner on 2026-10-30 (step 13 of `roadmap.md`, tree in [docs/wireframes/offer-classification.excalidraw](docs/wireframes/offer-classification.excalidraw)):
 
-| Domain | Slug | Modules | Former courses |
-|---|---|---|---|
-| Développement IA | `developpement-ia` | Claude Code, prompt engineering | — |
-| Initiation à la prog. | `initiation-a-la-programmation` | Algorithmique, Robomind | 7 |
-| Développement web | `developpement-web` | HTML, CSS, JavaScript, PHP, Vue, Alpine, Laravel | 1, 2, 3, 4, 9, 10, 11 |
-| Python | `python` | Fondamentaux, Django, machine learning | 6, 12 |
-| Bases de données | `bases-de-donnees` | Merise, MySQL, PostgreSQL | 5 |
-| Conception logicielle | `conception-logicielle` | POO, UML, principes SOLID, design patterns | — |
-| Méthodologie et tests | `methodologie-et-tests` | Git / GitHub, Cypress, CI/CD (GitHub Actions, Vercel, Render) | 8 |
-| Gestion de projet | `gestion-de-projet` | Méthode agile | — |
+- a **domain** is a shelf where a school looks for a speaker (« Développement web », « Bases de données »): schools start from the domain;
+- a **formation** is one subject, a technology or a method (JavaScript, Merise, Agilité): it gathers its modules in an advised order and gives them their address;
+- a **module** is the unit a client books, with its program.
+
+Vocabulary: in the code and the documentation, a formation is a **collection** (a list of modules); for the visitors and in the URLs, it is a **formation** (« Formation JavaScript », `/formations/javascript/`), the word of the « Formations » link of the header. The word « collection » is never shown. Schools say « module » for the unit they book.
+
+Rules:
+
+- **Every module belongs to exactly one formation**, which gives its address, even when the formation has a single module: adding a module to a formation later never changes an address. A module that seems to need two formations mixes two subjects: it goes to the formation of the language it is written in, and the other formation may point to it (« PDO » is in PHP, not in MySQL).
+- **A module is filed under one or more domains.** A formation appears in a domain as soon as one of its modules does, and a domain shows only its own modules of that formation: in « Développement web », the formation Python shows only Django. The domains are entry points: a formation shown in two domains is the same page, at one address.
+- **The names of the modules are short and rely on their formation** (decided by the owner on 2026-10-29): « Fondamentaux » in Python, « POO » in PHP, « PDO », not « PHP et SQL ». The first module of a formation is « Fondamentaux » when it teaches its basics; a module may have its own name (« RoboMind » in Algorithmique, « Scrum » in Agilité).
+- **A formation with a single published module is shown by its own name** (« UML », not « Fondamentaux »: the basics of software design are not UML), and its card leads straight to the module; its address `/formations/<formation>/` leads to the module page. A formation with two published modules or more has its own page.
+- A framework is a module of the formation of its language (Laravel in PHP, Django in Python, Vue and Alpine in JavaScript), marked as a framework; how the mark is shown is settled on the mock-up.
+- The modules are independent: a client takes one or several, in any order, so the site never presents them as a sequence to follow (no module numbers), except for the advised order of a formation. Small modules that combine (e.g. CSS split into Flexbox and Grid) are the direction after the launch, as the course material is split.
+
+The domains, in the order of the home page and the formations page: the new offers first, since they matter most today (decided by the owner on 2026-10-29), then from the first steps in programming to project management. Each formation is listed with its modules; the brackets give the other domains of a module, (draft) a module kept out of the site, (to come) one whose course doesn't exist yet and isn't written on the site.
+
+| Domain | Slug | Formations and modules |
+|---|---|---|
+| IA générative | `ia-generative` | Claude Code; Prompt engineering |
+| Programmation | `programmation` | Algorithmique (Fondamentaux, RoboMind); Python (Fondamentaux, POO, Machine learning, Django draft [Web]); JavaScript (Fondamentaux [Web]); PHP (Fondamentaux, POO, PDO to come, each [Web]) |
+| Développement web | `developpement-web` | HTML; CSS; JavaScript (Fondamentaux [Programmation], DOM to come, Vue draft, Alpine); PHP (Fondamentaux, POO, PDO to come [Programmation], Laravel); Python (Django draft [Programmation]) |
+| Bases de données | `bases-de-donnees` | Merise; MySQL; PostgreSQL (draft) |
+| Conception logicielle | `conception-logicielle` | UML; Principes SOLID; Design patterns |
+| Méthodologie et tests | `methodologie-et-tests` | Git / GitHub [Gestion de projet]; Cypress; CI/CD (GitHub Actions, Vercel, Render) |
+| Gestion de projet | `gestion-de-projet` | Agilité (Scrum); Git / GitHub [Méthodologie et tests] |
+
+« IA générative » replaces « Développement IA », which could read as « building AIs »: the domain is about using generative AI with method, so machine learning, which builds and trains models with scikit-learn, stays in Python (decided by the owner on 2026-10-30). « Programmation » replaces « Initiation à la prog. »: a language is programming before it is web (a console application in PHP), so the formations of the languages are in it. The domain « Python » is gone: a technology is a formation, not a domain. « Bases de données » keeps its name, the word schools look for; a data domain comes when there are data modules (data visualization). The POO is a module of each language (PHP and Python, JavaScript once the owner's course covers it), no longer in « Conception logicielle ». Every other module is the only module of its own formation, named after it, with `fondamentaux` as the provisional slug of the module (`/formations/uml/fondamentaux`).
 
 All the former courses are kept, as modules:
 
 | Former course | Module page |
 |---|---|
-| `/courses/1` | `/domaines/developpement-web/modules/html` |
-| `/courses/2` | `/domaines/developpement-web/modules/css` |
-| `/courses/3` | `/domaines/developpement-web/modules/javascript` |
-| `/courses/4` | `/domaines/developpement-web/modules/php` |
-| `/courses/5` | `/domaines/bases-de-donnees/modules/mysql` |
-| `/courses/6` | `/domaines/python/modules/python` |
-| `/courses/7` | `/domaines/initiation-a-la-programmation/modules/robomind` |
-| `/courses/8` | `/domaines/methodologie-et-tests/modules/cypress` |
-| `/courses/9` | `/domaines/developpement-web/modules/vue` |
-| `/courses/10` | `/domaines/developpement-web/modules/alpine` |
-| `/courses/11` | `/domaines/developpement-web/modules/laravel` |
-| `/courses/12` | `/domaines/python/modules/django` |
+| `/courses/1` | `/formations/html/fondamentaux` |
+| `/courses/2` | `/formations/css/fondamentaux` |
+| `/courses/3` | `/formations/javascript/fondamentaux` |
+| `/courses/4` | `/formations/php/fondamentaux` |
+| `/courses/5` | `/formations/mysql/fondamentaux` |
+| `/courses/6` | `/formations/python/fondamentaux` |
+| `/courses/7` | `/formations/algorithmique/robomind` |
+| `/courses/8` | `/formations/cypress/fondamentaux` |
+| `/courses/9` | `/formations/javascript/vue` (a draft: the page of its formation meanwhile) |
+| `/courses/10` | `/formations/javascript/alpine` |
+| `/courses/11` | `/formations/php/laravel` |
+| `/courses/12` | `/formations/python/django` (a draft: the page of its formation meanwhile) |
 
-The URLs follow the tree of the offers, each level named in French (decided by the owner on 2026-10-29): `/domaines/<domain>/modules/<module>`, and `/domaines/<domain>/collections/<collection>` for a collection; a module stays under `/modules/` whether it belongs to a collection or not, so that joining or leaving one never changes its URL. A slug is the name in kebab-case, in French, without accents or version numbers (`html`, `prompt-engineering`, `developpement-web`), the short name when the module has one (`git-github`, `methode-agile`, `poo`, decided by the owner on 2026-10-29); it is unique within its parent only (the domain `python` and its module `python`), never a number, and never changes once published: a module that moves to another domain gets a redirect from its old URL.
+A slug is the name in kebab-case, in French, without accents or version numbers (`html`, `prompt-engineering`, `developpement-web`), the short name when there is one (`git-github`, `poo`, decided by the owner on 2026-10-29); it is unique within its parent only (`fondamentaux` in several formations), never a number, and never changes once published. The addresses of the formations and modules don't depend on the domains, so a domain can be added, renamed or removed without breaking the link of any module; a domain page that disappears after the launch gets a redirect.
 
 Each module page shows:
 
-- the « Nouveau » label at the very top for a module of a new domain, then the name of the module over its domain, shown only as the large faded word behind the title, as in the section headings, and given in full to screen readers (decided by the owner on 2026-10-29, although the faded word is barely legible and cut when long: the domain is also on the module cards); no breadcrumb, the navigation leads back to the offers;
+- the « Nouveau » label at the very top for a module of a new domain, then the name of the module and its formation (how the formation is shown, the faded word behind the title until now, is settled on the wireframe of step 13b); no breadcrumb, the navigation leads back to the offers;
 - a short paragraph that says what the subject is and why it matters, written for pedagogical teams rather than as a list of notions;
 - the key facts: audience (one per line, e.g. « Étudiants », « Développeurs », « Chefs de projet technique »), level, indicative duration (« 3 jours, adaptable »), formats (on-site or remote);
 - the prerequisites and the objectives;
 - the program, in parts without numbers: they are not an order, and the practice comes when it is needed. The note that the explanations are short and the exercises adapted to the group;
 - a way to organize the module (the contact page);
-- the other modules of the same domain, then a card for a custom request; this part is left out when the domain has a single module;
+- the other modules close to it (of its formation, of its domains, settled on the wireframe of step 13b), then a card for a custom request;
 - a call to action to the contact form.
 
-The modules are independent: a client takes one or several, in any order, so the site never presents them as a sequence to follow (no module numbers), except for the advised order of a collection (see [Collections](#collections)). Each module has a summary of one short sentence that says what it is for, not a list of notions, shown on its card.
+Each module has a summary of one short sentence that says what it is for, not a list of notions, shown on its card. The title of its tab, which search engines show, names its formation: « Fondamentaux · Python · Formations · Sylent ».
 
-A module has a short name that relies on its context rather than repeating it: its domain is written under it on its card and behind its title on its page, so the first module of Python is « Fondamentaux », not « Python » (decided by the owner on 2026-10-29; the same rule names the modules of a collection). The title of its tab, which search engines show, names its domain: « Fondamentaux · Python · Formations · Sylent ».
+**IA générative** has not been taught yet: its modules say honestly that it is a new offer (a « Nouveau » label and a short note), centered on method and good practices, to help employees use AI tools to be more productive and more satisfied in their daily work.
 
-**Développement IA** has not been taught yet: its modules say honestly that it is a new offer (a « Nouveau » label and a short note), centered on method and good practices, to help employees use AI tools to be more productive and more satisfied in their daily work.
-
-Each module is a content file in the repository, named after its slug, which gives its domain and, for a former course, its former id (e.g. `formerId: 3`). The redirects are generated from these ids. A module may be a draft (`draft: true`): its file stays in the repository, but the site shows it nowhere (no page, no card, not on the back of its domain card nor in its tags, and a domain whose modules are all drafts is left out) until the owner publishes it; its former URL leads to the page of its domain meanwhile (decided on 2026-10-29). Vue, Django and PostgreSQL are drafts for now: Django waits for the collections of modules (step 13 of `roadmap.md`).
+Each module is a content file in the repository, which gives its formation, its domains and, for a former course, its former id (e.g. `formerId: 3`); each formation and each domain is a content file too. The redirects are generated from the former ids. A module may be a draft (`draft: true`): its file stays in the repository, but the site shows it nowhere (no page, no card, not on the back of a domain card nor in its tags, and a formation or a domain whose modules are all drafts is left out) until the owner publishes it; its former URL leads to the page of its formation meanwhile, or of its first domain when the formation has no page (decided on 2026-10-29). Vue, Django and PostgreSQL are drafts for now.
 
 ### Domain pages
 
-Each domain has its page at `/domaines/<domain>`, its slug in the table above (decided by the owner on 2026-10-29, before the launch). A visitor reaches it from the card of the domain on the home page and on the domains page, whose white band « Voir les modules » leads there, and from the other domain pages; the header has no link per domain, and a module page has no link of its own to its domain page: its section « Dans le même domaine » is enough (decided by the owner on 2026-10-29). `/domaines/<domain>/modules` leads to the domain page. The page shows:
+Each domain has its page at `/domaines/<domain>`, its slug in the table above. A visitor reaches it from the card of the domain on the home page and on the formations page, whose white band « Voir les modules » leads there, and from the other domain pages; the header has no link per domain (decided by the owner on 2026-10-29). `/domaines` leads to the formations page. The page shows:
 
-- a hero, as on a module page: the « Nouveau » label for a new domain, the name of the domain, without a faded word behind it (the owner dropped « Domaine » on 2026-10-29: the visitor is already among the domains), on one line at every width, its summary and, for a new domain, its note;
-- the published modules of the domain, one card each, as under a module page, then the card « Un besoin sur mesure ? »;
-- « Autres domaines », over the faded word « Explorer »: the cards of the other domains, as on the home page, as a module page leads to the other modules of its domain;
+- a hero, as on a module page: the « Nouveau » label for a new domain, the name of the domain, without a faded word behind it, on one line at every width, its summary and, for a new domain, its note;
+- the formations of the domain, with only their modules filed under it: a formation of a single module as one card, named after the formation; a formation of several modules as a group (its layout is settled on the wireframe of step 13b); then the card « Un besoin sur mesure ? »;
+- « Autres domaines », over the faded word « Explorer »: the cards of the other domains, as on the home page;
 - the call to action to the contact form.
 
-A domain whose modules are all drafts has no page. Its URL never changes once published, like a module's. The layout was agreed on a wireframe on 2026-10-29; the built page is now the reference.
+The back of a domain card shows its formations as tags (« #html #css #javascript »). A domain whose modules are all drafts has no page. The layout of the domain page was agreed on a wireframe on 2026-10-29 and is now the built page; the formations change it at step 13b.
 
-### Collections
+### Formation pages
 
-Inside a domain, a collection gathers a few modules on one technology, close to each other, in an advised order: for example JavaScript (the language, then « JavaScript et le DOM »), PHP (the basics, then a database with PDO) or Python (the basics, machine learning, data visualization). Not modules of different technologies: no « back-end » of PHP, MySQL and Laravel. The site keeps one tree, domain, then collection, then module (decided by the owner on 2026-10-29); the collection is an optional level, and a module outside any collection stays directly in its domain. The modules stay independent: a client takes one or several, in any order; the advised order of a collection is the only place where the site shows modules in sequence. The names of its modules follow the rule of the short names (see [Training offers](#training-offers)). The rest (how the site shows a collection, whether one with a single published module shows) is decided with the owner at step 13 of `roadmap.md`, before the launch.
+A formation of two published modules or more has its page at `/formations/<formation>`: its name (« Formation JavaScript »), a summary, its modules in the advised order, the domains where it is filed, and the call to action. Its layout, and maybe a dialog that lists the modules from a card (a real page stays, for search engines and shared links; after the launch), are settled on the wireframe of step 13b.
 
 ## URLs and redirects
 
-Every path is in French and follows the tree of the offers (see [Training offers](#training-offers)), decided by the owner on 2026-10-29: the paths change before the launch, while it costs nothing, rather than after it. Every path of the former site still resolves, so the existing links and the search ranking are not lost:
+Every path is in French. The formations and their modules have one address each, `/formations/<formation>/<module>`, independent of the domains (decided by the owner on 2026-10-30, replacing the tree `/domaines/<domain>/modules/<module>` of 2026-10-29, which was only on the preview and gets no redirect); the domains are entry points at `/domaines/<domain>`. The paths change before the launch, while it costs nothing, rather than after it. Every path of the former site still resolves, so the existing links and the search ranking are not lost:
 
 - `/` and `/contact`: the same paths.
-- `/courses` redirects to `/domaines`, `/about` to `/a-propos`, `/policy` (the privacy policy) to `/confidentialite`. The legal notice is a new page, `/mentions-legales`.
-- `/courses/1` to `/courses/12`: redirect to the page of the module that the course became (see the table above); the former URL of a draft leads to the page of its domain (see [Training offers](#training-offers)).
+- `/courses` and `/domaines` redirect to `/formations`, `/about` to `/a-propos`, `/policy` (the privacy policy) to `/confidentialite`. The legal notice is a new page, `/mentions-legales`.
+- `/courses/1` to `/courses/12`: redirect to the page of the module that the course became (see the table above); the former URL of a draft leads to the page of its formation (see [Training offers](#training-offers)).
+- `/formations/<formation>` of a formation with a single published module redirects to its module.
 - `/articles`, `/articles/1` and `/articles/2`: redirect to the home page, since the site has no articles.
 - `/creations`, `/register`, `/login`: no redirect; they show the not-found page.
 
