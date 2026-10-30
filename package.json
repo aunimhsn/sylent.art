@@ -16,9 +16,8 @@
     "lint": "astro check && eslint . && stylelint \"**/*.{css,astro}\"",
     "check:links": "linkinator dist && node scripts/check-former-urls.mjs",
     "check:overflow": "node scripts/check-overflow.mjs",
-    "check": "npm run format:check && npm run lint && npm run build && npm run check:links && npm run check:overflow && npm run check:base",
-    "fonts:metrics": "node scripts/font-metrics.mjs",
-    "check:base": "SITE_URL=https://aunimhsn.github.io BASE_PATH=/sylent.art astro build --outDir dist-base/sylent.art && linkinator sylent.art/ --server-root dist-base && node scripts/check-former-urls.mjs dist-base/sylent.art /sylent.art"
+    "check": "npm run format:check && npm run lint && npm run build && npm run check:links && npm run check:overflow",
+    "fonts:metrics": "node scripts/font-metrics.mjs"
   },
   "dependencies": {
     "astro": "^7.4.3",

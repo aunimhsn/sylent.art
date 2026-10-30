@@ -6,8 +6,8 @@
 // redirect page is the French one of src/pages/3xx.astro, Astro's template /3xx.html is not
 // published, and the sitemap lists only pages, no redirect. And the Open Graph tags of every page:
 // the title of its card is its own, the URL is its canonical one, and the image is built.
-// Run after `npm run build`, or on the preview built under its base:
-// `node scripts/check-former-urls.mjs dist-base/sylent.art /sylent.art`.
+// Run after `npm run build`, or on a build under a base:
+// `node scripts/check-former-urls.mjs <folder> <base>`.
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import redirectPage from "../src/content/redirect.json" with { type: "json" };

@@ -3,9 +3,8 @@ import { rmSync } from "node:fs";
 import { defineConfig, fontProviders } from "astro/config";
 import sitemap from "./scripts/sitemap.mjs";
 
-// The deployment workflow sets SITE_URL and BASE_PATH so that the owner can check the site at
-// https://aunimhsn.github.io/sylent.art before the domain points to GitHub Pages. Without
-// them, the site is built for https://sylent.art, as the checks expect.
+// The site is built for https://sylent.art. SITE_URL and BASE_PATH build it elsewhere, under a
+// base path: the deployment workflow set them for the github.io preview until the launch.
 const site = process.env.SITE_URL ?? "https://sylent.art";
 const base = process.env.BASE_PATH ?? "/";
 

@@ -23,11 +23,6 @@ jobs:
       - uses: withastro/action@v6
         with:
           node-version: 24 # The version of .nvmrc, which the action can't read.
-        # Until the launch (step 14), the site is checked at its github.io address; remove
-        # these two variables once the domain sylent.art points to GitHub Pages.
-        env:
-          SITE_URL: https://aunimhsn.github.io
-          BASE_PATH: /sylent.art
 
   # Only the job that publishes may write to GitHub Pages.
   deploy:
