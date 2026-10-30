@@ -3,7 +3,7 @@
 // of the cards, so that it keeps its place whatever the number of formations (chosen by the owner
 // on 2026-10-30; as a card among them, it fell alone on a new row or left a gap). Without glass
 // or scene, its text in a dashed frame, open on the side of the white button, that turns white
-// under the pointer; the arrow of the button moves forward instead of the button growing.
+// under the pointer and with the keyboard focus; the arrow of the button moves forward instead of the button growing.
 import fr from "../i18n/fr.json";
 import { href } from "../lib/url";
 import Icon from "./icon.astro";
@@ -41,7 +41,7 @@ import Icon from "./icon.astro";
     transition: border-color var(--duration-fast);
   }
 
-  .band:hover .band-text {
+  .band:is(:hover, :focus-within) .band-text {
     border-color: var(--text);
   }
 
@@ -49,7 +49,7 @@ import Icon from "./icon.astro";
     margin: 0;
   }
 
-  .band:hover .card-more {
+  .band:is(:hover, :focus-within) .card-more {
     padding-block: var(--space-4);
   }
 
@@ -60,7 +60,7 @@ import Icon from "./icon.astro";
     transition: transform var(--duration-fast);
   }
 
-  .band:hover .card-more :global(svg) {
+  .band:is(:hover, :focus-within) .card-more :global(svg) {
     transform: translateX(6px);
   }
 
