@@ -126,6 +126,12 @@ try {
       isMobile: phone,
       hasTouch: phone,
     });
+    // Only the local server is reached: the script of GoatCounter, in the build for sylent.art,
+    // would otherwise be fetched for every page, and a slow gc.zgo.at would fail the check.
+    await context.route(
+      (url) => url.origin !== origin,
+      (route) => route.abort(),
+    );
     // A few tabs at once, each taking the next page of the list. A page that fails to load, or
     // whose scripts throw, is reported with the others instead of stopping the check.
     const queue = [...pages];

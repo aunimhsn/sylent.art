@@ -32,11 +32,12 @@ export default defineConfig({
   },
   integrations: [
     // Astro also builds src/pages/3xx.astro as a page of its own, /3xx.html, without a redirect
-    // to fill it: it is removed.
+    // to fill it: it is removed, if Astro wrote it.
     {
       name: "redirect-page",
       hooks: {
-        "astro:build:done": ({ dir }) => rmSync(new URL("3xx.html", dir)),
+        "astro:build:done": ({ dir }) =>
+          rmSync(new URL("3xx.html", dir), { force: true }),
       },
     },
     sitemap(),

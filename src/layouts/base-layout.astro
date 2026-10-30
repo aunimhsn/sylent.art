@@ -17,7 +17,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 const isPreview = import.meta.env.BASE_URL !== "/";
 // The visits are counted by GoatCounter on sylent.art only: not on the preview, nor on the
 // development server (docs/external-services.md). Its script ignores localhost by itself, so
-// the checks, which serve the build locally, count nothing either.
+// the checks, which serve the build locally, count nothing either. Its version is pinned, with
+// the hash that GoatCounter publishes: the browser refuses a file that doesn't match it.
 const counts = import.meta.env.PROD && !isPreview;
 ---
 
@@ -35,7 +36,9 @@ const counts = import.meta.env.PROD && !isPreview;
         is:inline
         data-goatcounter="https://sylent.goatcounter.com/count"
         async
-        src="https://gc.zgo.at/count.js"
+        src="https://gc.zgo.at/count.v5.js"
+        crossorigin="anonymous"
+        integrity="sha384-atnOLvQb9t+jTSipvd75X2yginT4PjVbqDdlJAmxMm+wYElFmeR6EmLP5bYeoRVQ"
       />
     )}
     <Font cssVariable="--font-manrope" preload />

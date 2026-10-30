@@ -2,11 +2,14 @@
 // page, or a redirect to the page that specs.md gives it (URLs and redirects), which exists; and
 // that the dropped ones show the not-found page. Also checks the redirects of the site, which no
 // page links to: /domaines/ leads to the formations page, and the address of a formation of a
-// single module to its module.
+// single module to its module. And the pages of step 14b: the not-found page is built, every
+// redirect page is the French one of src/pages/3xx.astro, Astro's template /3xx.html is not
+// published, and the sitemap lists only pages, no redirect.
 // Run after `npm run build`, or on the preview built under its base:
 // `node scripts/check-former-urls.mjs dist-base/sylent.art /sylent.art`.
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import redirectPage from "../src/content/redirect.json" with { type: "json" };
 
 const [dist = "dist", base = ""] = process.argv.slice(2);
 
@@ -125,6 +128,41 @@ for (const [url, expected] of [...formerUrls, ...siteRedirects]) {
 
 for (const url of droppedUrls) {
   if (existsSync(fileOf(url))) errors.push(`${url}: dropped, but built`);
+}
+
+if (!existsSync(join(dist, "404.html"))) errors.push("404.html: not built");
+if (existsSync(join(dist, "3xx.html"))) {
+  errors.push("3xx.html: the template of the redirect pages is published");
+}
+
+// Every redirect page of the site, those of the former URLs and the others alike, is the French
+// one: Astro falls back to its own page in English if src/pages/3xx.astro fails.
+const htmlFiles = readdirSync(dist, { recursive: true }).filter((file) =>
+  file.endsWith(".html"),
+);
+const redirectPages = new Set();
+for (const file of htmlFiles) {
+  const html = readFileSync(join(dist, file), "utf8");
+  if (!/http-equiv=["']?refresh/i.test(html)) continue;
+  redirectPages.add(file);
+  if (!html.includes(redirectPage.text)) {
+    errors.push(`${file}: a redirect page that isn't the French one`);
+  }
+}
+
+// The sitemap lists pages that exist, and no redirect or not-found page.
+const sitemap = readFileSync(join(dist, "sitemap.xml"), "utf8");
+for (const [, loc] of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) {
+  const { pathname } = new URL(loc);
+  const file = join(pathname.slice(base.length), "index.html").replace(
+    /^\//,
+    "",
+  );
+  if (!existsSync(join(dist, file))) {
+    errors.push(`sitemap.xml: ${loc} has no page`);
+  } else if (redirectPages.has(file)) {
+    errors.push(`sitemap.xml: ${loc} is a redirect`);
+  }
 }
 
 if (waiting.length > 0) {
