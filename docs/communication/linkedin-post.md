@@ -1,4 +1,4 @@
-<!-- The LinkedIn post of the launch (roadmap, step 14d), written in French for the owner's audience; the link to sylent.art goes in the first comment. -->
+<!-- The LinkedIn post of the launch (roadmap, step 14d), written in French for the owner's audience, with the link in the post itself (the owner's choice: no link in the first comment to get around the algorithm). -->
 
 Mon site fait peau neuve.
 
@@ -13,6 +13,6 @@ Vous y trouverez :
 
 Une vie, mille leçons.
 
-Le lien est en premier commentaire. Parlons de vos apprenants.
+Parlons de vos apprenants : https://sylent.art
 
 #Formation #Pédagogie #DéveloppementWeb
