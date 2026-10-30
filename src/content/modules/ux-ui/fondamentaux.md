@@ -12,7 +12,7 @@ audience:
   - "Développeurs"
   - "Chefs de projet technique"
 level: "Débutant"
-prerequisites: "Les bases du HTML et du CSS, pour lire et corriger la maquette que l’IA écrit."
+prerequisites: "Aucun prérequis technique : savoir utiliser des applications suffit pour commencer."
 objectives:
   - "Recueillir le besoin d’une application et en définir la cible avec des personas"
   - "Appliquer les bonnes pratiques de l’UX et de l’UI, dont l’approche mobile-first"
