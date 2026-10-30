@@ -90,8 +90,8 @@ const allModules = FORMATIONS.flatMap(published);
 const moduleByKey = key => allModules.find(module => moduleKey(module) === key) || (formationOf(key) && published(formationOf(key))[0]);
 
 // The open decision of step 13b, compared with the bar of home.html: ?ghost= (the size of the
-// faded word behind a title).
-const VARIANT_DEFAULTS = { ghost: "fill" };
+// faded word behind a title; 60 % of the width by default).
+const VARIANT_DEFAULTS = { ghost: "sixty" };
 const variant = name => query.get(name) || VARIANT_DEFAULTS[name];
 document.documentElement.dataset.ghost = variant("ghost");
 
