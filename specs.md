@@ -138,7 +138,7 @@ A slug is the name in kebab-case, in French, without accents or version numbers 
 
 Each module page shows:
 
-- the « Nouveau » label at the very top for a module of a new domain; above the name of the module, its formation as a link to the page of the formation (« Formation PHP → »), with the mark of a framework, and the name of the formation as the faded word behind the title; for a module alone in its formation, its first domain instead (« Domaine : Conception logicielle », a link to the domain page, and the one word of the domain behind the title, « Conception »); no breadcrumb (decided on the mock-up of step 13b, 2026-10-30);
+- the « Nouveau » label at the very top for a module of a new domain; the name of the module over the name of its formation as the faded word (for a module alone in its formation, the one word of its first domain, « Conception »); right under the name, over the faded word, the badge « Framework » of a framework; no breadcrumb and no link above the name (decided by the owner on 2026-10-30): a button « Revenir en arrière » leads back, beside « Voir le programme »;
 - a short paragraph that says what the subject is and why it matters, written for pedagogical teams rather than as a list of notions;
 - the key facts: audience (one per line, e.g. « Étudiants », « Développeurs », « Chefs de projet technique »), level, formats (on-site or remote); no duration;
 - the prerequisites and the objectives;

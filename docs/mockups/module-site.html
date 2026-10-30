@@ -11,11 +11,12 @@
   formation of a single module (keys in shared/formations.js). The parts shared by every page are
   in shared/.
   Updated at step 13b of roadmap.md (wireframe docs/wireframes/formations.excalidraw), after the
-  built site: no breadcrumb; the hero over the grid, its formation above the title (a link to the
-  page of the formation, with the framework mark) and as the faded word behind it, or, for a
-  module alone in its formation, its first domain. Then the key facts under a rule (public, level, formats: no duration, asked
-  by the owner on 2026-10-30); the prerequisites, the objectives and the
-  program, beside a card that follows the scroll on a computer; the other modules of its
+  built site: no breadcrumb; the hero over the grid, the title over the name of its formation as
+  the faded word (the one word of its first domain for a module alone in its formation), the badge
+  « Framework » under the title of a framework, the lead, then the white button « Voir le
+  programme » and the outline button « Revenir en arrière », side by side from 640 px, one under
+  the other on a phone. Then the key facts under a rule (public, level, formats: no duration,
+  asked by the owner on 2026-10-30); the prerequisites, the objectives and the program, beside a card that follows the scroll on a computer; the other modules of its
   formation (« Dans la même formation »), or of its domain for a module alone in its formation.
   Content copied from src/content/modules/ (shared/programs.js).
 -->
@@ -26,7 +27,11 @@
 <link rel="stylesheet" href="shared/site.css">
 <link rel="stylesheet" href="shared/formations.css">
 <style>
-  .app-module-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-9); }
+  .app-module-actions { display: flex; flex-direction: column; gap: var(--space-3); margin-top: var(--space-9); }
+  @media (min-width: 640px) { .app-module-actions { flex-direction: row; flex-wrap: wrap; } }
+  /* The badge of a framework, under its title and over the faded word. */
+  .app-module-badge { position: relative; margin: var(--space-5) 0 0; }
+  .app-module-badge .app-new { position: static; display: inline-block; }
 
   /* ── Key facts: plain columns under a rule ──────────────────────────────────────── */
 
@@ -104,17 +109,20 @@
   document.title = single ? `${title} · Formations · Sylent` : `${title} · ${formation.title} · Formations · Sylent`;
   document.querySelector('meta[name="description"]').content = `${module.summary} Un module sur site ou à distance.`;
 
-  // Above the title: its formation, a link to its page, with the framework mark; for a module
-  // alone in its formation, its first domain. The faded word behind the title says the same, in
-  // one word.
-  const above = single
-    ? `<a class="app-offer-link" href="${domainHref(domain)}"><span>Domaine${NB}: ${domain.title}</span>${icon("right", 14)}</a>`
-    : `<a class="app-offer-link" href="${formationHref(formation)}"><span>Formation ${formation.title}</span>${icon("right", 14)}</a>${module.framework ? frameworkMark() : ""}`;
+  // Under the title: the badge of a framework, in orange, over the faded word; the formation is said
+  // to screen readers, since the faded word is hidden from them. No link above the title: the
+  // button « Revenir en arrière » leads back (asked by the owner on 2026-10-30).
+  const under = (module.framework ? `<p class="app-module-badge app-reveal"><span class="app-new">Framework</span></p>` : "") +
+    `<p class="app-hidden">${single ? `Domaine${NB}: ${domain.title}` : `Formation ${formation.title}`}</p>`;
+  // Back: to the previous page when it is a page of the site, otherwise to the page of its formation
+  // (of its first domain for a module alone in its formation), for a visitor who came from a search
+  // engine or a shared link.
+  const back = single ? domainHref(domain) : formationHref(formation);
   const hero = offerHero({
-    id: "module-title", title, ghost: single ? domain.ghost : formation.title, above,
+    id: "module-title", title, ghost: single ? domain.ghost : formation.title, under,
     lead: content.text.map(paragraph => `<p>${paragraph.replace(/\*\*/g, "")}</p>`).join(""),
     isNew: isNewModule(module), note: isNewModule(module) ? NEW_NOTE : "",
-    after: `<div class="app-module-actions app-reveal"><a class="app-button is-outline" href="#programme">Voir le programme</a></div>`,
+    after: `<div class="app-module-actions app-reveal"><a class="app-button" href="#programme">Voir le programme</a><a class="app-button is-outline" href="${back}" data-back>Revenir en arrière</a></div>`,
   });
 
   const facts = `
@@ -166,6 +174,14 @@
   document.getElementById("content").innerHTML = hero + facts + `
     <div class="app-wrap"><div class="app-module-body"><div class="app-module-main">${main}</div>${organize}</div></div>` +
     related + siteCta(`Organiser ce module${NB}?<br>Parlons de vos apprenants.`) + siteFooter();
+
+  document.querySelector("[data-back]").addEventListener("click", event => {
+    const fromSite = document.referrer && new URL(document.referrer).origin === location.origin;
+    if (fromSite && history.length > 1) {
+      event.preventDefault();
+      history.back();
+    }
+  });
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>

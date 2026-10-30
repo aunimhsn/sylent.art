@@ -94,8 +94,8 @@ const count = (number, word) => `${number}${NB}${word}${number > 1 ? "s" : ""}`;
 // ── The framework mark ──────────────────────────────────────────────────────────────
 // Chosen by the owner on 2026-10-30: « Framework » in small white capitals on a rectangle of the
 // background of the site, 2 px smaller than « Nouveau »: in the top left corner of the cover of a
-// module card, across the top edge of a card of the path of a formation, after the name in a list
-// or above a title.
+// module card, across the top edge of a card of the path of a formation, after the name in a list.
+// Under the title of a module page, a badge in orange instead, as « Nouveau » (asked by the owner).
 const frameworkMark = (where = "") => `<span class="app-fw${where ? ` is-${where}` : ""}">Framework</span>`;
 
 // ── Cards ─────────────────────────────────────────────────────────────────────────────
@@ -143,15 +143,16 @@ const offerDomainCard = domain => `
   </li>`;
 
 // The hero of a module, domain or formation page, as built on the site: the « Nouveau » label, a
-// line above the title (the formation of a module), the title over its faded word, the lead.
-const offerHero = ({ id, title, ghost, above = "", lead, after = "", isNew = false, note = "" }) => `
+// line above the title (the domains of a formation), the title over its faded word, a line under
+// it (the framework badge of a module, over the faded word), the lead.
+const offerHero = ({ id, title, ghost, above = "", under = "", lead, after = "", isNew = false, note = "" }) => `
   <section class="app-offer-hero" aria-labelledby="${id}" data-grid>
     <div class="app-wrap">
       ${isNew ? '<p class="app-offer-new app-reveal"><span class="app-new">Nouveau</span></p>' : ""}
       ${above ? `<div class="app-offer-above app-reveal">${above}</div>` : ""}
       <div class="app-offer-heading">
         ${ghost ? `<span class="app-offer-ghost" aria-hidden="true">${unaccented(ghost)}</span>` : ""}
-        <h1 class="app-offer-title app-reveal" id="${id}">${title}</h1>
+        <div class="app-offer-titles"><h1 class="app-offer-title app-reveal" id="${id}">${title}</h1>${under}</div>
       </div>
       <div class="app-offer-lead app-reveal">${lead}</div>
       ${note ? `<p class="app-offer-note app-note app-reveal">${note}</p>` : ""}
