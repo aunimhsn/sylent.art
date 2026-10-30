@@ -12,7 +12,7 @@ A **design token** is a named value that the components use instead of a raw val
 
 1. **Night**: neutral blacks without a blue tint, white as the main accent, sharp corners. Professional and calm, for schools and training organizations.
 2. **One signal color**: the orange `--signal` is rare and always means something: what moves, what is aimed at, what succeeds, what is new. It never colors a whole block, a field or a focus ring.
-3. **A pedagogue, not a « field developer »**: no monospace labels, no code look, no arrows on the buttons, no tags of technologies on the cards.
+3. **A pedagogue, not a « field developer »**: no monospace labels, no code look, no arrows on the buttons. The modules of a domain card are written as plain tags (« #html »), small and gray, never as colored badges or with icons (rule changed by the owner on 2026-10-30: it forbade any tag of technology on the cards).
 4. **Alive but quiet**: white line-art animations, slow, that explain the subject of each domain; nothing blinks for attention, and nothing moves for a visitor who asked to reduce motion.
 5. **The former site's signature**: a title over a large faded word for the section headings, the motto « Une vie, mille leçons », the back-to-top square.
 
@@ -253,4 +253,4 @@ The content rules (audiences, French typography, no rates) are in [specs.md](../
 
 ## Set aside
 
-Kept here so that they are not proposed again without a reason: the « Console » style of the course materials (night and mint green), the « Atelier » style (paper, vermilion, Fraunces), Poppins and Roboto for the text, neumorphic fields, an orange caret or orange field glows, a focus ring on the fields, gradients and glows behind the sections, monospace labels, arrows on buttons, icons and technology tags on the cards, a spider chart or pentagon for the partners, a « Fait main à Toulouse » line, a red signal color (it reads as an error in course materials).
+Kept here so that they are not proposed again without a reason: the « Console » style of the course materials (night and mint green), the « Atelier » style (paper, vermilion, Fraunces), Poppins and Roboto for the text, neumorphic fields, an orange caret or orange field glows, a focus ring on the fields, gradients and glows behind the sections, monospace labels, arrows on buttons, icons and colored badges of technologies on the cards, a spider chart or pentagon for the partners, a « Fait main à Toulouse » line, a red signal color (it reads as an error in course materials).

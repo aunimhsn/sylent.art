@@ -3,8 +3,8 @@
 // domains page, then a band for a custom request; under a domain page, the other domains only.
 //
 // Under the pointer (or with the keyboard focus) the content of a card slides up and its modules
-// come up in its place, on its back (docs/branding.md, Components). The back is decorative, hidden from screen readers:
-// the modules are listed on the page of the domain.
+// come up in its place, on its back (docs/branding.md, Components). The back is decorative, hidden
+// from screen readers: they read the modules in the tags at the bottom of the card.
 import fr from "../i18n/fr.json";
 import { domainPath, getOffers } from "../lib/offers";
 import { href } from "../lib/url";
@@ -49,8 +49,12 @@ const tagOf = (name: string) =>
       <ul class="card-tags" aria-label={fr.cards.domainModules}>
         {modules.map(({ data: module }) => (
           <li>
-            <span aria-hidden="true">#</span>
-            {tagOf(module.shortTitle ?? module.title)}
+            <span aria-hidden="true">
+              #{tagOf(module.shortTitle ?? module.title)}
+            </span>
+            <span class="visually-hidden">
+              {module.shortTitle ?? module.title}
+            </span>
           </li>
         ))}
       </ul>
@@ -208,9 +212,9 @@ const tagOf = (name: string) =>
 
 <style>
   /* The modules of the domain, at the bottom of the card, aligned from one card to the next:
-     plain text in lowercase kebab-case, smaller and grayer than the sentence, as the tags
-     under a post, not links (asked by the
-     owner on 2026-10-29: a school finds its module without passing the pointer). */
+     plain text in lowercase kebab-case, smaller and grayer than the sentence, as the tags under
+     a post, not links (asked by the owner on 2026-10-29: a school finds its module without
+     passing the pointer). Screen readers hear the real name instead (« Git / GitHub »). */
   .card-tags {
     display: flex;
     flex-wrap: wrap;
