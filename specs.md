@@ -24,7 +24,7 @@ Secondary audience: the learners (students, career changers, employees) who look
 
 What the primary audiences must find before getting in touch:
 
-- **The domains** taught, with indicative durations per module, always marked as adaptable. Pedagogical teams look for a speaker on a domain more than on a technology.
+- **The domains** taught. Pedagogical teams look for a speaker on a domain more than on a technology. The site shows no duration: it depends on the group and is discussed at the first contact (decided by the owner on 2026-10-30).
 - **The levels and the prerequisites** of each domain.
 - **The formats**: on-site or remote. The site doesn't detail the geographic zone (on-site around Toulouse and in Occitanie, remote across France for short modules): it is discussed at the first contact.
 - **The references**: the current partners and the volume of teaching.
@@ -100,7 +100,7 @@ Rules:
 - **A module is filed under one or more domains.** A formation appears in a domain as soon as one of its modules does, and a domain shows only its own modules of that formation: in « Développement web », the formation Python shows only Django. The domains are entry points: a formation shown in two domains is the same page, at one address.
 - **The names of the modules are short and rely on their formation** (decided by the owner on 2026-10-29): « Fondamentaux » in Python, « POO » in PHP, « PDO », not « PHP et SQL ». The first module of a formation is « Fondamentaux » when it teaches its basics; a module may have its own name (« RoboMind » in Algorithmique, « Scrum » in Agilité).
 - **A formation with a single published module is shown by its own name** (« UML », not « Fondamentaux »: the basics of software design are not UML), and its card leads straight to the module; its address `/formations/<formation>/` leads to the module page. A formation with two published modules or more has its own page.
-- A framework is a module of the formation of its language (Laravel in PHP, Django in Python, Vue and Alpine in JavaScript, Tailwind in CSS), marked as a framework (decided by the owner on 2026-10-30); how the mark is shown is settled on the mock-up.
+- A framework is a module of the formation of its language (Laravel in PHP, Django in Python, Vue and Alpine in JavaScript, Tailwind in CSS), marked as a framework (decided by the owner on 2026-10-30): « Framework » in small white capitals on a rectangle of the background of the site, on its card (see `docs/branding.md`).
 - The modules are independent: a client takes one or several, in any order, so the site never presents them as a sequence to follow (no module numbers), except for the advised order of a formation. Small modules that combine (e.g. CSS split into Flexbox and Grid) are the direction after the launch, as the course material is split.
 
 The domains, in the order of the home page and the formations page: the new offers first, since they matter most today (decided by the owner on 2026-10-29), then from the first steps in programming to project management. Each formation is listed with its modules; the brackets give the other domains of a module, (draft) a module kept out of the site, (to come) one whose course doesn't exist yet and isn't written on the site.
@@ -138,13 +138,13 @@ A slug is the name in kebab-case, in French, without accents or version numbers 
 
 Each module page shows:
 
-- the « Nouveau » label at the very top for a module of a new domain, then the name of the module and its formation (how the formation is shown, the faded word behind the title until now, is settled on the wireframe of step 13b); no breadcrumb, the navigation leads back to the offers;
+- the « Nouveau » label at the very top for a module of a new domain; above the name of the module, its formation as a link to the page of the formation (« Formation PHP → »), with the mark of a framework, and the name of the formation as the faded word behind the title; for a module alone in its formation, its first domain instead (« Domaine : Conception logicielle », a link to the domain page, and the one word of the domain behind the title, « Conception »); no breadcrumb (decided on the mock-up of step 13b, 2026-10-30);
 - a short paragraph that says what the subject is and why it matters, written for pedagogical teams rather than as a list of notions;
-- the key facts: audience (one per line, e.g. « Étudiants », « Développeurs », « Chefs de projet technique »), level, indicative duration (« 3 jours, adaptable »), formats (on-site or remote);
+- the key facts: audience (one per line, e.g. « Étudiants », « Développeurs », « Chefs de projet technique »), level, formats (on-site or remote); no duration;
 - the prerequisites and the objectives;
 - the program, in parts without numbers: they are not an order, and the practice comes when it is needed. The note that the explanations are short and the exercises adapted to the group;
 - a way to organize the module (the contact page);
-- the other modules close to it (of its formation, of its domains, settled on the wireframe of step 13b), then a card for a custom request;
+- « Dans la même formation »: the other modules of its formation, in the advised order; for a module alone in its formation, « Dans le même domaine »: the other formations of its first domain; then a card for a custom request;
 - a call to action to the contact form.
 
 Each module has a summary of one short sentence that says what it is for, not a list of notions, shown on its card. The title of its tab, which search engines show, names its formation: « Fondamentaux · Python · Formations · Sylent ».
@@ -158,15 +158,21 @@ Each module is a content file in the repository, which gives its formation, its 
 Each domain has its page at `/domaines/<domain>`, its slug in the table above. A visitor reaches it from the card of the domain on the home page and on the formations page, whose white band « Voir les modules » leads there, and from the other domain pages; the header has no link per domain (decided by the owner on 2026-10-29). `/domaines` leads to the formations page. The page shows:
 
 - a hero, as on a module page: the « Nouveau » label for a new domain, the name of the domain, without a faded word behind it, on one line at every width, its summary and, for a new domain, its note;
-- the formations of the domain, with only their modules filed under it: a formation of a single module as one card, named after the formation; a formation of several modules as a group (its layout is settled on the wireframe of step 13b); then the card « Un besoin sur mesure ? »;
+- the formations of the domain, one card each in the grid of the cards, with only their modules filed under it: a formation of a single module as a module card, named after the formation, that leads to the module; a formation of several modules as a formation card: its name, the count of all its published modules (« 3 modules », the whole formation even when the domain lists only some of them, without the word « Formation » that its band already says), its modules filed under the domain as links to their pages, each framework with its mark, and the band « Voir la formation » to its page; then the card « Un besoin sur mesure ? ». The cards of a row keep the same height (decided on the mock-up of step 13b, 2026-10-30);
 - « Autres domaines », over the faded word « Explorer »: the cards of the other domains, as on the home page;
 - the call to action to the contact form.
 
-The back of a domain card shows its formations as tags (« #html #css #javascript »). A domain whose modules are all drafts has no page. The layout of the domain page was agreed on a wireframe on 2026-10-29 and is now the built page; the formations change it at step 13b.
+The back of a domain card shows its formations as tags (« #html #css #javascript »). A domain whose modules are all drafts has no page. The layout of the domain page was agreed on a wireframe on 2026-10-29 and is now the built page; the formations changed its cards at step 13b, on the wireframe `docs/wireframes/formations.excalidraw`, then on the mock-up, which is the reference from then on.
 
 ### Formation pages
 
-A formation of two published modules or more has its page at `/formations/<formation>`: its name (« Formation JavaScript »), a summary, its modules in the advised order, the domains where it is filed, and the call to action. Its layout, and maybe a dialog that lists the modules from a card (a real page stays, for search engines and shared links; after the launch), are settled on the wireframe of step 13b.
+A formation of two published modules or more has its page at `/formations/<formation>`, agreed on the mock-up of step 13b (`docs/mockups/formation-site.html`, 2026-10-30):
+
+- a hero: the domains where it is filed, as links to their pages, above its name; its name alone (« PHP », not « Formation PHP »: the owner prefers it to the search ranking; the title of its tab says « PHP · Formations · Sylent »); the count of its modules (« 3 modules »); its summary;
+- « Modules » over the faded word « Parcours »: its modules in the advised order, one card each (its name, its level, its summary, « Voir le module »), without numbers nor a note on the order; a rail runs along them over the right of their cards, 48 px inside, a little past the first and the last card, and fills with orange as the page scrolls, lighting the square of each module it reaches; no rail on a phone. The mark of a framework sits across the top edge of its card. Beside them, the card « Organiser cette formation », that follows the scroll on a computer;
+- the call to action.
+
+After the launch, maybe a dialog that lists the modules from a card (a real page stays, for search engines and shared links).
 
 ## URLs and redirects
 

@@ -40,14 +40,10 @@
   font: var(--title-weight) min(var(--size-display), 9.6cqi)/0.98 var(--font-title);
   letter-spacing: var(--tracking-title);
 }
-/* « Formation » above the name of a formation, in the h1: the label of the module page. */
-.app-offer-name { display: inline-block; }
-.app-offer-eyebrow { display: block; margin-bottom: var(--space-4); color: var(--dim); font: var(--label-weight) var(--size-label)/1.3 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; }
 /* The left edge of the large titles and faded words: moved left by the side bearing of their
    first letter (--bearing, set by shared/formations.js), so that its ink starts on the edge; a
    faded word keeps its offset of 0.12 em to the right, now measured from its ink. */
-.app-offer-title, .app-offer-name, .app-heading-title { margin-left: calc(-1 * var(--bearing, 0em)); }
-.app-offer-title:has(.app-offer-name) { margin-left: 0; }
+.app-offer-title, .app-heading-title { margin-left: calc(-1 * var(--bearing, 0em)); }
 .app-offer-ghost, .app-heading-ghost { margin-left: calc(0.12em - var(--bearing, 0em)); }
 .app-offer-lead p { margin: var(--space-7) 0 0; max-width: var(--measure); color: var(--secondary); font-size: var(--size-intro); text-wrap: pretty; }
 .app-offer-lead p + p { margin-top: var(--space-4); }
@@ -64,16 +60,14 @@
 /* ── The framework mark ─────────────────────────────────────────────────────────────── */
 
 /* « Framework » in small white capitals on a rectangle of the background of the site, the
-   sibling of « Nouveau » (chosen by the owner on 2026-10-30). */
-.app-fw { display: inline-block; flex: none; padding: var(--space-2) var(--space-3); background: var(--bg); color: var(--text); font: var(--label-weight) var(--size-label)/1 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; white-space: nowrap; }
+   sibling of « Nouveau », 2 px smaller (chosen by the owner on 2026-10-30). */
+.app-fw { display: inline-block; flex: none; padding: 6px 10px; background: var(--bg); color: var(--text); font: var(--label-weight) var(--size-label)/1 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; white-space: nowrap; font-size: calc(var(--size-label) - 2px); }
 /* On a cover, in its top left corner, after « Nouveau » when the module is new too. */
 .app-cover-labels { position: absolute; left: var(--space-4); top: var(--space-4); display: flex; gap: var(--space-2); }
+.app-cover-labels { align-items: center; }
 .app-cover-labels .app-new { position: static; }
-/* On a card of the path: in its top left corner, flush with it (corner), or across its top edge
-   (edge). */
-.app-fw.is-card { position: absolute; z-index: 1; left: -1px; top: -1px; }
-[data-tag="edge"] .app-fw.is-card { left: var(--card-padding-inline); top: 0; transform: translateY(-50%); outline: 1px solid var(--glass-line); }
-[data-tag="corner"] .app-step-card:has(.is-card) { padding-top: calc(var(--space-6) + var(--space-8)); }
+/* On a card of the path: across its top edge, above its name. */
+.app-fw.is-card { position: absolute; z-index: 1; left: var(--card-padding-inline); top: 0; transform: translateY(-50%); outline: 1px solid var(--glass-line); }
 
 /* ── Formation cards ──────────────────────────────────────────────────────────────────── */
 
@@ -85,39 +79,7 @@
 .app-fcard-list a > svg { margin-left: auto; opacity: 0; transform: translateX(-6px); transition: opacity var(--duration-fast), transform var(--duration-fast); }
 .app-fcard-list a:hover, .app-fcard-list a:focus-visible { color: var(--text); }
 .app-fcard-list a:hover > svg, .app-fcard-list a:focus-visible > svg { opacity: 1; transform: none; }
-.app-fcard-list .app-fw { padding: 6px var(--space-2); font-size: 10px; }
 
-/* Stack: the other modules as sheets behind the card, toward the top right (one per module
-   after the first, three at most), drawn by shadows, which the overflow of the card doesn't
-   cut. The sheets move apart under the pointer. */
-[data-card="stack"] .app-fcard {
-  --sheet: 7px;
-  box-shadow:
-    calc(var(--sheet) * 1) calc(var(--sheet) * -1) 0 -1px var(--bg),
-    calc(var(--sheet) * 1) calc(var(--sheet) * -1) 0 0 var(--glass-line),
-    calc(var(--sheet) * 2 * min(1, max(0, var(--layers) - 1))) calc(var(--sheet) * -2 * min(1, max(0, var(--layers) - 1))) 0 -1px var(--bg),
-    calc(var(--sheet) * 2 * min(1, max(0, var(--layers) - 1))) calc(var(--sheet) * -2 * min(1, max(0, var(--layers) - 1))) 0 0 rgb(255 255 255 / calc(0.07 * min(1, max(0, var(--layers) - 1))));
-  transition: box-shadow var(--duration-fast), background-color var(--duration-fast);
-}
-[data-card="stack"] .app-fcard:hover { --sheet: 9px; }
-[data-card="stack"] .app-cards { padding-top: var(--space-4); }
-
-/* Slide: the face (name, count, summary) and the modules share the same place; under the pointer
-   or the keyboard the face slides up and out and the modules come up in its place, as on the
-   domain cards of the site. Touch screens show both, one under the other. */
-.app-fcard-window { position: relative; display: grid; flex: 1; overflow: hidden; margin-bottom: var(--space-5); }
-.app-fcard-window > * { grid-area: 1 / 1; display: flex; flex-direction: column; gap: var(--space-3); }
-.app-fcard-face p:last-child { margin: 0; }
-.app-fcard-back .app-fcard-list { margin: 0; }
-@media (hover: hover) {
-  .app-fcard-face, .app-fcard-back { transition: transform 0.6s var(--ease-in-out), opacity 0.6s var(--ease-in-out); }
-  .app-fcard-back { justify-content: center; transform: translateY(105%); opacity: 0; }
-  .app-fcard:hover .app-fcard-face, .app-fcard:focus-within .app-fcard-face { transform: translateY(-105%); opacity: 0; }
-  .app-fcard:hover .app-fcard-back, .app-fcard:focus-within .app-fcard-back { transform: none; opacity: 1; }
-}
-@media (hover: none) {
-  .app-fcard-window { display: flex; flex-direction: column; gap: var(--space-4); }
-}
 
 /* Domain cards: the formations as tags at the bottom, aligned from one card to the next. */
 .app-dcard > p:not(.app-dcard-tags) { margin-bottom: 0; }
@@ -125,10 +87,10 @@
 
 /* ── Formation page ──────────────────────────────────────────────────────────────────── */
 
-.app-ffacts { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-6); margin: var(--space-9) 0 0; padding: 0; list-style: none; }
-.app-ffacts > li { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); }
-.app-ffacts-label { color: var(--dim); font: var(--label-weight) var(--size-label)/1.3 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; }
-.app-ffacts-value { font: 700 var(--size-title-small)/1.3 var(--font-title); letter-spacing: var(--tracking-card); }
+/* The hero of a formation page: its domains above its name, as links, then the count of its
+   modules under it. */
+.app-offer-count { margin-top: var(--space-4) !important; color: var(--text) !important; font: 700 var(--size-title-small)/1.3 var(--font-title) !important; letter-spacing: var(--tracking-card); }
+.app-offer-count + p { margin-top: var(--space-6) !important; }
 .app-chip { padding: var(--space-2) var(--space-3); border: 1px solid var(--line-strong); color: var(--secondary); font: 700 var(--size-caption)/1 var(--font-title); transition: border-color var(--duration-fast), color var(--duration-fast); }
 .app-chip:hover { border-color: var(--text); color: var(--text); }
 
@@ -142,12 +104,9 @@
 
 /* ── The path: the modules in the advised order, along a rail ──────────────────────────── */
 
-/* The rail lies on the right of the cards, over them (rail: on their right border, 48 px inside
-   or 96 px inside), and runs a little past the first and the last card (--overhang). No rail on
-   a phone, where the cards need the whole width. */
+/* The rail lies over the right of the cards, 48 px inside, and runs a little past the first and
+   the last card (--overhang). No rail on a phone, where the cards need the whole width. */
 .app-path { --overhang: 40px; --inset: 48px; position: relative; display: grid; gap: var(--space-5); margin: 0; padding: 0; list-style: none; }
-[data-rail="border"] .app-path { --inset: 0px; }
-[data-rail="deep"] .app-path { --inset: 96px; }
 .app-step { position: relative; }
 .app-step-card { position: relative; display: grid; gap: var(--space-2); padding: var(--space-6) calc(var(--card-padding-inline) + var(--inset) + var(--space-6)) var(--space-6) var(--card-padding-inline); transition: background-color var(--duration-fast), border-color var(--duration-fast); }
 .app-step-card:hover { background-color: var(--glass-hover); }
@@ -157,34 +116,16 @@
 .app-step-more { justify-self: start; margin-top: var(--space-3); }
 .app-step-more::after { content: ""; position: absolute; inset: 0; }
 
-/* Line: the rail fills with orange as the page scrolls; each module has a square on the rail, at
+/* The rail fills with orange as the page scrolls; each module has a square on the rail, at
    the height of its name, that lights up when the orange reaches it. */
-.app-path.is-line::before,
-.app-path.is-line::after { content: ""; position: absolute; z-index: 2; right: calc(var(--inset) - 0.5px); top: var(--first, 0px); height: var(--length, 100%); width: 1px; background: linear-gradient(transparent, var(--line-strong) var(--overhang), var(--line-strong) calc(100% - var(--overhang)), transparent); pointer-events: none; }
-.app-path.is-line::after { background: linear-gradient(transparent, var(--signal) var(--overhang)); transform: scaleY(var(--progress, 1)); transform-origin: top; box-shadow: 0 0 10px var(--signal); }
+.app-path::before,
+.app-path::after { content: ""; position: absolute; z-index: 2; right: calc(var(--inset) - 0.5px); top: var(--first, 0px); height: var(--length, 100%); width: 1px; background: linear-gradient(transparent, var(--line-strong) var(--overhang), var(--line-strong) calc(100% - var(--overhang)), transparent); pointer-events: none; }
+.app-path::after { background: linear-gradient(transparent, var(--signal) var(--overhang)); transform: scaleY(var(--progress, 1)); transform-origin: top; box-shadow: 0 0 10px var(--signal); }
 .app-step-node { position: absolute; z-index: 3; right: calc(var(--inset) - 6px); top: var(--node-top, 30px); width: 12px; height: 12px; border: 1px solid var(--line-strong); background: var(--bg); transform: rotate(45deg); transition: background-color var(--duration-fast), border-color var(--duration-fast), box-shadow var(--duration-fast); pointer-events: none; }
-[data-tag="corner"] .app-step:has(.is-card) .app-step-node { --node-top: calc(30px + var(--space-8)); }
 .app-step.is-reached .app-step-node { border-color: var(--signal); background: var(--signal); box-shadow: 0 0 14px var(--signal); }
-.app-path:not(.is-line) .app-step-node { visibility: hidden; }
-
-/* Thread: a Three.js canvas over the rail (shared/paths.js), centered on it, past the cards. */
-.app-path-canvas { position: absolute; z-index: 2; right: calc(var(--inset) - 32px); top: calc(-1 * var(--overhang)); width: 64px; height: calc(100% + 2 * var(--overhang)); pointer-events: none; }
 
 @media (max-width: 639px) {
   .app-path { --inset: 0px; }
-  .app-path::before, .app-path::after, .app-step-node, .app-path-canvas { display: none; }
+  .app-path::before, .app-path::after, .app-step-node { display: none; }
   .app-step-card { padding-right: var(--card-padding-inline); }
 }
-
-/* ── Module page: its place in the formation (strip variant) ─────────────────────────── */
-
-.app-strip { margin-top: var(--space-9); }
-.app-strip-label { margin: 0 0 var(--space-3); color: var(--dim); font: var(--label-weight) var(--size-label)/1.3 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; }
-/* One row, which scrolls sideways on a phone when the formation is long (Python), fading out at
-   its right edge, rather than wrapping with a connector at the start of a line. */
-.app-strip ol { display: flex; align-items: center; margin: 0; padding: 0 var(--space-6) 0 0; list-style: none; overflow-x: auto; scrollbar-width: none; mask-image: linear-gradient(90deg, #000 calc(100% - var(--space-6)), transparent); }
-.app-strip li { display: flex; flex: none; align-items: center; }
-.app-strip li + li::before { content: ""; width: var(--space-4); height: 1px; margin-inline: var(--space-2); background: var(--line-strong); }
-.app-strip a, .app-strip [aria-current] { display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-3); border: 1px solid var(--line-strong); color: var(--secondary); font: 700 var(--size-caption)/1 var(--font-title); transition: border-color var(--duration-fast), color var(--duration-fast); }
-.app-strip a:hover { border-color: var(--text); color: var(--text); }
-.app-strip [aria-current] { border-color: var(--signal); color: var(--text); box-shadow: inset 0 -2px 0 var(--signal); }

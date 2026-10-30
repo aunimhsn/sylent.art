@@ -9,11 +9,11 @@
   The page of a formation of several modules (mock-up of step 13b of roadmap.md, from the
   wireframe docs/wireframes/formations.excalidraw), shown at phone and desktop width by home.html
   (?page=formation); ?formation=<slug> opens another formation. Data in shared/formations.js.
-  Layout: the hero (« Formation PHP », its summary, the count of modules, its domains as links),
-  then « Modules » over « PARCOURS »: the modules in the advised order along a rail over the
-  right of their cards (?path= line or thread, ?rail= where it lies, drawn by shared/paths.js; no
-  rail on a phone), beside the card to organize the formation, then the call to action. No
-  duration (asked by the owner on 2026-10-30).
+  Layout: the hero (its domains as links above its name, its name alone, the count of its
+  modules, its summary), then « Modules » over « PARCOURS »: the modules in the advised order along
+  a rail over the right of their cards (shared/paths.js; no rail on a phone), beside the card to
+  organize the formation, then the call to action. No duration (decided by the owner on
+  2026-10-30).
 -->
 <script src="shared/head.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,20 +37,15 @@
   document.title = `${formation.title} · Formations · Sylent`;
   document.querySelector('meta[name="description"]').content = `${formation.summary} ${count(modules.length, "module")}, sur site ou à distance.`;
 
-  const facts = `
-    <ul class="app-ffacts app-reveal">
-      <li><span class="app-ffacts-label">Modules</span><span class="app-ffacts-value">${modules.length}</span></li>
-      <li><span class="app-ffacts-label">${domains.length > 1 ? "Domaines" : "Domaine"}</span>${domains.map(domain => `<a class="app-chip" href="${domainHref(domain)}">${domain.title}</a>`).join("")}</li>
-    </ul>`;
-  // The title: « Formation PHP » (full), or « Formation » as a small label above « PHP » (label),
-  // the same words in the h1 for search engines and screen readers.
-  const title = variant("title") === "label" ? `<span class="app-offer-eyebrow">Formation </span><span class="app-offer-name">${formation.title}</span>` : `Formation ${formation.title}`;
-  const hero = offerHero({ id: "formation-title", title, lead: `<p>${formation.summary}</p>`, after: facts, isNew: domains.some(domain => domain.isNew) });
+  // Its domains above its name, as links; its name alone (decided by the owner on 2026-10-30, the
+  // word « Formation » is in the tab only); the count of its modules, then its summary.
+  const above = domains.map(domain => `<a class="app-chip" href="${domainHref(domain)}">${domain.title}</a>`).join("");
+  const hero = offerHero({ id: "formation-title", title: formation.title, above, lead: `<p class="app-offer-count">${count(modules.length, "module")}</p><p>${formation.summary}</p>`, isNew: domains.some(domain => domain.isNew) });
 
   // The modules in the advised order, without numbers: the rail says the order. A framework
   // carries its mark in the top left corner of its card.
   const steps = `
-    <ol class="app-path is-${variant("path")}" data-path>${modules.map(module => `
+    <ol class="app-path" data-path>${modules.map(module => `
       <li class="app-step app-reveal" data-step>
         <span class="app-step-node" aria-hidden="true"></span>
         <div class="app-step-card app-glass">

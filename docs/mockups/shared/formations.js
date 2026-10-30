@@ -3,11 +3,9 @@
 // (domain-site.html, formation-site.html, module-site.html), loaded after site.js and
 // programs.js. The other pages of the mock-up keep the former DOMAINS of site.js.
 //
-// The open decisions of step 13b are variants, chosen in the bar of home.html and passed to the
-// pages in the address: ?card= (formation card), ?title= (the title of a formation page), ?path= and ?rail= (the path of a formation page
-// and where its rail lies on the cards), ?tag= (where the framework mark sits on a card of the
-// path), ?strip= (the formation on a module page),. No duration is shown (asked by the owner on
-// 2026-10-30): the days stay in the data only.
+// Decided with the owner on 2026-10-30 (step 13b): no duration is shown anywhere, the days stay in
+// the data only; the formation cards list their modules; the framework mark sits across the top
+// edge of a card; the title of a formation page is its name alone.
 
 const FORMATIONS_PAGES = { domain: "domain-site.html", formation: "formation-site.html", module: "module-site.html" };
 
@@ -84,27 +82,20 @@ const isNewModule = module => module.domains.some(slug => domainOf(slug).isNew);
 // its formation alone when it is its only published module.
 const isSingle = formation => published(formation).length === 1;
 const moduleKey = module => isSingle(module.formation) ? module.formation.slug : `${module.formation.slug}-${module.slug}`;
-const moduleHref = module => `${FORMATIONS_PAGES.module}?${new URLSearchParams({ ...variantsParams(), module: moduleKey(module) })}`;
-const formationHref = formation => isSingle(formation) ? moduleHref(published(formation)[0]) : `${FORMATIONS_PAGES.formation}?${new URLSearchParams({ ...variantsParams(), formation: formation.slug })}`;
-const domainHref = domain => `${FORMATIONS_PAGES.domain}?${new URLSearchParams({ ...variantsParams(), domain: domain.slug })}`;
+const moduleHref = module => `${FORMATIONS_PAGES.module}?${new URLSearchParams({ module: moduleKey(module) })}`;
+const formationHref = formation => isSingle(formation) ? moduleHref(published(formation)[0]) : `${FORMATIONS_PAGES.formation}?${new URLSearchParams({ formation: formation.slug })}`;
+const domainHref = domain => `${FORMATIONS_PAGES.domain}?${new URLSearchParams({ domain: domain.slug })}`;
 const allModules = FORMATIONS.flatMap(published);
 // The former links of the mock-up (?module=javascript) lead to the first module of the formation.
 const moduleByKey = key => allModules.find(module => moduleKey(module) === key) || (formationOf(key) && published(formationOf(key))[0]);
-
-// The variants of the open decisions, kept from page to page by the links.
-const VARIANT_DEFAULTS = { card: "list", title: "full", path: "line", rail: "inset", tag: "corner", strip: "label" };
-const variant = name => query.get(name) || VARIANT_DEFAULTS[name];
-const variantsParams = () => Object.fromEntries(Object.keys(VARIANT_DEFAULTS).filter(name => query.has(name)).map(name => [name, query.get(name)]));
-document.documentElement.dataset.card = variant("card");
-document.documentElement.dataset.rail = variant("rail");
-document.documentElement.dataset.tag = variant("tag");
 
 const count = (number, word) => `${number}${NB}${word}${number > 1 ? "s" : ""}`;
 
 // ── The framework mark ──────────────────────────────────────────────────────────────
 // Chosen by the owner on 2026-10-30: « Framework » in small white capitals on a rectangle of the
-// background of the site, in the top left corner of the card of the module (its cover, or the
-// card itself on the path of a formation); inline after the name in a list or above a title.
+// background of the site, 2 px smaller than « Nouveau »: in the top left corner of the cover of a
+// module card, across the top edge of a card of the path of a formation, after the name in a list
+// or above a title.
 const frameworkMark = (where = "") => `<span class="app-fw${where ? ` is-${where}` : ""}">Framework</span>`;
 
 // ── Cards ─────────────────────────────────────────────────────────────────────────────
@@ -129,13 +120,10 @@ function formationCard(formation, domain) {
     </ul>`;
   const total = published(formation).length;
   const face = `<h3>${formation.title}</h3><p class="app-card-domain">${count(total, "module")}</p>`;
-  const body = variant("card") === "slide"
-    ? `<div class="app-fcard-window"><div class="app-fcard-face">${face}<p>${formation.summary}</p></div><div class="app-fcard-back">${list}</div></div>`
-    : `${face}${list}`;
   return `
-  <li class="app-card app-glass app-reveal app-tilt app-fcard" style="--layers:${Math.min(total, 4) - 1}" tabindex="-1">
+  <li class="app-card app-glass app-reveal app-tilt app-fcard">
     <div class="app-cover" data-scene="${formation.scene}" aria-hidden="true"><canvas></canvas>${domain.isNew ? '<span class="app-new">Nouveau</span>' : ""}</div>
-    ${body}
+    ${face}${list}
     <a class="app-card-more" href="${formationHref(formation)}" aria-label="Formation ${formation.title}${NB}: voir la formation">Voir la formation</a>
   </li>`;
 }
@@ -188,8 +176,6 @@ const bearingOf = text => {
 };
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".app-offer-title, .app-heading-title, .app-offer-ghost, .app-heading-ghost").forEach(element => {
-    // A formation title with « Formation » above it: only the name moves.
-    const target = element.querySelector(".app-offer-name") || element;
-    target.style.setProperty("--bearing", `${bearingOf(target.textContent)}em`);
+    element.style.setProperty("--bearing", `${bearingOf(element.textContent)}em`);
   });
 });

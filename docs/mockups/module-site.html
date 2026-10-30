@@ -13,8 +13,7 @@
   Updated at step 13b of roadmap.md (wireframe docs/wireframes/formations.excalidraw), after the
   built site: no breadcrumb; the hero over the grid, its formation above the title (a link to the
   page of the formation, with the framework mark) and as the faded word behind it, or, for a
-  module alone in its formation, its first domain; ?strip=path adds its place in the formation
-  under the lead. Then the key facts under a rule (public, level, formats: no duration, asked
+  module alone in its formation, its first domain. Then the key facts under a rule (public, level, formats: no duration, asked
   by the owner on 2026-10-30); the prerequisites, the objectives and the
   program, beside a card that follows the scroll on a computer; the other modules of its
   formation (« Dans la même formation »), or of its domain for a module alone in its formation.
@@ -111,19 +110,11 @@
   const above = single
     ? `<a class="app-offer-link" href="${domainHref(domain)}"><span>Domaine${NB}: ${domain.title}</span>${icon("right", 14)}</a>`
     : `<a class="app-offer-link" href="${formationHref(formation)}"><span>Formation ${formation.title}</span>${icon("right", 14)}</a>${module.framework ? frameworkMark() : ""}`;
-  // Strip: its place among the modules of its formation, under the lead.
-  const strip = !single && variant("strip") === "path" ? `
-    <nav class="app-strip app-reveal" aria-label="Les modules de la formation ${formation.title}">
-      <p class="app-strip-label">Dans la formation ${formation.title}</p>
-      <ol>${published(formation).map(other => `<li>${other === module
-        ? `<span aria-current="page">${other.title}</span>`
-        : `<a href="${moduleHref(other)}">${other.title}</a>`}</li>`).join("")}</ol>
-    </nav>` : "";
   const hero = offerHero({
     id: "module-title", title, ghost: single ? domain.ghost : formation.title, above,
     lead: content.text.map(paragraph => `<p>${paragraph.replace(/\*\*/g, "")}</p>`).join(""),
     isNew: isNewModule(module), note: isNewModule(module) ? NEW_NOTE : "",
-    after: strip + `<div class="app-module-actions app-reveal"><a class="app-button is-outline" href="#programme">Voir le programme</a></div>`,
+    after: `<div class="app-module-actions app-reveal"><a class="app-button is-outline" href="#programme">Voir le programme</a></div>`,
   });
 
   const facts = `

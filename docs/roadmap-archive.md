@@ -2,6 +2,15 @@
 
 The detail of the steps of [roadmap.md](../roadmap.md) once their pull request is merged, newest first.
 
+## 13a. Classification of the offers in `specs.md` (#38)
+
+Agreed with the owner on 2026-10-30, on the tree `docs/wireframes/offer-classification.excalidraw` (kept):
+
+- Three levels: domains (shelves where a school looks for a speaker) → formations (one subject each, which gives the address) → modules (the unit a client books). A module lives in one formation and is filed under one or more domains; a domain shows only its own modules of a formation.
+- Addresses `/formations/<formation>/<module>/`, independent of the domains, replacing `/domaines/<domain>/modules/<module>/` (only on the preview, no redirect); a formation of a single module is named after it and its address leads to the module.
+- « IA générative » and « Programmation » replace « Développement IA » and « Initiation à la prog. »; the domain « Python » is gone; the POO is a module of PHP and of Python; a framework is a module of the formation of its language, marked as such.
+- Sections Training offers, Domain pages, Formation pages and URLs and redirects of `specs.md` rewritten.
+
 ## 12. Domain pages (#31)
 
 Asked by the owner on 2026-10-29, before the launch; the layout agreed on the wireframe `docs/wireframes/domain-page.excalidraw`, removed once the page was built (it stays in the history):
