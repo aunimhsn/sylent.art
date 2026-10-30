@@ -1,4 +1,4 @@
-<!-- The LinkedIn post of the launch (roadmap, step 14d), written in French for the owner's audience, with the link in the post itself (the owner's choice: no link in the first comment to get around the algorithm). -->
+<!-- The post of the launch on LinkedIn and on the owner's Facebook page, the same text on both (roadmap, step 14d), written in French for the owner's audience, with the link in the post itself (the owner's choice: no link in the first comment to get around the algorithm). -->
 
 Mon site fait peau neuve.
 
