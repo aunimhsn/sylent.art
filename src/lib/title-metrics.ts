@@ -5,14 +5,24 @@
  * (docs/branding.md, Typography).
  */
 import metrics from "../data/manrope-800.json";
+import tokens from "../styles/tokens.css?raw";
 
 const advances: Record<string, number> = metrics.advance;
 const bearings: Record<string, number> = metrics.bearing;
 const kernings: Record<string, number> = metrics.kerning;
 
-/** The letter spacing of the titles and of the faded words, as in src/styles/tokens.css. */
-export const TRACKING_TITLE = -0.045;
-export const TRACKING_GHOST = -0.06;
+/** A letter spacing of src/styles/tokens.css, in em, so that it is written once. */
+const tracking = (token: string) => {
+  const value = tokens.match(new RegExp(`--${token}:\\s*(-?[\\d.]+)em;`))?.[1];
+  if (value === undefined) {
+    throw new Error(`--${token} in em not found in src/styles/tokens.css`);
+  }
+  return Number(value);
+};
+
+/** The letter spacing of the titles and of the faded words. */
+export const TRACKING_TITLE = tracking("tracking-title");
+export const TRACKING_GHOST = tracking("tracking-ghost");
 
 // A round letter looks further right than a straight one whose ink starts at the same place:
 // it moves 0.01 em further left, as typographers do.

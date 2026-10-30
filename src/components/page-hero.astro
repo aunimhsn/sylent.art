@@ -132,8 +132,12 @@ const sizes = {
        from its own width in em (--title-em), so that a short title keeps the display size
        (« Laravel » 44 px on a phone) and only a long one shrinks (asked by the owner on
        2026-10-30, instead of one size for every title, sized on the longest). What follows the
-       title (the slot "under") is placed from this size. */
-    --title-size: min(var(--size-display), calc(100cqi / var(--title-em)));
+       title (the slot "under") is placed from this size. Without its width, a title takes the
+       size of the longest one (10.5 em), and a faded word the size of the faded words. */
+    --title-size: min(
+      var(--size-display),
+      calc(100cqi / var(--title-em, 10.5))
+    );
 
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -149,10 +153,10 @@ const sizes = {
      size: a short word (« PHP ») grows on a phone, where the title grew too, and a long one
      (« JAVASCRIPT ») keeps the size of the faded words and may run past the screen. */
   .heading-ghost {
-    margin: var(--space-fluid-1) 0 0 calc(0.12em - var(--bearing));
+    margin: var(--space-fluid-1) 0 0 calc(0.12em - var(--bearing, 0em));
     font-size: max(
       var(--size-ghost),
-      min(176px, calc(60cqi / var(--ghost-em)))
+      min(176px, calc(60cqi / var(--ghost-em, 99)))
     );
   }
 
@@ -166,7 +170,7 @@ const sizes = {
      alignment chosen by the owner on 2026-10-30); the faded word keeps its offset of 0.12 em from
      its ink. */
   .page-title {
-    margin: 0 0 0 calc(-1 * var(--bearing));
+    margin: 0 0 0 calc(-1 * var(--bearing, 0em));
     font: var(--title-weight) var(--title-size) / 0.98 var(--font-title);
     letter-spacing: var(--tracking-title);
     text-wrap: balance;

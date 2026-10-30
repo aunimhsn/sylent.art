@@ -14,11 +14,13 @@ const fonts = ".astro/fonts";
 const output = "src/data/manrope-800.json";
 
 // The characters a large title may hold: the letters of French, the digits and the punctuation of
-// the titles (« CI/CD », « Git / GitHub »). A title with another one fails the build.
+// the titles (« CI/CD », « Git / GitHub »). A title with another one fails the build, as one that
+// the served file lacks (« Ÿ », outside its latin subset), which is left out. The narrow no-break
+// space is left out too: Chromium doesn't track it, so the width of a title would be wrong.
 const characters = [
   ..."ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
   ..."ÀÂÄÆÇÉÈÊËÎÏÔÖŒÙÛÜŸàâäæçéèêëîïôöœùûüÿ",
-  ..."   /-–'’.,:;!?&+()«»",
+  ..." \u00a0/-–'’.,:;!?&+()«»",
 ];
 
 const file = readdirSync(fonts).find((name) =>
@@ -33,7 +35,7 @@ const font = readFileSync(join(fonts, file)).toString("base64");
 /* global document, FontFace */
 const browser = await chromium.launch();
 const page = await browser.newPage();
-const metrics = await page.evaluate(
+const { missing, metrics } = await page.evaluate(
   async ({ font, characters }) => {
     const face = new FontFace(
       "Measured",
@@ -45,7 +47,21 @@ const metrics = await page.evaluate(
     document.fonts.add(await face.load());
     const size = 1000;
     const context = document.createElement("canvas").getContext("2d");
+    // A character the font lacks is drawn by a fallback font: its width then depends on it.
+    const inFont = (character) =>
+      ["serif", "monospace"]
+        .map((fallback) => {
+          context.font = `800 ${size}px Measured, ${fallback}`;
+          return context.measureText(character).width;
+        })
+        .reduce((serif, monospace) => serif === monospace);
+    const measured = characters.filter(inFont);
     context.font = `800 ${size}px Measured`;
+    // As in the page, where the titles are tracked: a letter spacing turns the ligatures off
+    // (« ff ») and keeps the kerning. It is taken off each width.
+    context.letterSpacing = "1px";
+    const widthOf = (text) =>
+      context.measureText(text).width - [...text].length;
     const em = (value) => Math.round((value / size) * 1000) / 1000;
     // The side bearing is read on the pixels of the letter drawn at the pen position `origin`:
     // measureText rounds its ink box to 1/64 em.
@@ -75,22 +91,23 @@ const metrics = await page.evaluate(
     const advance = {};
     const bearing = {};
     const kerning = {};
-    for (const character of characters) {
-      advance[character] = em(context.measureText(character).width);
+    for (const character of measured) {
+      advance[character] = em(widthOf(character));
       const start = inkStart(character);
       if (start !== undefined) bearing[character] = em(start);
     }
-    for (const first of characters) {
-      for (const second of characters) {
+    for (const first of measured) {
+      for (const second of measured) {
         const pair = em(
-          context.measureText(first + second).width -
-            context.measureText(first).width -
-            context.measureText(second).width,
+          widthOf(first + second) - widthOf(first) - widthOf(second),
         );
         if (pair !== 0) kerning[first + second] = pair;
       }
     }
-    return { advance, bearing, kerning };
+    const missing = characters.filter(
+      (character) => !measured.includes(character),
+    );
+    return { missing, metrics: { advance, bearing, kerning } };
   },
   { font, characters },
 );
@@ -100,6 +117,9 @@ writeFileSync(
   output,
   `${JSON.stringify({ font: file, ...metrics }, null, 2)}\n`,
 );
+if (missing.length > 0) {
+  console.log(`Not in ${file}, left out: ${missing.join(" ")}`);
+}
 console.log(
-  `${output}: ${characters.length} characters, ${Object.keys(metrics.kerning).length} kerning pairs.`,
+  `${output}: ${Object.keys(metrics.advance).length} characters, ${Object.keys(metrics.kerning).length} kerning pairs.`,
 );

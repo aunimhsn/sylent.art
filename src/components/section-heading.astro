@@ -26,7 +26,7 @@ const Title = `h${level}` as const;
     style={bearingStyle(ghostShown)}
     aria-hidden="true"
   >
-    {ghost}
+    {ghostShown}
   </span>
   <Title
     class="heading-title"
@@ -51,7 +51,7 @@ const Title = `h${level}` as const;
      right. */
   .heading-ghost {
     display: block;
-    margin-left: calc(0.12em - var(--bearing));
+    margin-left: calc(0.12em - var(--bearing, 0em));
   }
 
   /* On a phone the title holds on one line (asked by the owner on 2026-10-29): its size follows
@@ -61,7 +61,7 @@ const Title = `h${level}` as const;
     position: absolute;
     top: 0;
     left: 0;
-    margin: 0 0 0 calc(-1 * var(--bearing));
+    margin: 0 0 0 calc(-1 * var(--bearing, 0em));
     font: var(--title-weight) var(--size-section) / 1 var(--font-title);
 
     /* Apart from the shorthand: a browser without the cqi unit keeps the font and the size. */

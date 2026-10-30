@@ -112,7 +112,7 @@ const { pedagogy, partners, admin } = about;
   /* The ink of the first letter on the left edge, not its side bearing (--bearing, optical
      alignment, docs/branding.md). */
   .about-title {
-    margin: 0 0 0 calc(-1 * var(--bearing));
+    margin: 0 0 0 calc(-1 * var(--bearing, 0em));
     font: var(--title-weight) var(--size-display) / 0.98 var(--font-title);
     letter-spacing: var(--tracking-title);
   }

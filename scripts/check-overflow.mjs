@@ -4,7 +4,9 @@
 // Chromium as on a phone, then scrolled to the bottom, since the faded words slide with the
 // scroll. It also checks that the large white titles of the module, domain and section headings
 // hold on one line, as the owner asked, on a phone and on a computer, where « Développement web »
-// once broke mid-word. Run after `npm run build`:
+// once broke mid-word. Those titles are sized from the metrics of their font measured once
+// (src/data/manrope-800.json): it first checks that they were measured on the font the site
+// serves, which Google Fonts may update. Run after `npm run build`:
 // `node scripts/check-overflow.mjs [dist]`.
 import {
   createReadStream,
@@ -96,6 +98,16 @@ const wrappedTitles = () =>
         : [];
     },
   );
+
+// The measured file is named after the font file the build serves, in dist/_astro/fonts/.
+const { font } = JSON.parse(readFileSync("src/data/manrope-800.json", "utf8"));
+const served = `${font.match(/-([0-9a-f]+)\.woff2$/)?.[1]}.woff2`;
+if (!existsSync(join(dist, "_astro", "fonts", served))) {
+  console.error(
+    `src/data/manrope-800.json measures ${font}, which the site no longer serves: run \`npm run fonts:metrics\`.`,
+  );
+  process.exit(1);
+}
 
 const pages = pagesOf(dist);
 if (pages.length === 0) {
