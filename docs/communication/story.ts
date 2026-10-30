@@ -1,5 +1,5 @@
 // The videos of the launch (roadmap, step 14a), drawn with the scenes of the site and GSAP:
-// variant A « Le cube » and variant D « L'impact », as an Instagram story (1080 × 1920) or as a
+// variant A « Le cube » and variant D « L'impact », each with its synthesized sound (sound.js), as an Instagram story (1080 × 1920) or as a
 // video of the LinkedIn and Facebook feeds (?format=feed, 1080 × 1350). Everything moves on one
 // paused timeline that `story.seek(t)` sets to any time, the scenes included: the page of the
 // supports drives it (?controlled=1), and render.mjs captures it frame by frame.
@@ -20,6 +20,8 @@ interface Cue {
   pitch?: number;
   gain?: number;
   length?: number;
+  notes?: readonly number[];
+  attack?: number;
 }
 
 const params = new URLSearchParams(location.search);
@@ -409,6 +411,61 @@ async function variantCube() {
   );
   leave([title, ghostWord], 9.2);
   endCard(9.6);
+
+  // The epic score, in D minor at 100 beats a minute: a beat every 0.6 s, so that the turns of
+  // the cube (3.3, 4.5, 5.7 s) and the title (7.5 s) fall on accented beats; the chords follow
+  // them (Dm, Bb, F, C, Dm), and the end card resolves on D major.
+  const chords: Record<string, number[]> = {
+    Dm: [73.42, 146.83, 220, 293.66, 349.23],
+    Bb: [58.27, 116.54, 174.61, 233.08, 293.66],
+    F: [87.31, 174.61, 220, 261.63, 349.23],
+    C: [65.41, 130.81, 196, 261.63, 329.63],
+    D: [73.42, 146.83, 220, 293.66, 369.99, 440],
+  };
+  const accents = [3.3, 4.5, 5.7, 7.5];
+  cues.push({ time: 0, sound: "riser", length: 1, gain: 0.6 });
+  cues.push({ time: 1.0, sound: "impact", gain: 0.9 });
+  (
+    [
+      ["Dm", 1.0, 2.5, 0.8],
+      ["Bb", 3.3, 1.4, 0.3],
+      ["F", 4.5, 1.4, 0.3],
+      ["C", 5.7, 2.0, 0.3],
+      ["Dm", 7.5, 2.0, 0.2],
+    ] as const
+  ).forEach(([chord, time, length, attack]) =>
+    cues.push({ time, sound: "chord", notes: chords[chord], length, attack }),
+  );
+  for (let beat = 0; beat <= 12; beat++) {
+    const time = Math.round((1.5 + 0.6 * beat) * 100) / 100;
+    const accent = accents.includes(time);
+    cues.push({
+      time,
+      sound: "drum",
+      gain: accent ? 1 : time > 7.5 ? 0.7 : 0.45,
+    });
+  }
+  accents
+    .slice(0, 3)
+    .forEach((time) =>
+      cues.push({ time: time - 0.3, sound: "whoosh", length: 0.6, gain: 0.5 }),
+    );
+  [7.05, 7.2, 7.35].forEach((time, index) =>
+    cues.push({ time, sound: "drum", gain: 0.45 + 0.15 * index, pitch: 1.2 }),
+  );
+  cues.push({ time: 7.0, sound: "riser", length: 0.5, gain: 0.5 });
+  cues.push({ time: 7.5, sound: "impact", gain: 0.9 });
+  cues.push({ time: 9.1, sound: "riser", length: 0.5, gain: 0.6 });
+  cues.push({ time: 9.6, sound: "impact", gain: 1 });
+  cues.push({
+    time: 9.6,
+    sound: "chord",
+    notes: chords.D,
+    length: 2.4,
+    attack: 0.02,
+    gain: 1.2,
+  });
+  cues.push({ time: 10.7, sound: "chime", pitch: 0.75, gain: 0.7 });
 }
 
 // ── Variant D: the impact ─────────────────────────────────────────────────────────────

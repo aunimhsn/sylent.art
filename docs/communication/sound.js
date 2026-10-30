@@ -1,5 +1,6 @@
-// The sound of the variant « L'impact », synthesized from its cues rather than taken from a
-// track, so that every hit falls on its frame and no music rights are involved. Plain
+// The sound of the videos, synthesized from their cues rather than taken from a track, so that
+// every hit falls on its frame and no music rights are involved: the hits and the soft word of
+// « L'impact », the epic score of « Le cube » (drums, chords, a final major chord). Plain
 // JavaScript without dependencies: the page plays it, render.mjs writes it into the MP4.
 
 export const RATE = 48000;
@@ -27,7 +28,7 @@ function lowPass(source) {
 
 /**
  * The samples of the cues, mono, at RATE.
- * @param {{ time: number, sound: string, pitch?: number, gain?: number, length?: number }[]} cues
+ * @param {{ time: number, sound: string, pitch?: number, gain?: number, length?: number, notes?: number[], attack?: number }[]} cues
  * @param {number} duration in seconds
  */
 export function synthesize(cues, duration) {
@@ -85,6 +86,52 @@ export function synthesize(cues, duration) {
             Math.sin(2 * Math.PI * 118 * pitch * x) * Math.exp(-22 * x);
           const crack = click(4000) * Math.exp(-70 * x);
           return gain * (0.95 * boom + 0.5 * thud + 0.9 * crack);
+        });
+        break;
+      }
+      // A low drum, as a taiko: a falling tone and a burst of noise.
+      case "drum": {
+        const body = lowPass(random);
+        add(cue.time, 0.7, (x) => {
+          const fall =
+            2 * Math.PI * (52 * pitch * x + (45 * pitch * (1 - Math.exp(-14 * x))) / 14);
+          return (
+            gain *
+            (0.9 * Math.sin(fall) * Math.exp(-7 * x) +
+              0.5 * body(1400) * Math.exp(-28 * x))
+          );
+        });
+        break;
+      }
+      // A rush of air, for a turn of the cube.
+      case "whoosh": {
+        const length = cue.length ?? 0.5;
+        const air = lowPass(random);
+        add(cue.time, length, (x) => {
+          const shape = Math.sin((Math.PI * x) / length) ** 2;
+          return gain * 0.5 * shape * air(600 + 5000 * shape);
+        });
+        break;
+      }
+      // A chord held by a string ensemble: each note in two detuned voices of a few harmonics,
+      // a slow attack (fast for a stab) and a release over its last half second.
+      case "chord": {
+        const length = cue.length ?? 2;
+        const attack = cue.attack ?? 0.5;
+        const voices = (cue.notes ?? []).flatMap((note) => [
+          note * 0.997,
+          note * 1.003,
+        ]);
+        const harmonics = [1, 2, 3, 4, 5, 6];
+        add(cue.time, length, (x) => {
+          const envelope =
+            Math.min(1, x / attack) * Math.min(1, (length - x) / 0.5);
+          let sum = 0;
+          for (const voice of voices)
+            for (const harmonic of harmonics)
+              sum +=
+                Math.sin(2 * Math.PI * voice * harmonic * x) / harmonic;
+          return (gain * 0.035 * envelope * sum) / Math.sqrt(voices.length / 10);
         });
         break;
       }

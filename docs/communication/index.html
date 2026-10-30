@@ -186,9 +186,9 @@
   <body>
     <h1>Médias du lancement</h1>
     <p class="lead">
-      Chaque vidéo en story Instagram (9:16) et pour le fil de LinkedIn et Facebook (4:5). La
-      variante A sera publiée sans son ajouté : la musique se choisit dans l’appli Instagram. La
-      variante D a son propre son, calé sur les impacts.
+      Chaque vidéo en story Instagram (9:16) et pour le fil de LinkedIn et Facebook (4:5). Chaque
+      variante a son propre son, synthétisé et calé sur l’image : n’ajoute pas de musique dans
+      l’appli Instagram.
     </p>
     <form class="toolbar" id="toolbar">
       <fieldset>
@@ -217,8 +217,8 @@
     <div class="media" id="media"></div>
     <script type="module">
       const VIDEOS = [
-        { variant: "a", format: "story", title: "A · Le cube", kind: "Story Instagram · 9:16" },
-        { variant: "a", format: "feed", title: "A · Le cube", kind: "Fil LinkedIn, Facebook · 4:5" },
+        { variant: "a", format: "story", title: "A · Le cube", kind: "Story Instagram · 9:16", sound: true },
+        { variant: "a", format: "feed", title: "A · Le cube", kind: "Fil LinkedIn, Facebook · 4:5", sound: false },
         { variant: "d", format: "story", title: "D · L’impact", kind: "Story Instagram · 9:16", sound: true },
         { variant: "d", format: "feed", title: "D · L’impact", kind: "Fil LinkedIn, Facebook · 4:5", sound: false },
       ];
