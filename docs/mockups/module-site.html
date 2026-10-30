@@ -160,7 +160,7 @@
     </aside>`;
 
   // The neighbors: the other modules of its formation, in the advised order; for a module alone
-  // in its formation, the other formations of its first domain. Then the custom card.
+  // in its formation, the other formations of its first domain.
   const neighbors = single
     ? formationsIn(domain).filter(other => other !== formation).map(other => offerCard(other, domain))
     : published(formation).filter(other => other !== module).map(offerModuleCard);
@@ -168,7 +168,7 @@
     <section class="app-section" aria-labelledby="related-title" style="padding-top:0">
       <div class="app-wrap">
         ${heading(single ? "Dans le même domaine" : "Dans la même formation", "Explorer", "related-title")}
-        <ul class="app-cards is-domains">${neighbors.join("")}${customCard()}</ul>
+        <ul class="app-cards is-domains">${neighbors.join("")}</ul>
       </div>
     </section>` : "";
 

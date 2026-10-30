@@ -109,6 +109,16 @@ const { pedagogy, partners, admin } = about;
     bottom: 0;
   }
 
+  /* From 900 px, 6 % from the right of the window, but never further from the column of the page
+     than on a screen of 1440 px, where the head stands under the button « Me contacter »: on a
+     wider screen it would drift to the edge of the window, far from the text (asked by the owner
+     on 2026-10-30). */
+  @media (width >= 900px) {
+    .about-hero :global(.about-photo) {
+      right: max(6%, 50% - var(--width) / 2 - 34px);
+    }
+  }
+
   /* The ink of the first letter on the left edge, not its side bearing (--bearing, optical
      alignment, docs/branding.md). */
   .about-title {

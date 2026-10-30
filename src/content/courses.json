@@ -55,8 +55,11 @@
   },
   "formation": {
     "title": "{title} · Formations · Sylent",
-    "description": "{summary} {count}, sur site ou à distance.",
-    "domains": "Domaines",
+    "description": "{summary} Des modules sur site ou à distance.",
+    "domains": {
+      "one": "Dans le domaine",
+      "other": "Dans les domaines"
+    },
     "modules": {
       "title": "Modules",
       "ghost": "Parcours"

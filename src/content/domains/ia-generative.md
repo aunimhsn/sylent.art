@@ -1,7 +1,7 @@
 ---
 title: "IA générative"
 ghost: "IA"
-summary: "Utiliser l’IA générative avec méthode et rigueur, au quotidien."
+summary: "Faire de l’IA un allié au quotidien."
 order: 1
 scene: network
 isNew: true

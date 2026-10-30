@@ -4,7 +4,6 @@
 // collection with its published modules. The checks that span several files run here, so that a
 // content error fails the build (docs/technical-choices.md, Content).
 import { getCollection, type CollectionEntry } from "astro:content";
-import fr from "../i18n/fr.json";
 
 export type Domain = CollectionEntry<"domains">;
 export type Collection = CollectionEntry<"collections">;
@@ -175,12 +174,6 @@ export const domainsOf = (catalog: Catalog, module: Module) =>
 /** The new domain of a module, if any: the modules of a new domain are new too. */
 export const newDomainOf = (catalog: Catalog, module: Module) =>
   domainsOf(catalog, module).find(({ domain }) => domain.data.isNew)?.domain;
-
-/** The count of the modules of a formation: « 3 modules ». */
-export const moduleCount = (count: number) =>
-  fr.cards.moduleCount[
-    new Intl.PluralRules("fr").select(count) === "one" ? "one" : "other"
-  ].replace("{count}", String(count));
 
 /** The path of the page of a domain, without the base: `/domaines/<domain>/`. */
 export const domainPath = (id: string) => `/domaines/${id}/`;

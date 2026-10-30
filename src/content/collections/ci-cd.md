@@ -1,3 +1,3 @@
 ---
-title: "CI/CD"
+title: "CI / CD"
 ---

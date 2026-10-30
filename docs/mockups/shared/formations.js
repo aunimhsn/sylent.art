@@ -53,7 +53,7 @@ const FORMATIONS = [
   { slug: "design-patterns", title: "Design patterns", modules: [mod("fondamentaux", "Design patterns", "design-patterns", 2, "observer", ["conception-logicielle"], "Reconnaître et appliquer des solutions éprouvées aux problèmes courants.")] },
   { slug: "git-github", title: "Git / GitHub", modules: [mod("fondamentaux", "Git / GitHub", "git-github", 2, "branch", ["methodologie-et-tests", "gestion-de-projet"], "Versionner son code et travailler à plusieurs sur un projet.")] },
   { slug: "cypress", title: "Cypress", modules: [mod("fondamentaux", "Cypress", "cypress", 2, "checks", ["methodologie-et-tests"], "Tester une application comme le ferait un utilisateur.")] },
-  { slug: "ci-cd", title: "CI/CD", modules: [mod("fondamentaux", "CI/CD", "ci-cd", 2, "pipeline", ["methodologie-et-tests"], "Vérifier et mettre en ligne automatiquement chaque modification.")] },
+  { slug: "ci-cd", title: "CI / CD", modules: [mod("fondamentaux", "CI / CD", "ci-cd", 2, "pipeline", ["methodologie-et-tests"], "Vérifier et mettre en ligne automatiquement chaque modification.")] },
   { slug: "agilite", title: "Agilité", modules: [mod("scrum", "Scrum", "methode-agile", 2, "sprint", ["gestion-de-projet"], "Découvrir l’agilité en menant un projet fil rouge avec Scrum.")] },
 ];
 FORMATIONS.forEach(formation => formation.modules.forEach(module => { module.formation = formation; }));
@@ -63,13 +63,13 @@ const published = formation => formation.modules.filter(module => !module.draft)
 // alone in its formation (branding: a faded word is always one word). Sample summaries for the
 // renamed domains.
 const OFFER_DOMAINS = [
-  { slug: "ia-generative", title: "IA générative", ghost: "IA", scene: "network", isNew: true, summary: "Utiliser l’IA générative avec méthode et rigueur, au quotidien.", formations: ["claude-code", "prompt-engineering"] },
+  { slug: "ia-generative", title: "IA générative", ghost: "IA", scene: "network", isNew: true, summary: "Faire de l’IA un allié au quotidien.", formations: ["claude-code", "prompt-engineering"] },
   { slug: "programmation", title: "Programmation", ghost: "Programmation", scene: "steps", summary: `Apprendre à programmer${NB}: la logique, puis les langages, de la console au web.`, formations: ["algorithmique", "python", "javascript", "php"] },
   { slug: "developpement-web", title: "Développement web", ghost: "Web", scene: "web", summary: `Du HTML aux frameworks${NB}: construire des sites et des applications web.`, formations: ["html", "css", "javascript", "php", "python"] },
   { slug: "bases-de-donnees", title: "Bases de données", ghost: "Donnees", scene: "database", summary: "Modéliser, concevoir et interroger des données.", formations: ["merise", "mysql", "postgresql"] },
   { slug: "conception-logicielle", title: "Conception logicielle", ghost: "Conception", scene: "blueprint", summary: "Penser l’architecture d’un logiciel avant de l’écrire.", formations: ["uml", "principes-solid", "design-patterns"] },
   { slug: "methodologie-et-tests", title: "Méthodologie et tests", ghost: "Methode", scene: "branch", summary: "Versionner, tester et livrer avec méthode.", formations: ["git-github", "cypress", "ci-cd"] },
-  { slug: "gestion-de-projet", title: "Gestion de projet", ghost: "Projet", scene: "board", summary: "S’initier à l’agilité avec Scrum.", formations: ["agilite", "git-github"] },
+  { slug: "gestion-de-projet", title: "Gestion de projet", ghost: "Projet", scene: "board", summary: "Mener un projet en équipe, de l’idée à la mise en ligne.", formations: ["agilite", "git-github"] },
 ];
 const formationOf = slug => FORMATIONS.find(formation => formation.slug === slug);
 const domainOf = slug => OFFER_DOMAINS.find(domain => domain.slug === slug);
@@ -88,8 +88,6 @@ const domainHref = domain => `${FORMATIONS_PAGES.domain}?${new URLSearchParams({
 const allModules = FORMATIONS.flatMap(published);
 // The former links of the mock-up (?module=javascript) lead to the first module of the formation.
 const moduleByKey = key => allModules.find(module => moduleKey(module) === key) || (formationOf(key) && published(formationOf(key))[0]);
-
-const count = (number, word) => `${number}${NB}${word}${number > 1 ? "s" : ""}`;
 
 // ── The framework mark ──────────────────────────────────────────────────────────────
 // Chosen by the owner on 2026-10-30: « Framework » in small white capitals on a rectangle of the
@@ -111,15 +109,13 @@ const offerModuleCard = module => `
   </li>`;
 
 // A formation card: its modules filed under the domain, each a link to its module, and the band to
-// the page of the formation. The count is the whole formation (« 2 modules » for JavaScript in
-// Programmation, where only Fondamentaux is listed): it announces what its page shows.
+// the page of the formation; no count of its modules (dropped by the owner on 2026-10-30).
 function formationCard(formation, domain) {
   const modules = modulesIn(formation, domain);
   const list = `<ul class="app-fcard-list">${modules.map(module => `
-      <li><a href="${moduleHref(module)}"><span>${module.title}</span>${module.framework ? frameworkMark() : ""}${icon("right", 16)}</a></li>`).join("")}
+      <li><a href="${moduleHref(module)}"><span>${module.title}</span>${module.framework ? frameworkMark() : ""}</a></li>`).join("")}
     </ul>`;
-  const total = published(formation).length;
-  const face = `<h3>${formation.title}</h3><p class="app-card-domain">${count(total, "module")}</p>`;
+  const face = `<h3>${formation.title}</h3>`;
   return `
   <li class="app-card app-glass app-reveal app-tilt app-fcard">
     <div class="app-cover" data-scene="${formation.scene}" aria-hidden="true"><canvas></canvas>${domain.isNew ? '<span class="app-new">Nouveau</span>' : ""}</div>
@@ -138,18 +134,17 @@ const offerDomainCard = domain => `
   <li class="app-card app-glass app-reveal app-tilt app-dcard">
     <div class="app-cover" data-scene="${domain.scene}" aria-hidden="true"><canvas></canvas>${domain.isNew ? '<span class="app-new">Nouveau</span>' : ""}</div>
     <h3>${domain.title}</h3><p>${domain.summary}</p>
-    <p class="app-dcard-tags">${formationsIn(domain).map(formation => `#${formation.title.toLowerCase().replace(/\s*\/\s*|\s+/g, "-")}`).join(" ")}</p>
+    <p class="app-dcard-tags">${formationsIn(domain).map(formation => `#${unaccented(formation.title).toLowerCase().replace(/\s*\/\s*|\s+/g, "-")}`).join(" ")}</p>
     <a class="app-card-more" href="${domainHref(domain)}" aria-label="${domain.title}${NB}: voir les modules">Voir les modules</a>
   </li>`;
 
-// The hero of a module, domain or formation page, as built on the site: the « Nouveau » label, a
-// line above the title (the domains of a formation), the title over its faded word, a line under
+// The hero of a module, domain or formation page, as built on the site: the « Nouveau » label,
+// the title over its faded word, a line under
 // it (the framework badge of a module, over the faded word), the lead.
-const offerHero = ({ id, title, ghost, above = "", under = "", lead, after = "", isNew = false, note = "" }) => `
+const offerHero = ({ id, title, ghost, under = "", lead, after = "", isNew = false, note = "" }) => `
   <section class="app-offer-hero" aria-labelledby="${id}" data-grid>
     <div class="app-wrap">
       ${isNew ? '<p class="app-offer-new app-reveal"><span class="app-new">Nouveau</span></p>' : ""}
-      ${above ? `<div class="app-offer-above app-reveal">${above}</div>` : ""}
       <div class="app-offer-heading">
         ${ghost ? `<span class="app-offer-ghost" aria-hidden="true">${unaccented(ghost)}</span>` : ""}
         <div class="app-offer-titles"><h1 class="app-offer-title app-reveal" id="${id}">${title}</h1>${under}</div>

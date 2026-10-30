@@ -1,9 +1,10 @@
 ---
 // The hero of a module, formation or domain page, over the grid and its orange fluid
-// (global.css): the « Nouveau » label of a new domain, a line above the title (the slot "above":
-// the domains of a formation), the title, over a large faded word on a module page, a line right
-// under it (the slot "under": the mark of a framework), the lead (the slot), the note of a new
-// domain, then the actions, if any (the slot "actions").
+// (global.css): the « Nouveau » label of a new domain, the title, over a large faded word on a
+// module page, a line right under it (the slot "under": the mark of a framework), the lead (the
+// slot), the note of a new domain, then the actions, if any (the slot "actions"). The slot
+// "aside" takes a column on the right on a computer and comes after the lead on a phone (the
+// domains of a formation).
 import fr from "../i18n/fr.json";
 import { withoutAccents } from "../lib/text";
 import {
@@ -45,17 +46,12 @@ const sizes = {
   aria-labelledby={id}
   data-fluid="--grid-step"
 >
-  <div class="wrap">
+  <div class:list={["wrap", { "has-aside": Astro.slots.has("aside") }]}>
     <div>
       {isNew && (
         <p class="page-new reveal">
           <span class="new">{fr.cards.new}</span>
         </p>
-      )}
-      {Astro.slots.has("above") && (
-        <div class="page-above reveal">
-          <slot name="above" />
-        </div>
       )}
       <div class="page-heading" style={sizes}>
         {ghostShown && (
@@ -85,6 +81,11 @@ const sizes = {
         </div>
       )}
     </div>
+    {Astro.slots.has("aside") && (
+      <div class="page-aside reveal">
+        <slot name="aside" />
+      </div>
+    )}
   </div>
 </section>
 
@@ -113,22 +114,29 @@ const sizes = {
     display: inline-block;
   }
 
+  /* With an aside: one column on a phone, the aside after the lead; two columns from 900 px,
+     the aside on the right, its bottom on the bottom of the lead. */
+  .page-hero .has-aside {
+    display: grid;
+    gap: var(--space-10);
+  }
+
+  @media (width >= 900px) {
+    .page-hero .has-aside {
+      grid-template-columns: 7fr 4fr;
+      gap: var(--space-18);
+      align-items: end;
+    }
+  }
+
   /* The title over the faded word, a little lower and to the right, as in the section
      headings (src/components/section-heading.astro): both in the same cell of a grid, so that
      the taller of the two sets the height. The word slides with the scroll
      (src/scripts/motion.ts). */
-  .page-above {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-3) var(--space-4);
-    margin-bottom: var(--space-4);
-  }
-
   .page-heading {
     /* The title holds on one line at every width (asked by the owner on 2026-10-29): it takes the
        whole width of the page, not the column of the lead, where « Développement web » broke
-       mid-word on a computer, and it is as large as the display size allows within that width,
+       mid-word on a computer (beside an aside, the width of its column), and it is as large as the display size allows within that width,
        from its own width in em (--title-em), so that a short title keeps the display size
        (« Laravel » 44 px on a phone) and only a long one shrinks (asked by the owner on
        2026-10-30, instead of one size for every title, sized on the longest). What follows the

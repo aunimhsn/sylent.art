@@ -1,0 +1,96 @@
+---
+// The custom request under the formations of a domain page: a band across its own row of the grid
+// of the cards, so that it keeps its place whatever the number of formations (chosen by the owner
+// on 2026-10-30; as a card among them, it fell alone on a new row or left a gap). Without glass
+// or scene, its text in a dashed frame, open on the side of the white button, that turns white
+// under the pointer and with the keyboard focus; the arrow of the button moves forward instead of the button growing.
+import fr from "../i18n/fr.json";
+import { href } from "../lib/url";
+import Icon from "./icon.astro";
+---
+
+<li class="card reveal band">
+  <div class="band-text">
+    <h3>{fr.cards.customTitle}</h3>
+    <p>{fr.cards.customText}</p>
+  </div>
+  <a class="card-more" href={href("/contact/")}>
+    <span>{fr.cards.customButton}</span>
+    <Icon name="right" size={18} />
+  </a>
+</li>
+
+<style>
+  .band {
+    grid-column: 1 / -1;
+    gap: 0;
+    padding: 0;
+    background: none;
+  }
+
+  .band:hover {
+    background: none;
+  }
+
+  .band-text {
+    display: grid;
+    gap: var(--space-3);
+    padding: var(--card-padding-block) var(--card-padding-inline);
+    border: 1px dashed var(--line-strong);
+    border-bottom-width: 0;
+    transition: border-color var(--duration-fast);
+  }
+
+  .band:is(:hover, :focus-within) .band-text {
+    border-color: var(--text);
+  }
+
+  .band .card-more {
+    margin: 0;
+  }
+
+  .band:is(:hover, :focus-within) .card-more {
+    padding-block: var(--space-4);
+  }
+
+  /* The arrow only from two columns; on a phone the band stays a plain button, as on the cards. */
+  .band .card-more :global(svg) {
+    display: none;
+    margin-left: var(--space-3);
+    transition: transform var(--duration-fast);
+  }
+
+  .band:is(:hover, :focus-within) .card-more :global(svg) {
+    transform: translateX(6px);
+  }
+
+  /* From two columns the button is a column on the right, exactly as wide as the cards above (a
+     subgrid of the grid of the cards); on a phone it is a band at the bottom. */
+  @media (width >= 640px) {
+    .band {
+      display: grid;
+      grid-template-columns: subgrid;
+      column-gap: normal;
+    }
+
+    /* The frame runs over the gap of the grid, up to the button. */
+    .band-text {
+      grid-column: 1 / -2;
+      margin-right: calc(-1 * var(--cards-gap));
+      border-right-width: 0;
+      border-bottom-width: 1px;
+    }
+
+    .band .card-more {
+      grid-column: -2 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .band .card-more :global(svg) {
+      display: block;
+      flex: none;
+    }
+  }
+</style>

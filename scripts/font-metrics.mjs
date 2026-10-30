@@ -14,7 +14,7 @@ const fonts = ".astro/fonts";
 const output = "src/data/manrope-800.json";
 
 // The characters a large title may hold: the letters of French, the digits and the punctuation of
-// the titles (« CI/CD », « Git / GitHub »). A title with another one fails the build, as one that
+// the titles (« CI / CD », « Git / GitHub »). A title with another one fails the build, as one that
 // the served file lacks (« Ÿ », outside its latin subset), which is left out. The narrow no-break
 // space is left out too: Chromium doesn't track it, so the width of a title would be wrong.
 const characters = [

@@ -142,7 +142,7 @@ const PROGRAMS = {
    ]
   ],
   "text": [
-   "Plus une équipe attend pour vérifier son code, plus les erreurs coûtent cher à corriger, et une nouvelle version n’apporte rien tant qu’elle n’est pas en ligne. La CI/CD, c’est-à-dire l’intégration et le déploiement continus, automatise les deux : chaque modification est vérifiée, et chaque version validée est publiée, sans manipulation à la main. Ce module le met en place avec GitHub Actions, Vercel et Render, de la première vérification jusqu’au retour à une version précédente quand une mise en ligne se passe mal."
+   "Plus une équipe attend pour vérifier son code, plus les erreurs coûtent cher à corriger, et une nouvelle version n’apporte rien tant qu’elle n’est pas en ligne. La CI / CD, c’est-à-dire l’intégration et le déploiement continus, automatise les deux : chaque modification est vérifiée, et chaque version validée est publiée, sans manipulation à la main. Ce module le met en place avec GitHub Actions, Vercel et Render, de la première vérification jusqu’au retour à une version précédente quand une mise en ligne se passe mal."
   ]
  },
  "claude-code": {
