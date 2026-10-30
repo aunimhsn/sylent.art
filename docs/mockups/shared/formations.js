@@ -89,11 +89,10 @@ const allModules = FORMATIONS.flatMap(published);
 // The former links of the mock-up (?module=javascript) lead to the first module of the formation.
 const moduleByKey = key => allModules.find(module => moduleKey(module) === key) || (formationOf(key) && published(formationOf(key))[0]);
 
-// The open decisions of the module page, compared with the bar of home.html: ?fw= (how
-// « framework » joins the title of a framework) and ?back= (the second button of the hero).
-const VARIANT_DEFAULTS = { fw: "under", back: "formation" };
+// The open decision of the module page, compared with the bar of home.html: ?back= (the second
+// button of the hero).
+const VARIANT_DEFAULTS = { back: "formation" };
 const variant = name => query.get(name) || VARIANT_DEFAULTS[name];
-document.documentElement.dataset.fw = variant("fw");
 
 const count = (number, word) => `${number}${NB}${word}${number > 1 ? "s" : ""}`;
 
@@ -184,5 +183,18 @@ const bearingOf = text => {
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".app-offer-title, .app-heading-title, .app-offer-ghost, .app-heading-ghost").forEach(element => {
     element.style.setProperty("--bearing", `${bearingOf(element.textContent)}em`);
+  });
+});
+
+// The width of each large title in em, in Manrope 800 with the tracking of the titles, so that its
+// size fits the width of the page (shared/formations.css, --title-em). Measured once the fonts are
+// there; the site computes it at build time from the font file, as the side bearings.
+document.fonts.ready.then(() => {
+  const context = document.createElement("canvas").getContext("2d");
+  context.font = `800 100px Manrope`;
+  document.querySelectorAll(".app-offer-heading").forEach(heading => {
+    const text = heading.querySelector(".app-offer-title").textContent.trim();
+    const width = context.measureText(text).width / 100 - 0.045 * text.length;
+    heading.style.setProperty("--title-em", (width + 0.04).toFixed(3));
   });
 });

@@ -13,7 +13,7 @@
   Updated at step 13b of roadmap.md (wireframe docs/wireframes/formations.excalidraw), after the
   built site: no breadcrumb; the hero over the grid, the title over the name of its formation as
   the faded word (the one word of its first domain for a module alone in its formation),
-  « Framework » in orange letters with the title of a framework (?fw=), the lead, then the white button « Voir le
+  « Framework » after an orange rule under the title of a framework, the lead, then the white button « Voir le
   programme » and an outline button back to the formation, side by side from 640 px, one under
   the other on a phone. Then the key facts under a rule (public, level, formats: no duration,
   asked by the owner on 2026-10-30); the prerequisites, the objectives and the program, beside a card that follows the scroll on a computer; the other modules of its
@@ -107,22 +107,12 @@
   document.title = single ? `${title} · Formations · Sylent` : `${title} · ${formation.title} · Formations · Sylent`;
   document.querySelector('meta[name="description"]').content = `${module.summary} Un module sur site ou à distance.`;
 
-  // « Framework » joins the title of a framework in orange letters only, no background (asked by
-  // the owner on 2026-10-30, the orange badge was too loud); ?fw= compares where and how. A title
-  // with a descender (Alpine, Django) keeps its mark a little lower, clear of the descender. The
+  // « Framework » under the title of a framework: an orange rule and the word in --dim (chosen by
+  // the owner on 2026-10-30, the orange badge was too loud), a little lower under a descender. The
   // formation is said to screen readers, since the faded word is hidden from them.
-  const look = variant("fw");
   const descender = /[gjpqy]/.test(title) ? " has-descender" : "";
-  const marks = {
-    under: `<p class="app-fw-title${descender}">Framework</p>`,
-    language: `<p class="app-fw-title${descender}">Framework ${formation.title}</p>`,
-    sup: `<span class="app-fw-title is-sup">Framework</span>`,
-    above: `<p class="app-fw-title is-above">Framework ${formation.title}</p>`,
-    rule: `<p class="app-fw-title is-rule${descender}">Framework</p>`,
-    sentence: `<p class="app-fw-title is-sentence${descender}">Un <em>framework</em> ${formation.title}</p>`,
-  };
-  const mark = module.framework ? marks[look] : "";
-  const under = (look === "above" ? "" : mark) + `<p class="app-hidden">${single ? `Domaine${NB}: ${domain.title}` : `Formation ${formation.title}`}</p>`;
+  const under = (module.framework ? `<p class="app-fw-title${descender}">Framework</p>` : "") +
+    `<p class="app-hidden">${single ? `Domaine${NB}: ${domain.title}` : `Formation ${formation.title}`}</p>`;
   // The second button always does what it says: the page of the formation (of the first domain for
   // a module alone in its formation), or the list of the formations; or, with adapt, « Revenir en
   // arrière » when the visitor comes from a page of the site, the page of the formation otherwise
@@ -132,7 +122,6 @@
   const [back, backLabel] = backs[variant("back")];
   const hero = offerHero({
     id: "module-title", title, ghost: single ? domain.ghost : formation.title, under,
-    above: look === "above" ? mark : "",
     lead: content.text.map(paragraph => `<p>${paragraph.replace(/\*\*/g, "")}</p>`).join(""),
     isNew: isNewModule(module), note: isNewModule(module) ? NEW_NOTE : "",
     after: `<div class="app-module-actions app-reveal"><a class="app-button" href="#programme">Voir le programme</a><a class="app-button is-outline" href="${back}"${variant("back") === "adapt" ? " data-back" : ""}>${backLabel}</a></div>`,
