@@ -10,7 +10,7 @@
   wireframe docs/wireframes/formations.excalidraw), shown at phone and desktop width by home.html
   (?page=formation); ?formation=<slug> opens another formation. Data in shared/formations.js.
   Layout: the hero (« Formation PHP », its summary, the count of modules, its domains as links),
-  then « Les modules » over « PARCOURS »: the modules in the advised order along a rail over the
+  then « Modules » over « PARCOURS »: the modules in the advised order along a rail over the
   right of their cards (?path= line or thread, ?rail= where it lies, drawn by shared/paths.js; no
   rail on a phone), beside the card to organize the formation, then the call to action. No
   duration (asked by the owner on 2026-10-30).
@@ -73,7 +73,7 @@
   const body = `
     <section aria-labelledby="modules-title">
       <div class="app-wrap">
-        ${heading("Les modules", "Parcours", "modules-title")}
+        ${heading("Modules", "Parcours", "modules-title")}
         <div class="app-formation-body"><div>${steps}</div>${organize}</div>
       </div>
     </section>`;
