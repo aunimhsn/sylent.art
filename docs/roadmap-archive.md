@@ -2,6 +2,19 @@
 
 The detail of the steps of [roadmap.md](../roadmap.md) once their pull request is merged, newest first.
 
+## 10. Feedback on the preview (#18–#28, #32, #34–#37, #40, #42, #43)
+
+The owner reviewed the site online at `aunimhsn.github.io/sylent.art` on 2026-10-29 and 2026-10-30; each remark was fixed in a small pull request, the slugs (hence the URLs) kept:
+
+- Renames (#18, #25, #36): domains and modules shortened so that they hold on one line (« Git / GitHub », « Méthode agile », « POO », « Fondamentaux »), « Initiation à la prog. » with the period of an abbreviation; step 13 later replaced some domains.
+- The modules one by one with the owner (#20, #21, #23 to #28): their texts as close as possible to what the owner teaches; « Méthode et IA » removed; « CI/CD » merges continuous integration and deployment; a module may be a draft (`draft: true`, kept out of the site: Vue, Django, PostgreSQL); the others reworked or approved as they are, Prompt engineering kept for the launch until the owner reworks the AI courses.
+- Module pages (#20, #21, #24): titles no longer hyphenated, one audience per line, no breadcrumb, the badge « Nouveau » at the very top, the domain as the faded word behind the title.
+- Home page and layout (#19, #22, #35 to #37): domain cards that slide their content up and show their modules as tags, with the band « Voir les modules »; Roman numerals in Manrope; closer footer columns; the faded word « Echanger » ends its slide at the bottom of every page; the owner's photo behind the name, behind « Qui suis-je ? » and on the hero cube.
+- Phone (#32, #34): the faded words no longer widen the page; every title holds on one line; `npm run check` loads every page in Chromium at phone width (Playwright) and fails on an overflow or a title on two lines.
+- Titles (#42): each module and domain title as large as one line allows, from its own width measured on Manrope 800, and aligned on the ink of its first letter (see [Branding](branding.md), Typography).
+- About page (#40): the role « Formateur depuis 2021 ».
+- Formations (#43): the domains of a formation page as small cards beside its hero, the custom request as the eighth domain card, the framework mark on the formation cards, new summaries for « Gestion de projet » and « IA générative », the band « Un besoin sur mesure ? » under the formations of a domain page; the draft « UX / UI ».
+
 ## 13c. Build of the formations (#41)
 
 Step 13, classification of the offers, before the launch: the groups mixed fields and a technology (« Python »). Agreed with the owner on 2026-10-30, on the tree `docs/wireframes/offer-classification.excalidraw`: domains (shelves) → formations (one subject each, the address) → modules; a module lives in one formation and is filed under one or more domains; addresses `/formations/<formation>/<module>/`; « IA générative » and « Programmation » replace « Développement IA » and « Initiation à la prog. », the domain « Python » is gone, the POO is a module of PHP and of Python; the word « domaine » stays (see `specs.md`, Training offers).
