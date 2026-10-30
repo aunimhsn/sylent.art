@@ -22,6 +22,7 @@ A **design token** is a named value that the components use instead of a raw val
 - The wordmark is drawn as an SVG path, so that the site loads no third font for it.
 - Header: mark and wordmark side by side, mark 34 px high, gap one third of the mark, letters half of its height.
 - Footer: the wordmark alone, large (`clamp(220px, 38vw, 490px)` wide), set astride the edge between the call to action and the footer.
+- Favicon (added on 2026-10-30, forgotten at the launch): the mark alone, white, 80 % of the height of a square of `--bg`, as the square logo of the charter but larger, so that it still reads at 16 px. In `public/`: `favicon.svg`, `favicon.ico` (16, 32 and 48 px, for the browsers without SVG and for Google, which looks for `/favicon.ico`) and `apple-touch-icon.png` (180 px), rendered from the SVG.
 
 ## Colors
 
