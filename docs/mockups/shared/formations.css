@@ -27,9 +27,17 @@
 .app-offer-heading > * { grid-area: 1 / 1; }
 /* The title and what follows it right under it (the badge of a framework), over the faded word. */
 .app-offer-titles { position: relative; align-self: start; }
+/* The faded word behind a title: as wide as the heading (fill) or 80 % of it (most), at least the
+   size of the faded words and at most their largest size (176 px), so that a short word
+   (« PHP ») grows on a phone, where the title grew too, and a long one (« PROGRAMMATION ») keeps
+   the size of the faded words and may run past the screen; before keeps --size-ghost.
+   --ghost-em is its width in em, measured as --title-em. */
+.app-offer-heading * { --ghost-fit: max(var(--size-ghost), min(176px, calc(100cqi / var(--ghost-em, 99)))); }
+[data-ghost="most"] .app-offer-heading * { --ghost-fit: max(var(--size-ghost), min(176px, calc(80cqi / var(--ghost-em, 99)))); }
+[data-ghost="before"] .app-offer-heading * { --ghost-fit: var(--size-ghost); }
 .app-offer-ghost {
   margin: var(--space-fluid-1) 0 0 0.12em;
-  font: var(--title-weight) var(--size-ghost)/0.8 var(--font-title);
+  font: var(--title-weight) var(--ghost-fit)/0.8 var(--font-title);
   letter-spacing: var(--tracking-ghost);
   text-transform: uppercase;
   color: var(--ghost-word);

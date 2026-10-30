@@ -14,7 +14,8 @@
   built site: no breadcrumb; the hero over the grid, the title over the name of its formation as
   the faded word (the one word of its first domain for a module alone in its formation),
   « Framework » after an orange rule under the title of a framework, the lead, then the white button « Voir le
-  programme » and an outline button back to the formation, side by side from 640 px, one under
+  programme » and the outline « Voir la formation PHP », or « Revenir en arrière » when coming
+  from a page of the site, side by side from 640 px, one under
   the other on a phone. Then the key facts under a rule (public, level, formats: no duration,
   asked by the owner on 2026-10-30); the prerequisites, the objectives and the program, beside a card that follows the scroll on a computer; the other modules of its
   formation (« Dans la même formation »), or of its domain for a module alone in its formation.
@@ -113,18 +114,16 @@
   const descender = /[gjpqy]/.test(title) ? " has-descender" : "";
   const under = (module.framework ? `<p class="app-fw-title${descender}">Framework</p>` : "") +
     `<p class="app-hidden">${single ? `Domaine${NB}: ${domain.title}` : `Formation ${formation.title}`}</p>`;
-  // The second button always does what it says: the page of the formation (of the first domain for
-  // a module alone in its formation), or the list of the formations; or, with adapt, « Revenir en
-  // arrière » when the visitor comes from a page of the site, the page of the formation otherwise
-  // (a search engine, a shared link, a hidden referrer). ?back= compares them.
-  const toFormation = single ? [domainHref(domain), `Voir le domaine ${domain.title}`] : [formationHref(formation), `Voir la formation ${formation.title}`];
-  const backs = { formation: toFormation, all: [PAGES.courses, "Voir toutes les formations"], adapt: toFormation };
-  const [back, backLabel] = backs[variant("back")];
+  // The second button: « Voir la formation PHP » (« Voir le domaine … » for a module alone in its
+  // formation), which works without JavaScript and for a visitor from a search engine or a shared
+  // link; coming from a page of the site, it becomes « Revenir en arrière » and goes back (chosen
+  // by the owner on 2026-10-30: the words always say what the button does).
+  const [back, backLabel] = single ? [domainHref(domain), `Voir le domaine ${domain.title}`] : [formationHref(formation), `Voir la formation ${formation.title}`];
   const hero = offerHero({
     id: "module-title", title, ghost: single ? domain.ghost : formation.title, under,
     lead: content.text.map(paragraph => `<p>${paragraph.replace(/\*\*/g, "")}</p>`).join(""),
     isNew: isNewModule(module), note: isNewModule(module) ? NEW_NOTE : "",
-    after: `<div class="app-module-actions app-reveal"><a class="app-button" href="#programme">Voir le programme</a><a class="app-button is-outline" href="${back}"${variant("back") === "adapt" ? " data-back" : ""}>${backLabel}</a></div>`,
+    after: `<div class="app-module-actions app-reveal"><a class="app-button" href="#programme">Voir le programme</a><a class="app-button is-outline" href="${back}" data-back>${backLabel}</a></div>`,
   });
 
   const facts = `
@@ -177,9 +176,8 @@
     <div class="app-wrap"><div class="app-module-body"><div class="app-module-main">${main}</div>${organize}</div></div>` +
     related + siteCta(`Organiser ce module${NB}?<br>Parlons de vos apprenants.`) + siteFooter();
 
-  // Adapt: the page is written with the link to the formation, which works without JavaScript and
-  // for a visitor from outside; coming from a page of the site, the button becomes « Revenir en
-  // arrière » before the first paint and goes back in the history.
+  // Coming from a page of the site, the button becomes « Revenir en arrière » before the first
+  // paint and goes back in the history.
   const backButton = document.querySelector("[data-back]");
   const fromSite = document.referrer && new URL(document.referrer).origin === location.origin;
   if (backButton && fromSite && history.length > 1) {

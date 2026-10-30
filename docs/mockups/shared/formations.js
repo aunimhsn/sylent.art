@@ -89,10 +89,11 @@ const allModules = FORMATIONS.flatMap(published);
 // The former links of the mock-up (?module=javascript) lead to the first module of the formation.
 const moduleByKey = key => allModules.find(module => moduleKey(module) === key) || (formationOf(key) && published(formationOf(key))[0]);
 
-// The open decision of the module page, compared with the bar of home.html: ?back= (the second
-// button of the hero).
-const VARIANT_DEFAULTS = { back: "formation" };
+// The open decision of step 13b, compared with the bar of home.html: ?ghost= (the size of the
+// faded word behind a title).
+const VARIANT_DEFAULTS = { ghost: "fill" };
 const variant = name => query.get(name) || VARIANT_DEFAULTS[name];
+document.documentElement.dataset.ghost = variant("ghost");
 
 const count = (number, word) => `${number}${NB}${word}${number > 1 ? "s" : ""}`;
 
@@ -196,5 +197,11 @@ document.fonts.ready.then(() => {
     const text = heading.querySelector(".app-offer-title").textContent.trim();
     const width = context.measureText(text).width / 100 - 0.045 * text.length;
     heading.style.setProperty("--title-em", (width + 0.04).toFixed(3));
+    // The faded word, in capitals, without accents, with the tracking of the faded words.
+    const ghost = heading.querySelector(".app-offer-ghost");
+    if (ghost) {
+      const word = unaccented(ghost.textContent.trim()).toUpperCase();
+      heading.style.setProperty("--ghost-em", (context.measureText(word).width / 100 - 0.06 * word.length + 0.12).toFixed(3));
+    }
   });
 });
