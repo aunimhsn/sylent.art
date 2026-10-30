@@ -1,0 +1,100 @@
+---
+// The not-found page (docs/mockups/not-found-site.html), which GitHub Pages serves for every path
+// that has no page: a section heading over the faded « 404 », larger than the other faded words,
+// over the grid of the hero and its fluid, and two ways out, the home page and the formations.
+// Its texts are in src/content/not-found.json.
+import SectionHeading from "../components/section-heading.astro";
+import page from "../content/not-found.json";
+import SiteLayout from "../layouts/site-layout.astro";
+import { href } from "../lib/url";
+
+const [first, second] = page.lead;
+---
+
+<SiteLayout title={page.title} description={page.description} noindex>
+  <section
+    class="lost grid-texture"
+    aria-labelledby="lost-title"
+    data-fluid="--grid-step"
+  >
+    <div class="wrap">
+      <SectionHeading
+        title={page.heading}
+        short={page.shortHeading}
+        ghost={page.ghost}
+        id="lost-title"
+        level={1}
+      />
+      <p class="lead reveal">
+        {first}
+        <br class="is-wide" /> {second}
+      </p>
+      <div class="lost-actions reveal">
+        <a class="button magnetic" href={href("/")}>
+          {page.home}
+        </a>
+        <a class="button is-outline" href={href("/formations/")}>
+          {page.formations}
+        </a>
+      </div>
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  /* Room at the bottom for the wordmark of the footer, which straddles its top edge. The grid
+     covers the whole block, under a radial mask, as in the hero of the home page. */
+  .lost {
+    --grid-mask: radial-gradient(
+      75% 70% at 50% 45%,
+      #000000 30%,
+      transparent 75%
+    );
+
+    display: grid;
+    align-items: center;
+    box-sizing: border-box;
+    min-height: min(100svh, 860px);
+    padding: calc(var(--header-height) + var(--space-12)) 0
+      var(--space-wordmark);
+  }
+
+  .lost .wrap {
+    position: relative;
+  }
+
+  /* The faded number, larger than the other faded words: it is the whole message. The title sits
+     over its lower part. */
+  .lost :global(.heading-ghost) {
+    font-size: var(--size-ghost-404);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .lost :global(.heading-title) {
+    top: auto;
+    bottom: 18%;
+  }
+
+  .lost .lead {
+    margin: 0;
+  }
+
+  /* The text goes to the line after its first sentence from 640 px: on a phone, that sentence
+     already wraps. */
+  br.is-wide {
+    display: none;
+  }
+
+  @media (width >= 640px) {
+    br.is-wide {
+      display: initial;
+    }
+  }
+
+  .lost-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-9);
+  }
+</style>

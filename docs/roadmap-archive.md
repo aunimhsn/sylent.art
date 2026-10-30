@@ -2,6 +2,10 @@
 
 The detail of the steps of [roadmap.md](../roadmap.md) once their pull request is merged, newest first.
 
+## 14a. Communication supports (#45)
+
+Step 14, launch, announced on LinkedIn, Instagram and the owner's Facebook page (asked on 2026-10-30): the supports are prepared before the switch, and published after it. Made on 2026-10-30 and kept by the owner out of the repository: the teaser « L'impact » (« 3/11/26 », « nouveau site », « sylent.art », « bientôt ») and the launch video « Le cube » (« Disponible dès maintenant »), each as an Instagram story (1080 × 1920) and a feed video for LinkedIn and Facebook (1080 × 1350), with a synthesized sound; the text of the post, the same on both networks, with the link in the post itself. The temporary tool that made them (a Vite page, GSAP and Three.js videos, `sound.js`, `render.mjs`) stays on the branch `docs/communication-kit`, not merged and not reviewed: a repository dedicated to content creation may come later.
+
 ## 10. Feedback on the preview (#18–#28, #32, #34–#37, #40, #42, #43)
 
 The owner reviewed the site online at `aunimhsn.github.io/sylent.art` on 2026-10-29 and 2026-10-30; each remark was fixed in a small pull request, the slugs (hence the URLs) kept:

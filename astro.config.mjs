@@ -1,5 +1,7 @@
 // @ts-check
+import { rmSync } from "node:fs";
 import { defineConfig, fontProviders } from "astro/config";
+import sitemap from "./scripts/sitemap.mjs";
 
 // The deployment workflow sets SITE_URL and BASE_PATH so that the owner can check the site at
 // https://aunimhsn.github.io/sylent.art before the domain points to GitHub Pages. Without
@@ -27,6 +29,23 @@ export default defineConfig({
     "/articles": to("/"),
     "/articles/1": to("/"),
     "/articles/2": to("/"),
+  },
+  integrations: [
+    // Astro also builds src/pages/3xx.astro as a page of its own, /3xx.html, without a redirect
+    // to fill it: it is removed, if Astro wrote it.
+    {
+      name: "redirect-page",
+      hooks: {
+        "astro:build:done": ({ dir }) =>
+          rmSync(new URL("3xx.html", dir), { force: true }),
+      },
+    },
+    sitemap(),
+  ],
+  experimental: {
+    // Each redirect is written with src/pages/3xx.astro, a page in French, instead of Astro's
+    // page in English (docs/technical-choices.md, Astro).
+    redirectPage: true,
   },
   vite: {
     build: {
