@@ -6,6 +6,7 @@
 // scroll on a computer. A formation of a single published module has no page: its address leads
 // to its module.
 import type { GetStaticPaths } from "astro";
+import OrganizeCard from "../../../components/organize-card.astro";
 import PageHero from "../../../components/page-hero.astro";
 import SectionHeading from "../../../components/section-heading.astro";
 import courses from "../../../content/courses.json";
@@ -15,6 +16,7 @@ import {
   domainPath,
   getCatalog,
   isSingle,
+  moduleCount,
   modulePath,
   newDomainOf,
   type Formation,
@@ -47,10 +49,7 @@ if (isSingle(formation)) {
 const page = courses.formation;
 const { title, summary = "" } = formation.collection.data;
 const { modules, domains } = formation;
-const count = fr.cards.moduleCount.other.replace(
-  "{count}",
-  String(modules.length),
-);
+const count = moduleCount(modules.length);
 ---
 
 <SiteLayout
@@ -61,13 +60,15 @@ const count = fr.cards.moduleCount.other.replace(
   cta={page.cta}
 >
   <PageHero title={title} id="formation-title" isNew={isNew}>
-    <Fragment slot="above">
+    <ul slot="above" class="chips" aria-label={page.domains}>
       {domains.map(({ id, data }) => (
-        <a class="chip" href={href(domainPath(id))}>
-          {data.title}
-        </a>
+        <li>
+          <a class="chip" href={href(domainPath(id))}>
+            {data.title}
+          </a>
+        </li>
       ))}
-    </Fragment>
+    </ul>
     <p class="formation-count">{count}</p>
     <p class="formation-summary">{summary}</p>
   </PageHero>
@@ -114,13 +115,7 @@ const count = fr.cards.moduleCount.other.replace(
             </li>
           ))}
         </ol>
-        <aside class="organize glass" aria-labelledby="organize-title">
-          <h2 id="organize-title">{page.organize.title}</h2>
-          <p>{page.organize.text}</p>
-          <a class="button" href={href("/contact/")}>
-            {page.organize.button}
-          </a>
-        </aside>
+        <OrganizeCard {...page.organize} onPhone />
       </div>
     </div>
   </section>
@@ -132,7 +127,17 @@ const count = fr.cards.moduleCount.other.replace(
 
 <style>
   /* The domains of the formation above its name, as outline chips, white under the pointer. */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
   .chip {
+    display: block;
     padding: var(--space-2) var(--space-3);
     border: 1px solid var(--line-strong);
     color: var(--secondary);
@@ -164,29 +169,6 @@ const count = fr.cards.moduleCount.other.replace(
     display: grid;
     gap: var(--space-14);
     padding-bottom: var(--space-fluid-3);
-  }
-
-  .organize {
-    display: grid;
-    gap: var(--space-3);
-    padding: var(--card-padding-block) var(--card-padding-inline);
-  }
-
-  .organize h2 {
-    margin: 0;
-    font: 700 var(--size-card-title) / 1.2 var(--font-title);
-    letter-spacing: var(--tracking-card);
-  }
-
-  .organize p {
-    margin: 0;
-    color: var(--secondary);
-    font-size: var(--size-text-small);
-  }
-
-  .organize .button {
-    justify-self: start;
-    margin-top: var(--space-2);
   }
 
   /* ── The path: the modules in the advised order, without numbers, along a rail ──
@@ -336,11 +318,6 @@ const count = fr.cards.moduleCount.other.replace(
       grid-template-columns: 8fr 4fr;
       gap: var(--space-18);
       align-items: start;
-    }
-
-    .organize {
-      position: sticky;
-      top: calc(var(--header-height) + var(--space-6));
     }
   }
 </style>

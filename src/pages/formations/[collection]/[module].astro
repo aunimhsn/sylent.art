@@ -11,6 +11,7 @@ import CustomCard from "../../../components/custom-card.astro";
 import FormationCard from "../../../components/formation-card.astro";
 import Icon from "../../../components/icon.astro";
 import ModuleCard from "../../../components/module-card.astro";
+import OrganizeCard from "../../../components/organize-card.astro";
 import PageHero from "../../../components/page-hero.astro";
 import SectionHeading from "../../../components/section-heading.astro";
 import courses from "../../../content/courses.json";
@@ -77,8 +78,7 @@ const otherModules = single
 const hasText = Boolean(module.body?.trim());
 const { Content } = await render(module);
 // The way back: the page of its formation, or of its first domain for a module alone in its
-// formation. A visitor who comes from a page of the site gets « Revenir en arrière » instead,
-// which goes back in the history (see the script).
+// formation.
 const [backPath, backLabel] = single
   ? [
       domainPath(domain.id),
@@ -126,7 +126,7 @@ const hasDescender = /[gjpqy]/.test(title);
       <a class="button" href="#programme">
         {page.seeProgram}
       </a>
-      <a class="button is-outline" href={href(backPath)} data-back={page.back}>
+      <a class="button is-outline" href={href(backPath)}>
         {backLabel}
       </a>
     </Fragment>
@@ -182,13 +182,7 @@ const hasDescender = /[gjpqy]/.test(title);
           <p class="program-end reveal">{page.programEnd}</p>
         </section>
       </div>
-      <aside class="organize glass" aria-labelledby="organize-title">
-        <h2 id="organize-title">{page.organize.title}</h2>
-        <p>{page.organize.text}</p>
-        <a class="button" href={href("/contact/")}>
-          {page.organize.button}
-        </a>
-      </aside>
+      <OrganizeCard {...page.organize} />
     </div>
   </div>
 
@@ -220,19 +214,6 @@ const hasDescender = /[gjpqy]/.test(title);
 
 <script>
   import { gsap } from "gsap";
-
-  // Coming from a page of the site, the way back becomes « Revenir en arrière » and goes back in
-  // the history, so that its words always say what it does (docs/branding.md, Components); from
-  // a search engine, a shared link or without JavaScript, it leads to the formation or the domain.
-  const back = document.querySelector<HTMLAnchorElement>("[data-back]");
-  const site = new URL(import.meta.env.BASE_URL, location.origin).href;
-  if (back && document.referrer.startsWith(site) && history.length > 1) {
-    back.textContent = back.dataset.back ?? "";
-    back.addEventListener("click", (event) => {
-      event.preventDefault();
-      history.back();
-    });
-  }
 
   // « Framework » under the title of a framework comes in once the title is there: the orange
   // rule draws itself from left to right, then the word slides a little to the right as it is
@@ -288,6 +269,16 @@ const hasDescender = /[gjpqy]/.test(title);
     height: 1px;
     background: var(--signal);
     transform-origin: left;
+  }
+
+  /* Hidden before the first paint while the title is, until the script brings it in (the
+     starting state of the reveals, global.css). */
+  :global(html[data-motion="on"].is-js) .framework-rule {
+    transform: scaleX(0);
+  }
+
+  :global(html[data-motion="on"].is-js) .framework-word {
+    opacity: 0;
   }
 
   /* ── Key facts: plain columns under a rule ── */
@@ -419,28 +410,6 @@ const hasDescender = /[gjpqy]/.test(title);
     font-size: var(--size-text-small);
   }
 
-  /* The card to organize the module: it follows the scroll on a computer; on a phone the
-     header button and the call to action at the end are enough. */
-  .organize {
-    display: none;
-  }
-
-  .organize h2 {
-    margin: 0;
-    font: 700 var(--size-card-title) / 1.2 var(--font-title);
-    letter-spacing: var(--tracking-card);
-  }
-
-  .organize p {
-    margin: 0;
-    color: var(--secondary);
-    font-size: var(--size-text-small);
-  }
-
-  .organize .button {
-    margin-top: var(--space-2);
-  }
-
   /* The neighbors follow on without the top padding of their section. */
   .related {
     padding-top: 0;
@@ -455,14 +424,6 @@ const hasDescender = /[gjpqy]/.test(title);
       grid-template-columns: 8fr 4fr;
       gap: var(--space-18);
       align-items: start;
-    }
-
-    .organize {
-      position: sticky;
-      top: calc(var(--header-height) + var(--space-6));
-      display: grid;
-      gap: var(--space-3);
-      padding: var(--card-padding-block) var(--card-padding-inline);
     }
   }
 </style>

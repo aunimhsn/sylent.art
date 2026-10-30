@@ -1,0 +1,65 @@
+---
+// The glass card « Organiser ce module » or « Organiser cette formation », beside the program of a
+// module or the path of a formation, that follows the scroll on a computer and leads to the
+// contact page. On a module page it is hidden on a phone, where the header button and the call
+// to action at the end are enough; on a formation page it follows the path.
+import { href } from "../lib/url";
+
+interface Props {
+  title: string;
+  text: string;
+  button: string;
+  /** Shown on a phone too, under the content it stands beside on a computer. */
+  onPhone?: boolean;
+}
+
+const { title, text, button, onPhone = false } = Astro.props;
+---
+
+<aside
+  class:list={["organize glass", { "is-desktop": !onPhone }]}
+  aria-labelledby="organize-title"
+>
+  <h2 id="organize-title">{title}</h2>
+  <p>{text}</p>
+  <a class="button" href={href("/contact/")}>
+    {button}
+  </a>
+</aside>
+
+<style>
+  .organize {
+    display: grid;
+    gap: var(--space-3);
+    padding: var(--card-padding-block) var(--card-padding-inline);
+  }
+
+  .organize.is-desktop {
+    display: none;
+  }
+
+  .organize h2 {
+    margin: 0;
+    font: 700 var(--size-card-title) / 1.2 var(--font-title);
+    letter-spacing: var(--tracking-card);
+  }
+
+  .organize p {
+    margin: 0;
+    color: var(--secondary);
+    font-size: var(--size-text-small);
+  }
+
+  .organize .button {
+    margin-top: var(--space-2);
+  }
+
+  @media (width >= 900px) {
+    .organize,
+    .organize.is-desktop {
+      position: sticky;
+      top: calc(var(--header-height) + var(--space-6));
+      display: grid;
+    }
+  }
+</style>

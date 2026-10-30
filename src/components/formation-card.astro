@@ -10,6 +10,7 @@ import {
   formationPath,
   getCatalog,
   isSingle,
+  moduleCount,
   modulePath,
   newDomainOf,
   type Filed,
@@ -26,10 +27,7 @@ const { formation, modules } = Astro.props.filed;
 const catalog = await getCatalog();
 const isNew = modules.some((module) => newDomainOf(catalog, module));
 const { title } = formation.collection.data;
-const total = formation.modules.length;
-const count = fr.cards.moduleCount[
-  new Intl.PluralRules("fr").select(total) === "one" ? "one" : "other"
-].replace("{count}", String(total));
+const count = moduleCount(formation.modules.length);
 ---
 
 {isSingle(formation) ? (

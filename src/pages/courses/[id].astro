@@ -7,6 +7,7 @@ import type { GetStaticPaths } from "astro";
 import {
   collectionIdOf,
   domainPath,
+  domainsOf,
   formationPath,
   getCatalog,
   isSingle,
@@ -16,18 +17,18 @@ import {
 import { href } from "../../lib/url";
 
 export const getStaticPaths = (async () => {
-  const { formations, offers, drafts } = await getCatalog();
+  const catalog = await getCatalog();
+  const { formations, drafts } = catalog;
   const targetOfDraft = (draft: Module) => {
     const formation = formations.find(
       ({ collection }) => collection.id === collectionIdOf(draft),
     );
     if (formation && !isSingle(formation)) return formationPath(formation);
-    const domain = offers.find((offer) =>
-      draft.data.domains.some(({ id }) => id === offer.domain.id),
-    );
-    if (!domain)
+    const offer = domainsOf(catalog, draft)[0];
+    if (!offer) {
       throw new Error(`${draft.id}: no page to lead its former URL to`);
-    return domainPath(domain.domain.id);
+    }
+    return domainPath(offer.domain.id);
   };
   const modules = formations.flatMap(({ modules }) => modules);
   return [...modules, ...drafts].flatMap((module) => {
