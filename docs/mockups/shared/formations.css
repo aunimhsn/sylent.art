@@ -70,7 +70,7 @@
    height made up for (its line box ends about 0.11 em under the baseline), a little lower when the
    title has a descender (Alpine, Django). */
 .app-fw-title { position: relative; display: flex; align-items: center; gap: var(--space-3); margin: calc(var(--title-size) * 0.02) 0 0 0.04em; color: var(--dim); font: var(--label-weight) var(--size-label)/1 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; }
-.app-fw-title::before { content: ""; width: var(--space-8); height: 1px; background: var(--signal); }
+.app-fw-rule { flex: none; width: var(--space-8); height: 1px; background: var(--signal); transform-origin: left; }
 .app-fw-title.has-descender { margin-top: calc(var(--title-size) * 0.12); }
 
 /* ── The framework mark ─────────────────────────────────────────────────────────────── */

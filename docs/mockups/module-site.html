@@ -112,7 +112,7 @@
   // the owner on 2026-10-30, the orange badge was too loud), a little lower under a descender. The
   // formation is said to screen readers, since the faded word is hidden from them.
   const descender = /[gjpqy]/.test(title) ? " has-descender" : "";
-  const under = (module.framework ? `<p class="app-fw-title${descender}">Framework</p>` : "") +
+  const under = (module.framework ? `<p class="app-fw-title${descender}"><span class="app-fw-rule"></span><span class="app-fw-word">Framework</span></p>` : "") +
     `<p class="app-hidden">${single ? `Domaine${NB}: ${domain.title}` : `Formation ${formation.title}`}</p>`;
   // The second button: « Voir la formation PHP » (« Voir le domaine … » for a module alone in its
   // formation), which works without JavaScript and for a visitor from a search engine or a shared
@@ -193,6 +193,19 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
 <script src="shared/motion.js"></script>
+<script>
+  // « Framework » under the title of a framework comes in from the left once the title is there:
+  // the orange rule draws itself from left to right, then the word slides a little to the right
+  // as it is uncovered (asked by the owner on 2026-10-30). Nothing moves when the visitor asked to
+  // reduce motion.
+  (() => {
+    const mark = document.querySelector(".app-fw-title");
+    if (!mark || !window.sylentMotion) return;
+    gsap.timeline({ delay: 0.6 })
+      .fromTo(mark.querySelector(".app-fw-rule"), { scaleX: 0 }, { scaleX: 1, duration: 0.7, ease: "power3.out" })
+      .fromTo(mark.querySelector(".app-fw-word"), { x: -14, opacity: 0, clipPath: "inset(0 100% 0 0)" }, { x: 0, opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power3.out" }, "-=0.35");
+  })();
+</script>
 <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }</script>
 <script type="module" src="shared/covers.js"></script>
 </body>
