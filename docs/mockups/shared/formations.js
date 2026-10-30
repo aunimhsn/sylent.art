@@ -69,7 +69,7 @@ const OFFER_DOMAINS = [
   { slug: "bases-de-donnees", title: "Bases de données", ghost: "Donnees", scene: "database", summary: "Modéliser, concevoir et interroger des données.", formations: ["merise", "mysql", "postgresql"] },
   { slug: "conception-logicielle", title: "Conception logicielle", ghost: "Conception", scene: "blueprint", summary: "Penser l’architecture d’un logiciel avant de l’écrire.", formations: ["uml", "principes-solid", "design-patterns"] },
   { slug: "methodologie-et-tests", title: "Méthodologie et tests", ghost: "Methode", scene: "branch", summary: "Versionner, tester et livrer avec méthode.", formations: ["git-github", "cypress", "ci-cd"] },
-  { slug: "gestion-de-projet", title: "Gestion de projet", ghost: "Projet", scene: "board", summary: "S’initier à l’agilité avec Scrum.", formations: ["agilite", "git-github"] },
+  { slug: "gestion-de-projet", title: "Gestion de projet", ghost: "Projet", scene: "board", summary: "Mener un projet en équipe, de l’idée à la mise en ligne.", formations: ["agilite", "git-github"] },
 ];
 const formationOf = slug => FORMATIONS.find(formation => formation.slug === slug);
 const domainOf = slug => OFFER_DOMAINS.find(domain => domain.slug === slug);

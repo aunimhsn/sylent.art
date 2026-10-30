@@ -93,7 +93,7 @@ const DOMAINS = [
     ["Prompt engineering", 1, "Formuler ses demandes pour obtenir des réponses utiles et fiables.", "chat"],
     ["Intégrer l’IA avec méthode", 1, "Adopter l’IA en équipe, avec des règles claires et sûres.", "orbit"],
   ] },
-  { slug: "gestion-de-projet", title: "Gestion de projet", summary: "S’initier à l’agilité avec Scrum.", scene: "board", modules: [
+  { slug: "gestion-de-projet", title: "Gestion de projet", summary: "Mener un projet en équipe, de l’idée à la mise en ligne.", scene: "board", modules: [
     ["Initiation à l’agilité avec Scrum", 2, "Découvrir l’agilité en menant un projet fil rouge avec Scrum.", "sprint"],
   ] },
 ];
