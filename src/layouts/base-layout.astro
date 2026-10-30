@@ -3,6 +3,7 @@
 import { Font, getImage } from "astro:assets";
 import socialCard from "../assets/brand/social-card.png";
 import fr from "../i18n/fr.json";
+import { href } from "../lib/url";
 import "../styles/global.css";
 
 interface Props {
@@ -44,6 +45,14 @@ const cardUrl = new URL(card.src, Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <!--
+      The mark of the logo, white on the background of the site (docs/branding.md, Logo):
+      SVG for the browsers that read it, ICO (16, 32, 48 px) for the others and for Google,
+      which looks for /favicon.ico, and a PNG of 180 px for a shortcut on an iPhone.
+    -->
+    <link rel="icon" href={href("/favicon.ico")} sizes="32x32" />
+    <link rel="icon" href={href("/favicon.svg")} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={href("/apple-touch-icon.png")} />
     {!noindex && <link rel="canonical" href={canonical} />}
     {(isPreview || noindex) && <meta name="robots" content="noindex" />}
     <meta property="og:type" content="website" />
