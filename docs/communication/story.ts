@@ -1,7 +1,8 @@
-// The Instagram story of the launch (roadmap, step 14a): three variants of 12 s, drawn with the
-// scenes of the covers of the site and GSAP. Everything moves on one paused timeline that
-// `story.seek(t)` sets to any time, the scenes included, so that render.mjs can capture the
-// story frame by frame, the same at every run.
+// The videos of the launch (roadmap, step 14a), drawn with the scenes of the site and GSAP:
+// variant A « Le cube » and variant D « L'impact », as an Instagram story (1080 × 1920) or as a
+// video of the LinkedIn and Facebook feeds (?format=feed, 1080 × 1350). Everything moves on one
+// paused timeline that `story.seek(t)` sets to any time, the scenes included: the page of the
+// supports drives it (?controlled=1), and render.mjs captures it frame by frame.
 //
 // The tokens are imported first: the scenes read their colors from them when they load.
 import "../../src/styles/tokens.css";
@@ -9,17 +10,30 @@ import "./story.css";
 import { gsap } from "gsap";
 import * as THREE from "three";
 import type { Scene } from "../../src/scripts/cover-kit";
-import { MODULE_SCENES } from "../../src/scripts/module-scenes";
 import wordmark from "../../src/assets/brand/wordmark.svg?raw";
 import facePhoto from "../../src/assets/portrait/face.png";
+import { synthesize } from "./sound.js";
 
-const DURATION = 12;
+interface Cue {
+  time: number;
+  sound: string;
+  pitch?: number;
+  gain?: number;
+  length?: number;
+}
 
 const params = new URLSearchParams(location.search);
-const variant = params.get("variant") ?? "a";
+const variant = params.get("variant") === "d" ? "d" : "a";
 const launch = params.has("launch");
+const feed = params.get("format") === "feed";
+const WIDTH = 1080;
+const HEIGHT = feed ? 1350 : 1920;
 const stage = document.getElementById("stage") as HTMLElement;
-if (params.has("safe")) stage.classList.add("safe");
+stage.style.height = `${HEIGHT}px`;
+if (params.has("safe") && !feed) stage.classList.add("safe");
+
+let duration = 12;
+const cues: Cue[] = [];
 
 const css = (name: string) =>
   getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -37,13 +51,6 @@ const lines = (texts: string[]) =>
     .map((text) => `<span class="line"><span>${text}</span></span>`)
     .join("");
 
-/** Words that appear one by one. */
-const words = (text: string) =>
-  text
-    .split(" ")
-    .map((word) => `<span class="word">${word}</span>`)
-    .join(" ");
-
 const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
 
 // ── The scenes, drawn by one renderer ─────────────────────────────────────────────────
@@ -55,17 +62,14 @@ interface Slot {
   canvas: HTMLCanvasElement;
   context: CanvasRenderingContext2D;
   scene: Scene;
-  /** When its scene starts, in the time of the story. */
-  start: number;
 }
 
 const slots: Slot[] = [];
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setPixelRatio(1);
-const ROW_LIMIT = 4096;
 let room = [0, 0];
 
-function addSlot(element: HTMLElement, scene: Scene, start = 0) {
+function addSlot(element: HTMLElement, scene: Scene) {
   const canvas = document.createElement("canvas");
   element.append(canvas);
   slots.push({
@@ -73,53 +77,42 @@ function addSlot(element: HTMLElement, scene: Scene, start = 0) {
     canvas,
     context: canvas.getContext("2d") as CanvasRenderingContext2D,
     scene,
-    start,
   });
 }
 
 async function draw(time: number) {
-  const box = stage.getBoundingClientRect();
-  const parts: { slot: Slot; x: number; y: number; w: number; h: number }[] =
-    [];
-  let [x, y, rowHeight, used] = [0, 0, 0, 0];
+  const parts: { slot: Slot; x: number; w: number; h: number }[] = [];
+  let x = 0;
   for (const slot of slots) {
     const w = slot.element.offsetWidth;
     const h = slot.element.offsetHeight;
-    const rect = slot.element.getBoundingClientRect();
     const shown =
       w > 0 &&
       h > 0 &&
       slot.element.checkVisibility({
         opacityProperty: true,
         visibilityProperty: true,
-      }) &&
-      rect.bottom > box.top &&
-      rect.top < box.bottom &&
-      rect.right > box.left &&
-      rect.left < box.right;
+      });
     if (!shown) continue;
-    if (x > 0 && x + w > ROW_LIMIT) [x, y, rowHeight] = [0, y + rowHeight, 0];
-    parts.push({ slot, x, y, w, h });
+    parts.push({ slot, x, w, h });
     x += w;
-    used = Math.max(used, x);
-    rowHeight = Math.max(rowHeight, h);
   }
   if (parts.length === 0) return;
-  const needed = [used, y + rowHeight];
+  const needed = [x, Math.max(...parts.map(({ h }) => h))];
   if (room[0] < needed[0] || room[1] < needed[1]) {
     room = [Math.max(room[0], needed[0]), Math.max(room[1], needed[1])];
     renderer.setSize(room[0], room[1], false);
   }
   renderer.setScissorTest(true);
   renderer.setClearColor(0x000000, 0);
-  for (const { slot, x, y, w, h } of parts) {
+  for (const { slot, x, w, h } of parts) {
     const { camera } = slot.scene;
     if (camera.aspect !== w / h) {
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
     }
-    slot.scene.update(Math.max(0, time - slot.start));
-    const bottom = room[1] - y - h;
+    slot.scene.update(time);
+    const bottom = room[1] - h;
     renderer.setViewport(x, bottom, w, h);
     renderer.setScissor(x, bottom, w, h);
     renderer.clear();
@@ -132,14 +125,14 @@ async function draw(time: number) {
     needed[0],
     needed[1],
   );
-  for (const { slot, x, y, w, h } of parts) {
+  for (const { slot, x, w, h } of parts) {
     if (slot.canvas.width !== w || slot.canvas.height !== h) {
       slot.canvas.width = w;
       slot.canvas.height = h;
     } else {
       slot.context.clearRect(0, 0, w, h);
     }
-    slot.context.drawImage(bitmap, x, y, w, h, 0, 0, w, h);
+    slot.context.drawImage(bitmap, x, 0, w, h, 0, 0, w, h);
   }
   bitmap.close();
 }
@@ -177,33 +170,33 @@ async function photoOval() {
 /** The state of the cube that the timeline animates: its size and the face it shows. */
 const cubeState = { scale: 0, turn: 0 };
 
-async function cubeScene(): Promise<Scene> {
+async function cubeScene(size: number): Promise<Scene> {
   const family = css("--font-title");
   const photo = await photoOval();
   const faceTexture = ([small, big]: [string, string], index: number) => {
-    const size = 1024;
-    const unit = size / 512;
+    const side = 1024;
+    const unit = side / 512;
     const paint = document.createElement("canvas");
-    paint.width = paint.height = size;
+    paint.width = paint.height = side;
     const g = paint.getContext("2d") as CanvasRenderingContext2D;
     g.fillStyle = css("--cover-bg");
-    g.fillRect(0, 0, size, size);
+    g.fillRect(0, 0, side, side);
     g.strokeStyle = css("--cover-line");
     g.lineWidth = unit;
-    for (let x = 0; x <= size; x += 32 * unit) {
+    for (let x = 0; x <= side; x += 32 * unit) {
       g.beginPath();
       g.moveTo(x, 0);
-      g.lineTo(x, size);
+      g.lineTo(x, side);
       g.stroke();
       g.beginPath();
       g.moveTo(0, x);
-      g.lineTo(size, x);
+      g.lineTo(side, x);
       g.stroke();
     }
     if (index === 0) {
-      const height = size * 0.84;
+      const height = side * 0.84;
       const width = (photo.width / photo.height) * height;
-      g.drawImage(photo, (size - width) / 2, size - height, width, height);
+      g.drawImage(photo, (side - width) / 2, side - height, width, height);
     }
     g.fillStyle = css("--secondary");
     g.font = `700 ${24 * unit}px ${family}`;
@@ -217,10 +210,10 @@ async function cubeScene(): Promise<Scene> {
       do {
         g.font = `800 ${fontSize}px ${family}`;
         fontSize -= 4 * unit;
-      } while (g.measureText(big).width > size - 96 * unit);
+      } while (g.measureText(big).width > side - 96 * unit);
       g.textBaseline = "alphabetic";
-      g.fillText(big, 44 * unit, size - 70 * unit);
-      g.fillRect(48 * unit, size - 50 * unit, 72 * unit, 8 * unit);
+      g.fillText(big, 44 * unit, side - 70 * unit);
+      g.fillRect(48 * unit, side - 50 * unit, 72 * unit, 8 * unit);
     }
     const texture = new THREE.CanvasTexture(paint);
     texture.colorSpace = THREE.SRGBColorSpace;
@@ -263,10 +256,12 @@ async function cubeScene(): Promise<Scene> {
   );
   const rig = new THREE.Group();
   rig.add(cube, shell);
-  rig.scale.setScalar(1.3);
+  // The camera sees 7.5 units over the height of the slot: the cube takes `size` pixels.
+  rig.scale.setScalar((size * 7.5) / (2 * HEIGHT));
   scene.add(rig);
 
-  // The turns that bring each face to the front, as on the site.
+  // The turns that bring each face to the front, as on the site, then the faces in the order
+  // of the video: the photo, « Pourquoi ? », « Patience », « Bienveillance ».
   const lean = new THREE.Quaternion().setFromEuler(
     new THREE.Euler(0.28, -0.42, 0),
   );
@@ -282,8 +277,6 @@ async function cubeScene(): Promise<Scene> {
       .clone()
       .multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(x, y, 0))),
   );
-  // The faces in the order of the story: the photo, « Pourquoi ? », « Patience »,
-  // « Bienveillance ».
   const shown = [0, 3, 4, 2].map((index) => views[index]);
   return {
     scene,
@@ -303,36 +296,8 @@ async function cubeScene(): Promise<Scene> {
   };
 }
 
-// ── The parts shared by the variants ──────────────────────────────────────────────────
-function grid() {
-  stage.append(html(`<div class="grid"></div>`));
-}
-
-/** A large heading of the site: its title over its faded word, which slides from the right. */
-function heading(title: string, ghost: string, top: number, at: number) {
-  const ghostWord = html(
-    `<div class="ghost" style="top:${top - 70}px">${ghost}</div>`,
-  );
-  const titleLine = html(
-    `<h1 class="title" style="top:${top}px; font-size:120px">${lines([title])}</h1>`,
-  );
-  stage.append(ghostWord, titleLine);
-  tl.fromTo(
-    ghostWord,
-    { x: 520, autoAlpha: 0 },
-    { x: -260, autoAlpha: 1, duration: 6, ease: "power1.out" },
-    at,
-  );
-  tl.fromTo(
-    titleLine.querySelector(".line > span"),
-    { yPercent: 110 },
-    { yPercent: 0, duration: 0.8 },
-    at + 0.2,
-  );
-  return [ghostWord, titleLine];
-}
-
-/** The end card: the logo, « Nouveau site », the address over an orange trail. */
+// ── The end card of variant A ─────────────────────────────────────────────────────────
+/** The logo, « Nouveau site », the address over an orange trail. */
 function endCard(at: number) {
   const end = html(`
     <div class="end">
@@ -382,18 +347,18 @@ function leave(elements: (Element | null)[], at: number) {
 // An orange trail draws itself, the cube of the hero arrives with the owner's face and turns to
 // three of its qualities, then « Mon site fait peau neuve. ».
 async function variantCube() {
-  grid();
+  stage.append(html(`<div class="grid"></div>`));
   const trail = html(
-    `<span class="trail" style="left:96px; top:956px; width:888px"></span>`,
+    `<span class="trail" style="left:96px; top:${HEIGHT / 2 - 4}px; width:888px"></span>`,
   );
   const intro = html(
-    `<div class="small" style="position:absolute; left:96px; top:300px">Aunim Hassan · Formateur</div>`,
+    `<div class="small" style="position:absolute; left:96px; top:${feed ? 110 : 300}px">Aunim Hassan · Formateur</div>`,
   );
   const cubeSlot = html(
-    `<div class="slot" style="left:0; top:0; width:1080px; height:1920px"></div>`,
+    `<div class="slot" style="left:0; top:0; width:${WIDTH}px; height:${HEIGHT}px"></div>`,
   );
   stage.append(cubeSlot, trail, intro);
-  addSlot(cubeSlot, await cubeScene());
+  addSlot(cubeSlot, await cubeScene(feed ? 560 : 660));
 
   tl.fromTo(
     trail,
@@ -422,11 +387,12 @@ async function variantCube() {
   const texts = launch
     ? ["Mon", "nouveau", "site."]
     : ["Mon site", "fait peau", "neuve."];
+  const top = feed ? 480 : 720;
   const ghostWord = html(
-    `<div class="ghost" style="top:640px">${launch ? "En ligne" : "Bientot"}</div>`,
+    `<div class="ghost" style="top:${top - 80}px">${launch ? "En ligne" : "Bientot"}</div>`,
   );
   const title = html(
-    `<h1 class="title" style="top:720px; font-size:128px">${lines(texts)}</h1>`,
+    `<h1 class="title" style="top:${top}px">${lines(texts)}</h1>`,
   );
   stage.append(ghostWord, title);
   tl.fromTo(
@@ -445,158 +411,284 @@ async function variantCube() {
   endCard(9.6);
 }
 
-// ── Variant B: the modules ────────────────────────────────────────────────────────────
-// A wall of module cards, each with its scene, scrolls up under « Formations », then the offer
-// in three lines.
-const MODULES: [string, string, keyof typeof MODULE_SCENES][] = [
-  ["HTML", "Développement web", "markup"],
-  ["CSS", "Développement web", "layout"],
-  ["JavaScript", "Développement web", "event"],
-  ["PHP", "Développement web", "server"],
-  ["Laravel", "Développement web", "mvc"],
-  ["Python", "Programmation", "snake"],
-  ["Machine learning", "Programmation", "fit"],
-  ["MySQL", "Bases de données", "table"],
-  ["Merise", "Bases de données", "entities"],
-  ["UML", "Conception logicielle", "classes"],
-  ["Principes SOLID", "Conception logicielle", "solid"],
-  ["Scrum", "Gestion de projet", "sprint"],
-  ["Cypress", "Méthodologie et tests", "checks"],
-  ["CI / CD", "Méthodologie et tests", "pipeline"],
-  ["Claude Code", "IA générative", "terminal"],
-  ["Prompt engineering", "IA générative", "chat"],
-];
+// ── Variant D: the impact ─────────────────────────────────────────────────────────────
+// Out of the frame of the site, as the owner asked: three words fall one after the other, each
+// with a boom, a flash, a shock wave and shards, on a black, a white then an orange screen; then
+// silence, and « bientôt » pops up letter by letter, very small and very soft, while an orange
+// ball bounces down to become the dot of its i.
 
-function variantModules() {
-  grid();
-  const headingParts = heading("Formations", "Apprendre", 300, 0);
-  const viewport = html(
-    `<div class="layer" style="top:500px; overflow:hidden; -webkit-mask-image:linear-gradient(transparent, #000 60px, #000 85%, transparent); mask-image:linear-gradient(transparent, #000 60px, #000 85%, transparent)"></div>`,
-  );
-  const wall = html(`<div class="layer" style="top:60px"></div>`);
-  viewport.append(wall);
-  stage.append(viewport);
-  const pitch = 458;
-  MODULES.forEach(([title, domain, scene], index) => {
-    const row = Math.floor(index / 2);
-    const tile = html(`
-      <article class="tile" style="left:${96 + (index % 2) * 468}px; top:${row * pitch}px">
-        <div class="slot"></div>
-        <h2 class="tile-title"><span class="tile-domain">${domain}</span>${title}</h2>
-      </article>`);
-    wall.append(tile);
-    addSlot(
-      tile.querySelector(".slot") as HTMLElement,
-      MODULE_SCENES[scene](),
-      index * 0.3,
-    );
-    if (row < 3)
-      tl.fromTo(
-        tile,
-        { y: 120, autoAlpha: 0 },
-        { y: 0, autoAlpha: 1, duration: 0.8 },
-        0.5 + index * 0.12,
+/** The shards of the hits: small outlined blocks thrown from the center, then falling. */
+function shardsScene(hits: { time: number; color: string }[]): Scene {
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(30, WIDTH / HEIGHT, 0.1, 100);
+  camera.position.set(0, 0, 14);
+  const random = (k: number) => {
+    const x = Math.sin(k * 12.9898) * 43758.5453;
+    return x - Math.floor(x);
+  };
+  const shapes = [
+    new THREE.BoxGeometry(0.22, 0.22, 0.22),
+    new THREE.TetrahedronGeometry(0.17),
+    new THREE.OctahedronGeometry(0.14),
+  ];
+  const signal = new THREE.Color(css("--signal"));
+  const shards = hits.flatMap(({ time, color }, hit) =>
+    Array.from({ length: 34 }, (_, index) => {
+      const k = hit * 100 + index;
+      const tint = index % 5 === 0 ? signal : new THREE.Color(color);
+      const shard = new THREE.LineSegments(
+        new THREE.EdgesGeometry(shapes[index % shapes.length]),
+        new THREE.LineBasicMaterial({
+          color: tint,
+          transparent: true,
+        }),
       );
-  });
-  const rows = Math.ceil(MODULES.length / 2);
-  tl.to(
-    wall,
-    { y: -(rows * pitch - 1100), duration: 6, ease: "power1.inOut" },
-    1.4,
+      shard.scale.setScalar(0.6 + 1.6 * random(k + 0.5));
+      scene.add(shard);
+      const angle = random(k + 0.1) * Math.PI * 2;
+      const speed = 3 + 6 * random(k + 0.2);
+      return {
+        shard,
+        start: time,
+        end: hits[hit + 1]?.time ?? Infinity,
+        velocity: new THREE.Vector3(
+          Math.cos(angle) * speed,
+          Math.sin(angle) * speed + 2,
+          (random(k + 0.3) - 0.3) * 6,
+        ),
+        spin: new THREE.Vector3(
+          random(k + 0.4) * 9 - 4.5,
+          random(k + 0.6) * 9 - 4.5,
+          random(k + 0.7) * 9 - 4.5,
+        ),
+      };
+    }),
   );
-  leave([viewport, ...headingParts], 7.3);
-
-  const facts = html(
-    `<h1 class="title" style="top:640px; font-size:120px">${lines([
-      "7 domaines.",
-      "24 modules.",
-      '<span class="signal">Une méthode.</span>',
-    ])}</h1>`,
-  );
-  stage.append(facts);
-  tl.fromTo(
-    facts.querySelectorAll(".line > span"),
-    { yPercent: 110 },
-    { yPercent: 0, duration: 0.8, stagger: 0.35 },
-    7.6,
-  );
-  leave([facts], 9.2);
-  endCard(9.6);
+  return {
+    scene,
+    camera,
+    update(time) {
+      for (const { shard, start, end, velocity, spin } of shards) {
+        const age = time - start;
+        shard.visible = age >= 0 && time < end;
+        if (!shard.visible) continue;
+        shard.position
+          .copy(velocity)
+          .multiplyScalar(age)
+          .add(new THREE.Vector3(0, -4.5 * age * age, 0));
+        shard.rotation.set(spin.x * age, spin.y * age, spin.z * age);
+        (shard.material as THREE.LineBasicMaterial).opacity = Math.max(
+          0,
+          1 - age / 1.1,
+        );
+      }
+    },
+  };
 }
 
-// ── Variant C: the method ─────────────────────────────────────────────────────────────
-// The cycle of a lesson, its three phases filling their share, then the promise of the site.
-function variantMethod() {
-  grid();
-  const headingParts = heading("Pedagogie", "Accompagner", 300, 0);
-  const phases: [string, string, number][] = [
-    ["Théorie", "20 %", 0.2],
-    ["Pratique", "50 %", 0.5],
-    ["Correction", "30 %", 0.3],
+function variantImpact() {
+  duration = 9;
+  const white = "#f4f4f4";
+  const black = css("--bg");
+  const orange = css("--signal");
+  const hits = [
+    { time: 1.0, color: white, background: black, text: "var(--text)" },
+    { time: 2.15, color: black, background: white, text: black },
+    { time: 3.3, color: white, background: orange, text: "#ffffff" },
   ];
-  const steps = html(
-    `<div class="steps" style="top:560px">${phases
-      .map(
-        ([name, share], index) => `
-        <div class="step">
-          <span class="step-number">${["I", "II", "III"][index]}</span>
-          <span class="step-name"><span>${name}</span><span class="step-share">${share}</span></span>
-          <span class="gauge"><span></span></span>
-        </div>`,
+  const quiet = 4.55;
+
+  // Everything that shakes on a hit is in one layer; the stage keeps its background.
+  const shake = html(`<div class="layer"></div>`);
+  const shardSlot = html(
+    `<div class="slot" style="left:0; top:0; width:${WIDTH}px; height:${HEIGHT}px"></div>`,
+  );
+  const flash = html(`<div class="layer flash"></div>`);
+  const ring = html(`<div class="ring"></div>`);
+  const words = [
+    `<div class="hit"><span class="hit-year">2026</span></div>`,
+    `<div class="hit"><span class="hit-small">Nouveau</span><span class="hit-big">site</span></div>`,
+    `<div class="hit"><span class="hit-mark">${wordmark}</span><span class="hit-tld">.art</span></div>`,
+  ].map(html);
+  shake.append(shardSlot, ring, ...words);
+  stage.append(shake, flash);
+  addSlot(
+    shardSlot,
+    shardsScene(hits.map(({ time, color }) => ({ time, color }))),
+  );
+
+  // The tension before the first hit: a small orange dot that swells.
+  const dot = html(`<div class="dot"></div>`);
+  shake.append(dot);
+  tl.fromTo(
+    dot,
+    { scale: 0.5, autoAlpha: 0.5 },
+    {
+      scale: 1.6,
+      autoAlpha: 1,
+      duration: hits[0].time - 0.27,
+      ease: "power2.in",
+      immediateRender: false,
+    },
+    0.15,
+  );
+  tl.to(dot, { autoAlpha: 0, duration: 0.01 }, hits[0].time - 0.12);
+  cues.push({ time: 0.15, sound: "riser", length: 0.85, gain: 0.8 });
+
+  hits.forEach(({ time, background, text }, index) => {
+    const word = words[index];
+    // The word falls from the camera in 0.18 s, blurred, and lands on the hit.
+    tl.set(word, { color: text }, 0);
+    tl.fromTo(
+      word,
+      { scale: 2.8, autoAlpha: 0, filter: "blur(24px)" },
+      {
+        scale: 1,
+        autoAlpha: 1,
+        filter: "blur(0px)",
+        duration: 0.18,
+        ease: "power4.in",
+        immediateRender: false,
+      },
+      time - 0.18,
+    );
+    // Then it drifts closer until the next one.
+    tl.to(word, { scale: 1.06, duration: 1, ease: "none" }, time);
+    const next = hits[index + 1]?.time ?? quiet;
+    tl.set(word, { autoAlpha: 0 }, index < hits.length - 1 ? next - 0.18 : next);
+    tl.set(stage, { backgroundColor: background }, time);
+    tl.fromTo(
+      flash,
+      { autoAlpha: 0.85, backgroundColor: index === 1 ? orange : white },
+      { autoAlpha: 0, duration: 0.3, ease: "power2.out", immediateRender: false },
+      time,
+    );
+    tl.fromTo(
+      ring,
+      {
+        scale: 0.2,
+        autoAlpha: 1,
+        borderColor: index === 2 ? "#ffffff" : orange,
+      },
+      {
+        scale: 4.2,
+        autoAlpha: 0,
+        duration: 0.7,
+        ease: "power2.out",
+        immediateRender: false,
+      },
+      time,
+    );
+    tl.to(
+      shake,
+      {
+        keyframes: [
+          { x: -34, y: 20, duration: 0.04 },
+          { x: 26, y: -16, duration: 0.05 },
+          { x: -16, y: 10, duration: 0.06 },
+          { x: 8, y: -5, duration: 0.07 },
+          { x: 0, y: 0, duration: 0.08 },
+        ],
+        ease: "none",
+      },
+      time,
+    );
+    cues.push({
+      time,
+      sound: "impact",
+      gain: 0.8 + 0.1 * index,
+      pitch: 1 - 0.08 * index,
+    });
+  });
+
+  // Silence and black: then the soft word.
+  tl.set(stage, { backgroundColor: black }, quiet);
+  cues.push({ time: quiet, sound: "cut" });
+  const soft = launch ? "en ligne" : "bientôt";
+  const cute = html(
+    `<div class="cute">${[...soft]
+      .map((letter) =>
+        letter === "i"
+          ? `<span class="letter">ı</span>`
+          : `<span class="letter">${letter === " " ? "&nbsp;" : letter}</span>`,
       )
       .join("")}</div>`,
   );
-  const again = html(
-    `<div class="small" style="position:absolute; left:96px; top:1150px">Puis on recommence</div>`,
+  const ball = html(`<div class="ball"></div>`);
+  stage.append(cute, ball);
+  // The dot of the i: above the dotless i, measured before any tween moves the letters.
+  const box = stage.getBoundingClientRect();
+  const dotless = [...cute.querySelectorAll(".letter")].find(
+    (letter) => letter.textContent === "ı",
+  ) as HTMLElement;
+  const glyph = dotless.getBoundingClientRect();
+  const ballSize = 30;
+  const target = {
+    x: glyph.left - box.left + glyph.width / 2 - ballSize / 2,
+    y: glyph.top - box.top + glyph.height * 0.14 - ballSize / 2,
+  };
+  gsap.set(ball, { x: target.x, y: target.y });
+
+  const letters = cute.querySelectorAll(".letter");
+  const popAt = quiet + 0.35;
+  tl.fromTo(
+    letters,
+    { scale: 0, y: 40, autoAlpha: 0 },
+    {
+      scale: 1,
+      y: 0,
+      autoAlpha: 1,
+      duration: 0.7,
+      ease: "elastic.out(1, 0.45)",
+      stagger: 0.09,
+    },
+    popAt,
   );
-  const sceneSlot = html(
-    `<div class="slot" style="left:0; top:1180px; width:1080px; height:680px"></div>`,
+  // A rising pentatonic scale, one note per letter.
+  const scale = [1, 9 / 8, 5 / 4, 3 / 2, 5 / 3, 2, 9 / 4, 5 / 2];
+  [...soft].forEach((letter, index) => {
+    if (letter !== " ")
+      cues.push({ time: popAt + 0.09 * index, sound: "pluck", pitch: scale[index] });
+  });
+
+  // The ball falls from above the screen and bounces three times onto the i.
+  const fall = popAt + 0.09 * soft.length + 0.25;
+  const bounces = [fall + 0.5, fall + 0.82, fall + 1.02];
+  tl.fromTo(
+    ball,
+    { y: -120, autoAlpha: 1 },
+    { y: target.y, duration: 0.5, ease: "power2.in", immediateRender: false },
+    fall,
   );
-  stage.append(steps, again, sceneSlot);
-  addSlot(sceneSlot, MODULE_SCENES.sprint(), 4.2);
-  steps.querySelectorAll(".step").forEach((step, index) => {
-    const at = 1.0 + index * 1.0;
+  tl.to(ball, { y: target.y - 150, duration: 0.16, ease: "power2.out" }, bounces[0]);
+  tl.to(ball, { y: target.y, duration: 0.16, ease: "power2.in" }, bounces[0] + 0.16);
+  tl.to(ball, { y: target.y - 50, duration: 0.1, ease: "power2.out" }, bounces[1]);
+  tl.to(ball, { y: target.y, duration: 0.1, ease: "power2.in" }, bounces[1] + 0.1);
+  tl.set(ball, { autoAlpha: 0 }, 0);
+  bounces.forEach((at, index) => {
     tl.fromTo(
-      step.querySelectorAll(".step-number, .step-name"),
-      { y: 80, autoAlpha: 0 },
-      { y: 0, autoAlpha: 1, duration: 0.7, stagger: 0.1 },
+      ball,
+      { scaleX: 1.35, scaleY: 0.65 },
+      { scaleX: 1, scaleY: 1, duration: 0.12, ease: "power2.out", immediateRender: false },
       at,
     );
-    tl.fromTo(
-      step.querySelector(".gauge"),
-      { autoAlpha: 0 },
-      { autoAlpha: 1, duration: 0.3 },
-      at + 0.2,
-    );
-    tl.fromTo(
-      step.querySelector(".gauge > span"),
-      { scaleX: 0 },
-      { scaleX: phases[index][2], duration: 0.9, ease: "power2.inOut" },
-      at + 0.3,
-    );
+    cues.push({ time: at, sound: "boop", pitch: [1, 1.25, 1.5][index] });
   });
+  cues.push({ time: bounces[2] + 0.02, sound: "chime" });
+  // Once the dot is in place, the word gives a little happy wave.
   tl.fromTo(
-    [again, sceneSlot],
-    { autoAlpha: 0 },
-    { autoAlpha: 1, duration: 0.8, stagger: 0.2 },
-    4.2,
+    letters,
+    { y: 0 },
+    {
+      keyframes: [
+        { y: -18, duration: 0.14, ease: "power2.out" },
+        { y: 0, duration: 0.22, ease: "power2.in" },
+      ],
+      stagger: 0.05,
+      immediateRender: false,
+    },
+    bounces[2] + 0.05,
   );
-  leave([...headingParts, steps, again, sceneSlot], 6.8);
-
-  const promise = html(
-    `<p class="promise" style="top:700px">${words(
-      "Je prends vos apprenants par la main,",
-    )} <span class="highlight">${words("jusqu’à la maîtrise.")}</span></p>`,
-  );
-  stage.append(promise);
-  tl.fromTo(
-    promise.querySelectorAll(".word"),
-    { y: 60, autoAlpha: 0 },
-    { y: 0, autoAlpha: 1, duration: 0.6, stagger: 0.11 },
-    7.3,
-  );
-  leave([promise], 9.2);
-  endCard(9.6);
 }
 
 // ── Start ─────────────────────────────────────────────────────────────────────────────
@@ -604,14 +696,14 @@ const family = css("--font-title");
 await Promise.all([
   document.fonts.load(`800 120px ${family}`),
   document.fonts.load(`700 26px ${family}`),
+  document.fonts.load(`600 150px ${family}`, "bıentôt"),
   document.fonts.load(`500 40px ${css("--font-text")}`),
 ]);
-if (variant === "b") variantModules();
-else if (variant === "c") variantMethod();
+if (variant === "d") variantImpact();
 else await variantCube();
 tl.seek(0);
 
-/** Sets the story to a time, in seconds, and draws its scenes. */
+/** Sets the video to a time, in seconds, and draws its scenes. */
 async function seek(time: number) {
   tl.seek(time, false);
   await draw(time);
@@ -619,25 +711,36 @@ async function seek(time: number) {
 
 declare global {
   interface Window {
-    story: { duration: number; seek: (time: number) => Promise<void> };
+    story: {
+      duration: number;
+      cues: Cue[];
+      seek: (time: number) => Promise<void>;
+      /** The samples of its sound at 48 kHz, if it has one. */
+      sound: () => Float32Array | null;
+    };
   }
 }
-window.story = { duration: DURATION, seek };
+window.story = {
+  duration,
+  cues,
+  seek,
+  sound: () => (cues.length ? synthesize(cues, duration) : null),
+};
 
-// ?capture=1: render.mjs drives the time; ?t=4.5 holds one frame; otherwise the story loops,
-// with a second of the end card.
+// ?controlled=1: the page of the supports or render.mjs drives the time; ?t=4.5 holds one
+// frame; otherwise the video loops, with a second of its last frame.
 const held = params.get("t");
 if (held !== null) await seek(Number(held));
-else if (!params.has("capture")) {
+else if (!params.has("controlled")) {
   const begin = performance.now();
   let busy = false;
   const loop = (now: number) => {
     requestAnimationFrame(loop);
     if (busy) return;
     busy = true;
-    const time = ((now - begin) / 1000) % (DURATION + 1);
-    seek(Math.min(time, DURATION)).finally(() => (busy = false));
+    const time = ((now - begin) / 1000) % (duration + 1);
+    seek(Math.min(time, duration)).finally(() => (busy = false));
   };
   requestAnimationFrame(loop);
-}
+} else await seek(0);
 document.documentElement.dataset.ready = "true";

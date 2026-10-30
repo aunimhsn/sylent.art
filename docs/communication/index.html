@@ -1,17 +1,18 @@
 <!doctype html>
 <!--
-  The communication supports of the launch (roadmap, step 14a), each one shown as it will appear.
-  Served by Vite, so that the story reuses the scenes of the site, from the repository root:
+  The media of the launch (roadmap, step 14a), side by side: each video as an Instagram story
+  and as a video of the LinkedIn and Facebook feeds, with play and pause. Served by Vite, so that
+  the videos reuse the scenes of the site, from the repository root:
 
     npx vite docs/communication --port 8781
 
-  then open http://localhost:8781/. render.mjs turns the story into an MP4 in outputs/.
+  then open http://localhost:8781/. render.mjs turns a video into an MP4 in outputs/.
 -->
 <html lang="fr">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Supports de communication</title>
+    <title>Médias du lancement</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -24,7 +25,7 @@
       :root {
         --font-manrope: "Manrope", system-ui, sans-serif;
         --font-anaheim: "Anaheim", system-ui, sans-serif;
-        --scale: 0.4;
+        --scale: 0.28;
       }
 
       body {
@@ -42,22 +43,17 @@
       }
 
       .lead {
-        max-width: 60ch;
-        margin: 0 0 32px;
+        max-width: 70ch;
+        margin: 0 0 24px;
         color: var(--secondary);
       }
 
-      .layout {
+      .toolbar {
         display: flex;
         flex-wrap: wrap;
-        gap: 48px;
-        align-items: flex-start;
-      }
-
-      .controls {
-        display: grid;
-        gap: 24px;
-        min-width: 260px;
+        gap: 16px 32px;
+        align-items: end;
+        margin-bottom: 32px;
       }
 
       fieldset {
@@ -66,7 +62,8 @@
         border: 0;
       }
 
-      legend {
+      legend,
+      .label {
         margin-bottom: 8px;
         color: var(--dim);
         font: 700 13px / 1 var(--font-title);
@@ -74,26 +71,33 @@
         text-transform: uppercase;
       }
 
-      .choices {
+      .choices,
+      .actions {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
       }
 
-      .choices label {
+      .choices label,
+      button {
         padding: 8px 16px;
         border: 1px solid var(--line-strong);
         border-radius: 999px;
+        background: none;
+        color: var(--text);
+        font: inherit;
         cursor: pointer;
       }
 
-      .choices label:has(input:checked) {
+      .choices label:has(input:checked),
+      button[aria-pressed="true"] {
         border-color: var(--text);
         background: var(--text);
         color: var(--on-accent);
       }
 
-      .choices label:has(input:focus-visible) {
+      .choices label:has(input:focus-visible),
+      button:focus-visible {
         outline: 2px solid var(--signal-text);
         outline-offset: 2px;
       }
@@ -103,97 +107,261 @@
         opacity: 0;
       }
 
-      .note {
-        max-width: 34ch;
-        margin: 0;
-        color: var(--secondary);
-        font-size: 16px;
+      .media {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px 32px;
+        align-items: flex-start;
       }
 
-      /* The phone: the story at its real size, scaled down. */
-      .phone {
+      .card {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+        width: calc(1080px * var(--scale) + 22px);
+      }
+
+      .card h2 {
+        margin: 0;
+        font: 800 20px / 1.2 var(--font-title);
+      }
+
+      .card .label {
+        margin: 0;
+      }
+
+      /* The screen: the video at its real size, scaled down. */
+      .frame {
+        box-sizing: content-box;
         width: calc(1080px * var(--scale));
-        height: calc(1920px * var(--scale));
+        height: calc(var(--height) * var(--scale));
         padding: 10px;
         border: 1px solid var(--line-strong);
-        border-radius: 44px;
+        border-radius: 32px;
         background: #000;
-        box-sizing: content-box;
       }
 
       .screen {
         width: 100%;
         height: 100%;
         overflow: hidden;
-        border-radius: 34px;
+        border-radius: 22px;
+      }
+
+      .feed .frame {
+        border-radius: 14px;
+      }
+
+      .feed .screen {
+        border-radius: 4px;
       }
 
       .screen iframe {
         width: 1080px;
-        height: 1920px;
+        height: var(--height);
         border: 0;
         transform: scale(var(--scale));
         transform-origin: 0 0;
       }
 
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .time {
+        color: var(--secondary);
+        font-variant-numeric: tabular-nums;
+      }
+
       @media (width < 520px) {
         :root {
-          --scale: 0.3;
+          --scale: 0.25;
         }
       }
     </style>
   </head>
   <body>
-    <h1>Story Instagram</h1>
+    <h1>Médias du lancement</h1>
     <p class="lead">
-      Trois variantes de 12 secondes, en boucle. Le teaser part quelques jours avant la bascule, la
-      version de lancement le jour J, avec le sticker «&nbsp;Lien&nbsp;» et la musique ajoutés dans l’appli.
+      Chaque vidéo en story Instagram (9:16) et pour le fil de LinkedIn et Facebook (4:5). La
+      variante A sera publiée sans son ajouté : la musique se choisit dans l’appli Instagram. La
+      variante D a son propre son, calé sur les impacts.
     </p>
-    <div class="layout">
-      <div class="phone">
-        <div class="screen"><iframe id="story" title="Story Instagram"></iframe></div>
+    <form class="toolbar" id="toolbar">
+      <fieldset>
+        <legend>Version</legend>
+        <div class="choices">
+          <label><input type="radio" name="version" value="teaser" checked />Teaser</label>
+          <label><input type="radio" name="version" value="launch" />Lancement</label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Zones couvertes par Instagram</legend>
+        <div class="choices">
+          <label><input type="radio" name="safe" value="" checked />Masquées</label>
+          <label><input type="radio" name="safe" value="1" />Visibles</label>
+        </div>
+      </fieldset>
+      <div>
+        <div class="label">Toutes les vidéos</div>
+        <div class="actions">
+          <button type="button" id="play-all">Tout lire</button>
+          <button type="button" id="pause-all">Tout mettre en pause</button>
+          <button type="button" id="rewind-all">Revenir au début</button>
+        </div>
       </div>
-      <form class="controls" id="controls">
-        <fieldset>
-          <legend>Variante</legend>
-          <div class="choices">
-            <label><input type="radio" name="variant" value="a" checked />A · Le cube</label>
-            <label><input type="radio" name="variant" value="b" />B · Les modules</label>
-            <label><input type="radio" name="variant" value="c" />C · La méthode</label>
-          </div>
-        </fieldset>
-        <fieldset>
-          <legend>Version</legend>
-          <div class="choices">
-            <label><input type="radio" name="version" value="teaser" checked />Teaser</label>
-            <label><input type="radio" name="version" value="launch" />Lancement</label>
-          </div>
-        </fieldset>
-        <fieldset>
-          <legend>Zones couvertes par Instagram</legend>
-          <div class="choices">
-            <label><input type="radio" name="safe" value="" checked />Masquées</label>
-            <label><input type="radio" name="safe" value="1" />Visibles</label>
-          </div>
-        </fieldset>
-        <p class="note">
-          En rose, ce que l’appli recouvre&nbsp;: le profil en haut, le champ de réponse en bas. Aucun
-          texte ne doit s’y trouver.
-        </p>
-      </form>
-    </div>
+    </form>
+    <div class="media" id="media"></div>
     <script type="module">
-      const form = document.getElementById("controls");
-      const story = document.getElementById("story");
-      const show = () => {
-        const data = new FormData(form);
-        const query = new URLSearchParams({ variant: data.get("variant") });
-        if (data.get("version") === "launch") query.set("launch", "1");
-        if (data.get("safe")) query.set("safe", "1");
-        story.src = `./story.html?${query}`;
-      };
-      form.addEventListener("change", show);
-      show();
+      const VIDEOS = [
+        { variant: "a", format: "story", title: "A · Le cube", kind: "Story Instagram · 9:16" },
+        { variant: "a", format: "feed", title: "A · Le cube", kind: "Fil LinkedIn, Facebook · 4:5" },
+        { variant: "d", format: "story", title: "D · L’impact", kind: "Story Instagram · 9:16", sound: true },
+        { variant: "d", format: "feed", title: "D · L’impact", kind: "Fil LinkedIn, Facebook · 4:5", sound: false },
+      ];
+      const toolbar = document.getElementById("toolbar");
+      const media = document.getElementById("media");
+      let audio;
+
+      const cards = VIDEOS.map((video) => {
+        const card = document.createElement("article");
+        card.className = `card ${video.format}`;
+        card.style.setProperty("--height", video.format === "feed" ? "1350px" : "1920px");
+        card.innerHTML = `
+          <div>
+            <h2>${video.title}</h2>
+            <p class="label">${video.kind}</p>
+          </div>
+          <div class="frame"><div class="screen"><iframe title="${video.title}, ${video.kind}"></iframe></div></div>
+          <div class="controls">
+            <button type="button" class="play" aria-pressed="false">Lecture</button>
+            ${video.sound === undefined ? "" : `<button type="button" class="sound" aria-pressed="${video.sound}">Son</button>`}
+            <span class="time">0,0 s</span>
+          </div>`;
+        media.append(card);
+        const state = {
+          ...video,
+          card,
+          iframe: card.querySelector("iframe"),
+          playButton: card.querySelector(".play"),
+          soundButton: card.querySelector(".sound"),
+          timeLabel: card.querySelector(".time"),
+          story: null,
+          buffer: null,
+          source: null,
+          playing: false,
+          time: 0,
+          origin: 0,
+          busy: false,
+        };
+        state.playButton.addEventListener("click", () => (state.playing ? pause(state) : play(state)));
+        state.soundButton?.addEventListener("click", () => {
+          const on = state.soundButton.getAttribute("aria-pressed") !== "true";
+          state.soundButton.setAttribute("aria-pressed", String(on));
+          if (state.playing) startSound(state);
+        });
+        return state;
+      });
+
+      /** Loads every video again, after a change of version or of the safe zones. */
+      function load() {
+        const data = new FormData(toolbar);
+        for (const state of cards) {
+          pause(state);
+          state.story = null;
+          state.buffer = null;
+          state.time = 0;
+          const query = new URLSearchParams({ variant: state.variant, format: state.format, controlled: "1" });
+          if (data.get("version") === "launch") query.set("launch", "1");
+          if (data.get("safe")) query.set("safe", "1");
+          state.iframe.src = `./story.html?${query}`;
+          state.iframe.onload = async () => {
+            const view = state.iframe.contentWindow;
+            while (view.document.documentElement.dataset.ready !== "true") {
+              await new Promise((resolve) => setTimeout(resolve, 50));
+            }
+            state.story = view.story;
+            const samples = state.story.sound();
+            if (samples) state.buffer = new Float32Array(samples);
+            show(state);
+          };
+        }
+      }
+
+      function show(state) {
+        state.timeLabel.textContent = `${state.time.toFixed(1).replace(".", ",")} s`;
+      }
+
+      function startSound(state) {
+        state.source?.stop();
+        state.source = null;
+        const on = state.soundButton?.getAttribute("aria-pressed") === "true";
+        if (!on || !state.buffer || !state.playing || state.time >= state.story.duration) return;
+        audio ??= new AudioContext();
+        const buffer = audio.createBuffer(1, state.buffer.length, 48000);
+        buffer.copyToChannel(state.buffer, 0);
+        state.source = audio.createBufferSource();
+        state.source.buffer = buffer;
+        state.source.connect(audio.destination);
+        state.source.start(0, state.time);
+      }
+
+      function play(state) {
+        if (!state.story) return;
+        state.playing = true;
+        state.origin = performance.now() - state.time * 1000;
+        state.playButton.textContent = "Pause";
+        state.playButton.setAttribute("aria-pressed", "true");
+        startSound(state);
+      }
+
+      function pause(state) {
+        state.playing = false;
+        state.source?.stop();
+        state.source = null;
+        state.playButton.textContent = "Lecture";
+        state.playButton.setAttribute("aria-pressed", "false");
+      }
+
+      async function rewind(state) {
+        state.time = 0;
+        state.origin = performance.now();
+        if (state.story) await state.story.seek(0);
+        show(state);
+        startSound(state);
+      }
+
+      // Each playing video loops, with a second of its last frame.
+      function tick(now) {
+        requestAnimationFrame(tick);
+        for (const state of cards) {
+          if (!state.playing || !state.story || state.busy) continue;
+          let time = (now - state.origin) / 1000;
+          if (time > state.story.duration + 1) {
+            time = 0;
+            state.origin = now;
+            state.time = 0;
+            startSound(state);
+          }
+          state.time = time;
+          state.busy = true;
+          state.story.seek(Math.min(time, state.story.duration)).finally(() => (state.busy = false));
+          show(state);
+        }
+      }
+      requestAnimationFrame(tick);
+
+      document.getElementById("play-all").addEventListener("click", async () => {
+        await Promise.all(cards.map(rewind));
+        cards.forEach(play);
+      });
+      document.getElementById("pause-all").addEventListener("click", () => cards.forEach(pause));
+      document.getElementById("rewind-all").addEventListener("click", () => cards.forEach(rewind));
+      toolbar.addEventListener("change", load);
+      load();
     </script>
   </body>
 </html>

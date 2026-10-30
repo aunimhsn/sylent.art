@@ -1,11 +1,12 @@
-/* The stage of the story: one Instagram story, 1080 × 1920 CSS pixels, in the tokens of the site
-   (src/styles/tokens.css). The fonts come from Google Fonts here, the site serving its own. */
+/* The stage of the videos: 1080 px wide, 1920 px high for a story, 1350 px for the feeds, in
+   the tokens of the site (src/styles/tokens.css). The fonts come from Google Fonts here, the
+   site serving its own. */
 :root {
   --font-manrope: "Manrope", system-ui, sans-serif;
   --font-anaheim: "Anaheim", system-ui, sans-serif;
 
-  /* Instagram covers about the top 250 px (the bars and the profile) and the bottom 340 px (the
-     reply field): every text stays between them. */
+  /* Instagram covers about the top 250 px of a story (the bars and the profile) and the bottom
+     340 px (the reply field): every text stays between them. */
   --safe-top: 250px;
   --safe-bottom: 340px;
   --gutter: 96px;
@@ -57,46 +58,14 @@ body {
   height: 100%;
 }
 
-/* A card of a module, as on the site: its cover, then its title. */
-.tile {
-  position: absolute;
-  width: 420px;
-  border: 1px solid var(--glass-line);
-  border-radius: 20px;
-  background: var(--glass);
-  overflow: hidden;
-}
-
-.tile .slot {
-  position: relative;
-  width: 100%;
-  height: 300px;
-  background: var(--cover-bg);
-}
-
-.tile-title {
-  margin: 0;
-  padding: 24px 28px 28px;
-  font: var(--title-weight) 40px / 1 var(--font-title);
-  letter-spacing: var(--tracking-title);
-  white-space: nowrap;
-}
-
-.tile-domain {
-  display: block;
-  margin-bottom: 10px;
-  color: var(--dim);
-  font: 700 18px / 1 var(--font-title);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
+/* ── Variant A ──────────────────────────────────────────────────────────────────────── */
 
 /* The large titles, as the headings of the site: uppercase, over a large faded word. */
 .title {
   position: absolute;
   left: var(--gutter);
   margin: 0;
-  font: var(--title-weight) 132px / 0.95 var(--font-title);
+  font: var(--title-weight) 128px / 0.95 var(--font-title);
   letter-spacing: var(--tracking-title);
   text-transform: uppercase;
 }
@@ -129,10 +98,6 @@ body {
   text-transform: uppercase;
 }
 
-.signal {
-  color: var(--signal-text);
-}
-
 /* The orange trail: a rule that draws itself, with a glow at its head. */
 .trail {
   position: absolute;
@@ -143,7 +108,6 @@ body {
   transform-origin: left center;
 }
 
-/* The end card, shared by the variants. */
 .end {
   position: absolute;
   inset: 0;
@@ -161,7 +125,8 @@ body {
   color: var(--text);
 }
 
-.end-mark svg {
+.end-mark svg,
+.hit-mark svg {
   display: block;
   width: 100%;
   height: auto;
@@ -186,70 +151,112 @@ body {
   height: 100%;
 }
 
-/* The cycle of a lesson (variant C): three rows, a Roman numeral and a gauge each. */
-.steps {
+/* ── Variant D ──────────────────────────────────────────────────────────────────────── */
+
+/* A word that falls: centered, as large as the width allows. */
+.hit {
   position: absolute;
-  left: var(--gutter);
-  right: var(--gutter);
-  display: grid;
-  gap: 72px;
-}
-
-.step {
-  display: grid;
-  grid-template-columns: 150px 1fr;
-  align-items: center;
-  column-gap: 32px;
-}
-
-.step-number {
-  color: var(--signal-text);
-  font: var(--title-weight) 112px / 1 var(--font-title);
-}
-
-.step-name {
+  inset: 0;
   display: flex;
-  justify-content: space-between;
-  font: var(--title-weight) 64px / 1 var(--font-title);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  opacity: 0;
+  font-family: var(--font-title);
+  font-weight: var(--title-weight);
   letter-spacing: var(--tracking-title);
+  line-height: 0.82;
+  text-transform: uppercase;
 }
 
-.step-share {
-  color: var(--secondary);
+.hit-year {
+  font-size: 380px;
 }
 
-.gauge {
-  grid-column: 2;
-  height: 10px;
-  margin-top: 24px;
-  border-radius: 5px;
-  background: var(--line);
-  overflow: hidden;
+.hit-small {
+  font-size: 168px;
 }
 
-.gauge > span {
-  display: block;
-  height: 100%;
-  border-radius: 5px;
-  background: var(--signal);
-  transform-origin: left center;
+.hit-big {
+  font-size: 340px;
 }
 
-.promise {
+.hit-mark {
+  width: 920px;
+}
+
+.hit-tld {
+  margin-top: 36px;
+  font-size: 220px;
+  text-transform: lowercase;
+}
+
+.flash {
+  visibility: hidden;
+  opacity: 0;
+  background: #ffffff;
+}
+
+/* The shock wave of a hit. */
+.ring {
   position: absolute;
-  left: var(--gutter);
-  right: var(--gutter);
-  margin: 0;
-  font: var(--title-weight) 104px / 1.02 var(--font-title);
-  letter-spacing: var(--tracking-title);
+  top: 50%;
+  left: 50%;
+  width: 320px;
+  height: 320px;
+  margin: -160px 0 0 -160px;
+  border: 10px solid var(--signal);
+  border-radius: 50%;
+  visibility: hidden;
+  opacity: 0;
 }
 
-.promise .highlight {
-  color: var(--highlight);
+/* The small orange dot of the tension before the first hit. */
+.dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 28px;
+  height: 28px;
+  margin: -14px 0 0 -14px;
+  border-radius: 50%;
+  background: var(--signal);
+  box-shadow: 0 0 40px 8px color-mix(in srgb, var(--signal) 50%, transparent);
+  visibility: hidden;
+  opacity: 0;
 }
 
-.word {
+/* The soft word: small, lowercase, rounded by its weight, against the giant words before. */
+.cute {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 600 150px / 1 var(--font-title);
+  letter-spacing: -0.02em;
+}
+
+.letter {
   display: inline-block;
+  visibility: hidden;
+  opacity: 0;
+  transform-origin: 50% 90%;
+}
+
+/* The orange ball that becomes the dot of the i. */
+.ball {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--signal);
+  visibility: hidden;
+  opacity: 0;
+  transform-origin: 50% 100%;
 }
 
 /* ?safe=1: the zones that Instagram covers, for checking. */
