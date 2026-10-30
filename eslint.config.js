@@ -17,4 +17,9 @@ export default defineConfig([
     files: ["*.{js,mjs}", "scripts/**/*.mjs"],
     languageOptions: { globals: globals.node },
   },
+  {
+    // The render script of the story runs in Node.js, and its callbacks in the page.
+    files: ["docs/communication/*.mjs"],
+    languageOptions: { globals: { ...globals.node, ...globals.browser } },
+  },
 ]);

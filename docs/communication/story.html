@@ -1,0 +1,22 @@
+<!doctype html>
+<!--
+  The Instagram story, 1080 × 1920, drawn with the scenes of the site (src/scripts/module-scenes.ts).
+  ?variant=a|b|c picks the variant, ?launch=1 the launch version, ?t=4.5 holds one frame, ?safe=1
+  shows the zones that Instagram covers. scripts/render.mjs captures it frame by frame.
+-->
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Story</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@600..800&family=Anaheim:wght@500&display=block"
+    />
+  </head>
+  <body>
+    <main class="stage" id="stage"></main>
+    <script type="module" src="./story.ts"></script>
+  </body>
+</html>

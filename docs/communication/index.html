@@ -1,0 +1,199 @@
+<!doctype html>
+<!--
+  The communication supports of the launch (roadmap, step 14a), each one shown as it will appear.
+  Served by Vite, so that the story reuses the scenes of the site, from the repository root:
+
+    npx vite docs/communication --port 8781
+
+  then open http://localhost:8781/. render.mjs turns the story into an MP4 in outputs/.
+-->
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Supports de communication</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@600..800&family=Anaheim:wght@500&display=block"
+    />
+    <style>
+      @import "../../src/styles/tokens.css";
+
+      :root {
+        --font-manrope: "Manrope", system-ui, sans-serif;
+        --font-anaheim: "Anaheim", system-ui, sans-serif;
+        --scale: 0.4;
+      }
+
+      body {
+        margin: 0;
+        padding: 32px 16px 64px;
+        background: var(--bg);
+        color: var(--text);
+        font: 500 18px / 1.5 var(--font-text);
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font: 800 32px / 1.1 var(--font-title);
+        letter-spacing: var(--tracking-title);
+      }
+
+      .lead {
+        max-width: 60ch;
+        margin: 0 0 32px;
+        color: var(--secondary);
+      }
+
+      .layout {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 48px;
+        align-items: flex-start;
+      }
+
+      .controls {
+        display: grid;
+        gap: 24px;
+        min-width: 260px;
+      }
+
+      fieldset {
+        margin: 0;
+        padding: 0;
+        border: 0;
+      }
+
+      legend {
+        margin-bottom: 8px;
+        color: var(--dim);
+        font: 700 13px / 1 var(--font-title);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .choices {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .choices label {
+        padding: 8px 16px;
+        border: 1px solid var(--line-strong);
+        border-radius: 999px;
+        cursor: pointer;
+      }
+
+      .choices label:has(input:checked) {
+        border-color: var(--text);
+        background: var(--text);
+        color: var(--on-accent);
+      }
+
+      .choices label:has(input:focus-visible) {
+        outline: 2px solid var(--signal-text);
+        outline-offset: 2px;
+      }
+
+      .choices input {
+        position: absolute;
+        opacity: 0;
+      }
+
+      .note {
+        max-width: 34ch;
+        margin: 0;
+        color: var(--secondary);
+        font-size: 16px;
+      }
+
+      /* The phone: the story at its real size, scaled down. */
+      .phone {
+        width: calc(1080px * var(--scale));
+        height: calc(1920px * var(--scale));
+        padding: 10px;
+        border: 1px solid var(--line-strong);
+        border-radius: 44px;
+        background: #000;
+        box-sizing: content-box;
+      }
+
+      .screen {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        border-radius: 34px;
+      }
+
+      .screen iframe {
+        width: 1080px;
+        height: 1920px;
+        border: 0;
+        transform: scale(var(--scale));
+        transform-origin: 0 0;
+      }
+
+      @media (width < 520px) {
+        :root {
+          --scale: 0.3;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Story Instagram</h1>
+    <p class="lead">
+      Trois variantes de 12 secondes, en boucle. Le teaser part quelques jours avant la bascule, la
+      version de lancement le jour J, avec le sticker «&nbsp;Lien&nbsp;» et la musique ajoutés dans l’appli.
+    </p>
+    <div class="layout">
+      <div class="phone">
+        <div class="screen"><iframe id="story" title="Story Instagram"></iframe></div>
+      </div>
+      <form class="controls" id="controls">
+        <fieldset>
+          <legend>Variante</legend>
+          <div class="choices">
+            <label><input type="radio" name="variant" value="a" checked />A · Le cube</label>
+            <label><input type="radio" name="variant" value="b" />B · Les modules</label>
+            <label><input type="radio" name="variant" value="c" />C · La méthode</label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Version</legend>
+          <div class="choices">
+            <label><input type="radio" name="version" value="teaser" checked />Teaser</label>
+            <label><input type="radio" name="version" value="launch" />Lancement</label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Zones couvertes par Instagram</legend>
+          <div class="choices">
+            <label><input type="radio" name="safe" value="" checked />Masquées</label>
+            <label><input type="radio" name="safe" value="1" />Visibles</label>
+          </div>
+        </fieldset>
+        <p class="note">
+          En rose, ce que l’appli recouvre&nbsp;: le profil en haut, le champ de réponse en bas. Aucun
+          texte ne doit s’y trouver.
+        </p>
+      </form>
+    </div>
+    <script type="module">
+      const form = document.getElementById("controls");
+      const story = document.getElementById("story");
+      const show = () => {
+        const data = new FormData(form);
+        const query = new URLSearchParams({ variant: data.get("variant") });
+        if (data.get("version") === "launch") query.set("launch", "1");
+        if (data.get("safe")) query.set("safe", "1");
+        story.src = `./story.html?${query}`;
+      };
+      form.addEventListener("change", show);
+      show();
+    </script>
+  </body>
+</html>
