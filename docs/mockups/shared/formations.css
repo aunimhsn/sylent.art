@@ -40,6 +40,8 @@
   font: var(--title-weight) min(var(--size-display), 9.6cqi)/0.98 var(--font-title);
   letter-spacing: var(--tracking-title);
 }
+/* « Formation » above the name of a formation, in the h1: the label of the module page. */
+.app-offer-eyebrow { display: block; margin-bottom: var(--space-4); color: var(--dim); font: var(--label-weight) var(--size-label)/1.3 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; }
 .app-offer-lead p { margin: var(--space-7) 0 0; max-width: var(--measure); color: var(--secondary); font-size: var(--size-intro); text-wrap: pretty; }
 .app-offer-lead p + p { margin-top: var(--space-4); }
 .app-offer-note { margin: var(--space-6) 0 0; max-width: var(--measure-narrow); padding: var(--space-3) var(--space-4); font-size: var(--size-text-small); }

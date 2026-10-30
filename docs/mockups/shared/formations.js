@@ -4,7 +4,7 @@
 // programs.js. The other pages of the mock-up keep the former DOMAINS of site.js.
 //
 // The open decisions of step 13b are variants, chosen in the bar of home.html and passed to the
-// pages in the address: ?card= (formation card), ?path= and ?rail= (the path of a formation page
+// pages in the address: ?card= (formation card), ?title= (the title of a formation page), ?path= and ?rail= (the path of a formation page
 // and where its rail lies on the cards), ?tag= (where the framework mark sits on a card of the
 // path), ?strip= (the formation on a module page). No duration is shown (asked by the owner on
 // 2026-10-30): the days stay in the data only.
@@ -92,7 +92,7 @@ const allModules = FORMATIONS.flatMap(published);
 const moduleByKey = key => allModules.find(module => moduleKey(module) === key) || (formationOf(key) && published(formationOf(key))[0]);
 
 // The variants of the open decisions, kept from page to page by the links.
-const VARIANT_DEFAULTS = { card: "list", path: "line", rail: "inset", tag: "corner", strip: "label" };
+const VARIANT_DEFAULTS = { card: "list", title: "full", path: "line", rail: "inset", tag: "corner", strip: "label" };
 const variant = name => query.get(name) || VARIANT_DEFAULTS[name];
 const variantsParams = () => Object.fromEntries(Object.keys(VARIANT_DEFAULTS).filter(name => query.has(name)).map(name => [name, query.get(name)]));
 document.documentElement.dataset.card = variant("card");

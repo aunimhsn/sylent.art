@@ -42,7 +42,10 @@
       <li><span class="app-ffacts-label">Modules</span><span class="app-ffacts-value">${modules.length}</span></li>
       <li><span class="app-ffacts-label">${domains.length > 1 ? "Domaines" : "Domaine"}</span>${domains.map(domain => `<a class="app-chip" href="${domainHref(domain)}">${domain.title}</a>`).join("")}</li>
     </ul>`;
-  const hero = offerHero({ id: "formation-title", title: `Formation ${formation.title}`, lead: `<p>${formation.summary}</p>`, after: facts, isNew: domains.some(domain => domain.isNew) });
+  // The title: « Formation PHP » (full), or « Formation » as a small label above « PHP » (label),
+  // the same words in the h1 for search engines and screen readers.
+  const title = variant("title") === "label" ? `<span class="app-offer-eyebrow">Formation </span>${formation.title}` : `Formation ${formation.title}`;
+  const hero = offerHero({ id: "formation-title", title, lead: `<p>${formation.summary}</p>`, after: facts, isNew: domains.some(domain => domain.isNew) });
 
   // The modules in the advised order, without numbers: the rail says the order. A framework
   // carries its mark in the top left corner of its card.
