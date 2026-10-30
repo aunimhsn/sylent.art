@@ -486,11 +486,37 @@ function shardsScene(hits: { time: number; color: string }[]): Scene {
   };
 }
 
-/** Sets the font size of each element so that its text spans `width` pixels on one line. */
+/**
+ * Sets the font size of each element so that the ink of its text spans `width` pixels on one
+ * line, then centers that ink: lines of different sizes then start and end at the same pixel,
+ * whatever the side bearings of their first and last letters.
+ */
 function fit(elements: HTMLElement[], width: number) {
+  const g = document.createElement("canvas").getContext(
+    "2d",
+  ) as CanvasRenderingContext2D;
   for (const element of elements) {
-    element.style.fontSize = "100px";
-    element.style.fontSize = `${(100 * width) / element.getBoundingClientRect().width}px`;
+    const style = getComputedStyle(element);
+    const text =
+      style.textTransform === "uppercase"
+        ? (element.textContent ?? "").toUpperCase()
+        : (element.textContent ?? "");
+    const measure = (size: number) => {
+      g.font = `${style.fontWeight} ${size}px ${style.fontFamily}`;
+      g.letterSpacing = `${(parseFloat(style.letterSpacing) / parseFloat(style.fontSize)) * size}px`;
+      return g.measureText(text);
+    };
+    const probe = measure(100);
+    const size =
+      (100 * width) /
+      (probe.actualBoundingBoxLeft + probe.actualBoundingBoxRight);
+    element.style.fontSize = `${size}px`;
+    const ink = measure(size);
+    const start = -ink.actualBoundingBoxLeft;
+    const end = ink.actualBoundingBoxRight;
+    const box = element.getBoundingClientRect().width;
+    element.style.position = "relative";
+    element.style.left = `${box / 2 - (start + end) / 2}px`;
   }
 }
 
@@ -567,8 +593,9 @@ function variantImpact() {
     tl.to(word, { scale: 1.06, duration: 1, ease: "none" }, time);
     if (word.classList.contains("hit-block")) {
       const [first, second] = word.querySelectorAll(".hit-line");
-      tl.to(first, { x: -28, duration: 1, ease: "power2.out" }, time);
-      tl.to(second, { x: 28, duration: 1, ease: "power2.out" }, time);
+      const until = (hits[index + 1]?.time ?? quiet) - time;
+      tl.to(first, { x: -14, duration: until, ease: "power1.in" }, time);
+      tl.to(second, { x: 14, duration: until, ease: "power1.in" }, time);
     }
     const next = hits[index + 1]?.time ?? quiet;
     tl.set(
