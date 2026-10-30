@@ -9,8 +9,8 @@
   The page of a formation of several modules (mock-up of step 13b of roadmap.md, from the
   wireframe docs/wireframes/formations.excalidraw), shown at phone and desktop width by home.html
   (?page=formation); ?formation=<slug> opens another formation. Data in shared/formations.js.
-  Layout: the hero (its domains as links above its name, its name alone, the count of its
-  modules, its summary), then « Modules » over « PARCOURS »: the modules in the advised order along
+  Layout: the hero (its name alone, its summary; its domains on the
+  right as small cards with their cover, under the summary on a phone), then « Modules » over « PARCOURS »: the modules in the advised order along
   a rail over the right of their cards (shared/paths.js; no rail on a phone), beside the card to
   organize the formation, then the call to action. No duration (decided by the owner on
   2026-10-30).
@@ -21,6 +21,23 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Anaheim:wght@500&display=block">
 <link rel="stylesheet" href="shared/site.css">
 <link rel="stylesheet" href="shared/formations.css">
+<style>
+  /* The domains of the formation (chosen by the owner on 2026-10-30, among chips above the name, a
+     line of small capitals and key facts under the summary): the hero in two columns on a
+     computer, the domains on the right as small glass cards with the cover of the domain, its
+     name and an arrow; under the summary on a phone. */
+  .app-fhero { display: grid; gap: var(--space-10); }
+  @media (min-width: 900px) { .app-fhero { grid-template-columns: 7fr 4fr; gap: var(--space-18); align-items: end; } }
+  .app-dtiles { display: grid; gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
+  .app-dtiles-label { margin: 0 0 var(--space-1); color: var(--dim); font: var(--label-weight) var(--size-label)/1.3 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; }
+  .app-dtile { position: relative; overflow: hidden; display: grid; grid-template-columns: 104px 1fr auto; align-items: center; gap: var(--space-4); padding: 0 var(--space-5) 0 0; transition: background-color var(--duration-fast); }
+  .app-dtile:hover { background-color: var(--glass-hover); }
+  .app-dtile .app-cover { aspect-ratio: 3 / 2; margin: 0; border-bottom: 0; border-right: 1px solid var(--cover-line); }
+  .app-dtile a { font: 700 var(--size-ui)/1.25 var(--font-title); letter-spacing: var(--tracking-card); }
+  .app-dtile a::after { content: ""; position: absolute; inset: 0; }
+  .app-dtile svg { color: var(--dim); transition: color var(--duration-fast), transform var(--duration-fast); }
+  .app-dtile:hover svg { color: var(--text); transform: translateX(3px); }
+</style>
 </head>
 <body data-page="courses">
 <script src="shared/site.js"></script>
@@ -35,12 +52,25 @@
   const domains = OFFER_DOMAINS.filter(domain => modulesIn(formation, domain).length);
   const levelOf = module => module.level || (PROGRAMS[module.file] || {}).level || "";
   document.title = `${formation.title} · Formations · Sylent`;
-  document.querySelector('meta[name="description"]').content = `${formation.summary} ${count(modules.length, "module")}, sur site ou à distance.`;
+  document.querySelector('meta[name="description"]').content = `${formation.summary} Des modules sur site ou à distance.`;
 
-  // Its domains above its name, as links; its name alone (decided by the owner on 2026-10-30, the
-  // word « Formation » is in the tab only); the count of its modules, then its summary.
-  const above = domains.map(domain => `<a class="app-chip" href="${domainHref(domain)}">${domain.title}</a>`).join("");
-  const hero = offerHero({ id: "formation-title", title: formation.title, above, lead: `<p class="app-offer-count">${count(modules.length, "module")}</p><p>${formation.summary}</p>`, isNew: domains.some(domain => domain.isNew) });
+  // Its name alone (decided by the owner on 2026-10-30, the word « Formation » is in the tab
+  // only), then its summary, without the count of its modules (dropped by the owner on 2026-10-30); its domains on the right, as small cards
+  // with their cover, under the summary on a phone (chosen by the owner on 2026-10-30).
+  const isNew = domains.some(domain => domain.isNew);
+  const tiles = `
+    <div class="app-reveal">
+      <p class="app-dtiles-label" id="formation-domains">${domains.length > 1 ? "Dans les domaines" : "Dans le domaine"}</p>
+      <ul class="app-dtiles" aria-labelledby="formation-domains">${domains.map(domain => `
+        <li class="app-dtile app-glass">
+          <div class="app-cover" data-scene="${domain.scene}" aria-hidden="true"><canvas></canvas></div>
+          <a href="${domainHref(domain)}">${domain.title}</a>${icon("right", 18)}
+        </li>`).join("")}
+      </ul>
+    </div>`;
+  const hero = offerHero({ id: "formation-title", title: formation.title, lead: `<p>${formation.summary}</p>`, isNew })
+    .replace('<div class="app-wrap">', '<div class="app-wrap app-fhero"><div>')
+    .replace(/<\/div>\s*<\/section>\s*$/, `</div>${tiles}</div></section>`);
 
   // The modules in the advised order, without numbers: the rail says the order. A framework
   // carries its mark in the top left corner of its card.

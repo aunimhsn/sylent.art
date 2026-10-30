@@ -68,10 +68,6 @@
     "moduleLabel": "{title} : voir le détail",
     "formationMore": "Voir la formation",
     "formationLabel": "Formation {title} : voir la formation",
-    "moduleCount": {
-      "one": "{count} module",
-      "other": "{count} modules"
-    },
     "customTitle": "Un besoin sur mesure ?",
     "customText": "Décrivez vos apprenants et vos objectifs : je construis le module.",
     "customButton": "Me contacter"

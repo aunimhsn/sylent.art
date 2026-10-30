@@ -1,6 +1,7 @@
 // The animated covers (from docs/mockups/shared/covers.js): one small Three.js scene in each
 // element marked .cover, named by its data-scene. Imported by the components that show covers:
-// the domain and module cards, and the cycle of a lesson of the home page. The scenes of the
+// the domain and module cards, the domains of a formation page, and the cycle of a lesson of the
+// home page. The scenes of the
 // domains and of the cycle are here, those of the modules in src/scripts/module-scenes.ts, and
 // their shapes in src/scripts/cover-kit.ts.
 //
@@ -549,7 +550,7 @@ function start(renderer: THREE.WebGLRenderer) {
         cover,
         canvas,
         context,
-        card: cover.closest(".card"),
+        card: cover.closest(".card, .tile"),
         time: 1.3,
         visible: true,
         /** The frame of the copy it shows, so that a copy older than it is dropped. */

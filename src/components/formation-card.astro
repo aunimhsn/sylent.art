@@ -1,8 +1,7 @@
 ---
 // The card of a formation in a domain (docs/branding.md, Components): a module card named after
 // the formation when it has a single published module; otherwise its cover (the scene of its
-// first module), its name, the count of all its published modules (« 3 modules », the whole
-// formation even when the domain lists only some of them), its modules filed under the domain as
+// first module), its name, its modules filed under the domain as
 // links to their pages, each framework with its mark, and the band « Voir la formation » to its
 // page. Its modules are links above the band, whose link covers the card.
 import fr from "../i18n/fr.json";
@@ -10,13 +9,11 @@ import {
   formationPath,
   getCatalog,
   isSingle,
-  moduleCount,
   modulePath,
   newDomainOf,
   type Filed,
 } from "../lib/offers";
 import { href } from "../lib/url";
-import Icon from "./icon.astro";
 import ModuleCard from "./module-card.astro";
 
 interface Props {
@@ -27,7 +24,6 @@ const { formation, modules } = Astro.props.filed;
 const catalog = await getCatalog();
 const isNew = modules.some((module) => newDomainOf(catalog, module));
 const { title } = formation.collection.data;
-const count = moduleCount(formation.modules.length);
 ---
 
 {isSingle(formation) ? (
@@ -50,7 +46,6 @@ const count = moduleCount(formation.modules.length);
       {title}
       {isNew && <span class="visually-hidden">{fr.cards.newHidden}</span>}
     </h3>
-    <p class="card-count">{count}</p>
     <ul class="formation-modules">
       {modules.map((module) => (
         <li>
@@ -66,7 +61,6 @@ const count = moduleCount(formation.modules.length);
                 {fr.cards.framework}
               </span>
             )}
-            <Icon name="right" size={16} />
           </a>
         </li>
       ))}
@@ -87,7 +81,9 @@ const count = moduleCount(formation.modules.length);
 
 <style>
   /* The modules of the formation: rows under thin rules, each a link above the band of the card,
-     whose link covers the card. Under the pointer the row turns white and its arrow appears. */
+     whose link covers the card, the mark of a framework on the right. Under the pointer the row
+     turns white on a translucent white between its rules, instead of an arrow, which left no room
+     for the mark on the right (asked by the owner on 2026-10-30). */
   .formation-modules {
     position: relative;
     z-index: 1;
@@ -102,11 +98,14 @@ const count = moduleCount(formation.modules.length);
     align-items: center;
     gap: var(--space-3);
     min-height: 44px;
+    padding-inline: var(--space-3);
     border-top: 1px solid var(--line);
     color: var(--secondary);
     font: 700 var(--size-ui) / 1.2 var(--font-title);
     letter-spacing: var(--tracking-card);
-    transition: color var(--duration-fast);
+    transition:
+      color var(--duration-fast),
+      background-color var(--duration-fast);
   }
 
   .formation-modules a > span:first-child {
@@ -114,22 +113,12 @@ const count = moduleCount(formation.modules.length);
     min-width: 0;
   }
 
-  .formation-modules a > :global(svg) {
-    flex: none;
+  .formation-modules .framework {
     margin-left: auto;
-    opacity: 0;
-    transform: translateX(-6px);
-    transition:
-      opacity var(--duration-fast),
-      transform var(--duration-fast);
   }
 
   .formation-modules a:is(:hover, :focus-visible) {
+    background-color: var(--glass-hover);
     color: var(--text);
-  }
-
-  .formation-modules a:is(:hover, :focus-visible) > :global(svg) {
-    opacity: 1;
-    transform: none;
   }
 </style>

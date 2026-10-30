@@ -1,16 +1,25 @@
 ---
-// The last card after the modules of a domain: a module built for the request, with its own
-// scene, that leads to the contact page. After the domains of the home page, the same request
-// is a band instead (domain-cards.astro).
+// The last card after the formations of a domain, the modules of a formation and the domains of
+// the home page and the formations page: a module built for the request, with its own scene, that
+// leads to the contact page. After the seven domains, it is the eighth card of their grid (asked
+// by the owner on 2026-10-30, instead of a band across its own row).
 import fr from "../i18n/fr.json";
 import { href } from "../lib/url";
+
+interface Props {
+  /** 2 among the domain cards of the formations page, right under its h1; 3 elsewhere. */
+  headingLevel?: 2 | 3;
+}
+
+const { headingLevel = 3 } = Astro.props;
+const Heading = `h${headingLevel}` as const;
 ---
 
 <li class="card glass reveal tilt">
   <div class="cover" data-scene="custom" aria-hidden="true">
     <canvas></canvas>
   </div>
-  <h3>{fr.cards.customTitle}</h3>
+  <Heading>{fr.cards.customTitle}</Heading>
   <p>{fr.cards.customText}</p>
   <a class="card-more" href={href("/contact/")}>
     {fr.cards.customButton}

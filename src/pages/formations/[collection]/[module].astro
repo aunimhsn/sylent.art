@@ -247,12 +247,13 @@ const hasDescender = /[gjpqy]/.test(title);
   /* « Framework » under the title of a framework (docs/branding.md, Components): a short rule in
      orange, then the word in --dim; the orange only draws the line. Right under the title, its
      line height made up for (its line box ends about 0.11 em under the baseline), a little lower
-     when the title has a descender (« Alpine »). */
+     when the title has a descender (« Alpine »); 3 px lower in both cases, asked by the owner on
+     2026-10-30 (« Framework » touched the p of « Alpine »). */
   .framework-title {
     display: flex;
     align-items: center;
     gap: var(--space-3);
-    margin: calc(var(--title-size) * 0.02) 0 0 0.04em;
+    margin: calc(var(--title-size) * 0.02 + 3px) 0 0 0.04em;
     color: var(--dim);
     font: var(--label-weight) var(--size-label) / 1 var(--font-title);
     letter-spacing: var(--tracking-label);
@@ -260,7 +261,7 @@ const hasDescender = /[gjpqy]/.test(title);
   }
 
   .framework-title.has-descender {
-    margin-top: calc(var(--title-size) * 0.12);
+    margin-top: calc(var(--title-size) * 0.12 + 3px);
   }
 
   .framework-rule {

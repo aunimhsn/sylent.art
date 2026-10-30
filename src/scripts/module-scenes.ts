@@ -937,7 +937,7 @@ export const MODULE_SCENES = {
       },
     };
   },
-  // CI/CD: a change goes through the stages of the pipeline, then passes.
+  // CI / CD: a change goes through the stages of the pipeline, then passes.
   pipeline() {
     const scene = new THREE.Scene();
     const group = new THREE.Group();

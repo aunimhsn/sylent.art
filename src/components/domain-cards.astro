@@ -1,6 +1,6 @@
 ---
 // The cards of the domains, each leading to the page of its domain: on the home page and the
-// domains page, then a band for a custom request; under a domain page, the other domains only.
+// domains page, then the card of a custom request; under a domain page, the other domains only.
 //
 // Under the pointer (or with the keyboard focus) the content of a card slides up and its
 // formations come up in its place, on its back (docs/branding.md, Components). The back is
@@ -8,25 +8,26 @@
 // the card.
 import fr from "../i18n/fr.json";
 import { domainPath, getOffers } from "../lib/offers";
+import { withoutAccents } from "../lib/text";
 import { href } from "../lib/url";
-import Icon from "./icon.astro";
+import CustomCard from "./custom-card.astro";
 
 interface Props {
   /** The domain left out: the one of the page, under its other domains. */
   except?: string;
-  /** The band for a custom request, after the cards. */
-  band?: boolean;
+  /** The card of a custom request, after the domains. */
+  custom?: boolean;
   /** 2 on the domains page, right under its h1; 3 under a section heading. */
   headingLevel?: 2 | 3;
 }
 
-const { except, band = true, headingLevel = 3 } = Astro.props;
+const { except, custom = true, headingLevel = 3 } = Astro.props;
 const Heading = `h${headingLevel}` as const;
 const offers = (await getOffers()).filter(({ domain }) => domain.id !== except);
-// A tag: the name of a formation in lowercase kebab-case, accents kept (« Git / GitHub »
-// becomes « git-github », « Agilité » « agilité »).
+// A tag: the name of a formation in lowercase kebab-case, without accents (« Git / GitHub »
+// becomes « git-github », « Agilité » « agilite », asked by the owner on 2026-10-30).
 const tagOf = (name: string) =>
-  name
+  withoutAccents(name)
     .toLowerCase()
     .split(/[^\p{L}\p{N}]+/u)
     .filter(Boolean)
@@ -83,18 +84,7 @@ const tagOf = (name: string) =>
       </li>
     );
   })}
-  {band && (
-    <li class="card reveal is-band">
-      <div class="card-text">
-        <Heading>{fr.cards.customTitle}</Heading>
-        <p>{fr.cards.customText}</p>
-      </div>
-      <a class="card-more" href={href("/contact/")}>
-        <span>{fr.cards.customButton}</span>
-        <Icon name="right" size={18} />
-      </a>
-    </li>
-  )}
+  {custom && <CustomCard headingLevel={headingLevel} />}
 </ul>
 
 <script>
@@ -334,82 +324,5 @@ const tagOf = (name: string) =>
 
   .card-back.is-still .back-list li {
     height: auto;
-  }
-
-  /* The custom request: a band across its own row, without glass or scene. Its text sits in a
-     dashed frame, open on the side of the white button, that turns white under the pointer; the
-     arrow of the button moves forward instead of the button growing. From two columns the
-     button is a column on the right, exactly as wide as the cards above (a subgrid of the grid
-     of the cards); on a phone it is a band at the bottom. */
-  .card.is-band {
-    grid-column: 1 / -1;
-    gap: 0;
-    padding: 0;
-    background: none;
-  }
-
-  .card.is-band:hover {
-    background: none;
-  }
-
-  .card-text {
-    display: grid;
-    gap: var(--space-3);
-    padding: var(--card-padding-block) var(--card-padding-inline);
-    border: 1px dashed var(--line-strong);
-    border-bottom-width: 0;
-    transition: border-color var(--duration-fast);
-  }
-
-  .card.is-band:hover .card-text {
-    border-color: var(--text);
-  }
-
-  .card.is-band .card-more {
-    margin: 0;
-  }
-
-  .card.is-band:hover .card-more {
-    padding-block: var(--space-4);
-  }
-
-  /* The arrow only from two columns; on a phone the band stays a plain button, as on the other
-     cards. */
-  .card.is-band .card-more :global(svg) {
-    display: none;
-    margin-left: var(--space-3);
-    transition: transform var(--duration-fast);
-  }
-
-  .card.is-band:hover .card-more :global(svg) {
-    transform: translateX(6px);
-  }
-
-  @media (width >= 640px) {
-    .card.is-band {
-      display: grid;
-      grid-template-columns: subgrid;
-      column-gap: normal;
-    }
-
-    /* The frame runs over the gap of the grid, up to the button. */
-    .card-text {
-      grid-column: 1 / -2;
-      margin-right: calc(-1 * var(--cards-gap));
-      border-right-width: 0;
-      border-bottom-width: 1px;
-    }
-
-    .card.is-band .card-more {
-      grid-column: -2 / -1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .card.is-band .card-more :global(svg) {
-      display: block;
-      flex: none;
-    }
   }
 </style>
