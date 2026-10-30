@@ -412,10 +412,10 @@ async function variantCube() {
 }
 
 // ── Variant D: the impact ─────────────────────────────────────────────────────────────
-// Out of the frame of the site, as the owner asked: three words fall one after the other, each
-// with a boom, a flash, a shock wave and shards, on a black, a white then an orange screen; then
-// silence, and « bientôt » pops up letter by letter, very small and very soft, while an orange
-// ball bounces down to become the dot of its i.
+// Out of the frame of the site, as the owner asked: the date, « nouveau site » and the address
+// fall one after the other, each with a boom, a flash and shards, on a dark, a white then a dark
+// screen; then silence, and the letters of « bientôt » walk in from the right, small and soft,
+// while an orange ball bounces down to become the dot of its i.
 
 /** The shards of the hits: small outlined blocks thrown from the center, then falling. */
 function shardsScene(hits: { time: number; color: string }[]): Scene {
@@ -486,15 +486,22 @@ function shardsScene(hits: { time: number; color: string }[]): Scene {
   };
 }
 
+/** Sets the font size of each element so that its text spans `width` pixels on one line. */
+function fit(elements: HTMLElement[], width: number) {
+  for (const element of elements) {
+    element.style.fontSize = "100px";
+    element.style.fontSize = `${(100 * width) / element.getBoundingClientRect().width}px`;
+  }
+}
+
 function variantImpact() {
-  duration = 9;
+  duration = 10;
   const white = "#f4f4f4";
   const black = css("--bg");
-  const orange = css("--signal");
   const hits = [
-    { time: 1.0, color: white, background: black, text: "var(--text)" },
-    { time: 2.15, color: black, background: white, text: black },
-    { time: 3.3, color: white, background: orange, text: "#ffffff" },
+    { time: 1.0, color: white, background: black, text: white, flash: white },
+    { time: 2.15, color: black, background: white, text: black, flash: black },
+    { time: 3.3, color: white, background: black, text: white, flash: white },
   ];
   const quiet = 4.55;
 
@@ -504,14 +511,18 @@ function variantImpact() {
     `<div class="slot" style="left:0; top:0; width:${WIDTH}px; height:${HEIGHT}px"></div>`,
   );
   const flash = html(`<div class="layer flash"></div>`);
-  const ring = html(`<div class="ring"></div>`);
+  // The date of the launch, « nouveau site » as a block justified on both sides, the address.
   const words = [
-    `<div class="hit"><span class="hit-year">2026</span></div>`,
-    `<div class="hit"><span class="hit-small">Nouveau</span><span class="hit-big">site</span></div>`,
-    `<div class="hit"><span class="hit-mark">${wordmark}</span><span class="hit-tld">.art</span></div>`,
+    `<div class="hit"><span class="hit-line">3/11/26</span></div>`,
+    `<div class="hit hit-block"><span class="hit-line">Nouveau</span><span class="hit-line">site</span></div>`,
+    `<div class="hit"><span class="hit-line hit-address">sylent.art</span></div>`,
   ].map(html);
-  shake.append(shardSlot, ring, ...words);
+  shake.append(shardSlot, ...words);
   stage.append(shake, flash);
+  fit(
+    words.flatMap((word) => [...word.querySelectorAll<HTMLElement>(".hit-line")]),
+    WIDTH - 2 * 110,
+  );
   addSlot(
     shardSlot,
     shardsScene(hits.map(({ time, color }) => ({ time, color }))),
@@ -535,7 +546,7 @@ function variantImpact() {
   tl.to(dot, { autoAlpha: 0, duration: 0.01 }, hits[0].time - 0.12);
   cues.push({ time: 0.15, sound: "riser", length: 0.85, gain: 0.8 });
 
-  hits.forEach(({ time, background, text }, index) => {
+  hits.forEach(({ time, background, text, flash: flashColor }, index) => {
     const word = words[index];
     // The word falls from the camera in 0.18 s, blurred, and lands on the hit.
     tl.set(word, { color: text }, 0);
@@ -555,25 +566,18 @@ function variantImpact() {
     // Then it drifts closer until the next one.
     tl.to(word, { scale: 1.06, duration: 1, ease: "none" }, time);
     const next = hits[index + 1]?.time ?? quiet;
-    tl.set(word, { autoAlpha: 0 }, index < hits.length - 1 ? next - 0.18 : next);
+    tl.set(
+      word,
+      { autoAlpha: 0 },
+      index < hits.length - 1 ? next - 0.18 : next,
+    );
     tl.set(stage, { backgroundColor: background }, time);
     tl.fromTo(
       flash,
-      { autoAlpha: 0.85, backgroundColor: index === 1 ? orange : white },
-      { autoAlpha: 0, duration: 0.3, ease: "power2.out", immediateRender: false },
-      time,
-    );
-    tl.fromTo(
-      ring,
+      { autoAlpha: 0.85, backgroundColor: flashColor },
       {
-        scale: 0.2,
-        autoAlpha: 1,
-        borderColor: index === 2 ? "#ffffff" : orange,
-      },
-      {
-        scale: 4.2,
         autoAlpha: 0,
-        duration: 0.7,
+        duration: 0.3,
         ease: "power2.out",
         immediateRender: false,
       },
@@ -601,7 +605,7 @@ function variantImpact() {
     });
   });
 
-  // Silence and black: then the soft word.
+  // Silence and black: then the soft word, its letters walking in from the right one by one.
   tl.set(stage, { backgroundColor: black }, quiet);
   cues.push({ time: quiet, sound: "cut" });
   const soft = launch ? "en ligne" : "bientôt";
@@ -616,12 +620,12 @@ function variantImpact() {
   );
   const ball = html(`<div class="ball"></div>`);
   stage.append(cute, ball);
-  // The dot of the i: above the dotless i, measured before any tween moves the letters.
+  // The places of the letters and the dot of the i, measured before any tween moves them.
   const box = stage.getBoundingClientRect();
-  const dotless = [...cute.querySelectorAll(".letter")].find(
-    (letter) => letter.textContent === "ı",
-  ) as HTMLElement;
-  const glyph = dotless.getBoundingClientRect();
+  const letters = [...cute.querySelectorAll<HTMLElement>(".letter")];
+  const places = letters.map((letter) => letter.getBoundingClientRect());
+  const dotless = letters.findIndex((letter) => letter.textContent === "ı");
+  const glyph = places[dotless];
   const ballSize = 30;
   const target = {
     x: glyph.left - box.left + glyph.width / 2 - ballSize / 2,
@@ -629,30 +633,61 @@ function variantImpact() {
   };
   gsap.set(ball, { x: target.x, y: target.y });
 
-  const letters = cute.querySelectorAll(".letter");
-  const popAt = quiet + 0.35;
-  tl.fromTo(
-    letters,
-    { scale: 0, y: 40, autoAlpha: 0 },
-    {
-      scale: 1,
-      y: 0,
-      autoAlpha: 1,
-      duration: 0.7,
-      ease: "elastic.out(1, 0.45)",
-      stagger: 0.09,
-    },
-    popAt,
-  );
-  // A rising pentatonic scale, one note per letter.
-  const scale = [1, 9 / 8, 5 / 4, 3 / 2, 5 / 3, 2, 9 / 4, 5 / 2];
-  [...soft].forEach((letter, index) => {
-    if (letter !== " ")
-      cues.push({ time: popAt + 0.09 * index, sound: "pluck", pitch: scale[index] });
+  // Each letter waddles in: it sways from one foot to the other and hops at every step, then
+  // stops in its place with a little bounce and a note of a rising pentatonic scale.
+  const notes = [1, 9 / 8, 5 / 4, 3 / 2, 5 / 3, 2, 9 / 4, 5 / 2];
+  const step = 0.13;
+  const walk = 1.3;
+  const steps = Math.round(walk / step);
+  let arrived = quiet;
+  letters.forEach((letter, index) => {
+    if (letter.textContent?.trim() === "") return;
+    const start = quiet + 0.3 + index * 0.24;
+    const from = WIDTH + 80 - (places[index].left - box.left);
+    tl.fromTo(
+      letter,
+      { x: from, autoAlpha: 1 },
+      { x: 0, duration: walk, ease: "power1.out", immediateRender: false },
+      start,
+    );
+    tl.fromTo(
+      letter,
+      { rotation: -11 },
+      {
+        rotation: 11,
+        duration: step,
+        ease: "sine.inOut",
+        repeat: steps - 1,
+        yoyo: true,
+        immediateRender: false,
+      },
+      start,
+    );
+    tl.fromTo(
+      letter,
+      { y: 0 },
+      {
+        y: -22,
+        duration: step / 2,
+        ease: "power1.out",
+        repeat: steps * 2 - 1,
+        yoyo: true,
+        immediateRender: false,
+      },
+      start,
+    );
+    const stop = start + walk;
+    tl.to(
+      letter,
+      { rotation: 0, y: 0, duration: 0.35, ease: "back.out(4)" },
+      stop,
+    );
+    cues.push({ time: stop, sound: "pluck", pitch: notes[index] });
+    arrived = Math.max(arrived, stop);
   });
 
   // The ball falls from above the screen and bounces three times onto the i.
-  const fall = popAt + 0.09 * soft.length + 0.25;
+  const fall = arrived + 0.3;
   const bounces = [fall + 0.5, fall + 0.82, fall + 1.02];
   tl.fromTo(
     ball,
@@ -660,16 +695,38 @@ function variantImpact() {
     { y: target.y, duration: 0.5, ease: "power2.in", immediateRender: false },
     fall,
   );
-  tl.to(ball, { y: target.y - 150, duration: 0.16, ease: "power2.out" }, bounces[0]);
-  tl.to(ball, { y: target.y, duration: 0.16, ease: "power2.in" }, bounces[0] + 0.16);
-  tl.to(ball, { y: target.y - 50, duration: 0.1, ease: "power2.out" }, bounces[1]);
-  tl.to(ball, { y: target.y, duration: 0.1, ease: "power2.in" }, bounces[1] + 0.1);
+  tl.to(
+    ball,
+    { y: target.y - 150, duration: 0.16, ease: "power2.out" },
+    bounces[0],
+  );
+  tl.to(
+    ball,
+    { y: target.y, duration: 0.16, ease: "power2.in" },
+    bounces[0] + 0.16,
+  );
+  tl.to(
+    ball,
+    { y: target.y - 50, duration: 0.1, ease: "power2.out" },
+    bounces[1],
+  );
+  tl.to(
+    ball,
+    { y: target.y, duration: 0.1, ease: "power2.in" },
+    bounces[1] + 0.1,
+  );
   tl.set(ball, { autoAlpha: 0 }, 0);
   bounces.forEach((at, index) => {
     tl.fromTo(
       ball,
       { scaleX: 1.35, scaleY: 0.65 },
-      { scaleX: 1, scaleY: 1, duration: 0.12, ease: "power2.out", immediateRender: false },
+      {
+        scaleX: 1,
+        scaleY: 1,
+        duration: 0.12,
+        ease: "power2.out",
+        immediateRender: false,
+      },
       at,
     );
     cues.push({ time: at, sound: "boop", pitch: [1, 1.25, 1.5][index] });
@@ -689,6 +746,7 @@ function variantImpact() {
     },
     bounces[2] + 0.05,
   );
+  duration = Math.max(duration, bounces[2] + 1.6);
 }
 
 // ── Start ─────────────────────────────────────────────────────────────────────────────

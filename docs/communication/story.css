@@ -125,8 +125,7 @@ body {
   color: var(--text);
 }
 
-.end-mark svg,
-.hit-mark svg {
+.end-mark svg {
   display: block;
   width: 100%;
   height: auto;
@@ -153,7 +152,7 @@ body {
 
 /* ── Variant D ──────────────────────────────────────────────────────────────────────── */
 
-/* A word that falls: centered, as large as the width allows. */
+/* A word that falls: centered, each line as wide as the stage allows (fit in story.ts). */
 .hit {
   position: absolute;
   inset: 0;
@@ -170,46 +169,19 @@ body {
   text-transform: uppercase;
 }
 
-.hit-year {
-  font-size: 380px;
+.hit-line {
+  white-space: nowrap;
 }
 
-.hit-small {
-  font-size: 168px;
-}
-
-.hit-big {
-  font-size: 340px;
-}
-
-.hit-mark {
-  width: 920px;
-}
-
-.hit-tld {
-  margin-top: 36px;
-  font-size: 220px;
-  text-transform: lowercase;
+/* The address, as it is written. */
+.hit-address {
+  text-transform: none;
 }
 
 .flash {
   visibility: hidden;
   opacity: 0;
   background: #ffffff;
-}
-
-/* The shock wave of a hit. */
-.ring {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 320px;
-  height: 320px;
-  margin: -160px 0 0 -160px;
-  border: 10px solid var(--signal);
-  border-radius: 50%;
-  visibility: hidden;
-  opacity: 0;
 }
 
 /* The small orange dot of the tension before the first hit. */
