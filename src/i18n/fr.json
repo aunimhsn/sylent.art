@@ -4,7 +4,9 @@
     "title": "Sylent · Formateur en informatique",
     "description": "Formateur en informatique depuis 2021 : développement, bases de données, tests, Python et IA, pour les écoles, les organismes de formation et les entreprises.",
     "motto": "Une vie, mille leçons",
-    "locale": "fr-FR"
+    "locale": "fr-FR",
+    "ogLocale": "fr_FR",
+    "cardAlt": "Le cube de Sylent, avec le visage d’Aunim Hassan, formateur en informatique, à côté du logo et de l’adresse sylent.art."
   },
   "navigation": {
     "label": "Navigation principale",
