@@ -89,6 +89,12 @@ const allModules = FORMATIONS.flatMap(published);
 // The former links of the mock-up (?module=javascript) lead to the first module of the formation.
 const moduleByKey = key => allModules.find(module => moduleKey(module) === key) || (formationOf(key) && published(formationOf(key))[0]);
 
+// The open decisions of the module page, compared with the bar of home.html: ?fw= (how
+// « framework » joins the title of a framework) and ?back= (the second button of the hero).
+const VARIANT_DEFAULTS = { fw: "under", back: "formation" };
+const variant = name => query.get(name) || VARIANT_DEFAULTS[name];
+document.documentElement.dataset.fw = variant("fw");
+
 const count = (number, word) => `${number}${NB}${word}${number > 1 ? "s" : ""}`;
 
 // ── The framework mark ──────────────────────────────────────────────────────────────

@@ -70,8 +70,21 @@
     },
     module: {
       label: "Module",
-      options: { "php-laravel": "Laravel (PHP, framework)", "php-poo": "POO (PHP)", "python-modules-et-packages": "Modules et packages (Python)", uml: "UML (alone)", "claude-code": "Claude Code (new, alone)" },
+      options: { "php-laravel": "Laravel (PHP, framework)", "javascript-alpine": "Alpine (framework, descender)", "php-poo": "POO (PHP)", "python-modules-et-packages": "Modules et packages (Python)", uml: "UML (alone)", "claude-code": "Claude Code (new, alone)" },
       fallback: "php-laravel",
+      only: "module",
+    },
+    // The open decisions of the module page.
+    fw: {
+      label: "Framework in the title",
+      options: { under: "Under", language: "Under, with PHP", sup: "Exponent", above: "Above", rule: "Orange rule", sentence: "Sentence" },
+      fallback: "under",
+      only: "module",
+    },
+    back: {
+      label: "Second button",
+      options: { formation: "Voir la formation PHP", all: "Voir toutes les formations", adapt: "Adapts to where you come from" },
+      fallback: "formation",
       only: "module",
     },
     view: {

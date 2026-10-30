@@ -52,6 +52,25 @@
 .app-offer-note { margin: var(--space-6) 0 0; max-width: var(--measure-narrow); padding: var(--space-3) var(--space-4); font-size: var(--size-text-small); }
 
 
+/* « Framework » with the title of a module page: orange letters only, no background. Right under
+   the title, the line height of the title made up for (its line box ends about 0.11 em under the
+   baseline), a little lower when the title has a descender. Sizes from the title: the heading is
+   a container, the title is min(--size-display, 9.6cqi). */
+.app-fw-title { --title: min(var(--size-display), 9.6cqi); position: relative; margin: calc(var(--title) * 0.02) 0 0 0.04em; color: var(--signal-text); font: var(--label-weight) var(--size-label)/1 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; }
+.app-fw-title.has-descender { margin-top: calc(var(--title) * 0.12); }
+/* Exponent: at the top right of the title, as a mark. */
+.app-offer-titles:has(.is-sup) { display: flex; align-items: flex-start; gap: var(--space-3); }
+.app-fw-title.is-sup { margin: calc(var(--title) * 0.14) 0 0; }
+/* Above: where the formation link was, before the title. */
+.app-fw-title.is-above { margin: 0; }
+/* Rule: a short orange rule, the word in --dim; the orange only draws the line. */
+.app-fw-title.is-rule { display: flex; align-items: center; gap: var(--space-3); color: var(--dim); }
+.app-fw-title.is-rule::before { content: ""; width: var(--space-8); height: 1px; background: var(--signal); }
+/* Sentence: a subtitle in --secondary, the word « framework » in orange. */
+.app-fw-title.is-sentence { margin-top: calc(var(--title) * 0.08); color: var(--secondary); font: 700 var(--size-role)/1.3 var(--font-title); letter-spacing: var(--tracking-card); text-transform: none; }
+.app-fw-title.is-sentence.has-descender { margin-top: calc(var(--title) * 0.16); }
+.app-fw-title.is-sentence em { font-style: normal; color: var(--signal-text); }
+
 /* ── The framework mark ─────────────────────────────────────────────────────────────── */
 
 /* « Framework » in small white capitals on a rectangle of the background of the site, the
