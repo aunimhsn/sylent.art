@@ -103,16 +103,6 @@ export function synthesize(cues, duration) {
         });
         break;
       }
-      // A rush of air, for a turn of the cube.
-      case "whoosh": {
-        const length = cue.length ?? 0.5;
-        const air = lowPass(random);
-        add(cue.time, length, (x) => {
-          const shape = Math.sin((Math.PI * x) / length) ** 2;
-          return gain * 0.5 * shape * air(600 + 5000 * shape);
-        });
-        break;
-      }
       // A chord held by a string ensemble: each note in two detuned voices of a few harmonics,
       // a slow attack (fast for a stab) and a release over its last half second.
       case "chord": {

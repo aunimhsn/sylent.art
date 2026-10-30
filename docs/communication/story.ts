@@ -445,11 +445,6 @@ async function variantCube() {
       gain: accent ? 1 : time > 7.5 ? 0.7 : 0.45,
     });
   }
-  accents
-    .slice(0, 3)
-    .forEach((time) =>
-      cues.push({ time: time - 0.3, sound: "whoosh", length: 0.6, gain: 0.5 }),
-    );
   [7.05, 7.2, 7.35].forEach((time, index) =>
     cues.push({ time, sound: "drum", gain: 0.45 + 0.15 * index, pitch: 1.2 }),
   );
