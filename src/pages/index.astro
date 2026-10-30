@@ -17,7 +17,7 @@ import { getOffers } from "../lib/offers";
 import { href } from "../lib/url";
 
 const { partners, audiences, domains, pedagogy, about } = home;
-// « Huit domaines »: the count follows the domain files, in words up to twelve.
+// « Sept domaines »: the count follows the domain files, in words up to twelve.
 const count = (await getOffers()).length;
 const lead = domains.lead.replace(
   "{count}",

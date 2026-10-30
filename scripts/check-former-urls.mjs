@@ -1,7 +1,8 @@
 // Checks that every URL of the former site still resolves in the built site (dist/): either a
 // page, or a redirect to the page that specs.md gives it (URLs and redirects), which exists; and
-// that the dropped ones show the not-found page. Also checks the redirects of the tree of the
-// URLs, which no page links to: /domaines/<domain>/modules/ leads to the page of its domain.
+// that the dropped ones show the not-found page. Also checks the redirects of the site, which no
+// page links to: /domaines/ leads to the formations page, and the address of a formation of a
+// single module to its module.
 // Run after `npm run build`, or on the preview built under its base:
 // `node scripts/check-former-urls.mjs dist-base/sylent.art /sylent.art`.
 import { existsSync, readdirSync, readFileSync } from "node:fs";
@@ -9,26 +10,24 @@ import { join } from "node:path";
 
 const [dist = "dist", base = ""] = process.argv.slice(2);
 
-const web = "/domaines/developpement-web/modules";
-
 // Each former URL, with the path it redirects to (without the base), or null for a page at the
-// same path. A draft's former course leads to the page of its domain, until the module is
+// same path. A draft's former course leads to the page of its formation, until the module is
 // published (specs.md, Training offers).
 const formerUrls = new Map([
   ["/", null],
-  ["/courses", "/domaines/"],
-  ["/courses/1", `${web}/html/`],
-  ["/courses/2", `${web}/css/`],
-  ["/courses/3", `${web}/javascript/`],
-  ["/courses/4", `${web}/php/`],
-  ["/courses/5", "/domaines/bases-de-donnees/modules/mysql/"],
-  ["/courses/6", "/domaines/python/modules/python/"],
-  ["/courses/7", "/domaines/initiation-a-la-programmation/modules/robomind/"],
-  ["/courses/8", "/domaines/methodologie-et-tests/modules/cypress/"],
-  ["/courses/9", "/domaines/developpement-web/"], // Vue, a draft
-  ["/courses/10", `${web}/alpine/`],
-  ["/courses/11", `${web}/laravel/`],
-  ["/courses/12", "/domaines/python/"], // Django, a draft
+  ["/courses", "/formations/"],
+  ["/courses/1", "/formations/html/fondamentaux/"],
+  ["/courses/2", "/formations/css/fondamentaux/"],
+  ["/courses/3", "/formations/javascript/fondamentaux/"],
+  ["/courses/4", "/formations/php/fondamentaux/"],
+  ["/courses/5", "/formations/mysql/fondamentaux/"],
+  ["/courses/6", "/formations/python/fondamentaux/"],
+  ["/courses/7", "/formations/algorithmique/robomind/"],
+  ["/courses/8", "/formations/cypress/fondamentaux/"],
+  ["/courses/9", "/formations/javascript/"], // Vue, a draft
+  ["/courses/10", "/formations/javascript/alpine/"],
+  ["/courses/11", "/formations/php/laravel/"],
+  ["/courses/12", "/formations/python/"], // Django, a draft
   ["/articles", "/"],
   ["/articles/1", "/"],
   ["/articles/2", "/"],
@@ -37,13 +36,23 @@ const formerUrls = new Map([
   ["/policy", "/confidentialite/"],
 ]);
 
-// The parent of the module pages of each domain built, which leads to the domain page (specs.md,
-// Domain pages).
-const treeRedirects = new Map(
-  readdirSync(join(dist, "domaines"), { withFileTypes: true })
+/** The folders of a folder of the built site. */
+const foldersOf = (path) =>
+  readdirSync(join(dist, path), { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
-    .map(({ name }) => [`/domaines/${name}/modules`, `/domaines/${name}/`]),
-);
+    .map(({ name }) => name);
+
+// The redirects of the site (specs.md, URLs and redirects): /domaines/ leads to the formations
+// page, and the address of a formation of a single module, the only folder in it, to that
+// module; a formation of several modules has its page.
+const siteRedirects = new Map([
+  ["/domaines", "/formations/"],
+  ...foldersOf("formations").map((name) => {
+    const modules = foldersOf(`formations/${name}`);
+    const path = `/formations/${name}`;
+    return [path, modules.length === 1 ? `${path}/${modules[0]}/` : null];
+  }),
+]);
 
 // The former URLs that specs.md drops: no page and no redirect.
 const droppedUrls = ["/creations", "/register", "/login"];
@@ -69,7 +78,7 @@ const redirectOf = (html) => {
 const errors = [];
 const waiting = [];
 
-for (const [url, expected] of [...formerUrls, ...treeRedirects]) {
+for (const [url, expected] of [...formerUrls, ...siteRedirects]) {
   const file = fileOf(url);
   if (!existsSync(file)) {
     if (pending.has(url)) waiting.push(`${url} (step ${pending.get(url)})`);
@@ -127,5 +136,5 @@ if (errors.length > 0) {
 }
 console.log(
   `${formerUrls.size - waiting.length} former URLs and ` +
-    `${treeRedirects.size} redirects of the tree resolve in ${dist}/.`,
+    `${siteRedirects.size} addresses of the site resolve in ${dist}/.`,
 );

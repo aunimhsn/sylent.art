@@ -1,31 +1,47 @@
 ---
-// The card of one module, on the page of its domain and under a module page: its animated
-// cover, its name, its domain and its summary; the whole card leads to its page. The modules of
-// a new domain are new too. It tilts under the pointer (src/scripts/covers.ts).
+// The card of one module, on a domain page for a formation of a single module, and under a
+// module page: its animated cover, its name and its summary; the whole card leads to its page.
+// A formation of a single module is shown by its own name (« UML », not « Fondamentaux »). The
+// modules of a new domain are new too, and a framework carries its mark on the cover, after
+// « Nouveau ». It tilts under the pointer (src/scripts/covers.ts).
 import fr from "../i18n/fr.json";
-import { modulePath, type Domain, type Module } from "../lib/offers";
+import {
+  getCatalog,
+  modulePath,
+  newDomainOf,
+  type Module,
+} from "../lib/offers";
 import { href } from "../lib/url";
 
 interface Props {
   module: Module;
-  domain: Domain;
+  /** The name shown, when it is not the module's: its formation's, for a single module. */
+  title?: string;
 }
 
-const { module, domain } = Astro.props;
-const { title, summary, scene } = module.data;
-const { isNew } = domain.data;
+const { module } = Astro.props;
+const isNew = Boolean(newDomainOf(await getCatalog(), module));
+const { summary, scene, framework } = module.data;
+const title = Astro.props.title ?? module.data.title;
 ---
 
 <li class="card glass reveal tilt">
   <div class="cover" data-scene={scene} aria-hidden="true">
     <canvas></canvas>
-    {isNew && <span class="new">{fr.cards.new}</span>}
+    {(isNew || framework) && (
+      <span class="cover-labels">
+        {isNew && <span class="new">{fr.cards.new}</span>}
+        {framework && <span class="framework">{fr.cards.framework}</span>}
+      </span>
+    )}
   </div>
   <h3>
     {title}
     {isNew && <span class="visually-hidden">{fr.cards.newHidden}</span>}
+    {framework && (
+      <span class="visually-hidden">{fr.cards.frameworkHidden}</span>
+    )}
   </h3>
-  <p class="card-domain">{domain.data.title}</p>
   <p>{summary}</p>
   <a
     class="card-more"

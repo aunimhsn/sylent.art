@@ -10,7 +10,7 @@
   "domain": {
     "title": "Domaine {title} · Formations · Sylent",
     "description": "{summary} Des formations aux durées toujours adaptables, sur site ou à distance.",
-    "modules": "Les modules",
+    "formations": "Les formations",
     "others": {
       "title": "Autres domaines",
       "ghost": "Explorer"
@@ -18,21 +18,21 @@
     "cta": ["Un domaine qui vous intéresse ?", "Parlons-en."]
   },
   "module": {
-    "title": "{title} · {domain} · Formations · Sylent",
-    "description": "{summary} Un module de {duration}, sur site ou à distance.",
+    "title": "{title} · {formation} · Formations · Sylent",
+    "titleAlone": "{title} · Formations · Sylent",
+    "description": "{summary} Un module sur site ou à distance.",
+    "formation": "Formation {formation}",
     "domain": "Domaine : {domain}",
     "seeProgram": "Voir le programme",
+    "seeFormation": "Voir la formation {title}",
+    "seeDomain": "Voir le domaine {title}",
+    "back": "Revenir en arrière",
     "facts": {
       "audience": "Public",
       "level": "Niveau",
-      "duration": "Durée",
       "formats": "Formats"
     },
     "formats": "Sur site ou à distance",
-    "days": {
-      "one": "{days} jour, adaptable",
-      "other": "{days} jours, adaptable"
-    },
     "prerequisites": "Prérequis",
     "objectives": "Objectifs",
     "program": "Programme",
@@ -43,9 +43,31 @@
       "button": "Me contacter"
     },
     "related": {
-      "title": "Dans le même domaine",
-      "ghost": "Explorer"
+      "formation": {
+        "title": "Dans la même formation",
+        "ghost": "Explorer"
+      },
+      "domain": {
+        "title": "Dans le même domaine",
+        "ghost": "Explorer"
+      }
     },
     "cta": ["Organiser ce module ?", "Parlons de vos apprenants."]
+  },
+  "formation": {
+    "title": "{title} · Formations · Sylent",
+    "description": "{summary} {count}, sur site ou à distance.",
+    "modules": {
+      "title": "Modules",
+      "ghost": "Parcours"
+    },
+    "moduleMore": "Voir le module",
+    "moduleLabel": "{title} : voir le module",
+    "organize": {
+      "title": "Organiser cette formation",
+      "text": "Toute la formation ou quelques modules, sur site ou à distance, avec un programme et des exercices adaptés à votre groupe.",
+      "button": "Me contacter"
+    },
+    "cta": ["Organiser cette formation ?", "Parlons de vos apprenants."]
   }
 }

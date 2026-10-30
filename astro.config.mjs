@@ -20,7 +20,8 @@ export default defineConfig({
   // redirects); the redirects of /courses/<id> are written by src/pages/courses/[id].astro. The
   // site has no articles: their former URLs go to the home page.
   redirects: {
-    "/courses": to("/domaines/"),
+    "/courses": to("/formations/"),
+    "/domaines": to("/formations/"),
     "/about": to("/a-propos/"),
     "/policy": to("/confidentialite/"),
     "/articles": to("/"),
