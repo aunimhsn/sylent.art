@@ -6,7 +6,7 @@
 // The open decisions of step 13b are variants, chosen in the bar of home.html and passed to the
 // pages in the address: ?card= (formation card), ?title= (the title of a formation page), ?path= and ?rail= (the path of a formation page
 // and where its rail lies on the cards), ?tag= (where the framework mark sits on a card of the
-// path), ?strip= (the formation on a module page). No duration is shown (asked by the owner on
+// path), ?strip= (the formation on a module page), ?align= (the left edge of the large titles). No duration is shown (asked by the owner on
 // 2026-10-30): the days stay in the data only.
 
 const FORMATIONS_PAGES = { domain: "domain-site.html", formation: "formation-site.html", module: "module-site.html" };
@@ -92,7 +92,7 @@ const allModules = FORMATIONS.flatMap(published);
 const moduleByKey = key => allModules.find(module => moduleKey(module) === key) || (formationOf(key) && published(formationOf(key))[0]);
 
 // The variants of the open decisions, kept from page to page by the links.
-const VARIANT_DEFAULTS = { card: "list", title: "full", path: "line", rail: "inset", tag: "corner", strip: "label" };
+const VARIANT_DEFAULTS = { card: "list", title: "full", path: "line", rail: "inset", tag: "corner", strip: "label", align: "none" };
 const variant = name => query.get(name) || VARIANT_DEFAULTS[name];
 const variantsParams = () => Object.fromEntries(Object.keys(VARIANT_DEFAULTS).filter(name => query.has(name)).map(name => [name, query.get(name)]));
 document.documentElement.dataset.card = variant("card");
@@ -171,3 +171,24 @@ const offerHero = ({ id, title, ghost, above = "", lead, after = "", isNew = fal
     </div>
   </section>`;
 const NEW_NOTE = `Une offre nouvelle, centrée sur la méthode et les bonnes pratiques${NB}: utiliser les outils d’IA pour être plus efficace et plus serein au quotidien.`;
+
+// ── The left edge of the large titles ────────────────────────────────────────────────
+// A letter carries a margin on its left (its side bearing), which grows with the size of the
+// text: the D of « Développement web » starts about 6 px right of the edge at 92 px. ?align=
+// compares the corrections: none; em, one margin of -0.06 em for every title (exact for the
+// straight letters, D P F M…, a little too much for the round ones and for J T V); letter, the
+// side bearing of the first letter, from a table measured on Manrope 800 (ink exactly on the
+// edge); optical, the same but the round letters a little past the edge, as typographers do.
+const SIDE_BEARINGS = { A: 0.015, B: 0.062, C: 0.015, D: 0.062, E: 0.062, F: 0.062, G: 0.015, H: 0.062, I: 0.078, J: 0, K: 0.062, L: 0.078, M: 0.062, N: 0.062, O: 0.015, P: 0.062, Q: 0.015, R: 0.062, S: 0.031, T: 0, U: 0.062, V: 0, W: 0, X: 0, Y: 0, Z: 0.047 };
+const ROUND = "ACGOQS";
+document.addEventListener("DOMContentLoaded", () => {
+  const align = variant("align");
+  if (align === "none") return;
+  document.querySelectorAll(".app-offer-title, .app-heading-title").forEach(title => {
+    const letter = unaccented((title.querySelector(".app-offer-name") || title).textContent.trim()).charAt(0).toUpperCase();
+    const bearing = align === "em" ? 0.06 : (SIDE_BEARINGS[letter] || 0) + (align === "optical" && ROUND.includes(letter) ? 0.012 : 0);
+    // A title with a label above it (« Formation » on a formation page): only the name moves.
+    const name = title.querySelector(".app-offer-name");
+    (name || title).style.marginLeft = `${-bearing}em`;
+  });
+});

@@ -44,7 +44,7 @@
     </ul>`;
   // The title: « Formation PHP » (full), or « Formation » as a small label above « PHP » (label),
   // the same words in the h1 for search engines and screen readers.
-  const title = variant("title") === "label" ? `<span class="app-offer-eyebrow">Formation </span>${formation.title}` : `Formation ${formation.title}`;
+  const title = variant("title") === "label" ? `<span class="app-offer-eyebrow">Formation </span><span class="app-offer-name">${formation.title}</span>` : `Formation ${formation.title}`;
   const hero = offerHero({ id: "formation-title", title, lead: `<p>${formation.summary}</p>`, after: facts, isNew: domains.some(domain => domain.isNew) });
 
   // The modules in the advised order, without numbers: the rail says the order. A framework
