@@ -99,6 +99,8 @@ On 2026-10-28 three redder colors were compared, for fear of looking like the br
 | Caption | `--size-caption` | Manrope 600 | 14 px / 1.3 | Domain of a module, field labels, figure captions, header button, copyright |
 | Label | `--size-label` | Manrope 800 | 12 px / 1–1.6 | Uppercase, `--tracking-label`: footer headings, « Autres moyens », key facts, the badge « Nouveau »; white in the footer, `--dim` elsewhere |
 
+- **Left edge of the large titles** (optical alignment, chosen by the owner on 2026-10-30): a letter carries a margin on its left, its side bearing, which spaces it from the letter before and grows with the size of the text (the D of « Développement web » started 6 px right of the edge at 92 px, the faded words up to 17 px). Each page title, section title and faded word moves left by the side bearing of its first letter, in em so that it holds at every size: 0.07 em for the straight capitals of Manrope 800 (B D E F H K M N P R U), 0.08 em for I and L, 0.02 to 0.05 em for A C G O Q S Z, about 0 for J T V W X Y (read from the font file, xMin / unitsPerEm). A round letter (C G O Q S) moves 0.01 em further, so that it looks aligned with a straight one. A faded word keeps its offset of 0.12 em to the right, now measured from its ink. CSS has no property to drop a side bearing: the value is set at build time (`--bearing`), as in the mock-up (`shared/formations.js`).
+
 ## Spacing
 
 Every margin, padding and gap is a multiple of 4 px, named `--space-N` for N × 4 px: the eye reads the repeated steps as one rhythm. Only the values in use have a token.

@@ -43,6 +43,12 @@
 /* « Formation » above the name of a formation, in the h1: the label of the module page. */
 .app-offer-name { display: inline-block; }
 .app-offer-eyebrow { display: block; margin-bottom: var(--space-4); color: var(--dim); font: var(--label-weight) var(--size-label)/1.3 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; }
+/* The left edge of the large titles and faded words: moved left by the side bearing of their
+   first letter (--bearing, set by shared/formations.js), so that its ink starts on the edge; a
+   faded word keeps its offset of 0.12 em to the right, now measured from its ink. */
+.app-offer-title, .app-offer-name, .app-heading-title { margin-left: calc(-1 * var(--bearing, 0em)); }
+.app-offer-title:has(.app-offer-name) { margin-left: 0; }
+.app-offer-ghost, .app-heading-ghost { margin-left: calc(0.12em - var(--bearing, 0em)); }
 .app-offer-lead p { margin: var(--space-7) 0 0; max-width: var(--measure); color: var(--secondary); font-size: var(--size-intro); text-wrap: pretty; }
 .app-offer-lead p + p { margin-top: var(--space-4); }
 .app-offer-note { margin: var(--space-6) 0 0; max-width: var(--measure-narrow); padding: var(--space-3) var(--space-4); font-size: var(--size-text-small); }
