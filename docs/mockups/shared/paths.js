@@ -1,35 +1,37 @@
-// The path of a formation page (formation-site.html): its modules in the advised order, beside a
-// rail. Three looks, chosen with ?path= (step 13b of roadmap.md):
+// The path of a formation page (formation-site.html): its modules in the advised order, along a
+// rail that lies over the right of their cards and runs a little past the first and the last
+// (step 13b of roadmap.md). Two looks, chosen with ?path=:
 // - line: the rail fills with orange as the page scrolls, and the square of a module lights up
 //   when the orange reaches it;
 // - thread: two strands of light twisted around the rail (Three.js), which cross at each module,
-//   with a point of light that runs down to where the reader is and leaves an orange trail;
-// - strata: the modules as stacked slabs (Three.js), the first at the bottom, a framework as a
-//   frame on top of its language; the slab of the module being read rises and lights up.
-// The orange always means the same thing: how far the reader has gone. Nothing moves when the
+//   with a point of light that runs down to where the reader is and leaves an orange trail.
+// The orange means how far the reader has gone. No rail on a phone; nothing moves when the
 // visitor asked to reduce motion.
 import * as THREE from "three";
 
 const list = document.querySelector("[data-path]");
 const steps = [...list.querySelectorAll("[data-step]")];
-const look = ["thread", "strata"].find(name => list.classList.contains(`is-${name}`)) || "line";
+const look = list.classList.contains("is-thread") ? "thread" : "line";
+const phone = matchMedia("(max-width: 639px)");
 const motion = document.documentElement.dataset.motion === "on";
 const clamp = x => Math.min(1, Math.max(0, x));
 const SIGNAL = new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue("--signal").trim() || "#d3450e");
 // The reader is where the orange reaches: a line at 60 % of the height of the window.
 const MARK = 0.6;
 
-// The centers of the modules on the rail, in the space of the list, and how far the reader is.
+// The centers of the modules on the rail and the ends of the rail, in the space of the list, and
+// how far the reader is.
 function reading() {
   const box = list.getBoundingClientRect();
   const centers = steps.map(step => {
     const node = step.querySelector(".app-step-node").getBoundingClientRect();
     return node.top + node.height / 2 - box.top;
   });
+  const overhang = parseFloat(getComputedStyle(list).getPropertyValue("--overhang")) || 0;
+  const top = -overhang, bottom = box.height + overhang;
   const at = motion ? innerHeight * MARK - box.top : Infinity;
-  const first = centers[0], last = centers[centers.length - 1];
   const reached = centers.map(center => center <= at + 1);
-  return { box, centers, at, first, last, progress: clamp((at - first) / (last - first)), reached, active: Math.max(0, reached.lastIndexOf(true)) };
+  return { box, centers, overhang, top, bottom, at, progress: clamp((at - top) / (bottom - top)), reached };
 }
 
 // ── Line: CSS only, driven by the scroll ─────────────────────────────────────────────
@@ -37,8 +39,8 @@ function reading() {
 function line() {
   const update = () => {
     const state = reading();
-    list.style.setProperty("--first", `${state.first}px`);
-    list.style.setProperty("--length", `${state.last - state.first}px`);
+    list.style.setProperty("--first", `${state.top}px`);
+    list.style.setProperty("--length", `${state.bottom - state.top}px`);
     list.style.setProperty("--progress", state.progress.toFixed(4));
     steps.forEach((step, index) => step.classList.toggle("is-reached", state.reached[index]));
   };
@@ -59,9 +61,9 @@ function thread() {
   const camera = new THREE.OrthographicCamera(0, 1, 0, -1, -100, 100);
 
   // A strand is a polyline with a color per point: brighter in front, orange once reached.
-  const PER_GAP = 48, OVERHANG = 0.45;
+  const PER_GAP = 48;
   const gaps = steps.length - 1;
-  const total = Math.ceil((gaps + 2 * OVERHANG) * PER_GAP) + 1;
+  const total = (gaps + 2) * PER_GAP + 1;
   const strand = () => {
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(total * 3), 3));
@@ -106,9 +108,10 @@ function thread() {
       width = canvas.clientWidth;
       height = canvas.clientHeight;
       renderer.setSize(width, height, false);
-      Object.assign(camera, { right: width, bottom: -height });
-      camera.updateProjectionMatrix();
     }
+    // The canvas starts at the top of the rail, above the list.
+    Object.assign(camera, { right: width, top: state.overhang, bottom: state.overhang - height });
+    camera.updateProjectionMatrix();
     const { centers } = state;
     const center = width / 2, amplitude = width * 0.36;
     // The page y of a position p along the modules (integer p: a module), and back.
@@ -119,16 +122,19 @@ function thread() {
       return centers[k] + (p - k) * (centers[k + 1] - centers[k]);
     };
     const pOf = y => {
+      if (y < centers[0]) return (y - centers[0]) / (centers[1] - centers[0]);
       for (let k = 0; k < gaps; k++) if (y <= centers[k + 1]) return k + (y - centers[k]) / (centers[k + 1] - centers[k]);
-      return gaps;
+      return gaps + (y - centers[gaps]) / (centers[gaps] - centers[gaps - 1]);
     };
+    // The strands run from one end of the rail to the other, fading out at both ends.
+    const start = pOf(state.top), end = pOf(state.bottom);
     // Half a turn between two modules, so that the strands cross on each one; the amplitude
     // breathes, which keeps the crossings in place.
     const xOf = (p, side) => center + amplitude * (0.86 + 0.14 * Math.sin(time * 1.3 + p * 2.1)) * Math.sin(Math.PI * p + side * Math.PI);
     const depthOf = (p, side) => Math.cos(Math.PI * p + side * Math.PI);
     const shade = (p, side, y) => {
       const front = (depthOf(p, side) + 1) / 2;
-      const ends = clamp(Math.min(p + OVERHANG, gaps + OVERHANG - p) / OVERHANG);
+      const ends = clamp(Math.min(p - start, end - p) / 0.3);
       gray.setScalar(0.16 + 0.5 * front);
       color.copy(gray);
       if (y <= state.at) color.lerp(SIGNAL, 0.55 + 0.45 * front);
@@ -137,7 +143,7 @@ function thread() {
     strands.forEach((object, side) => {
       const positions = object.geometry.attributes.position.array, colors = object.geometry.attributes.color.array;
       for (let k = 0; k < total; k++) {
-        const p = -OVERHANG + k / PER_GAP;
+        const p = start + (end - start) * k / (total - 1);
         const y = yOf(p);
         positions.set([xOf(p, side), -y, depthOf(p, side)], k * 3);
         shade(p, side, y).toArray(colors, k * 3);
@@ -169,14 +175,14 @@ function thread() {
       if (state.reached[index]) knot.material.color.lerp(SIGNAL, 1);
     });
     // The runner follows the reader along the front strand, from the first module to the last.
-    const y = Math.min(Math.max(state.at, centers[0]), centers[gaps]);
+    const y = Math.min(Math.max(state.at, state.top + state.overhang * 0.5), state.bottom - state.overhang * 0.5);
     const p = pOf(y);
     const runner = new THREE.Vector3(xOf(p, 0), -y, 3);
     history.unshift(runner);
     if (history.length > trail.length * 2) history.length = trail.length * 2;
     trail.forEach((dot, k) => {
       const at = history[k * 2];
-      dot.visible = Boolean(at) && state.at > centers[0] - 40;
+      dot.visible = Boolean(at) && state.at > state.top;
       if (at) dot.position.set(at.x, at.y, 3 - k * 0.01);
     });
     glow.position.set(runner.x, runner.y, 2.5);
@@ -186,105 +192,10 @@ function thread() {
   };
 }
 
-// ── Strata: the modules as stacked slabs ───────────────────────────────────────────────
-
-function strata() {
-  const stage = document.querySelector("[data-strata]");
-  const canvas = stage.querySelector("canvas");
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-  const scene = new THREE.Scene();
-  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, -100, 100);
-  camera.position.set(6, 4.6, 6);
-  camera.lookAt(0, 0, 0);
-
-  const SIZE = 2.6, THICK = 0.3, GAP = 1.05;
-  const FILL = new THREE.Color(0x111111), FILL_LIT = new THREE.Color(0x2a1208), WHITE = new THREE.Color(0xffffff);
-  const stack = new THREE.Group();
-  stack.position.y = -(steps.length - 1) * GAP / 2;
-  scene.add(stack);
-  const slabs = steps.map((step, index) => {
-    const geometry = new THREE.BoxGeometry(SIZE, THICK, SIZE);
-    const slab = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ color: FILL }));
-    const lines = [new THREE.LineSegments(new THREE.EdgesGeometry(geometry), new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5 }))];
-    // A framework: a frame raised on its slab, the structure it gives to its language.
-    if (step.querySelector(".app-fw")) {
-      const frame = new THREE.EdgesGeometry(new THREE.BoxGeometry(SIZE * 0.72, 0.22, SIZE * 0.72));
-      const raised = new THREE.LineSegments(frame, new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5 }));
-      raised.position.y = THICK / 2 + 0.11;
-      lines.push(raised);
-    } else {
-      // The others: a few grooves on their top, one more per module, as the knowledge grows.
-      const points = [];
-      for (let k = 1; k <= index + 1; k++) {
-        const z = -SIZE / 2 + k * SIZE / (index + 2);
-        points.push(new THREE.Vector3(-SIZE * 0.38, THICK / 2 + 0.001, z), new THREE.Vector3(SIZE * 0.38, THICK / 2 + 0.001, z));
-      }
-      lines.push(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(points), new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.18 })));
-    }
-    lines.forEach(object => slab.add(object));
-    slab.position.y = index * GAP;
-    stack.add(slab);
-    const label = document.createElement("span");
-    label.className = "app-strata-label";
-    label.textContent = step.querySelector(".app-step-title").firstChild.textContent.trim();
-    stage.append(label);
-    return { slab, lines, label, lift: 0 };
-  });
-
-  // The module under the pointer wins over the module being read.
-  let hovered = -1;
-  steps.forEach((step, index) => {
-    step.addEventListener("pointerenter", () => { hovered = index; });
-    step.addEventListener("pointerleave", () => { hovered = -1; });
-  });
-
-  let width = 0, height = 0, last = 0;
-  const clock = new THREE.Clock();
-  const corner = new THREE.Vector3();
-  return () => {
-    const state = reading();
-    const time = motion ? clock.getElapsedTime() : 0;
-    const delta = motion ? Math.min(time - last, 0.1) : 1;
-    last = time;
-    if (canvas.clientWidth !== width || canvas.clientHeight !== height) {
-      width = canvas.clientWidth;
-      height = canvas.clientHeight;
-      renderer.setSize(width, height, false);
-      // The stack on the left two thirds, the names of the modules on the right.
-      const half = (steps.length - 1) * GAP / 2 + 2;
-      const aspect = width / height;
-      Object.assign(camera, { top: half, bottom: -half, left: -SIZE * 0.85, right: -SIZE * 0.85 + 2 * half * aspect });
-      camera.updateProjectionMatrix();
-    }
-    const active = hovered >= 0 ? hovered : state.active;
-    stack.rotation.y = 0.22 * Math.sin(time * 0.35);
-    slabs.forEach((item, index) => {
-      const target = index === active ? 1 : 0;
-      item.lift += (target - item.lift) * Math.min(1, delta * 6);
-      const lift = item.lift;
-      item.slab.position.set(0, index * GAP + lift * 0.34, 0);
-      item.slab.material.color.copy(FILL).lerp(FILL_LIT, lift);
-      item.lines.forEach((object, k) => {
-        object.material.color.copy(WHITE).lerp(SIGNAL, lift);
-        object.material.opacity = (k ? 0.3 : 0.45) + 0.55 * lift;
-      });
-      // The name of the module, beside the right corner of its slab.
-      corner.set(SIZE / 2, 0, -SIZE / 2);
-      item.slab.localToWorld(corner);
-      corner.project(camera);
-      item.label.style.setProperty("--x", `${(corner.x + 1) / 2 * width + 14}px`);
-      item.label.style.setProperty("--y", `${(1 - corner.y) / 2 * height}px`);
-      item.label.classList.toggle("is-active", index === active);
-      steps[index].classList.toggle("is-active", index === active);
-    });
-    renderer.render(scene, camera);
-  };
-}
-
 // ── The loop: every frame while the path is on screen, otherwise on scroll and resize ────
 
-const update = look === "thread" ? thread() : look === "strata" ? strata() : line();
+const draw = look === "thread" ? thread() : line();
+const update = () => { if (!phone.matches) draw(); };
 let visible = true, queued = false;
 const frame = () => {
   queued = false;

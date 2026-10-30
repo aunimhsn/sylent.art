@@ -4,8 +4,10 @@
 // programs.js. The other pages of the mock-up keep the former DOMAINS of site.js.
 //
 // The open decisions of step 13b are variants, chosen in the bar of home.html and passed to the
-// pages in the address: ?card= (formation card), ?mark= (framework mark), ?path= (the path of a
-// formation page), ?strip= (the formation on a module page).
+// pages in the address: ?card= (formation card), ?path= and ?rail= (the path of a formation page
+// and where its rail lies on the cards), ?tag= (where the framework mark sits on a card of the
+// path), ?strip= (the formation on a module page). No duration is shown (asked by the owner on
+// 2026-10-30): the days stay in the data only.
 
 const FORMATIONS_PAGES = { domain: "domain-site.html", formation: "formation-site.html", module: "module-site.html" };
 
@@ -90,31 +92,29 @@ const allModules = FORMATIONS.flatMap(published);
 const moduleByKey = key => allModules.find(module => moduleKey(module) === key) || (formationOf(key) && published(formationOf(key))[0]);
 
 // The variants of the open decisions, kept from page to page by the links.
-const VARIANT_DEFAULTS = { card: "list", mark: "outline", path: "line", strip: "label" };
+const VARIANT_DEFAULTS = { card: "list", path: "line", rail: "inset", tag: "corner", strip: "label" };
 const variant = name => query.get(name) || VARIANT_DEFAULTS[name];
 const variantsParams = () => Object.fromEntries(Object.keys(VARIANT_DEFAULTS).filter(name => query.has(name)).map(name => [name, query.get(name)]));
 document.documentElement.dataset.card = variant("card");
-document.documentElement.dataset.mark = variant("mark");
+document.documentElement.dataset.rail = variant("rail");
+document.documentElement.dataset.tag = variant("tag");
 
-const days = count => `${count}${NB}jour${count > 1 ? "s" : ""}`;
 const count = (number, word) => `${number}${NB}${word}${number > 1 ? "s" : ""}`;
 
-// ── The framework mark: three looks, one meaning ──────────────────────────────────────
-// outline: a label in outline, the sibling of « Nouveau »; dot: a small orange square, the
-// signal of what is built on top of the language; layers: two stacked planes, a layer over the
-// language.
-const LAYERS = '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5l6 3-6 3-6-3z"/><path d="M2 9.5l6 3 6-3" opacity=".55"/></svg>';
-const frameworkMark = () => `<span class="app-fw">${variant("mark") === "layers" ? LAYERS : ""}<span>Framework</span></span>`;
+// ── The framework mark ──────────────────────────────────────────────────────────────
+// Chosen by the owner on 2026-10-30: « Framework » in small white capitals on a rectangle of the
+// background of the site, in the top left corner of the card of the module (its cover, or the
+// card itself on the path of a formation); inline after the name in a list or above a title.
+const frameworkMark = (where = "") => `<span class="app-fw${where ? ` is-${where}` : ""}">Framework</span>`;
 
 // ── Cards ─────────────────────────────────────────────────────────────────────────────
 
-// A module card: under its name, its duration; a framework carries its mark on its cover. Used for
+// A module card: its name and its summary; a framework carries its mark on its cover. Used for
 // a formation of a single module (named after it) and for the neighbors of a module.
 const offerModuleCard = module => `
   <li class="app-card app-glass app-reveal app-tilt">
-    <div class="app-cover" data-scene="${module.scene}" aria-hidden="true"><canvas></canvas>${isNewModule(module) ? '<span class="app-new">Nouveau</span>' : ""}${module.framework ? `<span class="app-cover-fw">${frameworkMark()}</span>` : ""}</div>
+    <div class="app-cover" data-scene="${module.scene}" aria-hidden="true"><canvas></canvas>${isNewModule(module) || module.framework ? `<span class="app-cover-labels">${isNewModule(module) ? '<span class="app-new">Nouveau</span>' : ""}${module.framework ? frameworkMark() : ""}</span>` : ""}</div>
     <h3>${isSingle(module.formation) ? module.formation.title : module.title}</h3>
-    <p class="app-card-domain">${days(module.days)}</p>
     <p>${module.summary}</p>
     <a class="app-card-more" href="${moduleHref(module)}" aria-label="${module.title}${NB}: voir le détail">Voir le détail</a>
   </li>`;

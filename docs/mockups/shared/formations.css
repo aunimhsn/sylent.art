@@ -54,18 +54,17 @@
 
 /* ── The framework mark ─────────────────────────────────────────────────────────────── */
 
-.app-fw { display: inline-flex; flex: none; align-items: center; gap: var(--space-2); font: var(--label-weight) var(--size-label)/1 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; white-space: nowrap; }
-/* Outline: the sibling of « Nouveau », drawn instead of filled. */
-[data-mark="outline"] .app-fw { padding: 6px var(--space-2) 5px; border: 1px solid var(--line-strong); color: var(--secondary); }
-/* Dot: an orange square before a quiet word. */
-[data-mark="dot"] .app-fw { color: var(--dim); letter-spacing: 0.08em; }
-[data-mark="dot"] .app-fw::before { content: ""; width: 6px; height: 6px; background: var(--signal); }
-/* Layers: two planes, one over the other, as a framework over its language. */
-[data-mark="layers"] .app-fw { color: var(--secondary); letter-spacing: 0.08em; }
-[data-mark="layers"] .app-fw svg { color: var(--signal-text); }
-/* On a cover, in its top right corner, over the scene. */
-.app-cover-fw { position: absolute; right: var(--space-4); top: var(--space-4); }
-[data-mark="outline"] .app-cover-fw .app-fw { background: rgb(10 10 10 / 0.6); }
+/* « Framework » in small white capitals on a rectangle of the background of the site, the
+   sibling of « Nouveau » (chosen by the owner on 2026-10-30). */
+.app-fw { display: inline-block; flex: none; padding: var(--space-2) var(--space-3); background: var(--bg); color: var(--text); font: var(--label-weight) var(--size-label)/1 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; white-space: nowrap; }
+/* On a cover, in its top left corner, after « Nouveau » when the module is new too. */
+.app-cover-labels { position: absolute; left: var(--space-4); top: var(--space-4); display: flex; gap: var(--space-2); }
+.app-cover-labels .app-new { position: static; }
+/* On a card of the path: in its top left corner, flush with it (corner), or across its top edge
+   (edge). */
+.app-fw.is-card { position: absolute; z-index: 1; left: -1px; top: -1px; }
+[data-tag="edge"] .app-fw.is-card { left: var(--card-padding-inline); top: 0; transform: translateY(-50%); outline: 1px solid var(--glass-line); }
+[data-tag="corner"] .app-step-card:has(.is-card) { padding-top: calc(var(--space-6) + var(--space-8)); }
 
 /* ── Formation cards ──────────────────────────────────────────────────────────────────── */
 
@@ -77,8 +76,7 @@
 .app-fcard-list a > svg { margin-left: auto; opacity: 0; transform: translateX(-6px); transition: opacity var(--duration-fast), transform var(--duration-fast); }
 .app-fcard-list a:hover, .app-fcard-list a:focus-visible { color: var(--text); }
 .app-fcard-list a:hover > svg, .app-fcard-list a:focus-visible > svg { opacity: 1; transform: none; }
-.app-fcard-list .app-fw { font-size: 10px; }
-[data-mark="outline"] .app-fcard-list .app-fw { padding: 4px 6px 3px; }
+.app-fcard-list .app-fw { padding: 6px var(--space-2); font-size: 10px; }
 
 /* Stack: the other modules as sheets behind the card, toward the top right (one per module
    after the first, three at most), drawn by shadows, which the overflow of the card doesn't
@@ -127,19 +125,22 @@
 
 .app-formation-body { display: grid; gap: var(--space-14); padding-bottom: var(--space-fluid-3); }
 @media (min-width: 900px) { .app-formation-body { grid-template-columns: 8fr 4fr; gap: var(--space-18); align-items: start; } }
-.app-path-note { margin: calc(-1 * var(--space-fluid-1)) 0 var(--space-fluid-2); color: var(--dim); font-size: var(--size-text-small); }
 .app-organize { display: grid; gap: var(--space-3); padding: var(--card-padding-block) var(--card-padding-inline); }
 @media (min-width: 900px) { .app-organize { position: sticky; top: calc(var(--header-height) + var(--space-6)); } }
 .app-organize h2 { margin: 0; font: 700 var(--size-card-title)/1.2 var(--font-title); letter-spacing: var(--tracking-card); }
 .app-organize p { margin: 0; color: var(--secondary); font-size: var(--size-text-small); }
 .app-organize .app-button { justify-self: start; margin-top: var(--space-2); }
 
-/* ── The path: the modules in the advised order, beside a rail ─────────────────────────── */
+/* ── The path: the modules in the advised order, along a rail ──────────────────────────── */
 
-.app-path { --rail: 56px; position: relative; display: grid; gap: var(--space-5); margin: 0; padding: 0 0 0 var(--rail); list-style: none; }
-@media (max-width: 639px) { .app-path { --rail: 36px; } }
+/* The rail lies on the right of the cards, over them (rail: on their right border, 48 px inside
+   or 96 px inside), and runs a little past the first and the last card (--overhang). No rail on
+   a phone, where the cards need the whole width. */
+.app-path { --overhang: 40px; --inset: 48px; position: relative; display: grid; gap: var(--space-5); margin: 0; padding: 0; list-style: none; }
+[data-rail="border"] .app-path { --inset: 0px; }
+[data-rail="deep"] .app-path { --inset: 96px; }
 .app-step { position: relative; }
-.app-step-card { position: relative; display: grid; gap: var(--space-2); padding: var(--space-6) var(--card-padding-inline); transition: background-color var(--duration-fast), border-color var(--duration-fast); }
+.app-step-card { position: relative; display: grid; gap: var(--space-2); padding: var(--space-6) calc(var(--card-padding-inline) + var(--inset) + var(--space-6)) var(--space-6) var(--card-padding-inline); transition: background-color var(--duration-fast), border-color var(--duration-fast); }
 .app-step-card:hover { background-color: var(--glass-hover); }
 .app-step-title { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4); margin: 0; font: 700 var(--size-card-title)/1.2 var(--font-title); letter-spacing: var(--tracking-card); }
 .app-step-facts { margin: 0; color: var(--dim); font: 600 var(--size-caption)/1.3 var(--font-title); }
@@ -147,29 +148,24 @@
 .app-step-more { justify-self: start; margin-top: var(--space-3); }
 .app-step-more::after { content: ""; position: absolute; inset: 0; }
 
-/* Line: a rail on the left that fills with orange as the page scrolls; each module has a square
-   on the rail that lights up when the orange reaches it. */
+/* Line: the rail fills with orange as the page scrolls; each module has a square on the rail, at
+   the height of its name, that lights up when the orange reaches it. */
 .app-path.is-line::before,
-.app-path.is-line::after { content: ""; position: absolute; left: calc(var(--rail) / 2 - 0.5px); top: var(--first, 0px); height: var(--length, 100%); width: 1px; background: var(--line-strong); }
-.app-path.is-line::after { background: var(--signal); transform: scaleY(var(--progress, 1)); transform-origin: top; box-shadow: 0 0 10px var(--signal); }
-.app-step-node { position: absolute; left: calc(-1 * var(--rail) / 2 - 6px); top: var(--node-top, 34px); width: 12px; height: 12px; border: 1px solid var(--line-strong); background: var(--bg); transform: rotate(45deg); transition: background-color var(--duration-fast), border-color var(--duration-fast), box-shadow var(--duration-fast); }
+.app-path.is-line::after { content: ""; position: absolute; z-index: 2; right: calc(var(--inset) - 0.5px); top: var(--first, 0px); height: var(--length, 100%); width: 1px; background: linear-gradient(transparent, var(--line-strong) var(--overhang), var(--line-strong) calc(100% - var(--overhang)), transparent); pointer-events: none; }
+.app-path.is-line::after { background: linear-gradient(transparent, var(--signal) var(--overhang)); transform: scaleY(var(--progress, 1)); transform-origin: top; box-shadow: 0 0 10px var(--signal); }
+.app-step-node { position: absolute; z-index: 3; right: calc(var(--inset) - 6px); top: var(--node-top, 30px); width: 12px; height: 12px; border: 1px solid var(--line-strong); background: var(--bg); transform: rotate(45deg); transition: background-color var(--duration-fast), border-color var(--duration-fast), box-shadow var(--duration-fast); pointer-events: none; }
+[data-tag="corner"] .app-step:has(.is-card) .app-step-node { --node-top: calc(30px + var(--space-8)); }
 .app-step.is-reached .app-step-node { border-color: var(--signal); background: var(--signal); box-shadow: 0 0 14px var(--signal); }
 .app-path:not(.is-line) .app-step-node { visibility: hidden; }
 
-/* Thread: a Three.js canvas over the rail (shared/paths.js). */
-.app-path-canvas { position: absolute; left: 0; top: 0; width: var(--rail); height: 100%; pointer-events: none; }
+/* Thread: a Three.js canvas over the rail (shared/paths.js), centered on it, past the cards. */
+.app-path-canvas { position: absolute; z-index: 2; right: calc(var(--inset) - 32px); top: calc(-1 * var(--overhang)); width: 64px; height: calc(100% + 2 * var(--overhang)); pointer-events: none; }
 
-/* Strata: the modules as stacked slabs, in a Three.js canvas that follows the scroll on a
-   computer, beside the list; on a phone, above it. */
-.app-strata { display: grid; gap: var(--space-8); }
-@media (min-width: 900px) { .app-strata { grid-template-columns: 5fr 7fr; gap: var(--space-8); align-items: start; } }
-.app-strata-stage { position: relative; aspect-ratio: 1; max-height: 340px; width: 100%; }
-@media (min-width: 900px) { .app-strata-stage { position: sticky; top: calc(var(--header-height) + var(--space-6)); max-height: none; } }
-.app-strata-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-.app-strata-label { position: absolute; left: var(--x); top: var(--y); transform: translateY(-50%); color: var(--dim); font: 700 var(--size-caption)/1 var(--font-title); white-space: nowrap; transition: color var(--duration-fast); pointer-events: none; }
-.app-strata-label.is-active { color: var(--signal-text); }
-.app-strata .app-path { --rail: 0px; }
-.app-strata .app-step.is-active .app-step-card { border-color: rgb(211 69 14 / 0.5); }
+@media (max-width: 639px) {
+  .app-path { --inset: 0px; }
+  .app-path::before, .app-path::after, .app-step-node, .app-path-canvas { display: none; }
+  .app-step-card { padding-right: var(--card-padding-inline); }
+}
 
 /* ── Module page: its place in the formation (strip variant) ─────────────────────────── */
 

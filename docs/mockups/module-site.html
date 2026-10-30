@@ -14,7 +14,8 @@
   built site: no breadcrumb; the hero over the grid, its formation above the title (a link to the
   page of the formation, with the framework mark) and as the faded word behind it, or, for a
   module alone in its formation, its first domain; ?strip=path adds its place in the formation
-  under the lead. Then the key facts under a rule; the prerequisites, the objectives and the
+  under the lead. Then the key facts under a rule (public, level, formats: no duration, asked
+  by the owner on 2026-10-30); the prerequisites, the objectives and the
   program, beside a card that follows the scroll on a computer; the other modules of its
   formation (« Dans la même formation »), or of its domain for a module alone in its formation.
   Content copied from src/content/modules/ (shared/programs.js).
@@ -31,7 +32,7 @@
   /* ── Key facts: plain columns under a rule ──────────────────────────────────────── */
 
   .app-facts { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-7) var(--space-6); margin: 0; }
-  @media (min-width: 900px) { .app-facts { grid-template-columns: repeat(4, 1fr); } }
+  @media (min-width: 900px) { .app-facts { grid-template-columns: repeat(3, 1fr); } }
   .app-facts div { padding-top: var(--space-5); border-top: 1px solid var(--line); }
   .app-facts dt { color: var(--dim); font: var(--label-weight) var(--size-label)/1.3 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; }
   .app-facts dd { margin: var(--space-3) 0 0; font: 700 var(--size-title-small)/1.35 var(--font-title); letter-spacing: var(--tracking-card); }
@@ -101,9 +102,8 @@
   const domain = domainOf(module.domains[0]);
   const content = PROGRAMS[module.file || "modules-et-packages"] || PROGRAMS[module.slug];
   const title = single ? formation.title : module.title;
-  const duration = `${days(module.days)}, adaptable`;
   document.title = single ? `${title} · Formations · Sylent` : `${title} · ${formation.title} · Formations · Sylent`;
-  document.querySelector('meta[name="description"]').content = `${module.summary} Un module de ${duration}, sur site ou à distance.`;
+  document.querySelector('meta[name="description"]').content = `${module.summary} Un module sur site ou à distance.`;
 
   // Above the title: its formation, a link to its page, with the framework mark; for a module
   // alone in its formation, its first domain. The faded word behind the title says the same, in
@@ -131,7 +131,6 @@
       <dl class="app-facts app-reveal">
         <div><dt>Public</dt>${content.audience.map(item => `<dd>${item}</dd>`).join("")}</div>
         <div><dt>Niveau</dt><dd>${content.level}</dd></div>
-        <div><dt>Durée</dt><dd>${duration}</dd></div>
         <div><dt>Formats</dt><dd>Sur site ou à distance</dd></div>
       </dl>
     </div>`;

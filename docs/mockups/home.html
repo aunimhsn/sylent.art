@@ -83,8 +83,20 @@
     },
     path: {
       label: "Path",
-      options: { line: "Line", thread: "Thread (3D)", strata: "Strata (3D)" },
+      options: { line: "Line", thread: "Thread (3D)" },
       fallback: "line",
+      only: "formation",
+    },
+    rail: {
+      label: "Rail on the cards",
+      options: { border: "On the border", inset: "48 px inside", deep: "96 px inside" },
+      fallback: "inset",
+      only: "formation",
+    },
+    tag: {
+      label: "Framework mark",
+      options: { corner: "In the corner", edge: "Across the top edge" },
+      fallback: "corner",
       only: "formation",
     },
     strip: {
@@ -92,12 +104,6 @@
       options: { label: "Label", path: "Label and path" },
       fallback: "label",
       only: "module",
-    },
-    mark: {
-      label: "Framework mark",
-      options: { outline: "Outline", dot: "Orange dot", layers: "Layers" },
-      fallback: "outline",
-      only: ["domain", "formation", "module"],
     },
     view: {
       label: "View",

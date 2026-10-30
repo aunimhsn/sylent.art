@@ -9,10 +9,11 @@
   The page of a formation of several modules (mock-up of step 13b of roadmap.md, from the
   wireframe docs/wireframes/formations.excalidraw), shown at phone and desktop width by home.html
   (?page=formation); ?formation=<slug> opens another formation. Data in shared/formations.js.
-  Layout: the hero (« Formation PHP », its summary, the count of modules and days, its domains as
-  links), then « Les modules » over « PARCOURS »: the modules in the advised order beside a rail
-  (?path= line, thread or strata, drawn by shared/paths.js), beside the card to organize the
-  formation, then the call to action.
+  Layout: the hero (« Formation PHP », its summary, the count of modules, its domains as links),
+  then « Les modules » over « PARCOURS »: the modules in the advised order along a rail over the
+  right of their cards (?path= line or thread, ?rail= where it lies, drawn by shared/paths.js; no
+  rail on a phone), beside the card to organize the formation, then the call to action. No
+  duration (asked by the owner on 2026-10-30).
 -->
 <script src="shared/head.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,7 +32,6 @@
 <script>
   const formation = [formationOf(query.get("formation"))].find(found => found && !isSingle(found)) || formationOf("php");
   const modules = published(formation);
-  const total = modules.reduce((sum, module) => sum + module.days, 0);
   const domains = OFFER_DOMAINS.filter(domain => modulesIn(formation, domain).length);
   const levelOf = module => module.level || (PROGRAMS[module.file] || {}).level || "";
   document.title = `${formation.title} · Formations · Sylent`;
@@ -40,28 +40,25 @@
   const facts = `
     <ul class="app-ffacts app-reveal">
       <li><span class="app-ffacts-label">Modules</span><span class="app-ffacts-value">${modules.length}</span></li>
-      <li><span class="app-ffacts-label">Durée</span><span class="app-ffacts-value">${total}${NB}jours au total, adaptables</span></li>
       <li><span class="app-ffacts-label">${domains.length > 1 ? "Domaines" : "Domaine"}</span>${domains.map(domain => `<a class="app-chip" href="${domainHref(domain)}">${domain.title}</a>`).join("")}</li>
     </ul>`;
   const hero = offerHero({ id: "formation-title", title: `Formation ${formation.title}`, lead: `<p>${formation.summary}</p>`, after: facts, isNew: domains.some(domain => domain.isNew) });
 
-  // The modules in the advised order, without numbers: the rail says the order, the note says that
-  // each module is booked on its own.
+  // The modules in the advised order, without numbers: the rail says the order. A framework
+  // carries its mark in the top left corner of its card.
   const steps = `
     <ol class="app-path is-${variant("path")}" data-path>${modules.map(module => `
       <li class="app-step app-reveal" data-step>
         <span class="app-step-node" aria-hidden="true"></span>
         <div class="app-step-card app-glass">
-          <h3 class="app-step-title">${module.title}${module.framework ? frameworkMark() : ""}</h3>
-          <p class="app-step-facts">${days(module.days)} · ${levelOf(module)}</p>
+          ${module.framework ? frameworkMark("card") : ""}
+          <h3 class="app-step-title">${module.title}</h3>
+          <p class="app-step-facts">${levelOf(module)}</p>
           <p>${module.summary}</p>
           <a class="app-link app-step-more" href="${moduleHref(module)}" aria-label="${module.title}${NB}: voir le module">Voir le module</a>
         </div>
       </li>`).join("")}
     </ol>`;
-  const path = variant("path") === "strata"
-    ? `<div class="app-strata"><div class="app-strata-stage" data-strata aria-hidden="true"><canvas></canvas></div>${steps}</div>`
-    : steps;
 
   const organize = `
     <aside class="app-organize app-glass" aria-labelledby="organize-title">
@@ -74,8 +71,7 @@
     <section aria-labelledby="modules-title">
       <div class="app-wrap">
         ${heading("Les modules", "Parcours", "modules-title")}
-        <p class="app-path-note app-reveal">Ordre conseillé${NB}: chaque module se réserve seul, selon le niveau du groupe.</p>
-        <div class="app-formation-body"><div>${path}</div>${organize}</div>
+        <div class="app-formation-body"><div>${steps}</div>${organize}</div>
       </div>
     </section>`;
 
