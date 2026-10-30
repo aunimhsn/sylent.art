@@ -7,6 +7,7 @@ import portrait from "../assets/portrait/face.png";
 import home from "../content/home.json";
 import pedagogy from "../content/pedagogy.json";
 import fr from "../i18n/fr.json";
+import { bearingStyle } from "../lib/title-metrics";
 import { href } from "../lib/url";
 
 // The faces of the cube: a label over a word, over one of the key figures, written once in
@@ -44,7 +45,11 @@ const photo = home.cube[0]?.photo
   ></canvas>
   <div class="wrap">
     <div class="hero-text">
-      <h1 class="hero-title intro" id="hero-title">
+      <h1
+        class="hero-title intro"
+        id="hero-title"
+        style={bearingStyle(home.hero.title)}
+      >
         {home.hero.title} <span class="highlight">{home.hero.highlight}</span>
       </h1>
       <p class="hero-sub intro">
@@ -115,8 +120,10 @@ const photo = home.cube[0]?.photo
     z-index: 2;
   }
 
+  /* The ink of the first letter on the left edge, not its side bearing (--bearing, optical
+     alignment, docs/branding.md). */
   .hero-title {
-    margin: 0;
+    margin: 0 0 0 calc(-1 * var(--bearing, 0em));
     font: var(--title-weight) var(--size-display) / 0.98 var(--font-title);
     letter-spacing: var(--tracking-title);
     text-wrap: balance;

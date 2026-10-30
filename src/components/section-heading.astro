@@ -5,6 +5,7 @@
 // (« PEDAGOGIE »): an exception to French typography accepted by the owner (CLAUDE.md). Screen
 // readers keep the real words through aria-label.
 import { withoutAccents } from "../lib/text";
+import { bearingStyle } from "../lib/title-metrics";
 
 interface Props {
   title: string;
@@ -15,16 +16,22 @@ interface Props {
 
 const { title, ghost, id, level = 2 } = Astro.props;
 const shown = withoutAccents(title);
+const ghostShown = withoutAccents(ghost).toUpperCase();
 const Title = `h${level}` as const;
 ---
 
 <div class="heading">
-  <span class="ghost-word heading-ghost" aria-hidden="true">
-    {ghost}
+  <span
+    class="ghost-word heading-ghost"
+    style={bearingStyle(ghostShown)}
+    aria-hidden="true"
+  >
+    {ghostShown}
   </span>
   <Title
     class="heading-title"
     id={id}
+    style={bearingStyle(shown.toUpperCase())}
     aria-label={shown === title ? undefined : title}
   >
     {shown}
@@ -39,9 +46,12 @@ const Title = `h${level}` as const;
     padding-top: var(--space-fluid-1);
   }
 
+  /* The title and the faded word start from the ink of their first letter, not its side bearing
+     (--bearing, optical alignment chosen by the owner on 2026-10-30), the word 0.12 em further
+     right. */
   .heading-ghost {
     display: block;
-    margin-left: 0.12em;
+    margin-left: calc(0.12em - var(--bearing, 0em));
   }
 
   /* On a phone the title holds on one line (asked by the owner on 2026-10-29): its size follows
@@ -51,7 +61,7 @@ const Title = `h${level}` as const;
     position: absolute;
     top: 0;
     left: 0;
-    margin: 0;
+    margin: 0 0 0 calc(-1 * var(--bearing, 0em));
     font: var(--title-weight) var(--size-section) / 1 var(--font-title);
 
     /* Apart from the shorthand: a browser without the cqi unit keeps the font and the size. */
