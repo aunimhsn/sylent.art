@@ -302,7 +302,7 @@ function endCard(at: number) {
   const end = html(`
     <div class="end">
       <div class="end-mark">${wordmark}</div>
-      <div class="small">${launch ? "Nouveau site · en ligne" : "Nouveau site · bientôt"}</div>
+      <div class="small">${launch ? "Disponible dès maintenant" : "Nouveau site · bientôt"}</div>
       <div class="end-url">${lines(["sylent.art"])}</div>
       <div class="end-rule"><span class="trail"></span></div>
     </div>`);
@@ -384,9 +384,7 @@ async function variantCube() {
   tl.to(cubeState, { scale: 0, duration: 0.5, ease: "power3.in" }, 7.0);
   leave([intro], 7.0);
 
-  const texts = launch
-    ? ["Mon", "nouveau", "site."]
-    : ["Mon site", "fait peau", "neuve."];
+  const texts = ["Mon site", "fait peau", "neuve."];
   const top = feed ? 480 : 720;
   const ghostWord = html(
     `<div class="ghost" style="top:${top - 80}px">${launch ? "En ligne" : "Bientot"}</div>`,
@@ -395,12 +393,14 @@ async function variantCube() {
     `<h1 class="title" style="top:${top}px">${lines(texts)}</h1>`,
   );
   stage.append(ghostWord, title);
+  // Its slide outlasts its exit: only its fade-in is tied to the slide.
   tl.fromTo(
     ghostWord,
-    { x: 400, autoAlpha: 0 },
-    { x: -200, autoAlpha: 1, duration: 3, ease: "power1.out" },
+    { x: 400 },
+    { x: -200, duration: 3, ease: "power1.out" },
     7.2,
   );
+  tl.fromTo(ghostWord, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.6 }, 7.2);
   tl.fromTo(
     title.querySelectorAll(".line > span"),
     { yPercent: 110 },
