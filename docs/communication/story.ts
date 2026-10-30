@@ -563,8 +563,13 @@ function variantImpact() {
       },
       time - 0.18,
     );
-    // Then it drifts closer until the next one.
+    // Then it drifts closer until the next one; the two lines of « nouveau site » slide apart.
     tl.to(word, { scale: 1.06, duration: 1, ease: "none" }, time);
+    if (word.classList.contains("hit-block")) {
+      const [first, second] = word.querySelectorAll(".hit-line");
+      tl.to(first, { x: -28, duration: 1, ease: "power2.out" }, time);
+      tl.to(second, { x: 28, duration: 1, ease: "power2.out" }, time);
+    }
     const next = hits[index + 1]?.time ?? quiet;
     tl.set(
       word,
