@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Domaine · Formations · Sylent</title>
+<meta name="description" content="Les formations d’un domaine et leurs modules, sur site ou à distance.">
+<!--
+  The page of one domain of sylent.art (mock-up of step 13b of roadmap.md, from the wireframe
+  docs/wireframes/formations.excalidraw), shown at phone and desktop width by home.html
+  (?page=domain); ?domain=<slug> opens another domain. Data and cards in shared/formations.js.
+  Layout, as built on the site: the hero without a faded word, then one card per formation of the
+  domain (a module card for a formation of a single module, a formation card that lists its
+  modules otherwise), the custom card, the other domains and the call to action.
+-->
+<script src="shared/head.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Anaheim:wght@500&display=block">
+<link rel="stylesheet" href="shared/site.css">
+<link rel="stylesheet" href="shared/formations.css">
+<style>
+  .app-domain-cards { padding-bottom: var(--space-fluid-3); }
+</style>
+</head>
+<body data-page="courses">
+<script src="shared/site.js"></script>
+<script src="shared/programs.js"></script>
+<script src="shared/formations.js"></script>
+
+<main id="content"></main>
+
+<script>
+  const domain = domainOf(query.get("domain")) || domainOf("developpement-web");
+  document.title = `Domaine ${domain.title} · Formations · Sylent`;
+  document.querySelector('meta[name="description"]').content = `${domain.summary} Des formations aux durées toujours adaptables, sur site ou à distance.`;
+
+  const hero = offerHero({ id: "domain-title", title: domain.title, lead: `<p>${domain.summary}</p>`, isNew: domain.isNew, note: domain.isNew ? NEW_NOTE : "" });
+
+  // The formations of the domain, then the custom card; a hidden heading for screen readers.
+  const cards = `
+    <section class="app-domain-cards" aria-labelledby="formations-title">
+      <div class="app-wrap">
+        <h2 class="app-hidden" id="formations-title">Les formations</h2>
+        <ul class="app-cards is-domains">${formationsIn(domain).map(formation => offerCard(formation, domain)).join("")}${customCard()}</ul>
+      </div>
+    </section>`;
+
+  const others = `
+    <section class="app-section" aria-labelledby="others-title" style="padding-top:0">
+      <div class="app-wrap">
+        ${heading("Autres domaines", "Explorer", "others-title")}
+        <ul class="app-cards is-domains">${OFFER_DOMAINS.filter(other => other !== domain).map(offerDomainCard).join("")}</ul>
+      </div>
+    </section>`;
+
+  document.getElementById("content").innerHTML = hero + cards + others +
+    siteCta(`Un domaine qui vous intéresse${NB}?<br>Parlons-en.`) + siteFooter();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="shared/motion.js"></script>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }</script>
+<script type="module" src="shared/covers.js"></script>
+</body>
+</html>

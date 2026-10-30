@@ -3,61 +3,39 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>JavaScript · Formations · Sylent</title>
+<title>Module · Formations · Sylent</title>
 <meta name="description" content="Le programme du module, son public, ses prérequis et ses objectifs, sur site ou à distance.">
 <!--
-  The page of one module of sylent.art (mock-up, step 4 of roadmap.md), shown at phone and
-  desktop width by home.html (?page=module); ?module=<slug> opens another module (the slugs come
-  from slugOf in shared/site.js). The parts shared by every page are in shared/.
-  Layout, in the style of the home page: a hero with the grid and its fluid, and the text on the
-  left; the key facts under a rule; the prerequisites, the objectives and the program, beside a
-  card that follows the scroll on a computer; the other modules of the domain.
-  Sample content: JavaScript (after its page on the former site) and Claude Code have a program;
-  the other modules show theirs as to come.
+  The page of one module of sylent.art, shown at phone and desktop width by home.html
+  (?page=module); ?module=<formation>-<module> opens another module, or ?module=<formation> for a
+  formation of a single module (keys in shared/formations.js). The parts shared by every page are
+  in shared/.
+  Updated at step 13b of roadmap.md (wireframe docs/wireframes/formations.excalidraw), after the
+  built site: no breadcrumb; the hero over the grid, the title over the name of its formation as
+  the faded word (the one word of its first domain for a module alone in its formation),
+  « Framework » after an orange rule under the title of a framework, the lead, then the white button « Voir le
+  programme » and the outline « Voir la formation PHP », or « Revenir en arrière » when coming
+  from a page of the site, side by side from 640 px, one under
+  the other on a phone. Then the key facts under a rule (public, level, formats: no duration,
+  asked by the owner on 2026-10-30); the prerequisites, the objectives and the program, beside a card that follows the scroll on a computer; the other modules of its
+  formation (« Dans la même formation »), or of its domain for a module alone in its formation.
+  Content copied from src/content/modules/ (shared/programs.js).
 -->
 <script src="shared/head.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Anaheim:wght@500&display=block">
 <link rel="stylesheet" href="shared/site.css">
+<link rel="stylesheet" href="shared/formations.css">
 <style>
-  /* ── Hero: the text of the module, over the grid ───────────────────────────────── */
+  .app-module-actions { display: flex; flex-direction: column; gap: var(--space-3); margin-top: var(--space-9); }
+  @media (min-width: 640px) { .app-module-actions { flex-direction: row; flex-wrap: wrap; } }
 
-  .app-module-hero { position: relative; padding: calc(var(--header-height) + var(--space-fluid-2)) 0 var(--space-fluid-3); }
-  .app-module-hero::before,
-  .app-module-hero > .app-grid-fluid {
-    content: "";
-    position: absolute;
-    inset: 0;
-    mask-image: radial-gradient(80% 75% at 70% 40%, #000 30%, transparent 75%);
-    pointer-events: none;
-  }
-  /* The orange fluid of the grid (site.js) lies in a layer at the same place, with the same mask. */
-  .app-module-hero::before {
-    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: var(--grid-step) var(--grid-step);
-  }
-  .app-module-hero .app-wrap { position: relative; }
-  .app-module-text { max-width: var(--width-text); }
-
-  .app-crumbs ol { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-3); margin: 0 0 var(--space-8); padding: 0; list-style: none; color: var(--dim); font: 600 var(--size-caption)/1.3 var(--font-title); }
-  .app-crumbs li + li::before { content: "/"; margin-right: var(--space-3); color: var(--line-strong); }
-  .app-crumbs a { transition: color var(--duration-fast); }
-  .app-crumbs a:hover { color: var(--text); }
-  .app-crumbs [aria-current] { color: var(--secondary); }
-
-  .app-module-domain { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-4); margin: 0; color: var(--dim); font: var(--label-weight) var(--size-label)/1.3 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; }
-  .app-module-domain .app-new { position: static; }
-  .app-module-title { margin: var(--space-4) 0 0; font: var(--title-weight) var(--size-display)/0.98 var(--font-title); letter-spacing: var(--tracking-title); text-wrap: balance; }
-  .app-module-lead { margin: var(--space-7) 0 0; max-width: var(--measure); color: var(--secondary); font-size: var(--size-intro); text-wrap: pretty; }
-  .app-module-lead + .app-module-lead { margin-top: var(--space-4); }
-  .app-module-note { margin: var(--space-6) 0 0; max-width: var(--measure-narrow); padding: var(--space-3) var(--space-4); font-size: var(--size-text-small); }
-  .app-module-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-9); }
 
   /* ── Key facts: plain columns under a rule ──────────────────────────────────────── */
 
   .app-facts { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-7) var(--space-6); margin: 0; }
-  @media (min-width: 900px) { .app-facts { grid-template-columns: repeat(4, 1fr); } }
+  @media (min-width: 900px) { .app-facts { grid-template-columns: repeat(3, 1fr); } }
   .app-facts div { padding-top: var(--space-5); border-top: 1px solid var(--line); }
   .app-facts dt { color: var(--dim); font: var(--label-weight) var(--size-label)/1.3 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; }
   .app-facts dd { margin: var(--space-3) 0 0; font: 700 var(--size-title-small)/1.35 var(--font-title); letter-spacing: var(--tracking-card); }
@@ -97,108 +75,81 @@
 </head>
 <body data-page="courses">
 <script src="shared/site.js"></script>
+<script src="shared/programs.js"></script>
+<script src="shared/formations.js"></script>
 
 <main id="content"></main>
 
 <script>
-  // ── Content: sample programs ────────────────────────────────────────────────────────
-  const PROGRAMS = {
-    javascript: {
-      description: [`JavaScript est le langage qui rend le web interactif. Exécuté par tous les navigateurs, il fonctionne aussi côté serveur avec Node.js${NB}: un seul langage pour tout le web, et une étape incontournable pour tout futur développeur.`],
-      audience: "Étudiants, webmasters, développeurs, chefs de projet technique",
-      level: "Débutant",
-      prerequisites: "Connaître les bases du HTML et du CSS. Aucune connaissance en programmation.",
-      objectives: [
-        `Écrire un programme lisible${NB}: variables, conditions, boucles et fonctions`,
-        "Manipuler une page web avec le DOM",
-        "Réagir aux actions du visiteur avec les événements",
-        "Récupérer et afficher des données avec fetch",
-      ],
-      parts: [
-        ["Les bases du langage", "L’environnement et l’intégration dans une page, les variables et les constantes, l’objet console, les tableaux et les objets."],
-        ["La logique", "Les conditions, les boucles et les fonctions."],
-        ["La page web", "Manipuler le DOM et réagir aux événements du visiteur."],
-        ["Les données", "Le format JSON et la méthode fetch, pour échanger avec un serveur."],
-        ["Travaux pratiques", `Par exemple le chiffrement de César ou le jeu du «${NB}Plus ou moins${NB}», parmi d’autres exercices adaptés au niveau du groupe.`],
-      ],
-    },
-    "claude-code": {
-      description: [`Claude Code est un assistant de programmation qui travaille directement dans le projet. Ce module apprend à vos équipes à s’en servir avec méthode${NB}: lui donner le bon contexte, relire ce qu’il produit et garder la main sur la qualité.`],
-      audience: "Développeurs, équipes techniques",
-      level: "Intermédiaire",
-      prerequisites: "Savoir programmer dans au moins un langage et utiliser Git.",
-      objectives: [
-        "Installer et configurer Claude Code dans un projet",
-        `Donner le bon contexte${NB}: instructions, conventions de l’équipe, mémoire`,
-        "Confier une tâche, relire et corriger le résultat",
-        `Garder la maîtrise${NB}: permissions, revue de code et tests`,
-      ],
-      parts: [
-        ["Prise en main", "Installation, premiers échanges, lire et modifier un projet existant."],
-        ["Le contexte", "Les fichiers d’instructions, les conventions de l’équipe, découper une demande."],
-        ["Le travail au quotidien", "Corriger un bug, écrire des tests, refactoriser, documenter."],
-        ["Garder la maîtrise", "Permissions, relecture, revue de code et sécurité des données."],
-        ["Automatiser", "Commandes, agents et intégration dans le flux de travail de l’équipe."],
-      ],
-    },
+  // « Modules et packages » has no content file yet: the text agreed with the owner on 2026-10-30,
+  // written at step 13c.
+  PROGRAMS["modules-et-packages"] = {
+    audience: ["Étudiants", "Développeurs"],
+    level: "Intermédiaire",
+    prerequisites: "Les bases de Python : variables, conditions, boucles et fonctions.",
+    objectives: ["Isoler un projet dans un environnement virtuel", "Découper un programme en modules et en packages", "Installer et figer les dépendances d’un projet avec pip"],
+    program: [
+      ["L’environnement virtuel", "Isoler les dépendances de chaque projet, le créer et l’activer."],
+      ["Les modules", "Découper un programme en fichiers, importer ce dont on a besoin."],
+      ["Les packages", "Regrouper les modules en dossiers, le fichier __init__.py."],
+      ["Les constantes", "Rassembler la configuration d’un projet au même endroit."],
+      ["pip et PyPI", "Trouver, installer et figer les bibliothèques d’un projet."],
+      ["Travaux pratiques", "Par exemple une calculatrice, un dessin crayonné ou le prix d’un fichier Excel, parmi d’autres exercices."],
+    ],
+    text: ["Un script grandit vite : ce module apprend à organiser un projet Python en modules et en packages, et à gérer ses dépendances dans un environnement virtuel, pour qu’il s’installe partout de la même façon."],
   };
-  const duration = days => `${days}${NB}jour${days > 1 ? "s" : ""}, adaptable`;
 
-  // The module asked for (?module=<slug>), with its domain; JavaScript by default.
-  const MODULES = DOMAINS.flatMap(domain => domain.modules.map(module => ({ domain, module, slug: slugOf(module[0]) })));
-  const { domain, module } = MODULES.find(({ slug }) => slug === query.get("module")) || MODULES.find(({ slug }) => slug === "javascript");
-  const [title, days, summary] = module;
-  const program = PROGRAMS[slugOf(title)];
-  document.title = `${title} · Formations · Sylent`;
-  document.querySelector('meta[name="description"]').content = `${summary} Un module de ${duration(days)}, sur site ou à distance.`;
+  const module = moduleByKey(query.get("module")) || moduleByKey("php-laravel");
+  const { formation } = module;
+  const single = isSingle(formation);
+  const domain = domainOf(module.domains[0]);
+  const content = PROGRAMS[module.file || "modules-et-packages"] || PROGRAMS[module.slug];
+  const title = single ? formation.title : module.title;
+  document.title = single ? `${title} · Formations · Sylent` : `${title} · ${formation.title} · Formations · Sylent`;
+  document.querySelector('meta[name="description"]').content = `${module.summary} Un module sur site ou à distance.`;
 
-  const hero = `
-    <section class="app-module-hero" aria-labelledby="module-title" data-grid>
-      <div class="app-wrap">
-        <div class="app-module-text">
-          <nav class="app-crumbs app-reveal" aria-label="Fil d’Ariane">
-            <ol><li><a href="${PAGES.home}">Accueil</a></li><li><a href="${PAGES.courses}">Formations</a></li><li aria-current="page">${title}</li></ol>
-          </nav>
-          <p class="app-module-domain app-reveal">${domain.title}${domain.isNew ? '<span class="app-new">Nouveau</span>' : ""}</p>
-          <h1 class="app-module-title app-reveal" id="module-title">${title}</h1>
-          ${(program ? program.description : [summary]).map(paragraph => `<p class="app-module-lead app-reveal">${paragraph}</p>`).join("")}
-          ${domain.isNew ? `<p class="app-module-note app-note app-reveal">Une offre nouvelle, centrée sur la méthode et les bonnes pratiques${NB}: utiliser les outils d’IA pour être plus efficace et plus serein au quotidien.</p>` : ""}
-          <div class="app-module-actions app-reveal">
-            <a class="app-button is-outline" href="#programme">Voir le programme</a>
-          </div>
-        </div>
-      </div>
-    </section>`;
+  // « Framework » under the title of a framework: an orange rule and the word in --dim (chosen by
+  // the owner on 2026-10-30, the orange badge was too loud), a little lower under a descender. The
+  // formation is said to screen readers, since the faded word is hidden from them.
+  const descender = /[gjpqy]/.test(title) ? " has-descender" : "";
+  const under = (module.framework ? `<p class="app-fw-title${descender}"><span class="app-fw-rule"></span><span class="app-fw-word">Framework</span></p>` : "") +
+    `<p class="app-hidden">${single ? `Domaine${NB}: ${domain.title}` : `Formation ${formation.title}`}</p>`;
+  // The second button: « Voir la formation PHP » (« Voir le domaine … » for a module alone in its
+  // formation), which works without JavaScript and for a visitor from a search engine or a shared
+  // link; coming from a page of the site, it becomes « Revenir en arrière » and goes back (chosen
+  // by the owner on 2026-10-30: the words always say what the button does).
+  const [back, backLabel] = single ? [domainHref(domain), `Voir le domaine ${domain.title}`] : [formationHref(formation), `Voir la formation ${formation.title}`];
+  const hero = offerHero({
+    id: "module-title", title, ghost: single ? domain.ghost : formation.title, under,
+    lead: content.text.map(paragraph => `<p>${paragraph.replace(/\*\*/g, "")}</p>`).join(""),
+    isNew: isNewModule(module), note: isNewModule(module) ? NEW_NOTE : "",
+    after: `<div class="app-module-actions app-reveal"><a class="app-button" href="#programme">Voir le programme</a><a class="app-button is-outline" href="${back}" data-back>${backLabel}</a></div>`,
+  });
 
   const facts = `
     <div class="app-wrap">
       <dl class="app-facts app-reveal">
-        <div><dt>Public</dt><dd>${program ? program.audience : "À préciser"}</dd></div>
-        <div><dt>Niveau</dt><dd>${program ? program.level : "À préciser"}</dd></div>
-        <div><dt>Durée</dt><dd>${duration(days)}</dd></div>
+        <div><dt>Public</dt>${content.audience.map(item => `<dd>${item}</dd>`).join("")}</div>
+        <div><dt>Niveau</dt><dd>${content.level}</dd></div>
         <div><dt>Formats</dt><dd>Sur site ou à distance</dd></div>
       </dl>
     </div>`;
 
-  const main = program ? `
+  const main = `
     <section class="app-reveal" aria-labelledby="prerequisites-title">
       <h2 id="prerequisites-title">Prérequis</h2>
-      <p>${program.prerequisites}</p>
+      <p>${content.prerequisites}</p>
     </section>
     <section class="app-reveal" aria-labelledby="objectives-title">
       <h2 id="objectives-title">Objectifs</h2>
-      <ul class="app-objectives">${program.objectives.map(objective => `<li>${icon("check", 16)}<span>${objective}</span></li>`).join("")}</ul>
+      <ul class="app-objectives">${content.objectives.map(objective => `<li>${icon("check", 16)}<span>${objective}</span></li>`).join("")}</ul>
     </section>
     <section id="programme" aria-labelledby="program-title">
       <h2 class="app-reveal" id="program-title">Programme</h2>
-      <ul class="app-program">${program.parts.map(([part, text]) => `
+      <ul class="app-program">${content.program.map(([part, text]) => `
         <li class="app-reveal" data-draw><h3>${part}</h3><p>${text}</p></li>`).join("")}
       </ul>
       <p class="app-program-end app-reveal">Des explications courtes, puis de la pratique${NB}: les exercices et le projet sont adaptés au niveau du groupe.</p>
-    </section>` : `
-    <section id="programme" class="app-reveal" aria-labelledby="program-title">
-      <h2 id="program-title">Programme</h2>
-      <p>Le programme détaillé de ce module est en cours de rédaction.</p>
     </section>`;
 
   const organize = `
@@ -208,27 +159,53 @@
       <a class="app-button" href="${PAGES.contact}">Me contacter</a>
     </aside>`;
 
-  // The other modules of the same domain, when it has some, then the card of a module built for the
-  // request, as at the end of the domains of the home page. The large word behind the heading
-  // invites to explore the rest of the domain.
-  const others = domain.modules.filter(other => other !== module);
-  const related = others.length ? `
+  // The neighbors: the other modules of its formation, in the advised order; for a module alone
+  // in its formation, the other formations of its first domain. Then the custom card.
+  const neighbors = single
+    ? formationsIn(domain).filter(other => other !== formation).map(other => offerCard(other, domain))
+    : published(formation).filter(other => other !== module).map(offerModuleCard);
+  const related = neighbors.length ? `
     <section class="app-section" aria-labelledby="related-title" style="padding-top:0">
       <div class="app-wrap">
-        ${heading("Dans le même domaine", "Explorer", "related-title")}
-        <ul class="app-cards is-domains">${others.map(other => moduleCard(domain, other)).join("")}${customCard()}</ul>
+        ${heading(single ? "Dans le même domaine" : "Dans la même formation", "Explorer", "related-title")}
+        <ul class="app-cards is-domains">${neighbors.join("")}${customCard()}</ul>
       </div>
     </section>` : "";
 
   document.getElementById("content").innerHTML = hero + facts + `
     <div class="app-wrap"><div class="app-module-body"><div class="app-module-main">${main}</div>${organize}</div></div>` +
     related + siteCta(`Organiser ce module${NB}?<br>Parlons de vos apprenants.`) + siteFooter();
+
+  // Coming from a page of the site, the button becomes « Revenir en arrière » before the first
+  // paint and goes back in the history.
+  const backButton = document.querySelector("[data-back]");
+  const fromSite = document.referrer && new URL(document.referrer).origin === location.origin;
+  if (backButton && fromSite && history.length > 1) {
+    backButton.textContent = "Revenir en arrière";
+    backButton.addEventListener("click", event => {
+      event.preventDefault();
+      history.back();
+    });
+  }
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
 <script src="shared/motion.js"></script>
+<script>
+  // « Framework » under the title of a framework comes in from the left once the title is there:
+  // the orange rule draws itself from left to right, then the word slides a little to the right
+  // as it is uncovered (asked by the owner on 2026-10-30). Nothing moves when the visitor asked to
+  // reduce motion.
+  (() => {
+    const mark = document.querySelector(".app-fw-title");
+    if (!mark || !window.sylentMotion) return;
+    gsap.timeline({ delay: 0.6 })
+      .fromTo(mark.querySelector(".app-fw-rule"), { scaleX: 0 }, { scaleX: 1, duration: 0.7, ease: "power3.out" })
+      .fromTo(mark.querySelector(".app-fw-word"), { x: -14, opacity: 0, clipPath: "inset(0 100% 0 0)" }, { x: 0, opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power3.out" }, "-=0.35");
+  })();
+</script>
 <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }</script>
 <script type="module" src="shared/covers.js"></script>
 </body>

@@ -1,0 +1,145 @@
+/* The components of the pages of step 13b (domain, formation, module), over shared/site.css:
+   the hero of the built site, the formation cards, the framework mark and the path of a
+   formation. The variants of the open decisions are classes or data attributes set from the
+   address (shared/formations.js). Only the tokens of site.css. */
+
+/* ── Hero, as built on the site (src/components/page-hero.astro) ───────────────────── */
+
+.app-offer-hero { position: relative; padding: calc(var(--header-height) + var(--space-fluid-2)) 0 var(--space-fluid-3); }
+.app-offer-hero::before,
+.app-offer-hero > .app-grid-fluid {
+  content: "";
+  position: absolute;
+  inset: 0;
+  mask-image: radial-gradient(80% 75% at 70% 40%, #000 30%, transparent 75%);
+  pointer-events: none;
+}
+.app-offer-hero::before {
+  background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: var(--grid-step) var(--grid-step);
+}
+.app-offer-hero .app-wrap { position: relative; }
+.app-offer-new { margin: 0 0 var(--space-6); }
+.app-offer-new .app-new { position: static; display: inline-block; }
+.app-offer-above { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-4); margin-bottom: var(--space-4); }
+.app-offer-heading { display: grid; grid-template-columns: minmax(0, 1fr); container-type: inline-size; }
+.app-offer-heading * { --title-size: min(var(--size-display), calc(100cqi / var(--title-em, 10.4))); }
+.app-offer-heading > * { grid-area: 1 / 1; }
+/* The title and what follows it right under it (the badge of a framework), over the faded word. */
+.app-offer-titles { position: relative; align-self: start; }
+/* The faded word behind a title: 60 % of the width of the heading (chosen by the owner on
+   2026-10-30, among the whole width, 80 % and the former fixed size), at least the size of the faded words and at most their largest size (176 px), so
+   that a short word (« PHP ») grows on a phone, where the title grew too, and a long one
+   (« JAVASCRIPT ») keeps the size of the faded words and may run past the screen; on a computer
+   it is 176 px, as before. --ghost-em is its width in em, measured as --title-em. */
+.app-offer-heading * { --ghost-fit: max(var(--size-ghost), min(176px, calc(60cqi / var(--ghost-em, 99)))); }
+.app-offer-ghost {
+  margin: var(--space-fluid-1) 0 0 0.12em;
+  font: var(--title-weight) var(--ghost-fit)/0.8 var(--font-title);
+  letter-spacing: var(--tracking-ghost);
+  text-transform: uppercase;
+  color: var(--ghost-word);
+  white-space: nowrap;
+  user-select: none;
+}
+.app-offer-title {
+  position: relative;
+  align-self: start;
+  margin: 0;
+  /* Each title as large as the display size allows, but never wider than the page: its width in
+     em (--title-em, measured on Manrope 800 by shared/formations.js; the site computes it at
+     build time) divides the width of the heading. « Laravel » takes 44 px on a phone, where the
+     former 9.6cqi, sized for the longest title, gave every title 33.6 px. */
+  font: var(--title-weight) var(--title-size)/0.98 var(--font-title);
+  letter-spacing: var(--tracking-title);
+}
+/* The left edge of the large titles and faded words: moved left by the side bearing of their
+   first letter (--bearing, set by shared/formations.js), so that its ink starts on the edge; a
+   faded word keeps its offset of 0.12 em to the right, now measured from its ink. */
+.app-offer-title, .app-heading-title { margin-left: calc(-1 * var(--bearing, 0em)); }
+.app-offer-ghost, .app-heading-ghost { margin-left: calc(0.12em - var(--bearing, 0em)); }
+.app-offer-lead p { margin: var(--space-7) 0 0; max-width: var(--measure); color: var(--secondary); font-size: var(--size-intro); text-wrap: pretty; }
+.app-offer-lead p + p { margin-top: var(--space-4); }
+.app-offer-note { margin: var(--space-6) 0 0; max-width: var(--measure-narrow); padding: var(--space-3) var(--space-4); font-size: var(--size-text-small); }
+
+
+/* « Framework » with the title of a module page (chosen by the owner on 2026-10-30): a short rule in
+   orange, then the word in --dim; the orange only draws the line. Right under the title, its line
+   height made up for (its line box ends about 0.11 em under the baseline), a little lower when the
+   title has a descender (Alpine, Django). */
+.app-fw-title { position: relative; display: flex; align-items: center; gap: var(--space-3); margin: calc(var(--title-size) * 0.02) 0 0 0.04em; color: var(--dim); font: var(--label-weight) var(--size-label)/1 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; }
+.app-fw-rule { flex: none; width: var(--space-8); height: 1px; background: var(--signal); transform-origin: left; }
+.app-fw-title.has-descender { margin-top: calc(var(--title-size) * 0.12); }
+
+/* ── The framework mark ─────────────────────────────────────────────────────────────── */
+
+/* « Framework » in small white capitals on a rectangle of the background of the site, the
+   sibling of « Nouveau », 2 px smaller (chosen by the owner on 2026-10-30). */
+.app-fw { display: inline-block; flex: none; padding: 6px 10px; background: var(--bg); color: var(--text); font: var(--label-weight) var(--size-label)/1 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; white-space: nowrap; font-size: calc(var(--size-label) - 2px); }
+/* On a cover, in its top left corner, after « Nouveau » when the module is new too. */
+.app-cover-labels { position: absolute; left: var(--space-4); top: var(--space-4); display: flex; gap: var(--space-2); }
+.app-cover-labels { align-items: center; }
+.app-cover-labels .app-new { position: static; }
+/* On a card of the path: across its top edge, above its name. */
+.app-fw.is-card { position: absolute; z-index: 1; left: var(--card-padding-inline); top: 0; transform: translateY(-50%); outline: 1px solid var(--glass-line); }
+
+/* ── Formation cards ──────────────────────────────────────────────────────────────────── */
+
+/* The modules of the formation: rows under thin rules, each a link above the band of the card
+   (whose link covers the card). Under the pointer the row turns white and its arrow appears. */
+.app-fcard-list { position: relative; z-index: 1; margin: var(--space-2) 0 var(--space-5); padding: 0; list-style: none; border-bottom: 1px solid var(--line); }
+.app-fcard-list a { display: flex; align-items: center; gap: var(--space-3); min-height: 44px; border-top: 1px solid var(--line); color: var(--secondary); font: 700 var(--size-ui)/1.2 var(--font-title); letter-spacing: var(--tracking-card); transition: color var(--duration-fast); }
+.app-fcard-list a > span { flex: 0 1 auto; min-width: 0; }
+.app-fcard-list a > svg { margin-left: auto; opacity: 0; transform: translateX(-6px); transition: opacity var(--duration-fast), transform var(--duration-fast); }
+.app-fcard-list a:hover, .app-fcard-list a:focus-visible { color: var(--text); }
+.app-fcard-list a:hover > svg, .app-fcard-list a:focus-visible > svg { opacity: 1; transform: none; }
+
+
+/* Domain cards: the formations as tags at the bottom, aligned from one card to the next. */
+.app-dcard > p:not(.app-dcard-tags) { margin-bottom: 0; }
+.app-dcard-tags { margin: auto 0 var(--space-5) !important; padding-top: var(--space-4); color: var(--dim) !important; font-size: var(--size-caption) !important; }
+
+/* ── Formation page ──────────────────────────────────────────────────────────────────── */
+
+/* The hero of a formation page: its domains above its name, as links, then the count of its
+   modules under it. */
+.app-offer-count { margin-top: var(--space-4) !important; color: var(--text) !important; font: 700 var(--size-title-small)/1.3 var(--font-title) !important; letter-spacing: var(--tracking-card); }
+.app-offer-count + p { margin-top: var(--space-6) !important; }
+.app-chip { padding: var(--space-2) var(--space-3); border: 1px solid var(--line-strong); color: var(--secondary); font: 700 var(--size-caption)/1 var(--font-title); transition: border-color var(--duration-fast), color var(--duration-fast); }
+.app-chip:hover { border-color: var(--text); color: var(--text); }
+
+.app-formation-body { display: grid; gap: var(--space-14); padding-bottom: var(--space-fluid-3); }
+@media (min-width: 900px) { .app-formation-body { grid-template-columns: 8fr 4fr; gap: var(--space-18); align-items: start; } }
+.app-organize { display: grid; gap: var(--space-3); padding: var(--card-padding-block) var(--card-padding-inline); }
+@media (min-width: 900px) { .app-organize { position: sticky; top: calc(var(--header-height) + var(--space-6)); } }
+.app-organize h2 { margin: 0; font: 700 var(--size-card-title)/1.2 var(--font-title); letter-spacing: var(--tracking-card); }
+.app-organize p { margin: 0; color: var(--secondary); font-size: var(--size-text-small); }
+.app-organize .app-button { justify-self: start; margin-top: var(--space-2); }
+
+/* ── The path: the modules in the advised order, along a rail ──────────────────────────── */
+
+/* The rail lies over the right of the cards, 48 px inside, and runs a little past the first and
+   the last card (--overhang). No rail on a phone, where the cards need the whole width. */
+.app-path { --overhang: 40px; --inset: 48px; position: relative; display: grid; gap: var(--space-5); margin: 0; padding: 0; list-style: none; }
+.app-step { position: relative; }
+.app-step-card { position: relative; display: grid; gap: var(--space-2); padding: var(--space-6) calc(var(--card-padding-inline) + var(--inset) + var(--space-6)) var(--space-6) var(--card-padding-inline); transition: background-color var(--duration-fast), border-color var(--duration-fast); }
+.app-step-card:hover { background-color: var(--glass-hover); }
+.app-step-title { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4); margin: 0; font: 700 var(--size-card-title)/1.2 var(--font-title); letter-spacing: var(--tracking-card); }
+.app-step-facts { margin: 0; color: var(--dim); font: 600 var(--size-caption)/1.3 var(--font-title); }
+.app-step-card > p:not(.app-step-facts) { margin: var(--space-2) 0 0; max-width: var(--measure); color: var(--secondary); font-size: var(--size-text-small); }
+.app-step-more { justify-self: start; margin-top: var(--space-3); }
+.app-step-more::after { content: ""; position: absolute; inset: 0; }
+
+/* The rail fills with orange as the page scrolls; each module has a square on the rail, at
+   the height of its name, that lights up when the orange reaches it. */
+.app-path::before,
+.app-path::after { content: ""; position: absolute; z-index: 2; right: calc(var(--inset) - 0.5px); top: var(--first, 0px); height: var(--length, 100%); width: 1px; background: linear-gradient(transparent, var(--line-strong) var(--overhang), var(--line-strong) calc(100% - var(--overhang)), transparent); pointer-events: none; }
+.app-path::after { background: linear-gradient(transparent, var(--signal) var(--overhang)); transform: scaleY(var(--progress, 1)); transform-origin: top; box-shadow: 0 0 10px var(--signal); }
+.app-step-node { position: absolute; z-index: 3; right: calc(var(--inset) - 6px); top: var(--node-top, 30px); width: 12px; height: 12px; border: 1px solid var(--line-strong); background: var(--bg); transform: rotate(45deg); transition: background-color var(--duration-fast), border-color var(--duration-fast), box-shadow var(--duration-fast); pointer-events: none; }
+.app-step.is-reached .app-step-node { border-color: var(--signal); background: var(--signal); box-shadow: 0 0 14px var(--signal); }
+
+@media (max-width: 639px) {
+  .app-path { --inset: 0px; }
+  .app-path::before, .app-path::after, .app-step-node { display: none; }
+  .app-step-card { padding-right: var(--card-padding-inline); }
+}

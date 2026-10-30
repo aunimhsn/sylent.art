@@ -45,7 +45,7 @@
   const VARIANTS = {
     page: {
       label: "Page",
-      options: { home: "Home", courses: "Formations", module: "Module", contact: "Contact", about: "À propos", legal: "Mentions légales", privacy: "Confidentialité", "not-found": "404" },
+      options: { home: "Home", courses: "Formations", domain: "Domaine", formation: "Formation", module: "Module", contact: "Contact", about: "À propos", legal: "Mentions légales", privacy: "Confidentialité", "not-found": "404" },
       fallback: "home",
     },
     // The states of the contact form (only for the contact page).
@@ -55,11 +55,23 @@
       fallback: "empty",
       only: "contact",
     },
-    // The module shown by the module page: one with its program, one new.
+    // Step 13b: the domain, the formation and the module shown by their pages.
+    domain: {
+      label: "Domaine",
+      options: { "developpement-web": "Développement web", programmation: "Programmation", "conception-logicielle": "Conception logicielle", "ia-generative": "IA générative (new)" },
+      fallback: "developpement-web",
+      only: "domain",
+    },
+    formation: {
+      label: "Formation",
+      options: { php: "PHP", python: "Python", javascript: "JavaScript", algorithmique: "Algorithmique" },
+      fallback: "php",
+      only: "formation",
+    },
     module: {
       label: "Module",
-      options: { javascript: "JavaScript", "claude-code": "Claude Code (new)" },
-      fallback: "javascript",
+      options: { "php-laravel": "Laravel (PHP, framework)", "javascript-alpine": "Alpine (framework, descender)", "php-poo": "POO (PHP)", "python-modules-et-packages": "Modules et packages (Python)", uml: "UML (alone)", "claude-code": "Claude Code (new, alone)" },
+      fallback: "php-laravel",
       only: "module",
     },
     view: {
@@ -71,15 +83,17 @@
   // The Console style chosen by the owner, in white instead of green, with Manrope for the titles
   // and Anaheim medium for the text, and the headings of the former site. Atelier was set aside.
   const NOTE = "Night style: neutral blacks and white, Manrope for the titles, Anaheim medium for the text, the SYLENT logo, the headings of the former site.";
-  const FILES = { home: "home-site.html", courses: "courses-site.html", module: "module-site.html", contact: "contact-site.html", about: "about-site.html", legal: "legal-site.html", privacy: "privacy-site.html", "not-found": "not-found-site.html" };
+  const FILES = { home: "home-site.html", courses: "courses-site.html", domain: "domain-site.html", formation: "formation-site.html", module: "module-site.html", contact: "contact-site.html", about: "about-site.html", legal: "legal-site.html", privacy: "privacy-site.html", "not-found": "not-found-site.html" };
 
   const params = new URLSearchParams(location.search);
   const chosen = Object.fromEntries(Object.entries(VARIANTS).map(([key, variant]) =>
     [key, params.get(key) in variant.options ? params.get(key) : variant.fallback]));
 
+  // A group belongs to every page, or to the pages named by its only.
+  const belongs = variant => !variant.only || [].concat(variant.only).includes(chosen.page);
   // A page receives the groups that belong to it, when they differ from their default.
   const site = () => {
-    const passed = Object.entries(VARIANTS).filter(([key, variant]) => variant.only === chosen.page && chosen[key] !== variant.fallback);
+    const passed = Object.entries(VARIANTS).filter(([key, variant]) => belongs(variant) && variant.only && chosen[key] !== variant.fallback);
     return FILES[chosen.page] + (passed.length ? "?" + new URLSearchParams(passed.map(([key]) => [key, chosen[key]])) : "");
   };
   const phone = () => `<div class="page-slot"><span>Mobile · 390 × 844 · scroll inside the phone</span><div class="page-phone"><iframe src="${site()}" title="Page at phone width"></iframe></div></div>`;
@@ -87,7 +101,7 @@
 
   function render() {
     document.getElementById("bar").innerHTML = `<strong>sylent.art · mock-up</strong>` +
-      Object.entries(VARIANTS).filter(([, variant]) => !variant.only || variant.only === chosen.page).map(([key, variant]) => `<div class="page-group"><span>${variant.label}</span>${
+      Object.entries(VARIANTS).filter(([, variant]) => belongs(variant)).map(([key, variant]) => `<div class="page-group"><span>${variant.label}</span>${
         Object.entries(variant.options).map(([value, label]) =>
           `<button type="button" data-variant="${key}" data-value="${value}" aria-pressed="${chosen[key] === value}">${label}</button>`).join("")}</div>`).join("") +
       `<p>${NOTE} Sample content; logo of IGENSIA Tech to come.</p>`;

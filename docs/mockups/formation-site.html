@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Formation · Formations · Sylent</title>
+<meta name="description" content="Une formation de plusieurs modules, dans l’ordre conseillé, sur site ou à distance.">
+<!--
+  The page of a formation of several modules (mock-up of step 13b of roadmap.md, from the
+  wireframe docs/wireframes/formations.excalidraw), shown at phone and desktop width by home.html
+  (?page=formation); ?formation=<slug> opens another formation. Data in shared/formations.js.
+  Layout: the hero (its domains as links above its name, its name alone, the count of its
+  modules, its summary), then « Modules » over « PARCOURS »: the modules in the advised order along
+  a rail over the right of their cards (shared/paths.js; no rail on a phone), beside the card to
+  organize the formation, then the call to action. No duration (decided by the owner on
+  2026-10-30).
+-->
+<script src="shared/head.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Anaheim:wght@500&display=block">
+<link rel="stylesheet" href="shared/site.css">
+<link rel="stylesheet" href="shared/formations.css">
+</head>
+<body data-page="courses">
+<script src="shared/site.js"></script>
+<script src="shared/programs.js"></script>
+<script src="shared/formations.js"></script>
+
+<main id="content"></main>
+
+<script>
+  const formation = [formationOf(query.get("formation"))].find(found => found && !isSingle(found)) || formationOf("php");
+  const modules = published(formation);
+  const domains = OFFER_DOMAINS.filter(domain => modulesIn(formation, domain).length);
+  const levelOf = module => module.level || (PROGRAMS[module.file] || {}).level || "";
+  document.title = `${formation.title} · Formations · Sylent`;
+  document.querySelector('meta[name="description"]').content = `${formation.summary} ${count(modules.length, "module")}, sur site ou à distance.`;
+
+  // Its domains above its name, as links; its name alone (decided by the owner on 2026-10-30, the
+  // word « Formation » is in the tab only); the count of its modules, then its summary.
+  const above = domains.map(domain => `<a class="app-chip" href="${domainHref(domain)}">${domain.title}</a>`).join("");
+  const hero = offerHero({ id: "formation-title", title: formation.title, above, lead: `<p class="app-offer-count">${count(modules.length, "module")}</p><p>${formation.summary}</p>`, isNew: domains.some(domain => domain.isNew) });
+
+  // The modules in the advised order, without numbers: the rail says the order. A framework
+  // carries its mark in the top left corner of its card.
+  const steps = `
+    <ol class="app-path" data-path>${modules.map(module => `
+      <li class="app-step app-reveal" data-step>
+        <span class="app-step-node" aria-hidden="true"></span>
+        <div class="app-step-card app-glass">
+          ${module.framework ? frameworkMark("card") : ""}
+          <h3 class="app-step-title">${module.title}</h3>
+          <p class="app-step-facts">${levelOf(module)}</p>
+          <p>${module.summary}</p>
+          <a class="app-link app-step-more" href="${moduleHref(module)}" aria-label="${module.title}${NB}: voir le module">Voir le module</a>
+        </div>
+      </li>`).join("")}
+    </ol>`;
+
+  const organize = `
+    <aside class="app-organize app-glass" aria-labelledby="organize-title">
+      <h2 id="organize-title">Organiser cette formation</h2>
+      <p>Toute la formation ou quelques modules, sur site ou à distance, avec un programme et des exercices adaptés à votre groupe.</p>
+      <a class="app-button" href="${PAGES.contact}">Me contacter</a>
+    </aside>`;
+
+  const body = `
+    <section aria-labelledby="modules-title">
+      <div class="app-wrap">
+        ${heading("Modules", "Parcours", "modules-title")}
+        <div class="app-formation-body"><div>${steps}</div>${organize}</div>
+      </div>
+    </section>`;
+
+  document.getElementById("content").innerHTML = hero + body +
+    siteCta(`Organiser cette formation${NB}?<br>Parlons de vos apprenants.`) + siteFooter();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="shared/motion.js"></script>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }</script>
+<script type="module" src="shared/covers.js"></script>
+<script type="module" src="shared/paths.js"></script>
+</body>
+</html>
