@@ -178,8 +178,10 @@ body {
   height: 8px;
 }
 
+/* No glow under the address (asked by the owner on 2026-10-30). */
 .end-rule .trail {
   inset: 0;
+  box-shadow: none;
   width: 100%;
   height: 100%;
 }
