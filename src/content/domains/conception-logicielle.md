@@ -8,4 +8,5 @@ collections:
   - uml
   - principes-solid
   - design-patterns
+  - ux-ui
 ---
