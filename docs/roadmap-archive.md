@@ -2,6 +2,13 @@
 
 The detail of the steps of [roadmap.md](../roadmap.md) once their pull request is merged, newest first.
 
+## 14b. Site ready to share (#46, #47)
+
+Step 14, launch: what the site needs before its links are shared, in two pull requests.
+
+- 14b-1 (#46): the not-found page; the redirect pages in French (`src/pages/3xx.astro`, Astro's experimental `redirectPage`); `sitemap.xml` and `robots.txt` without the redirect pages (`scripts/sitemap.mjs`); GoatCounter on `sylent.art` only, its script pinned with its hash; the phone number of GitHub checked (none on its own pages, the public one kept); the owner's Google Business Profile added to step 14d.
+- 14b-2 (#47): the Open Graph tags on every page (title, description, URL, site name, locale) and one preview card of 1200 × 630 px, the SYLENT logo and « www.sylent.art » in Manrope, centered over the faded photo of the owner, settled with the owner on 2026-10-30 after two rounds of layouts (a frame of the cube of the launch video set aside), served in JPEG (see [Branding](branding.md#icons-and-images) and [Technical choices](technical-choices.md#astro)).
+
 ## 14a. Communication supports (#45)
 
 Step 14, launch, announced on LinkedIn, Instagram and the owner's Facebook page (asked on 2026-10-30): the supports are prepared before the switch, and published after it. Made on 2026-10-30 and kept by the owner out of the repository: the teaser « L'impact » (« 3/11/26 », « nouveau site », « sylent.art », « bientôt ») and the launch video « Le cube » (« Disponible dès maintenant »), each as an Instagram story (1080 × 1920) and a feed video for LinkedIn and Facebook (1080 × 1350), with a synthesized sound; the text of the post, the same on both networks, with the link in the post itself. The temporary tool that made them (a Vite page, GSAP and Three.js videos, `sound.js`, `render.mjs`) stays on the branch `docs/communication-kit`, not merged and not reviewed: a repository dedicated to content creation may come later.

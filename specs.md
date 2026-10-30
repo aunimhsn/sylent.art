@@ -209,6 +209,7 @@ GitHub Pages has no server-side redirects: a redirect is a static page with a ca
 
 - Static site on GitHub Pages, custom domain `sylent.art`, HTTPS enforced, `CNAME` file kept.
 - Every page has a title, a meta description, `lang="fr"`, and is usable at phone width.
+- Every page has the Open Graph tags, so that a link to it shows a card on LinkedIn and Facebook: its title, its description and one preview image of 1200 × 630 px, the same for the whole site: the logo and the address over the faded photo of the trainer.
 - Accessibility: semantic HTML, sufficient contrast, every action reachable with the keyboard.
 - Images have an `alt` text and are served in a light format (e.g. WebP) at the size they are shown.
 - No secret and no personal data other than the public contact details in the public repository.

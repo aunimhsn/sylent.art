@@ -4,7 +4,8 @@
 // page links to: /domaines/ leads to the formations page, and the address of a formation of a
 // single module to its module. And the pages of step 14b: the not-found page is built, every
 // redirect page is the French one of src/pages/3xx.astro, Astro's template /3xx.html is not
-// published, and the sitemap lists only pages, no redirect.
+// published, and the sitemap lists only pages, no redirect. And the Open Graph tags of every page:
+// the title of its card is its own, the URL is its canonical one, and the image is built.
 // Run after `npm run build`, or on the preview built under its base:
 // `node scripts/check-former-urls.mjs dist-base/sylent.art /sylent.art`.
 import { existsSync, readdirSync, readFileSync } from "node:fs";
@@ -141,9 +142,30 @@ const htmlFiles = readdirSync(dist, { recursive: true }).filter((file) =>
   file.endsWith(".html"),
 );
 const redirectPages = new Set();
+/** The content of a meta tag, or of the canonical link, as Astro writes them. */
+const meta = (html, property) =>
+  html.match(new RegExp(`<meta property="${property}" content="([^"]*)"`))?.[1];
 for (const file of htmlFiles) {
   const html = readFileSync(join(dist, file), "utf8");
-  if (!/http-equiv=["']?refresh/i.test(html)) continue;
+  if (!/http-equiv=["']?refresh/i.test(html)) {
+    const title = html.match(/<title>([^<]*)<\/title>/)?.[1];
+    if (meta(html, "og:title") !== title) {
+      errors.push(`${file}: og:title differs from the title`);
+    }
+    const canonical = html.match(/<link rel="canonical" href="([^"]*)"/)?.[1];
+    if (meta(html, "og:url") !== canonical) {
+      errors.push(`${file}: og:url differs from the canonical link`);
+    }
+    const image = meta(html, "og:image");
+    const imagePath = image && new URL(image).pathname;
+    if (
+      !imagePath?.startsWith(`${base}/`) ||
+      !existsSync(join(dist, imagePath.slice(base.length)))
+    ) {
+      errors.push(`${file}: og:image ${image} is not built`);
+    }
+    continue;
+  }
   redirectPages.add(file);
   if (!html.includes(redirectPage.text)) {
     errors.push(`${file}: a redirect page that isn't the French one`);
