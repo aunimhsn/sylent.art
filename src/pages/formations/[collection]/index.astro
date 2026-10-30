@@ -181,14 +181,15 @@ const { modules, domains } = formation;
     inset: 0;
   }
 
-  .tile svg {
+  /* The arrow comes from the Icon component: :global, or the scoped rule misses it. */
+  .tile :global(svg) {
     color: var(--dim);
     transition:
       color var(--duration-fast),
       transform var(--duration-fast);
   }
 
-  .tile:is(:hover, :focus-within) svg {
+  .tile:is(:hover, :focus-within) :global(svg) {
     color: var(--text);
     transform: translateX(3px);
   }

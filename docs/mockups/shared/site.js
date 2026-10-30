@@ -114,19 +114,14 @@ const moduleCard = (domain, [title, , summary, scene], first = false) => `
     <h3>${title}</h3><p class="app-card-domain">${domain.title}</p><p>${summary}</p>
     <a class="app-card-more" href="${PAGES.module}?module=${slugOf(title)}" aria-label="${title}${NB}: voir le détail">Voir le détail</a>
   </li>`;
-// The last card, after the domains or the modules: a module built for the request. After the
-// domains of the home page it is a band across its own row (isBand), without glass or scene, its
-// text in a dashed frame.
-const customText = `<h3>Un besoin sur mesure${NB}?</h3>
-    <p>Décrivez vos apprenants et vos objectifs${NB}: je construis le module.</p>`;
-const customCard = (isBand = false) => isBand ? `
-  <li class="app-card app-reveal is-band">
-    <div class="app-card-text">${customText}</div>
-    <a class="app-card-more" href="${PAGES.contact}"><span>Me contacter</span>${icon("right", 18)}</a>
-  </li>` : `
-  <li class="app-card app-glass app-reveal app-tilt">
+// The last card, after the domains, the formations or the modules: a module built for the request.
+// After the seven domains it is their eighth card (2026-10-30, instead of a band across its own
+// row), without the tilt, which the domain cards don't have.
+const customCard = (tilt = true) => `
+  <li class="app-card app-glass app-reveal${tilt ? " app-tilt" : ""}">
     <div class="app-cover" data-scene="custom" aria-hidden="true"><canvas></canvas></div>
-    ${customText}
+    <h3>Un besoin sur mesure${NB}?</h3>
+    <p>Décrivez vos apprenants et vos objectifs${NB}: je construis le module.</p>
     <a class="app-card-more" href="${PAGES.contact}">Me contacter</a>
   </li>`;
 

@@ -138,14 +138,13 @@ const offerDomainCard = domain => `
     <a class="app-card-more" href="${domainHref(domain)}" aria-label="${domain.title}${NB}: voir les modules">Voir les modules</a>
   </li>`;
 
-// The hero of a module, domain or formation page, as built on the site: the « Nouveau » label, a
-// line above the title (the domains of a formation), the title over its faded word, a line under
+// The hero of a module, domain or formation page, as built on the site: the « Nouveau » label,
+// the title over its faded word, a line under
 // it (the framework badge of a module, over the faded word), the lead.
-const offerHero = ({ id, title, ghost, above = "", under = "", lead, after = "", isNew = false, note = "" }) => `
+const offerHero = ({ id, title, ghost, under = "", lead, after = "", isNew = false, note = "" }) => `
   <section class="app-offer-hero" aria-labelledby="${id}" data-grid>
     <div class="app-wrap">
       ${isNew ? '<p class="app-offer-new app-reveal"><span class="app-new">Nouveau</span></p>' : ""}
-      ${above ? `<div class="app-offer-above app-reveal">${above}</div>` : ""}
       <div class="app-offer-heading">
         ${ghost ? `<span class="app-offer-ghost" aria-hidden="true">${unaccented(ghost)}</span>` : ""}
         <div class="app-offer-titles"><h1 class="app-offer-title app-reveal" id="${id}">${title}</h1>${under}</div>

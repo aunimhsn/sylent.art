@@ -21,7 +21,6 @@
 .app-offer-hero .app-wrap { position: relative; }
 .app-offer-new { margin: 0 0 var(--space-6); }
 .app-offer-new .app-new { position: static; display: inline-block; }
-.app-offer-above { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-4); margin-bottom: var(--space-4); }
 .app-offer-heading { display: grid; grid-template-columns: minmax(0, 1fr); container-type: inline-size; }
 .app-offer-heading * { --title-size: min(var(--size-display), calc(100cqi / var(--title-em, 10.4))); }
 .app-offer-heading > * { grid-area: 1 / 1; }

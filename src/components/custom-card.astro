@@ -9,13 +9,16 @@ import { href } from "../lib/url";
 interface Props {
   /** 2 among the domain cards of the formations page, right under its h1; 3 elsewhere. */
   headingLevel?: 2 | 3;
+  /** It tilts under the pointer as a module card, but not among the domain cards, which slide
+   * their content instead (chosen by the owner on 2026-10-30). */
+  tilt?: boolean;
 }
 
-const { headingLevel = 3 } = Astro.props;
+const { headingLevel = 3, tilt = true } = Astro.props;
 const Heading = `h${headingLevel}` as const;
 ---
 
-<li class="card glass reveal tilt">
+<li class:list={["card glass reveal", { tilt }]}>
   <div class="cover" data-scene="custom" aria-hidden="true">
     <canvas></canvas>
   </div>
