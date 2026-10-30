@@ -12,10 +12,13 @@ interface Props {
   ghost: string;
   id: string;
   level?: 1 | 2;
+  /** A shorter title shown below 640 px, where the title doesn't fit (the not-found page). */
+  short?: string;
 }
 
-const { title, ghost, id, level = 2 } = Astro.props;
+const { title, ghost, id, level = 2, short } = Astro.props;
 const shown = withoutAccents(title);
+const shortShown = short && withoutAccents(short);
 const ghostShown = withoutAccents(ghost).toUpperCase();
 const Title = `h${level}` as const;
 ---
@@ -28,14 +31,31 @@ const Title = `h${level}` as const;
   >
     {ghostShown}
   </span>
-  <Title
-    class="heading-title"
-    id={id}
-    style={bearingStyle(shown.toUpperCase())}
-    aria-label={shown === title ? undefined : title}
-  >
-    {shown}
-  </Title>
+  {shortShown ? (
+    <Title class="heading-title" id={id} aria-label={title}>
+      <span
+        class="heading-part is-wide"
+        style={bearingStyle(shown.toUpperCase())}
+      >
+        {shown}
+      </span>
+      <span
+        class="heading-part is-short"
+        style={bearingStyle(shortShown.toUpperCase())}
+      >
+        {shortShown}
+      </span>
+    </Title>
+  ) : (
+    <Title
+      class="heading-title"
+      id={id}
+      style={bearingStyle(shown.toUpperCase())}
+      aria-label={shown === title ? undefined : title}
+    >
+      {shown}
+    </Title>
+  )}
 </div>
 
 <style>
@@ -68,6 +88,27 @@ const Title = `h${level}` as const;
     font-size: min(var(--size-section), 7.6cqi);
     letter-spacing: var(--tracking-title);
     text-transform: uppercase;
+  }
+
+  /* With a short title, each part starts from the ink of its own first letter; the title shows
+     from 640 px, the short one below. */
+  .heading-part {
+    display: inline-block;
+    margin-left: calc(-1 * var(--bearing, 0em));
+  }
+
+  .heading-part.is-wide {
+    display: none;
+  }
+
+  @media (width >= 640px) {
+    .heading-part.is-wide {
+      display: inline-block;
+    }
+
+    .heading-part.is-short {
+      display: none;
+    }
   }
 
   /* A lead right under a heading comes closer to it. */

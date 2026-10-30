@@ -6,13 +6,19 @@ import "../styles/global.css";
 interface Props {
   title: string;
   description: string;
+  /** A page that search engines must not index, as the not-found page. */
+  noindex?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, noindex = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 // Under a base path, the site is the preview at its github.io address, which search engines
 // must not index beside the former site.
 const isPreview = import.meta.env.BASE_URL !== "/";
+// The visits are counted by GoatCounter on sylent.art only: not on the preview, nor on the
+// development server (docs/external-services.md). Its script ignores localhost by itself, so
+// the checks, which serve the build locally, count nothing either.
+const counts = import.meta.env.PROD && !isPreview;
 ---
 
 <!doctype html>
@@ -22,8 +28,16 @@ const isPreview = import.meta.env.BASE_URL !== "/";
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
-    {isPreview && <meta name="robots" content="noindex" />}
+    {!noindex && <link rel="canonical" href={canonical} />}
+    {(isPreview || noindex) && <meta name="robots" content="noindex" />}
+    {counts && (
+      <script
+        is:inline
+        data-goatcounter="https://sylent.goatcounter.com/count"
+        async
+        src="https://gc.zgo.at/count.js"
+      />
+    )}
     <Font cssVariable="--font-manrope" preload />
     <Font cssVariable="--font-anaheim" preload />
     <!--

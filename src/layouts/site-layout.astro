@@ -11,12 +11,14 @@ interface Props {
   description: string;
   /** The call to action at the end of the page: true for the usual question, or its own. */
   cta?: boolean | string[];
+  /** A page that search engines must not index, as the not-found page. */
+  noindex?: boolean;
 }
 
-const { title, description, cta = false } = Astro.props;
+const { title, description, cta = false, noindex = false } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} noindex={noindex}>
   <SiteHeader />
   <main id="content">
     <slot />
