@@ -11,6 +11,7 @@ import RichText from "../components/rich-text.astro";
 import SectionHeading from "../components/section-heading.astro";
 import about from "../content/about.json";
 import SiteLayout from "../layouts/site-layout.astro";
+import { bearingStyle } from "../lib/title-metrics";
 import { href } from "../lib/url";
 
 const { pedagogy, partners, admin } = about;
@@ -24,7 +25,11 @@ const { pedagogy, partners, admin } = about;
   >
     <OwnerPhoto class="about-photo" loading="eager" />
     <div class="wrap">
-      <h1 class="about-title reveal" id="about-title">
+      <h1
+        class="about-title reveal"
+        id="about-title"
+        style={bearingStyle(about.name)}
+      >
         {about.name}
       </h1>
       <p class="about-role reveal">{about.role}</p>
@@ -104,8 +109,10 @@ const { pedagogy, partners, admin } = about;
     bottom: 0;
   }
 
+  /* The ink of the first letter on the left edge, not its side bearing (--bearing, optical
+     alignment, docs/branding.md). */
   .about-title {
-    margin: 0;
+    margin: 0 0 0 calc(-1 * var(--bearing));
     font: var(--title-weight) var(--size-display) / 0.98 var(--font-title);
     letter-spacing: var(--tracking-title);
   }

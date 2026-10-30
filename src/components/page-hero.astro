@@ -6,6 +6,12 @@
 // domain, then the actions, if any (the slot "actions").
 import fr from "../i18n/fr.json";
 import { withoutAccents } from "../lib/text";
+import {
+  bearingStyle,
+  TRACKING_GHOST,
+  TRACKING_TITLE,
+  widthEm,
+} from "../lib/title-metrics";
 
 interface Props {
   title: string;
@@ -20,6 +26,18 @@ interface Props {
 }
 
 const { title, ghost, id, label, isNew = false, note } = Astro.props;
+// The faded word as shown: in capitals, without accents.
+const ghostShown = ghost && withoutAccents(ghost).toUpperCase();
+// The widths of the title and of the faded word in em, from which their sizes follow the width of
+// the heading (below). The title keeps 5 % more and 0.04 em of air: Chromium on Linux sets each
+// letter on a whole pixel, which makes a title up to 4.4 % wider at 38 px; the faded word keeps
+// its offset of 0.12 em.
+const sizes = {
+  "--title-em": (widthEm(title, TRACKING_TITLE) * 1.05 + 0.04).toFixed(3),
+  ...(ghostShown && {
+    "--ghost-em": (widthEm(ghostShown, TRACKING_GHOST) + 0.12).toFixed(3),
+  }),
+};
 ---
 
 <section
@@ -39,14 +57,18 @@ const { title, ghost, id, label, isNew = false, note } = Astro.props;
           <slot name="above" />
         </div>
       )}
-      <div class="page-heading">
-        {ghost && (
-          <span class="ghost-word heading-ghost" aria-hidden="true">
-            {withoutAccents(ghost)}
+      <div class="page-heading" style={sizes}>
+        {ghostShown && (
+          <span
+            class="ghost-word heading-ghost"
+            style={bearingStyle(ghostShown)}
+            aria-hidden="true"
+          >
+            {ghostShown}
           </span>
         )}
         <div class="page-titles">
-          <h1 class="page-title reveal" id={id}>
+          <h1 class="page-title reveal" id={id} style={bearingStyle(title)}>
             {title}
           </h1>
           <slot name="under" />
@@ -106,10 +128,12 @@ const { title, ghost, id, label, isNew = false, note } = Astro.props;
   .page-heading {
     /* The title holds on one line at every width (asked by the owner on 2026-10-29): it takes the
        whole width of the page, not the column of the lead, where « Développement web » broke
-       mid-word on a computer, and its size follows that width, so that the longest title,
-       « Méthodologie et tests » (9.9 em), fits. What follows the title (the slot "under") is
-       placed from this size. */
-    --title-size: min(var(--size-display), 9.6cqi);
+       mid-word on a computer, and it is as large as the display size allows within that width,
+       from its own width in em (--title-em), so that a short title keeps the display size
+       (« Laravel » 44 px on a phone) and only a long one shrinks (asked by the owner on
+       2026-10-30, instead of one size for every title, sized on the longest). What follows the
+       title (the slot "under") is placed from this size. */
+    --title-size: min(var(--size-display), calc(100cqi / var(--title-em)));
 
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -120,8 +144,16 @@ const { title, ghost, id, label, isNew = false, note } = Astro.props;
     grid-area: 1 / 1;
   }
 
+  /* The faded word takes 60 % of the width of the heading (chosen by the owner on 2026-10-30),
+     from its width in em (--ghost-em), between the size of the faded words and their largest
+     size: a short word (« PHP ») grows on a phone, where the title grew too, and a long one
+     (« JAVASCRIPT ») keeps the size of the faded words and may run past the screen. */
   .heading-ghost {
-    margin: var(--space-fluid-1) 0 0 0.12em;
+    margin: var(--space-fluid-1) 0 0 calc(0.12em - var(--bearing));
+    font-size: max(
+      var(--size-ghost),
+      min(176px, calc(60cqi / var(--ghost-em)))
+    );
   }
 
   /* The title and the line right under it, over the faded word. */
@@ -130,8 +162,11 @@ const { title, ghost, id, label, isNew = false, note } = Astro.props;
     align-self: start;
   }
 
+  /* The ink of the first letter on the left edge, not its side bearing (--bearing, optical
+     alignment chosen by the owner on 2026-10-30); the faded word keeps its offset of 0.12 em from
+     its ink. */
   .page-title {
-    margin: 0;
+    margin: 0 0 0 calc(-1 * var(--bearing));
     font: var(--title-weight) var(--title-size) / 0.98 var(--font-title);
     letter-spacing: var(--tracking-title);
     text-wrap: balance;

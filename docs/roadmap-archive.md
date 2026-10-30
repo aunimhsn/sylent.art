@@ -2,6 +2,12 @@
 
 The detail of the steps of [roadmap.md](../roadmap.md) once their pull request is merged, newest first.
 
+## 13c. Build of the formations (#41)
+
+Step 13, classification of the offers, before the launch: the groups mixed fields and a technology (« Python »). Agreed with the owner on 2026-10-30, on the tree `docs/wireframes/offer-classification.excalidraw`: domains (shelves) → formations (one subject each, the address) → modules; a module lives in one formation and is filed under one or more domains; addresses `/formations/<formation>/<module>/`; « IA générative » and « Programmation » replace « Développement IA » and « Initiation à la prog. », the domain « Python » is gone, the POO is a module of PHP and of Python; the word « domaine » stays (see `specs.md`, Training offers).
+
+Built in 13c: the content (formation files, the domains of each module, the POO split into PHP and Python, the new module « Modules et packages » from the owner's slides of 2022 (text agreed on 2026-10-30) and the draft Tailwind, the module and domain renames), the pages `/formations/…` and `/domaines/<domain>/`, the redirects (`/courses/<id>/`, `/domaines/`, a formation of a single module), the domain card tags as formations, the layout of the mock-up of 13b (formation cards, formation page and its rail, module hero and neighbors, framework mark, no duration on the cards, the key facts nor the meta descriptions), the checks.
+
 ## 13b. Wireframe and mock-up of the formations (#39)
 
 Agreed with the owner on 2026-10-30, on `docs/wireframes/formations.excalidraw`, then on the mock-up (`domain-site.html`, `formation-site.html`, `module-site.html`, `shared/formations.{js,css}`, `shared/paths.js`), the reference of step 13c:
