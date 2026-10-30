@@ -1,0 +1,185 @@
+/* The components of the pages of step 13b (domain, formation, module), over shared/site.css:
+   the hero of the built site, the formation cards, the framework mark and the path of a
+   formation. The variants of the open decisions are classes or data attributes set from the
+   address (shared/formations.js). Only the tokens of site.css. */
+
+/* ── Hero, as built on the site (src/components/page-hero.astro) ───────────────────── */
+
+.app-offer-hero { position: relative; padding: calc(var(--header-height) + var(--space-fluid-2)) 0 var(--space-fluid-3); }
+.app-offer-hero::before,
+.app-offer-hero > .app-grid-fluid {
+  content: "";
+  position: absolute;
+  inset: 0;
+  mask-image: radial-gradient(80% 75% at 70% 40%, #000 30%, transparent 75%);
+  pointer-events: none;
+}
+.app-offer-hero::before {
+  background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: var(--grid-step) var(--grid-step);
+}
+.app-offer-hero .app-wrap { position: relative; }
+.app-offer-new { margin: 0 0 var(--space-6); }
+.app-offer-new .app-new { position: static; display: inline-block; }
+.app-offer-above { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-4); margin-bottom: var(--space-4); }
+.app-offer-heading { display: grid; grid-template-columns: minmax(0, 1fr); container-type: inline-size; }
+.app-offer-heading > * { grid-area: 1 / 1; }
+.app-offer-ghost {
+  margin: var(--space-fluid-1) 0 0 0.12em;
+  font: var(--title-weight) var(--size-ghost)/0.8 var(--font-title);
+  letter-spacing: var(--tracking-ghost);
+  text-transform: uppercase;
+  color: var(--ghost-word);
+  white-space: nowrap;
+  user-select: none;
+}
+.app-offer-title {
+  position: relative;
+  align-self: start;
+  margin: 0;
+  font: var(--title-weight) min(var(--size-display), 9.6cqi)/0.98 var(--font-title);
+  letter-spacing: var(--tracking-title);
+}
+.app-offer-lead p { margin: var(--space-7) 0 0; max-width: var(--measure); color: var(--secondary); font-size: var(--size-intro); text-wrap: pretty; }
+.app-offer-lead p + p { margin-top: var(--space-4); }
+.app-offer-note { margin: var(--space-6) 0 0; max-width: var(--measure-narrow); padding: var(--space-3) var(--space-4); font-size: var(--size-text-small); }
+
+/* The formation of a module, above its title: an uppercase label that is a link, with an arrow
+   that moves forward under the pointer. */
+.app-offer-link { display: inline-flex; align-items: center; gap: var(--space-2); color: var(--dim); font: var(--label-weight) var(--size-label)/1.3 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; transition: color var(--duration-fast); }
+.app-offer-link svg { transition: transform var(--duration-fast); }
+.app-offer-link:hover { color: var(--text); }
+.app-offer-link:hover svg { transform: translateX(4px); }
+.app-offer-link span { border-bottom: 1px solid var(--line-strong); padding-bottom: 2px; }
+
+/* ── The framework mark ─────────────────────────────────────────────────────────────── */
+
+.app-fw { display: inline-flex; flex: none; align-items: center; gap: var(--space-2); font: var(--label-weight) var(--size-label)/1 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; white-space: nowrap; }
+/* Outline: the sibling of « Nouveau », drawn instead of filled. */
+[data-mark="outline"] .app-fw { padding: 6px var(--space-2) 5px; border: 1px solid var(--line-strong); color: var(--secondary); }
+/* Dot: an orange square before a quiet word. */
+[data-mark="dot"] .app-fw { color: var(--dim); letter-spacing: 0.08em; }
+[data-mark="dot"] .app-fw::before { content: ""; width: 6px; height: 6px; background: var(--signal); }
+/* Layers: two planes, one over the other, as a framework over its language. */
+[data-mark="layers"] .app-fw { color: var(--secondary); letter-spacing: 0.08em; }
+[data-mark="layers"] .app-fw svg { color: var(--signal-text); }
+/* On a cover, in its top right corner, over the scene. */
+.app-cover-fw { position: absolute; right: var(--space-4); top: var(--space-4); }
+[data-mark="outline"] .app-cover-fw .app-fw { background: rgb(10 10 10 / 0.6); }
+
+/* ── Formation cards ──────────────────────────────────────────────────────────────────── */
+
+/* The modules of the formation: rows under thin rules, each a link above the band of the card
+   (whose link covers the card). Under the pointer the row turns white and its arrow appears. */
+.app-fcard-list { position: relative; z-index: 1; margin: var(--space-2) 0 var(--space-5); padding: 0; list-style: none; border-bottom: 1px solid var(--line); }
+.app-fcard-list a { display: flex; align-items: center; gap: var(--space-3); min-height: 44px; border-top: 1px solid var(--line); color: var(--secondary); font: 700 var(--size-ui)/1.2 var(--font-title); letter-spacing: var(--tracking-card); transition: color var(--duration-fast); }
+.app-fcard-list a > span { flex: 0 1 auto; min-width: 0; }
+.app-fcard-list a > svg { margin-left: auto; opacity: 0; transform: translateX(-6px); transition: opacity var(--duration-fast), transform var(--duration-fast); }
+.app-fcard-list a:hover, .app-fcard-list a:focus-visible { color: var(--text); }
+.app-fcard-list a:hover > svg, .app-fcard-list a:focus-visible > svg { opacity: 1; transform: none; }
+.app-fcard-list .app-fw { font-size: 10px; }
+[data-mark="outline"] .app-fcard-list .app-fw { padding: 4px 6px 3px; }
+
+/* Stack: the other modules as sheets behind the card, toward the top right (one per module
+   after the first, three at most), drawn by shadows, which the overflow of the card doesn't
+   cut. The sheets move apart under the pointer. */
+[data-card="stack"] .app-fcard {
+  --sheet: 7px;
+  box-shadow:
+    calc(var(--sheet) * 1) calc(var(--sheet) * -1) 0 -1px var(--bg),
+    calc(var(--sheet) * 1) calc(var(--sheet) * -1) 0 0 var(--glass-line),
+    calc(var(--sheet) * 2 * min(1, max(0, var(--layers) - 1))) calc(var(--sheet) * -2 * min(1, max(0, var(--layers) - 1))) 0 -1px var(--bg),
+    calc(var(--sheet) * 2 * min(1, max(0, var(--layers) - 1))) calc(var(--sheet) * -2 * min(1, max(0, var(--layers) - 1))) 0 0 rgb(255 255 255 / calc(0.07 * min(1, max(0, var(--layers) - 1))));
+  transition: box-shadow var(--duration-fast), background-color var(--duration-fast);
+}
+[data-card="stack"] .app-fcard:hover { --sheet: 9px; }
+[data-card="stack"] .app-cards { padding-top: var(--space-4); }
+
+/* Slide: the face (name, count, summary) and the modules share the same place; under the pointer
+   or the keyboard the face slides up and out and the modules come up in its place, as on the
+   domain cards of the site. Touch screens show both, one under the other. */
+.app-fcard-window { position: relative; display: grid; flex: 1; overflow: hidden; margin-bottom: var(--space-5); }
+.app-fcard-window > * { grid-area: 1 / 1; display: flex; flex-direction: column; gap: var(--space-3); }
+.app-fcard-face p:last-child { margin: 0; }
+.app-fcard-back .app-fcard-list { margin: 0; }
+@media (hover: hover) {
+  .app-fcard-face, .app-fcard-back { transition: transform 0.6s var(--ease-in-out), opacity 0.6s var(--ease-in-out); }
+  .app-fcard-back { justify-content: center; transform: translateY(105%); opacity: 0; }
+  .app-fcard:hover .app-fcard-face, .app-fcard:focus-within .app-fcard-face { transform: translateY(-105%); opacity: 0; }
+  .app-fcard:hover .app-fcard-back, .app-fcard:focus-within .app-fcard-back { transform: none; opacity: 1; }
+}
+@media (hover: none) {
+  .app-fcard-window { display: flex; flex-direction: column; gap: var(--space-4); }
+}
+
+/* Domain cards: the formations as tags at the bottom, aligned from one card to the next. */
+.app-dcard > p:not(.app-dcard-tags) { margin-bottom: 0; }
+.app-dcard-tags { margin: auto 0 var(--space-5) !important; padding-top: var(--space-4); color: var(--dim) !important; font-size: var(--size-caption) !important; }
+
+/* ── Formation page ──────────────────────────────────────────────────────────────────── */
+
+.app-ffacts { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-6); margin: var(--space-9) 0 0; padding: 0; list-style: none; }
+.app-ffacts > li { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); }
+.app-ffacts-label { color: var(--dim); font: var(--label-weight) var(--size-label)/1.3 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; }
+.app-ffacts-value { font: 700 var(--size-title-small)/1.3 var(--font-title); letter-spacing: var(--tracking-card); }
+.app-chip { padding: var(--space-2) var(--space-3); border: 1px solid var(--line-strong); color: var(--secondary); font: 700 var(--size-caption)/1 var(--font-title); transition: border-color var(--duration-fast), color var(--duration-fast); }
+.app-chip:hover { border-color: var(--text); color: var(--text); }
+
+.app-formation-body { display: grid; gap: var(--space-14); padding-bottom: var(--space-fluid-3); }
+@media (min-width: 900px) { .app-formation-body { grid-template-columns: 8fr 4fr; gap: var(--space-18); align-items: start; } }
+.app-path-note { margin: calc(-1 * var(--space-fluid-1)) 0 var(--space-fluid-2); color: var(--dim); font-size: var(--size-text-small); }
+.app-organize { display: grid; gap: var(--space-3); padding: var(--card-padding-block) var(--card-padding-inline); }
+@media (min-width: 900px) { .app-organize { position: sticky; top: calc(var(--header-height) + var(--space-6)); } }
+.app-organize h2 { margin: 0; font: 700 var(--size-card-title)/1.2 var(--font-title); letter-spacing: var(--tracking-card); }
+.app-organize p { margin: 0; color: var(--secondary); font-size: var(--size-text-small); }
+.app-organize .app-button { justify-self: start; margin-top: var(--space-2); }
+
+/* ── The path: the modules in the advised order, beside a rail ─────────────────────────── */
+
+.app-path { --rail: 56px; position: relative; display: grid; gap: var(--space-5); margin: 0; padding: 0 0 0 var(--rail); list-style: none; }
+@media (max-width: 639px) { .app-path { --rail: 36px; } }
+.app-step { position: relative; }
+.app-step-card { position: relative; display: grid; gap: var(--space-2); padding: var(--space-6) var(--card-padding-inline); transition: background-color var(--duration-fast), border-color var(--duration-fast); }
+.app-step-card:hover { background-color: var(--glass-hover); }
+.app-step-title { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4); margin: 0; font: 700 var(--size-card-title)/1.2 var(--font-title); letter-spacing: var(--tracking-card); }
+.app-step-facts { margin: 0; color: var(--dim); font: 600 var(--size-caption)/1.3 var(--font-title); }
+.app-step-card > p:not(.app-step-facts) { margin: var(--space-2) 0 0; max-width: var(--measure); color: var(--secondary); font-size: var(--size-text-small); }
+.app-step-more { justify-self: start; margin-top: var(--space-3); }
+.app-step-more::after { content: ""; position: absolute; inset: 0; }
+
+/* Line: a rail on the left that fills with orange as the page scrolls; each module has a square
+   on the rail that lights up when the orange reaches it. */
+.app-path.is-line::before,
+.app-path.is-line::after { content: ""; position: absolute; left: calc(var(--rail) / 2 - 0.5px); top: var(--first, 0px); height: var(--length, 100%); width: 1px; background: var(--line-strong); }
+.app-path.is-line::after { background: var(--signal); transform: scaleY(var(--progress, 1)); transform-origin: top; box-shadow: 0 0 10px var(--signal); }
+.app-step-node { position: absolute; left: calc(-1 * var(--rail) / 2 - 6px); top: var(--node-top, 34px); width: 12px; height: 12px; border: 1px solid var(--line-strong); background: var(--bg); transform: rotate(45deg); transition: background-color var(--duration-fast), border-color var(--duration-fast), box-shadow var(--duration-fast); }
+.app-step.is-reached .app-step-node { border-color: var(--signal); background: var(--signal); box-shadow: 0 0 14px var(--signal); }
+.app-path:not(.is-line) .app-step-node { visibility: hidden; }
+
+/* Thread: a Three.js canvas over the rail (shared/paths.js). */
+.app-path-canvas { position: absolute; left: 0; top: 0; width: var(--rail); height: 100%; pointer-events: none; }
+
+/* Strata: the modules as stacked slabs, in a Three.js canvas that follows the scroll on a
+   computer, beside the list; on a phone, above it. */
+.app-strata { display: grid; gap: var(--space-8); }
+@media (min-width: 900px) { .app-strata { grid-template-columns: 5fr 7fr; gap: var(--space-8); align-items: start; } }
+.app-strata-stage { position: relative; aspect-ratio: 1; max-height: 340px; width: 100%; }
+@media (min-width: 900px) { .app-strata-stage { position: sticky; top: calc(var(--header-height) + var(--space-6)); max-height: none; } }
+.app-strata-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.app-strata-label { position: absolute; left: var(--x); top: var(--y); transform: translateY(-50%); color: var(--dim); font: 700 var(--size-caption)/1 var(--font-title); white-space: nowrap; transition: color var(--duration-fast); pointer-events: none; }
+.app-strata-label.is-active { color: var(--signal-text); }
+.app-strata .app-path { --rail: 0px; }
+.app-strata .app-step.is-active .app-step-card { border-color: rgb(211 69 14 / 0.5); }
+
+/* ── Module page: its place in the formation (strip variant) ─────────────────────────── */
+
+.app-strip { margin-top: var(--space-9); }
+.app-strip-label { margin: 0 0 var(--space-3); color: var(--dim); font: var(--label-weight) var(--size-label)/1.3 var(--font-title); letter-spacing: var(--tracking-label); text-transform: uppercase; }
+/* One row, which scrolls sideways on a phone when the formation is long (Python), fading out at
+   its right edge, rather than wrapping with a connector at the start of a line. */
+.app-strip ol { display: flex; align-items: center; margin: 0; padding: 0 var(--space-6) 0 0; list-style: none; overflow-x: auto; scrollbar-width: none; mask-image: linear-gradient(90deg, #000 calc(100% - var(--space-6)), transparent); }
+.app-strip li { display: flex; flex: none; align-items: center; }
+.app-strip li + li::before { content: ""; width: var(--space-4); height: 1px; margin-inline: var(--space-2); background: var(--line-strong); }
+.app-strip a, .app-strip [aria-current] { display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-3); border: 1px solid var(--line-strong); color: var(--secondary); font: 700 var(--size-caption)/1 var(--font-title); transition: border-color var(--duration-fast), color var(--duration-fast); }
+.app-strip a:hover { border-color: var(--text); color: var(--text); }
+.app-strip [aria-current] { border-color: var(--signal); color: var(--text); box-shadow: inset 0 -2px 0 var(--signal); }

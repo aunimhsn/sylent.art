@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Formation · Formations · Sylent</title>
+<meta name="description" content="Une formation de plusieurs modules, dans l’ordre conseillé, sur site ou à distance.">
+<!--
+  The page of a formation of several modules (mock-up of step 13b of roadmap.md, from the
+  wireframe docs/wireframes/formations.excalidraw), shown at phone and desktop width by home.html
+  (?page=formation); ?formation=<slug> opens another formation. Data in shared/formations.js.
+  Layout: the hero (« Formation PHP », its summary, the count of modules and days, its domains as
+  links), then « Les modules » over « PARCOURS »: the modules in the advised order beside a rail
+  (?path= line, thread or strata, drawn by shared/paths.js), beside the card to organize the
+  formation, then the call to action.
+-->
+<script src="shared/head.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Anaheim:wght@500&display=block">
+<link rel="stylesheet" href="shared/site.css">
+<link rel="stylesheet" href="shared/formations.css">
+</head>
+<body data-page="courses">
+<script src="shared/site.js"></script>
+<script src="shared/programs.js"></script>
+<script src="shared/formations.js"></script>
+
+<main id="content"></main>
+
+<script>
+  const formation = [formationOf(query.get("formation"))].find(found => found && !isSingle(found)) || formationOf("php");
+  const modules = published(formation);
+  const total = modules.reduce((sum, module) => sum + module.days, 0);
+  const domains = OFFER_DOMAINS.filter(domain => modulesIn(formation, domain).length);
+  const levelOf = module => module.level || (PROGRAMS[module.file] || {}).level || "";
+  document.title = `${formation.title} · Formations · Sylent`;
+  document.querySelector('meta[name="description"]').content = `${formation.summary} ${count(modules.length, "module")}, sur site ou à distance.`;
+
+  const facts = `
+    <ul class="app-ffacts app-reveal">
+      <li><span class="app-ffacts-label">Modules</span><span class="app-ffacts-value">${modules.length}</span></li>
+      <li><span class="app-ffacts-label">Durée</span><span class="app-ffacts-value">${total}${NB}jours au total, adaptables</span></li>
+      <li><span class="app-ffacts-label">${domains.length > 1 ? "Domaines" : "Domaine"}</span>${domains.map(domain => `<a class="app-chip" href="${domainHref(domain)}">${domain.title}</a>`).join("")}</li>
+    </ul>`;
+  const hero = offerHero({ id: "formation-title", title: `Formation ${formation.title}`, lead: `<p>${formation.summary}</p>`, after: facts, isNew: domains.some(domain => domain.isNew) });
+
+  // The modules in the advised order, without numbers: the rail says the order, the note says that
+  // each module is booked on its own.
+  const steps = `
+    <ol class="app-path is-${variant("path")}" data-path>${modules.map(module => `
+      <li class="app-step app-reveal" data-step>
+        <span class="app-step-node" aria-hidden="true"></span>
+        <div class="app-step-card app-glass">
+          <h3 class="app-step-title">${module.title}${module.framework ? frameworkMark() : ""}</h3>
+          <p class="app-step-facts">${days(module.days)} · ${levelOf(module)}</p>
+          <p>${module.summary}</p>
+          <a class="app-link app-step-more" href="${moduleHref(module)}" aria-label="${module.title}${NB}: voir le module">Voir le module</a>
+        </div>
+      </li>`).join("")}
+    </ol>`;
+  const path = variant("path") === "strata"
+    ? `<div class="app-strata"><div class="app-strata-stage" data-strata aria-hidden="true"><canvas></canvas></div>${steps}</div>`
+    : steps;
+
+  const organize = `
+    <aside class="app-organize app-glass" aria-labelledby="organize-title">
+      <h2 id="organize-title">Organiser cette formation</h2>
+      <p>Toute la formation ou quelques modules, sur site ou à distance, avec un programme et des exercices adaptés à votre groupe.</p>
+      <a class="app-button" href="${PAGES.contact}">Me contacter</a>
+    </aside>`;
+
+  const body = `
+    <section aria-labelledby="modules-title">
+      <div class="app-wrap">
+        ${heading("Les modules", "Parcours", "modules-title")}
+        <p class="app-path-note app-reveal">Ordre conseillé${NB}: chaque module se réserve seul, selon le niveau du groupe.</p>
+        <div class="app-formation-body"><div>${path}</div>${organize}</div>
+      </div>
+    </section>`;
+
+  document.getElementById("content").innerHTML = hero + body +
+    siteCta(`Organiser cette formation${NB}?<br>Parlons de vos apprenants.`) + siteFooter();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="shared/motion.js"></script>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }</script>
+<script type="module" src="shared/covers.js"></script>
+<script type="module" src="shared/paths.js"></script>
+</body>
+</html>
