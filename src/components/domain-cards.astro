@@ -24,6 +24,9 @@ interface Props {
 const { except, custom = true, headingLevel = 3 } = Astro.props;
 const Heading = `h${headingLevel}` as const;
 const offers = (await getOffers()).filter(({ domain }) => domain.id !== except);
+// Up to six formations fit the back of a card, simply listed: only more scroll (asked by the owner
+// on 2026-10-30; from three until then).
+const stillMax = 6;
 // A tag: the name of a formation in lowercase kebab-case, without accents (« Git / GitHub »
 // becomes « git-github », « Agilité » « agilite », asked by the owner on 2026-10-30).
 const tagOf = (name: string) =>
@@ -68,7 +71,7 @@ const tagOf = (name: string) =>
           <span>{fr.cards.domainMore}</span>
         </a>
         <div
-          class:list={["card-back", { "is-still": names.length < 3 }]}
+          class:list={["card-back", { "is-still": names.length <= stillMax }]}
           aria-hidden="true"
         >
           <div class="back-reel">
@@ -109,7 +112,7 @@ const tagOf = (name: string) =>
     let before = 0;
     let spinning = false;
 
-    // From three formations, they scroll up without end. The reel repeats them until one cycle is
+    // From seven formations, they scroll up without end. The reel repeats them until one cycle is
     // taller than the reel, then holds two cycles, so that it loops without a gap whatever the
     // size of the card.
     function fill() {
@@ -309,7 +312,7 @@ const tagOf = (name: string) =>
     letter-spacing: var(--tracking-card);
   }
 
-  /* One or two formations: simply listed, without the reel and its fades. */
+  /* Up to six formations: simply listed, without the reel and its fades. */
   .card-back.is-still .back-reel {
     display: flex;
     flex-direction: column;
