@@ -634,19 +634,27 @@ function variantImpact() {
   gsap.set(ball, { x: target.x, y: target.y });
 
   // Each letter waddles in: it sways from one foot to the other and hops at every step, then
-  // stops in its place with a little bounce and a note of a rising pentatonic scale.
-  const notes = [1, 9 / 8, 5 / 4, 3 / 2, 5 / 3, 2, 9 / 4, 5 / 2];
+  // stops in its place with a little bounce. The letters leave two steps apart, so that all
+  // their steps fall on one beat: a « tut » on each, from one foot to the other.
   const step = 0.13;
+  const beats = new Set<number>();
   const walk = 1.3;
   const steps = Math.round(walk / step);
   let arrived = quiet;
   letters.forEach((letter, index) => {
     if (letter.textContent?.trim() === "") return;
-    const start = quiet + 0.3 + index * 0.24;
+    const start = quiet + 0.3 + index * 2 * step;
     const from = WIDTH + 80 - (places[index].left - box.left);
+    // Its own short tween shows it: it reverts reliably when the video loops back.
     tl.fromTo(
       letter,
-      { x: from, autoAlpha: 1 },
+      { autoAlpha: 0 },
+      { autoAlpha: 1, duration: 0.01, immediateRender: false },
+      start,
+    );
+    tl.fromTo(
+      letter,
+      { x: from },
       { x: 0, duration: walk, ease: "power1.out", immediateRender: false },
       start,
     );
@@ -682,16 +690,30 @@ function variantImpact() {
       { rotation: 0, y: 0, duration: 0.35, ease: "back.out(4)" },
       stop,
     );
-    cues.push({ time: stop, sound: "pluck", pitch: notes[index] });
+    for (let beat = 1; beat <= steps; beat++)
+      beats.add(Math.round((start - quiet) / step) + beat);
     arrived = Math.max(arrived, stop);
   });
+  [...beats].forEach((beat) =>
+    cues.push({
+      time: quiet + beat * step,
+      sound: "step",
+      pitch: beat % 2 ? 1 : 1.19,
+    }),
+  );
 
   // The ball falls from above the screen and bounces three times onto the i.
   const fall = arrived + 0.3;
   const bounces = [fall + 0.5, fall + 0.82, fall + 1.02];
   tl.fromTo(
     ball,
-    { y: -120, autoAlpha: 1 },
+    { autoAlpha: 0 },
+    { autoAlpha: 1, duration: 0.01, immediateRender: false },
+    fall,
+  );
+  tl.fromTo(
+    ball,
+    { y: -120 },
     { y: target.y, duration: 0.5, ease: "power2.in", immediateRender: false },
     fall,
   );
@@ -715,7 +737,6 @@ function variantImpact() {
     { y: target.y, duration: 0.1, ease: "power2.in" },
     bounces[1] + 0.1,
   );
-  tl.set(ball, { autoAlpha: 0 }, 0);
   bounces.forEach((at, index) => {
     tl.fromTo(
       ball,

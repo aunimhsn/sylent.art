@@ -88,16 +88,16 @@ export function synthesize(cues, duration) {
         });
         break;
       }
-      // A soft xylophone note, for a letter that pops up.
-      case "pluck": {
-        const frequency = 523.25 * pitch;
-        add(cue.time, 0.7, (x) => {
-          const attack = Math.min(1, x / 0.004);
-          const tone =
-            Math.sin(2 * Math.PI * frequency * x) +
-            0.25 * Math.sin(2 * Math.PI * 4 * frequency * x) * Math.exp(-14 * x);
-          return gain * 0.22 * attack * tone * Math.exp(-7 * x);
-        });
+      // A step of a walking letter: a short, soft « tut ».
+      case "step": {
+        const frequency = 700 * pitch;
+        add(cue.time, 0.12, (x) =>
+          gain *
+          0.28 *
+          Math.sin(2 * Math.PI * frequency * x) *
+          Math.min(1, x / 0.002) *
+          Math.exp(-38 * x),
+        );
         break;
       }
       // The bounce of the orange ball: a little rising boop.
