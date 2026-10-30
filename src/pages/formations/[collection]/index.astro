@@ -1,0 +1,323 @@
+---
+// The page of a formation of two published modules or more (docs/mockups/formation-site.html), at
+// /formations/<collection>/ (specs.md, Formation pages): a hero with the domains where it is
+// filed above its name alone, the count of its modules and its summary; then its modules in the
+// advised order along a rail (src/scripts/formation-path.ts), beside a card that follows the
+// scroll on a computer. A formation of a single published module has no page: its address leads
+// to its module.
+import type { GetStaticPaths } from "astro";
+import OrganizeCard from "../../../components/organize-card.astro";
+import PageHero from "../../../components/page-hero.astro";
+import SectionHeading from "../../../components/section-heading.astro";
+import courses from "../../../content/courses.json";
+import fr from "../../../i18n/fr.json";
+import SiteLayout from "../../../layouts/site-layout.astro";
+import {
+  domainPath,
+  getCatalog,
+  isSingle,
+  moduleCount,
+  modulePath,
+  newDomainOf,
+  type Formation,
+} from "../../../lib/offers";
+import { href } from "../../../lib/url";
+
+export const getStaticPaths = (async () => {
+  const catalog = await getCatalog();
+  return catalog.formations.map((formation) => ({
+    params: { collection: formation.collection.id },
+    props: {
+      formation,
+      isNew: formation.modules.some((module) => newDomainOf(catalog, module)),
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  formation: Formation;
+  isNew: boolean;
+}
+
+const { formation, isNew } = Astro.props;
+
+// 301 as the others: GitHub Pages only serves a page that leads on at once (a 302 waits 2 s).
+if (isSingle(formation)) {
+  return Astro.redirect(href(modulePath(formation.modules[0])), 301);
+}
+
+const page = courses.formation;
+const { title, summary = "" } = formation.collection.data;
+const { modules, domains } = formation;
+const count = moduleCount(modules.length);
+---
+
+<SiteLayout
+  title={page.title.replace("{title}", title)}
+  description={page.description
+    .replace("{summary}", summary)
+    .replace("{count}", count)}
+  cta={page.cta}
+>
+  <PageHero title={title} id="formation-title" isNew={isNew}>
+    <ul slot="above" class="chips" aria-label={page.domains}>
+      {domains.map(({ id, data }) => (
+        <li>
+          <a class="chip" href={href(domainPath(id))}>
+            {data.title}
+          </a>
+        </li>
+      ))}
+    </ul>
+    <p class="formation-count">{count}</p>
+    <p class="formation-summary">{summary}</p>
+  </PageHero>
+
+  <section aria-labelledby="modules-title">
+    <div class="wrap">
+      <SectionHeading
+        title={page.modules.title}
+        ghost={page.modules.ghost}
+        id="modules-title"
+      />
+      <div class="formation-body">
+        <ol class="path" data-path>
+          {modules.map((module) => (
+            <li class="step reveal" data-step>
+              <span class="step-node" aria-hidden="true"></span>
+              <div class="step-card glass">
+                {module.data.framework && (
+                  <span class="framework is-card" aria-hidden="true">
+                    {fr.cards.framework}
+                  </span>
+                )}
+                <h3>
+                  {module.data.title}
+                  {module.data.framework && (
+                    <span class="visually-hidden">
+                      {fr.cards.frameworkHidden}
+                    </span>
+                  )}
+                </h3>
+                <p class="step-level">{module.data.level}</p>
+                <p>{module.data.summary}</p>
+                <a
+                  class="link step-more"
+                  href={href(modulePath(module))}
+                  aria-label={page.moduleLabel.replace(
+                    "{title}",
+                    module.data.title,
+                  )}
+                >
+                  {page.moduleMore}
+                </a>
+              </div>
+            </li>
+          ))}
+        </ol>
+        <OrganizeCard {...page.organize} onPhone />
+      </div>
+    </div>
+  </section>
+</SiteLayout>
+
+<script>
+  import "../../../scripts/formation-path";
+</script>
+
+<style>
+  /* The domains of the formation above its name, as outline chips, white under the pointer. */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .chip {
+    display: block;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--line-strong);
+    color: var(--secondary);
+    font: 700 var(--size-caption) / 1 var(--font-title);
+    transition:
+      border-color var(--duration-fast),
+      color var(--duration-fast);
+  }
+
+  .chip:is(:hover, :focus-visible) {
+    border-color: var(--text);
+    color: var(--text);
+  }
+
+  /* The count of its modules, under its name, before its summary (over the paragraphs of the
+     lead of the hero). */
+  :global(.page-lead) .formation-count {
+    margin-top: var(--space-4);
+    color: var(--text);
+    font: 700 var(--size-title-small) / 1.3 var(--font-title);
+    letter-spacing: var(--tracking-card);
+  }
+
+  :global(.page-lead) .formation-summary {
+    margin-top: var(--space-6);
+  }
+
+  .formation-body {
+    display: grid;
+    gap: var(--space-14);
+    padding-bottom: var(--space-fluid-3);
+  }
+
+  /* ── The path: the modules in the advised order, without numbers, along a rail ──
+     The rail lies over the right of the cards, 48 px inside, and runs a little past the first
+     and the last card (--overhang). No rail on a phone, where the cards need the whole width. */
+  .path {
+    --overhang: 40px;
+    --inset: 48px;
+
+    position: relative;
+    display: grid;
+    gap: var(--space-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .step {
+    position: relative;
+  }
+
+  .step-card {
+    position: relative;
+    display: grid;
+    gap: var(--space-2);
+    padding: var(--space-6)
+      calc(var(--card-padding-inline) + var(--inset) + var(--space-6))
+      var(--space-6) var(--card-padding-inline);
+    transition: background-color var(--duration-fast);
+  }
+
+  .step-card:hover {
+    background-color: var(--glass-hover);
+  }
+
+  .step-card h3 {
+    margin: 0;
+    font: 700 var(--size-card-title) / 1.2 var(--font-title);
+    letter-spacing: var(--tracking-card);
+  }
+
+  .step-level {
+    margin: 0;
+    color: var(--dim);
+    font: 600 var(--size-caption) / 1.3 var(--font-title);
+  }
+
+  .step-level + p {
+    margin: var(--space-2) 0 0;
+    max-width: var(--measure);
+    color: var(--secondary);
+    font-size: var(--size-text-small);
+  }
+
+  /* The link covers the card. */
+  .step-more {
+    justify-self: start;
+    margin-top: var(--space-3);
+  }
+
+  .step-more::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+
+  /* The mark of a framework, across the top edge of its card. */
+  .framework.is-card {
+    position: absolute;
+    z-index: 1;
+    left: var(--card-padding-inline);
+    top: 0;
+    outline: 1px solid var(--glass-line);
+    transform: translateY(-50%);
+  }
+
+  /* The rail fills with orange as the page scrolls; each module has a square on the rail, at the
+     height of its name, that lights up when the orange reaches it (src/scripts/formation-path.ts:
+     --first, --length, --progress). */
+  .path::before,
+  .path::after {
+    content: "";
+    position: absolute;
+    z-index: 2;
+    top: var(--first, 0);
+    right: calc(var(--inset) - 0.5px);
+    width: 1px;
+    height: var(--length, 100%);
+    background: linear-gradient(
+      transparent,
+      var(--line-strong) var(--overhang),
+      var(--line-strong) calc(100% - var(--overhang)),
+      transparent
+    );
+    pointer-events: none;
+  }
+
+  .path::after {
+    background: linear-gradient(transparent, var(--signal) var(--overhang));
+    box-shadow: 0 0 10px var(--signal);
+    transform: scaleY(var(--progress, 1));
+    transform-origin: top;
+  }
+
+  .step-node {
+    position: absolute;
+    z-index: 3;
+    top: 30px;
+    right: calc(var(--inset) - 6px);
+    width: 12px;
+    height: 12px;
+    border: 1px solid var(--line-strong);
+    background: var(--bg);
+    transform: rotate(45deg);
+    transition:
+      background-color var(--duration-fast),
+      border-color var(--duration-fast),
+      box-shadow var(--duration-fast);
+    pointer-events: none;
+  }
+
+  /* Without motion, the rail is full and every square lit (the script marks them all). */
+  .step.is-reached .step-node {
+    border-color: var(--signal);
+    background: var(--signal);
+    box-shadow: 0 0 14px var(--signal);
+  }
+
+  @media (width < 640px) {
+    .path {
+      --inset: 0px;
+    }
+
+    .path::before,
+    .path::after,
+    .step-node {
+      display: none;
+    }
+
+    .step-card {
+      padding-right: var(--card-padding-inline);
+    }
+  }
+
+  @media (width >= 900px) {
+    .formation-body {
+      grid-template-columns: 8fr 4fr;
+      gap: var(--space-18);
+      align-items: start;
+    }
+  }
+</style>

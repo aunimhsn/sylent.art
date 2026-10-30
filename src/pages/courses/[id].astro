@@ -1,17 +1,40 @@
 ---
 // The courses of the former site (/courses/<id>/), each redirected to the page of the module it
 // became, from the formerId of the module (specs.md, URLs and redirects). The former URL of a
-// draft leads to the page of its domain, until the module is published.
+// draft leads to the page of its formation until the module is published, or of its first domain
+// when the formation has no page.
 import type { GetStaticPaths } from "astro";
-import { domainPath, getDrafts, getOffers, modulePath } from "../../lib/offers";
+import {
+  collectionIdOf,
+  domainPath,
+  domainsOf,
+  formationPath,
+  getCatalog,
+  isSingle,
+  modulePath,
+  type Module,
+} from "../../lib/offers";
 import { href } from "../../lib/url";
 
 export const getStaticPaths = (async () => {
-  const modules = (await getOffers()).flatMap(({ modules }) => modules);
-  return [...modules, ...(await getDrafts())].flatMap((module) => {
-    const { formerId, draft, domain } = module.data;
+  const catalog = await getCatalog();
+  const { formations, drafts } = catalog;
+  const targetOfDraft = (draft: Module) => {
+    const formation = formations.find(
+      ({ collection }) => collection.id === collectionIdOf(draft),
+    );
+    if (formation && !isSingle(formation)) return formationPath(formation);
+    const offer = domainsOf(catalog, draft)[0];
+    if (!offer) {
+      throw new Error(`${draft.id}: no page to lead its former URL to`);
+    }
+    return domainPath(offer.domain.id);
+  };
+  const modules = formations.flatMap(({ modules }) => modules);
+  return [...modules, ...drafts].flatMap((module) => {
+    const { formerId, draft } = module.data;
     if (!formerId) return [];
-    const target = draft ? domainPath(domain.id) : modulePath(module);
+    const target = draft ? targetOfDraft(module) : modulePath(module);
     return [{ params: { id: String(formerId) }, props: { target } }];
   });
 }) satisfies GetStaticPaths;

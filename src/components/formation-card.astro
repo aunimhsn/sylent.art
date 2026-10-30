@@ -1,0 +1,135 @@
+---
+// The card of a formation in a domain (docs/branding.md, Components): a module card named after
+// the formation when it has a single published module; otherwise its cover (the scene of its
+// first module), its name, the count of all its published modules (« 3 modules », the whole
+// formation even when the domain lists only some of them), its modules filed under the domain as
+// links to their pages, each framework with its mark, and the band « Voir la formation » to its
+// page. Its modules are links above the band, whose link covers the card.
+import fr from "../i18n/fr.json";
+import {
+  formationPath,
+  getCatalog,
+  isSingle,
+  moduleCount,
+  modulePath,
+  newDomainOf,
+  type Filed,
+} from "../lib/offers";
+import { href } from "../lib/url";
+import Icon from "./icon.astro";
+import ModuleCard from "./module-card.astro";
+
+interface Props {
+  filed: Filed;
+}
+
+const { formation, modules } = Astro.props.filed;
+const catalog = await getCatalog();
+const isNew = modules.some((module) => newDomainOf(catalog, module));
+const { title } = formation.collection.data;
+const count = moduleCount(formation.modules.length);
+---
+
+{isSingle(formation) ? (
+  <ModuleCard module={formation.modules[0]} title={title} />
+) : (
+  <li class="card glass reveal tilt">
+    <div
+      class="cover"
+      data-scene={formation.modules[0].data.scene}
+      aria-hidden="true"
+    >
+      <canvas />
+      {isNew && (
+        <span class="cover-labels">
+          <span class="new">{fr.cards.new}</span>
+        </span>
+      )}
+    </div>
+    <h3>
+      {title}
+      {isNew && <span class="visually-hidden">{fr.cards.newHidden}</span>}
+    </h3>
+    <p class="card-count">{count}</p>
+    <ul class="formation-modules">
+      {modules.map((module) => (
+        <li>
+          <a href={href(modulePath(module))}>
+            <span>
+              {module.data.title}
+              {module.data.framework && (
+                <span class="visually-hidden">{fr.cards.frameworkHidden}</span>
+              )}
+            </span>
+            {module.data.framework && (
+              <span class="framework" aria-hidden="true">
+                {fr.cards.framework}
+              </span>
+            )}
+            <Icon name="right" size={16} />
+          </a>
+        </li>
+      ))}
+    </ul>
+    <a
+      class="card-more"
+      href={href(formationPath(formation))}
+      aria-label={fr.cards.formationLabel.replace("{title}", title)}
+    >
+      {fr.cards.formationMore}
+    </a>
+  </li>
+)}
+
+<script>
+  import "../scripts/covers";
+</script>
+
+<style>
+  /* The modules of the formation: rows under thin rules, each a link above the band of the card,
+     whose link covers the card. Under the pointer the row turns white and its arrow appears. */
+  .formation-modules {
+    position: relative;
+    z-index: 1;
+    margin: var(--space-2) 0 var(--space-5);
+    padding: 0;
+    border-bottom: 1px solid var(--line);
+    list-style: none;
+  }
+
+  .formation-modules a {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: 44px;
+    border-top: 1px solid var(--line);
+    color: var(--secondary);
+    font: 700 var(--size-ui) / 1.2 var(--font-title);
+    letter-spacing: var(--tracking-card);
+    transition: color var(--duration-fast);
+  }
+
+  .formation-modules a > span:first-child {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+
+  .formation-modules a > :global(svg) {
+    flex: none;
+    margin-left: auto;
+    opacity: 0;
+    transform: translateX(-6px);
+    transition:
+      opacity var(--duration-fast),
+      transform var(--duration-fast);
+  }
+
+  .formation-modules a:is(:hover, :focus-visible) {
+    color: var(--text);
+  }
+
+  .formation-modules a:is(:hover, :focus-visible) > :global(svg) {
+    opacity: 1;
+    transform: none;
+  }
+</style>

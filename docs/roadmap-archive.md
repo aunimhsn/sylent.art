@@ -2,6 +2,15 @@
 
 The detail of the steps of [roadmap.md](../roadmap.md) once their pull request is merged, newest first.
 
+## 13b. Wireframe and mock-up of the formations (#39)
+
+Agreed with the owner on 2026-10-30, on `docs/wireframes/formations.excalidraw`, then on the mock-up (`domain-site.html`, `formation-site.html`, `module-site.html`, `shared/formations.{js,css}`, `shared/paths.js`), the reference of step 13c:
+
+- Formation cards that list their modules filed under the domain, « 3 modules » for the whole formation, the band « Voir la formation »; a formation of a single module keeps the module card, named after the formation.
+- The formation page: its domains as chips above its name alone, « 3 modules », its summary; « Modules » over « PARCOURS », the modules along an orange rail over the right of their cards, beside « Organiser cette formation »; no rail on a phone.
+- The module page under its formation: its name as the faded word (the one word of its first domain for a module alone), the mark « Framework » (an orange rule and the word) under the title, « Voir le programme » and « Voir la formation PHP », or « Revenir en arrière » after a page of the site; « Dans la même formation ».
+- The framework mark on the cover of a card and across the top edge of a card of the path; no duration anywhere. Decisions in `specs.md` and `docs/branding.md`. After the launch: a dialog that lists the modules of a formation from its card.
+
 ## 13a. Classification of the offers in `specs.md` (#38)
 
 Agreed with the owner on 2026-10-30, on the tree `docs/wireframes/offer-classification.excalidraw` (kept):

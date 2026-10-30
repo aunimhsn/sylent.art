@@ -1,0 +1,429 @@
+---
+// The page of one module (docs/mockups/module-site.html), at /formations/<collection>/<module>/:
+// a hero over the grid with the presentation of the module, the key facts under a rule, the
+// prerequisites, the objectives and the program beside a card that follows the scroll on a
+// computer, then the other modules of its formation, or, for a module alone in its formation,
+// the other formations of its first domain. The former courses (/courses/<id>/) redirect here
+// from src/pages/courses/[id].astro.
+import type { GetStaticPaths } from "astro";
+import { render } from "astro:content";
+import CustomCard from "../../../components/custom-card.astro";
+import FormationCard from "../../../components/formation-card.astro";
+import Icon from "../../../components/icon.astro";
+import ModuleCard from "../../../components/module-card.astro";
+import OrganizeCard from "../../../components/organize-card.astro";
+import PageHero from "../../../components/page-hero.astro";
+import SectionHeading from "../../../components/section-heading.astro";
+import courses from "../../../content/courses.json";
+import fr from "../../../i18n/fr.json";
+import SiteLayout from "../../../layouts/site-layout.astro";
+import {
+  domainPath,
+  domainsOf,
+  formationPath,
+  getCatalog,
+  isSingle,
+  newDomainOf,
+  type Formation,
+  type Module,
+  type Offer,
+} from "../../../lib/offers";
+import { href } from "../../../lib/url";
+
+export const getStaticPaths = (async () => {
+  const catalog = await getCatalog();
+  return catalog.formations.flatMap((formation) =>
+    formation.modules.map((module) => {
+      const [collection, slug] = module.id.split("/");
+      return {
+        params: { collection, module: slug },
+        props: {
+          module,
+          formation,
+          offer: domainsOf(catalog, module)[0],
+          isNew: Boolean(newDomainOf(catalog, module)),
+          note: newDomainOf(catalog, module)?.data.note,
+        },
+      };
+    }),
+  );
+}) satisfies GetStaticPaths;
+
+interface Props {
+  module: Module;
+  formation: Formation;
+  /** Its first domain, with its formations: the neighbors of a module alone in its formation. */
+  offer: Offer;
+  isNew: boolean;
+  note?: string;
+}
+
+const { module, formation, offer, isNew, note } = Astro.props;
+const { domain } = offer;
+const page = courses.module;
+const { summary, audience, level, prerequisites, framework } = module.data;
+const { objectives, program } = module.data;
+const single = isSingle(formation);
+const formationTitle = formation.collection.data.title;
+// A module alone in its formation is shown by the name of its formation (« UML »).
+const title = single ? formationTitle : module.data.title;
+const otherFormations = single
+  ? offer.formations.filter(
+      (filed) => filed.formation.collection.id !== formation.collection.id,
+    )
+  : [];
+const otherModules = single
+  ? []
+  : formation.modules.filter(({ id }) => id !== module.id);
+const hasText = Boolean(module.body?.trim());
+const { Content } = await render(module);
+// The way back: the page of its formation, or of its first domain for a module alone in its
+// formation.
+const [backPath, backLabel] = single
+  ? [
+      domainPath(domain.id),
+      page.seeDomain.replace("{title}", domain.data.title),
+    ]
+  : [
+      formationPath(formation),
+      page.seeFormation.replace("{title}", formationTitle),
+    ];
+// A descender (« Alpine ») takes more room under the title, above the mark of a framework.
+const hasDescender = /[gjpqy]/.test(title);
+---
+
+<SiteLayout
+  title={(single ? page.titleAlone : page.title)
+    .replace("{title}", title)
+    .replace("{formation}", formationTitle)}
+  description={page.description.replace("{summary}", summary)}
+  cta={page.cta}
+>
+  <PageHero
+    title={title}
+    ghost={single ? domain.data.ghost : formationTitle}
+    id="module-title"
+    label={
+      single
+        ? page.domain.replace("{domain}", domain.data.title)
+        : page.formation.replace("{formation}", formationTitle)
+    }
+    isNew={isNew}
+    note={note}
+  >
+    {framework && (
+      <p
+        slot="under"
+        class:list={["framework-title", { "has-descender": hasDescender }]}
+        data-framework
+      >
+        <span class="framework-rule"></span>
+        <span class="framework-word">{fr.cards.framework}</span>
+      </p>
+    )}
+    {hasText ? <Content /> : <p>{summary}</p>}
+    <Fragment slot="actions">
+      <a class="button" href="#programme">
+        {page.seeProgram}
+      </a>
+      <a class="button is-outline" href={href(backPath)}>
+        {backLabel}
+      </a>
+    </Fragment>
+  </PageHero>
+
+  <div class="wrap">
+    <dl class="facts reveal">
+      <div>
+        <dt>{page.facts.audience}</dt>
+        {audience.map((item) => (
+          <dd>{item}</dd>
+        ))}
+      </div>
+      <div>
+        <dt>{page.facts.level}</dt>
+        <dd>{level}</dd>
+      </div>
+      <div>
+        <dt>{page.facts.formats}</dt>
+        <dd>{page.formats}</dd>
+      </div>
+    </dl>
+
+    <div class="module-body">
+      <div class="module-main">
+        <section class="reveal" aria-labelledby="prerequisites-title">
+          <h2 id="prerequisites-title">{page.prerequisites}</h2>
+          <p class="body-text">{prerequisites}</p>
+        </section>
+        <section class="reveal" aria-labelledby="objectives-title">
+          <h2 id="objectives-title">{page.objectives}</h2>
+          <ul class="objectives">
+            {objectives.map((objective) => (
+              <li>
+                <Icon name="check" size={16} />
+                <span>{objective}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+        <section id="programme" aria-labelledby="program-title">
+          <h2 class="reveal" id="program-title">
+            {page.program}
+          </h2>
+          <ul class="program">
+            {program.map((part) => (
+              <li class="part reveal" data-draw>
+                <h3>{part.title}</h3>
+                <p>{part.text}</p>
+              </li>
+            ))}
+          </ul>
+          <p class="program-end reveal">{page.programEnd}</p>
+        </section>
+      </div>
+      <OrganizeCard {...page.organize} />
+    </div>
+  </div>
+
+  {otherFormations.length + otherModules.length > 0 && (
+    <section class="section related" aria-labelledby="related-title">
+      <div class="wrap">
+        <SectionHeading
+          title={
+            single ? page.related.domain.title : page.related.formation.title
+          }
+          ghost={
+            single ? page.related.domain.ghost : page.related.formation.ghost
+          }
+          id="related-title"
+        />
+        <ul class="cards">
+          {otherFormations.map((filed) => (
+            <FormationCard filed={filed} />
+          ))}
+          {otherModules.map((other) => (
+            <ModuleCard module={other} />
+          ))}
+          <CustomCard />
+        </ul>
+      </div>
+    </section>
+  )}
+</SiteLayout>
+
+<script>
+  import { gsap } from "gsap";
+
+  // « Framework » under the title of a framework comes in once the title is there: the orange
+  // rule draws itself from left to right, then the word slides a little to the right as it is
+  // uncovered (docs/branding.md, Components). Nothing moves when the visitor asked to reduce
+  // motion.
+  const mark = document.querySelector("[data-framework]");
+  if (mark && document.documentElement.dataset.motion === "on") {
+    gsap
+      .timeline({ delay: 0.6 })
+      .fromTo(
+        mark.querySelector(".framework-rule"),
+        { scaleX: 0 },
+        { scaleX: 1, duration: 0.7, ease: "power3.out" },
+      )
+      .fromTo(
+        mark.querySelector(".framework-word"),
+        { x: -14, opacity: 0, clipPath: "inset(0 100% 0 0)" },
+        {
+          x: 0,
+          opacity: 1,
+          clipPath: "inset(0 0% 0 0)",
+          duration: 0.8,
+          ease: "power3.out",
+        },
+        "-=0.35",
+      );
+  }
+</script>
+
+<style>
+  /* « Framework » under the title of a framework (docs/branding.md, Components): a short rule in
+     orange, then the word in --dim; the orange only draws the line. Right under the title, its
+     line height made up for (its line box ends about 0.11 em under the baseline), a little lower
+     when the title has a descender (« Alpine »). */
+  .framework-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin: calc(var(--title-size) * 0.02) 0 0 0.04em;
+    color: var(--dim);
+    font: var(--label-weight) var(--size-label) / 1 var(--font-title);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+
+  .framework-title.has-descender {
+    margin-top: calc(var(--title-size) * 0.12);
+  }
+
+  .framework-rule {
+    flex: none;
+    width: var(--space-8);
+    height: 1px;
+    background: var(--signal);
+    transform-origin: left;
+  }
+
+  /* Hidden before the first paint while the title is, until the script brings it in (the
+     starting state of the reveals, global.css). */
+  :global(html[data-motion="on"].is-js) .framework-rule {
+    transform: scaleX(0);
+  }
+
+  :global(html[data-motion="on"].is-js) .framework-word {
+    opacity: 0;
+  }
+
+  /* ── Key facts: plain columns under a rule ── */
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-7) var(--space-6);
+    margin: 0;
+  }
+
+  .facts div {
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--line);
+  }
+
+  .facts dt {
+    color: var(--dim);
+    font: var(--label-weight) var(--size-label) / 1.3 var(--font-title);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+
+  .facts dd {
+    margin: var(--space-3) 0 0;
+    font: 700 var(--size-title-small) / 1.35 var(--font-title);
+    letter-spacing: var(--tracking-card);
+  }
+
+  /* One audience per line, as a list without bullets: a small gap tells a wrapped audience
+     from the next one on a phone. */
+  .facts dd + dd {
+    margin-top: var(--space-1);
+  }
+
+  /* ── Body: prerequisites, objectives and program, beside the card to organize ── */
+  .module-body {
+    display: grid;
+    gap: var(--space-14);
+    padding-block: var(--space-fluid-3);
+  }
+
+  .module-main > section + section {
+    margin-top: var(--space-fluid-3);
+  }
+
+  .module-main h2 {
+    margin: 0 0 var(--space-6);
+    font: var(--title-weight) var(--size-h2) / 1.1 var(--font-title);
+    letter-spacing: var(--tracking-title);
+  }
+
+  .body-text {
+    margin: 0;
+    max-width: var(--measure);
+    color: var(--secondary);
+    font-size: var(--size-lead);
+  }
+
+  .objectives {
+    display: grid;
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .objectives li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-4);
+    font-size: var(--size-lead);
+  }
+
+  .objectives :global(svg) {
+    flex: none;
+    box-sizing: content-box;
+    margin-top: 2px;
+    padding: var(--space-1);
+    border: 1px solid var(--line-strong);
+  }
+
+  /* The parts of the program, without numbers: they are not an order, the practice comes when
+     it is needed. Their rule draws itself as the page scrolls (data-draw, src/scripts/motion.ts). */
+  .program {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .part {
+    position: relative;
+    display: grid;
+    gap: var(--space-2);
+    padding: var(--space-6) 0;
+  }
+
+  .part::before,
+  .part::after {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .part::after {
+    background: var(--text);
+    transform: scaleX(var(--progress, 1));
+    transform-origin: left;
+  }
+
+  .part h3 {
+    margin: 0;
+    font: 700 var(--size-card-title) / 1.25 var(--font-title);
+    letter-spacing: var(--tracking-card);
+  }
+
+  .part p {
+    margin: 0;
+    color: var(--secondary);
+    font-size: var(--size-text-small);
+  }
+
+  .program-end {
+    margin: var(--space-2) 0 0;
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--line);
+    color: var(--dim);
+    font-size: var(--size-text-small);
+  }
+
+  /* The neighbors follow on without the top padding of their section. */
+  .related {
+    padding-top: 0;
+  }
+
+  @media (width >= 900px) {
+    .facts {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .module-body {
+      grid-template-columns: 8fr 4fr;
+      gap: var(--space-18);
+      align-items: start;
+    }
+  }
+</style>

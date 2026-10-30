@@ -9,8 +9,9 @@ import { currentOf, href } from "../lib/url";
 import Icon from "./icon.astro";
 
 const menu = [
-  { label: fr.navigation.courses, path: "/domaines/" },
-  { label: fr.navigation.about, path: "/a-propos/" },
+  // The domain pages are part of the offers too.
+  { label: fr.navigation.courses, path: "/formations/", also: ["/domaines/"] },
+  { label: fr.navigation.about, path: "/a-propos/", also: [] },
 ];
 const current = Astro.url.pathname;
 ---
@@ -25,8 +26,8 @@ const current = Astro.url.pathname;
       <Wordmark class="wordmark" aria-hidden="true" />
     </a>
     <nav class="nav" aria-label={fr.navigation.label}>
-      {menu.map(({ label, path }) => (
-        <a href={href(path)} aria-current={currentOf(path, current)}>
+      {menu.map(({ label, path, also }) => (
+        <a href={href(path)} aria-current={currentOf(path, current, also)}>
           {label}
         </a>
       ))}
@@ -58,11 +59,11 @@ const current = Astro.url.pathname;
   </div>
 </header>
 <div class="menu" id="menu" aria-hidden="true">
-  {menu.map(({ label, path }) => (
+  {menu.map(({ label, path, also }) => (
     <a
       class="menu-link"
       href={href(path)}
-      aria-current={currentOf(path, current)}
+      aria-current={currentOf(path, current, also)}
     >
       {label}
     </a>

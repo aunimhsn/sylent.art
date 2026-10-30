@@ -2,9 +2,10 @@
 // The cards of the domains, each leading to the page of its domain: on the home page and the
 // domains page, then a band for a custom request; under a domain page, the other domains only.
 //
-// Under the pointer (or with the keyboard focus) the content of a card slides up and its modules
-// come up in its place, on its back (docs/branding.md, Components). The back is decorative, hidden
-// from screen readers: they read the modules in the tags at the bottom of the card.
+// Under the pointer (or with the keyboard focus) the content of a card slides up and its
+// formations come up in its place, on its back (docs/branding.md, Components). The back is
+// decorative, hidden from screen readers: they read the formations in the tags at the bottom of
+// the card.
 import fr from "../i18n/fr.json";
 import { domainPath, getOffers } from "../lib/offers";
 import { href } from "../lib/url";
@@ -22,8 +23,8 @@ interface Props {
 const { except, band = true, headingLevel = 3 } = Astro.props;
 const Heading = `h${headingLevel}` as const;
 const offers = (await getOffers()).filter(({ domain }) => domain.id !== except);
-// A tag: the short name of a module in lowercase kebab-case, accents kept (« Git / GitHub »
-// becomes « git-github », « Méthode agile » « méthode-agile »).
+// A tag: the name of a formation in lowercase kebab-case, accents kept (« Git / GitHub »
+// becomes « git-github », « Agilité » « agilité »).
 const tagOf = (name: string) =>
   name
     .toLowerCase()
@@ -33,54 +34,55 @@ const tagOf = (name: string) =>
 ---
 
 <ul class="cards">
-  {offers.map(({ domain: { id, data }, modules }) => (
-    <li class="card glass reveal" data-domain={id}>
-      <div class="cover" data-scene={data.scene} aria-hidden="true">
-        <canvas />
-        {data.isNew && <span class="new">{fr.cards.new}</span>}
-      </div>
-      <Heading>
-        {data.title}
-        {data.isNew && (
-          <span class="visually-hidden">{fr.cards.newHidden}</span>
-        )}
-      </Heading>
-      <p>{data.summary}</p>
-      <ul class="card-tags" aria-label={fr.cards.domainModules}>
-        {modules.map(({ data: module }) => (
-          <li>
-            <span aria-hidden="true">
-              #{tagOf(module.shortTitle ?? module.title)}
-            </span>
-            <span class="visually-hidden">
-              {module.shortTitle ?? module.title}
-            </span>
-          </li>
-        ))}
-      </ul>
-      <a
-        class="card-more"
-        href={href(domainPath(id))}
-        aria-label={fr.cards.domainLabel.replace("{title}", data.title)}
-      >
-        <span>{fr.cards.domainMore}</span>
-      </a>
-      <div
-        class:list={["card-back", { "is-still": modules.length < 3 }]}
-        aria-hidden="true"
-      >
-        <div class="back-reel">
-          <ul class="back-list">
-            {modules.map(({ data: module }) => (
-              <li>
-                <strong>{module.shortTitle ?? module.title}</strong>
-              </li>
-            ))}
-          </ul>
+  {offers.map(({ domain: { id, data }, formations }) => {
+    const names = formations.map(
+      ({ formation }) => formation.collection.data.title,
+    );
+    return (
+      <li class="card glass reveal" data-domain={id}>
+        <div class="cover" data-scene={data.scene} aria-hidden="true">
+          <canvas />
+          {data.isNew && <span class="new">{fr.cards.new}</span>}
         </div>
-      </div>
-    </li>
-  ))}
+        <Heading>
+          {data.title}
+          {data.isNew && (
+            <span class="visually-hidden">{fr.cards.newHidden}</span>
+          )}
+        </Heading>
+        <p>{data.summary}</p>
+        <ul class="card-tags" aria-label={fr.cards.domainFormations}>
+          {names.map((name) => (
+            <li>
+              <span aria-hidden="true">#{tagOf(name)}</span>
+              <span class="visually-hidden">{name}</span>
+            </li>
+          ))}
+        </ul>
+        <a
+          class="card-more"
+          href={href(domainPath(id))}
+          aria-label={fr.cards.domainLabel.replace("{title}", data.title)}
+        >
+          <span>{fr.cards.domainMore}</span>
+        </a>
+        <div
+          class:list={["card-back", { "is-still": names.length < 3 }]}
+          aria-hidden="true"
+        >
+          <div class="back-reel">
+            <ul class="back-list">
+              {names.map((name) => (
+                <li>
+                  <strong>{name}</strong>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </li>
+    );
+  })}
   {band && (
     <li class="card reveal is-band">
       <div class="card-text">
@@ -99,7 +101,7 @@ const tagOf = (name: string) =>
   import "../scripts/covers";
 
   // Under the pointer or with the keyboard focus, the content above the band goes up and out,
-  // and the list of the modules comes up from under it at the same pace: the card keeps its
+  // and the list of the formations comes up from under it at the same pace: the card keeps its
   // shape (it turned half a turn until 2026-10-29, which jerked when the pointer passed fast).
   // Only on pointer devices: touch screens keep the cards still.
   const motion = document.documentElement.dataset.motion === "on";
@@ -109,7 +111,7 @@ const tagOf = (name: string) =>
     const back = card.querySelector(".card-back") as HTMLElement;
     const reel = back.querySelector(".back-reel") as HTMLElement;
     const list = reel.querySelector(".back-list") as HTMLElement;
-    const modules = [...list.children];
+    const names = [...list.children];
     const still = back.classList.contains("is-still");
     let items: HTMLElement[] = [];
     let copies = 0;
@@ -117,19 +119,19 @@ const tagOf = (name: string) =>
     let before = 0;
     let spinning = false;
 
-    // From three modules, they scroll up without end. The reel repeats them until one cycle is
+    // From three formations, they scroll up without end. The reel repeats them until one cycle is
     // taller than the reel, then holds two cycles, so that it loops without a gap whatever the
     // size of the card.
     function fill() {
       const row = (list.firstElementChild as HTMLElement).offsetHeight;
       const height = reel.clientHeight;
       if (!row || !height) return false;
-      const needed = Math.ceil((height / row + 1) / modules.length);
+      const needed = Math.ceil((height / row + 1) / names.length);
       if (needed !== copies) {
         copies = needed;
         list.replaceChildren(
           ...Array.from({ length: copies * 2 }, () =>
-            modules.map((module) => module.cloneNode(true)),
+            names.map((name) => name.cloneNode(true)),
           ).flat(),
         );
         items = [...list.children] as HTMLElement[];
@@ -138,7 +140,7 @@ const tagOf = (name: string) =>
       return true;
     }
 
-    // Each module comes in at the bottom, and near the top moves away toward the back.
+    // Each formation comes in at the bottom, and near the top moves away toward the back.
     function spin(now: number) {
       if (!card.classList.contains("is-open")) {
         spinning = false;
@@ -211,9 +213,9 @@ const tagOf = (name: string) =>
 </script>
 
 <style>
-  /* The modules of the domain, at the bottom of the card, aligned from one card to the next:
+  /* The formations of the domain, at the bottom of the card, aligned from one card to the next:
      plain text in lowercase kebab-case, smaller and grayer than the sentence, as the tags under
-     a post, not links (asked by the owner on 2026-10-29: a school finds its module without
+     a post, not links (asked by the owner on 2026-10-29: a school finds its formation without
      passing the pointer). Screen readers hear the real name instead (« Git / GitHub »). */
   .card-tags {
     display: flex;
@@ -232,7 +234,7 @@ const tagOf = (name: string) =>
   }
 
   /* The back covers the card above its white band, which stays in place and keeps growing a
-     little under the pointer. It clips the list of the modules, which waits under it, and lets
+     little under the pointer. It clips the list of the formations, which waits under it, and lets
      the pointer through to the link of the card, which covers the whole card. */
   .card-back {
     position: absolute;
@@ -249,7 +251,7 @@ const tagOf = (name: string) =>
     visibility: visible;
   }
 
-  /* The modules scroll up without end over the whole height of the back, so that the reel is
+  /* The formations scroll up without end over the whole height of the back, so that the reel is
      centered above the band. */
   .back-reel {
     position: relative;
@@ -263,7 +265,7 @@ const tagOf = (name: string) =>
     );
   }
 
-  /* The slide: the content above the band goes up by --slide, and the reel of the modules comes
+  /* The slide: the content above the band goes up by --slide, and the reel of the formations comes
      up from as far below (see the script). Both follow one animated value, --card-open, from 0
      to 1: two transitions of their own drifted apart when the pointer left during the slide, and
      the list ran over the content. */
@@ -317,7 +319,7 @@ const tagOf = (name: string) =>
     letter-spacing: var(--tracking-card);
   }
 
-  /* One or two modules: simply listed, without the reel and its fades. */
+  /* One or two formations: simply listed, without the reel and its fades. */
   .card-back.is-still .back-reel {
     display: flex;
     flex-direction: column;

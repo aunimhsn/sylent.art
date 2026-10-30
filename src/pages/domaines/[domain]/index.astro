@@ -1,11 +1,12 @@
 ---
 // The page of one domain, at /domaines/<domain>/ (specs.md, Domain pages): a hero as on a module
-// page, without a faded word, then the cards of its published modules and of a custom
-// request, then the other domains. A domain whose modules are all drafts has no page.
+// page, without a faded word, then the cards of its formations, with only their modules filed
+// under it (src/components/formation-card.astro), and of a custom request, then the other
+// domains. A domain whose modules are all drafts has no page.
 import type { GetStaticPaths } from "astro";
 import CustomCard from "../../../components/custom-card.astro";
 import DomainCards from "../../../components/domain-cards.astro";
-import ModuleCard from "../../../components/module-card.astro";
+import FormationCard from "../../../components/formation-card.astro";
 import PageHero from "../../../components/page-hero.astro";
 import SectionHeading from "../../../components/section-heading.astro";
 import courses from "../../../content/courses.json";
@@ -22,7 +23,7 @@ interface Props {
   offer: Offer;
 }
 
-const { domain, modules } = Astro.props.offer;
+const { domain, formations } = Astro.props.offer;
 const page = courses.domain;
 const { title, summary, isNew, note } = domain.data;
 ---
@@ -36,14 +37,14 @@ const { title, summary, isNew, note } = domain.data;
     <p>{summary}</p>
   </PageHero>
 
-  <section class="domain-modules" aria-labelledby="modules-title">
+  <section class="domain-formations" aria-labelledby="formations-title">
     <div class="wrap">
-      <h2 class="visually-hidden" id="modules-title">
-        {page.modules}
+      <h2 class="visually-hidden" id="formations-title">
+        {page.formations}
       </h2>
       <ul class="cards">
-        {modules.map((module) => (
-          <ModuleCard module={module} domain={domain} />
+        {formations.map((filed) => (
+          <FormationCard filed={filed} />
         ))}
         <CustomCard />
       </ul>
