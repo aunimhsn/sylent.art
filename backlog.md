@@ -16,6 +16,7 @@ What is noted and not being done: an evolving list, read when the next work is c
 ## Features
 
 - **A « predict the output » game**: guess what a piece of code prints, as a playful page of the site. Noted on 2026-10-30.
+- **A skill of interactive tuning pages**: on 2026-10-30, the fonts of the domain cards were chosen on a page of trials (`outputs/2026-10-30-card-fonts/index.html`, deleted on 2026-10-31): the card drawn several times side by side, each with a font and its sizes, sliders and buttons to tune them live on the owner's screen, the values to copy shown under each card. Making it a skill (or a part of `html-mockups`) would serve every fine visual choice that the tab groups compare less well (a size, an offset, an opacity). For the templates first. Noted on 2026-10-30.
 
 ## Large works
 
