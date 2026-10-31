@@ -37,8 +37,8 @@ Read only by the steps that need them:
 - [ ] **17. Site in line with the course material**: the owner writes, in `sylent-courses`, the material of the 16 modules that have none yet, some of them from the owner's slides on Google Slides (HTML, CSS, PHP, Vue, Alpine, Laravel, Django, Cypress, Robomind, Machine learning, PostgreSQL, UML, Design patterns, CI/CD, Claude Code, Prompt engineering); then each module page is updated from its lessons and exercises, as in step 8b (chapter themes and exercise names only, the repository being private).
 
 - [ ] **18. Retrospective** (phase 8 of `process.md`, asked on 2026-10-31).
-  - [x] 18a. Lessons of the project written in `process.md` and `design-journal.md`; the skills copied into `.claude/skills/` of the project.
-  - [ ] 18b. The [astro-static-website-template](https://github.com/aunimhsn/astro-static-website-template) repository (public template): conventions, process, Claude Code setup and skills, and an Astro skeleton of a static brand site (SEO, favicon, not-found page, redirects, checks, CI and deployment), without the services specific to sylent.art.
-  - [ ] 18c. The lessons that apply to every project brought to the Rust template, renamed `rust-cli-template`.
+  - [x] 18a. Lessons of the project (#52).
+  - [x] 18b. The [astro-static-website-template](https://github.com/aunimhsn/astro-static-website-template) repository ([#1](https://github.com/aunimhsn/astro-static-website-template/pull/1)).
+  - [ ] 18c. The lessons that apply to every project brought to the Rust template, renamed `rust-cli-template`, with the two phases added to the web template (9. Polish, optional; 10. Next cycle, fed by a « Later » list of `roadmap.md`); the same two phases brought back to the `process.md` of this project.
 
 The steps may be split into sub-steps when a pull request grows too large.
