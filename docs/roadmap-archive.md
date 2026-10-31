@@ -2,6 +2,14 @@
 
 The detail of the steps of [roadmap.md](../roadmap.md) once their pull request is merged, newest first.
 
+## 18b. The astro-static-website-template repository ([#1](https://github.com/aunimhsn/astro-static-website-template/pull/1))
+
+Step 18, retrospective (2026-10-31): the public template [aunimhsn/astro-static-website-template](https://github.com/aunimhsn/astro-static-website-template), for static brand websites built with Astro and hosted on GitHub Pages, made from this project. The conventions (`CLAUDE.md`, with the rules added to the Rust template since and the owner's preferences), `process.md` with two new phases asked by the owner (9. Polish, optional; 10. Next cycle, fed by a « Later » list of `roadmap.md`), the skeletons of `specs.md`, `roadmap.md` and the notes of `docs/` (`docs/branding.md` starting with the brand assets to ask for), the `code-reviewer` subagent and the two skills updated with the lessons. The Astro skeleton: base layout with metadata, favicon and Open Graph, tokens, home page, legal notice, not-found and French redirect pages, sitemap and `robots.txt`; the former addresses in `src/data/urls.json`; the checks of the addresses and of the width of every page; `npm run brand:images` for the favicon and the preview card; CI, deployment (skipped on the template itself) and Dependabot. Left out: Formspree, GoatCounter, GSAP, Three.js and the font metrics. The repository has the single topic `template`, as `rust-cli-template`, which the Rust template was renamed to the same day.
+
+## 18a. Lessons of the project (#52)
+
+The retrospective of the project in `process.md` (content tree in Excalidraw before the wireframes, brand assets to ask for, scripts chosen after the mock-up, a scale of tokens from the start, the mock-up checked on the owner's phone, a mock-up server of its own port without cache, the width check from the skeleton, a launch checklist) and in its table of lessons; three lessons in `design-journal.md`; the `excalidraw-wireframes` and `html-mockups` skills copied into `.claude/skills/`, the owner's personal copy removed (one source of truth per project).
+
 ## 14b. Site ready to share (#46, #47)
 
 Step 14, launch: what the site needs before its links are shared, in two pull requests.
