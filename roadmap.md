@@ -18,7 +18,7 @@ Read only by the steps that need them:
 
 ## Steps
 
-### Cycle 1: the site online
+### Cycle 1: the site online (done on 2026-10-31)
 
 - [x] **0. Project setup** (#1): conventions, process, folders, Claude Code setup, first draft of `specs.md`.
 - [x] **1. Specifications** (#2): audiences, value proposition, offers by domain, form, URLs, legal information; Formspree and GoatCounter chosen.
@@ -34,11 +34,7 @@ Read only by the steps that need them:
 - [x] **11. French URLs in a tree** (#30): `/domaines/<domain>/modules/<module>/`, `/a-propos/`, `/confidentialite/`, `/mentions-legales/`, redirects from every former path.
 - [x] **12. Domain pages** (#31): `/domaines/<domain>/` over the faded word « Domaine », reached from the domain cards (« Explorer le domaine »); `/domaines/` shows the domain cards; the former courses of the drafts lead to their domain page.
 - [x] **13. Classification of the offers**: domains → formations → modules, addresses `/formations/<formation>/<module>/`; 13a specifications (#38), 13b wireframe and mock-up (#39), 13c build (#41).
-- [ ] **14. Launch**, announced on LinkedIn, Instagram and the owner's Facebook page (asked on 2026-10-30): the supports are prepared before the switch, and published after it.
-  - [x] 14a. Communication supports (#45): teaser and launch video, story and feed, the text of the post; kept by the owner out of the repository.
-  - [x] 14b. Site ready to share (#46, #47): 404 page, French redirect pages, sitemap, `robots.txt`, GoatCounter on `sylent.art` only, Open Graph tags and preview card.
-  - [ ] 14c. Switch, on 2026-10-30 evening, as soon as possible as the owner asked (TTL left at 4 hours). Done: on the preview, the LinkedIn Post Inspector keeps `?ref=linkedin` in the link and shows a card for `/about/` (it follows the redirect page); its card of the home page is a blurry 160 px thumbnail, to check in a draft post after the switch. The DNS records given to the owner (GitHub Pages `A` and `AAAA` on the apex, `www` CNAME `aunimhsn.github.io.`); `SITE_URL`, `BASE_PATH` and `check:base` removed. To do: set the custom domain in the Pages settings and enforce HTTPS; check that `www.sylent.art`, the address shown on the preview card, redirects to `sylent.art` (see [Deployment](docs/technical-choices.md#deployment)); check the cards of the links with the LinkedIn Post Inspector and the Facebook Sharing Debugger; show the owner how to stop counting their own visits (`#toggle-goatcounter`, [External services](docs/external-services.md)).
-  - [ ] 14d. Publication by the owner: the teaser before the switch, which it announces on 3 November 2026; the launch video and the post once `sylent.art` is online, the link `https://sylent.art/?ref=linkedin` on LinkedIn and `?ref=facebook` on Facebook, so that GoatCounter tells the networks apart. The owner's Google Business Profile (asked on 2026-10-30): before the switch, the address hidden (a service area instead, the home address is never shown), the description of the new positioning, the category (« Formateur »), the phone; after the switch only, the link to the site `https://sylent.art/?ref=google`.
+- [x] **14. Launch** (#45–#48): communication supports, site ready to share (404, French redirects, sitemap, Open Graph, GoatCounter), switch of `sylent.art` to GitHub Pages with HTTPS, publication on LinkedIn, Facebook and the Google Business Profile.
 - [x] **18. Retrospective** (#52, #53, #54): lessons in `process.md` and `design-journal.md`; [astro-static-website-template](https://github.com/aunimhsn/astro-static-website-template) ([#1](https://github.com/aunimhsn/astro-static-website-template/pull/1), [#4](https://github.com/aunimhsn/astro-static-website-template/pull/4)); [rust-cli-template](https://github.com/aunimhsn/rust-cli-template) ([#17](https://github.com/aunimhsn/rust-cli-template/pull/17), [#18](https://github.com/aunimhsn/rust-cli-template/pull/18)); the process as a toolbox around a backlog, with its diagram.
 
 The steps may be split into sub-steps when a pull request grows too large. When no step is left, Claude Code proposes the next items of the backlog to the owner.
