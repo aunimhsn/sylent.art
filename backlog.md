@@ -7,6 +7,7 @@ What is noted and not being done: an evolving list, read when the next work is c
 - **Texts not reviewed in detail**: written by Claude Code, not yet read closely by the owner: `src/content/modules/php/poo.md`, `src/content/modules/python/poo.md`, `src/content/modules/css/tailwind.md`, and the summaries of the formations in `src/content/collections/`. Noted on 2026-10-30.
 - **The orange fluid of the grids**: its energy, which the owner loves, to tune by eye. Noted on 2026-10-28.
 - **The Twitch link**: in the footer and the contact page, once the owner's streams start. Waits on: the first streams, around December 2026. Noted on 2026-10-27.
+- **Comments and docs from the preview era**: `src/lib/url.ts`, `src/pages/robots.txt.ts`, `src/layouts/base-layout.astro` and `docs/external-services.md` still speak of the `github.io` preview as served; `docs/technical-choices.md` (Deployment) gives no complete recipe to rebuild a preview under a base (`astro build --outDir` outside the repository, linkinator with `--server-root`, `scripts/check-former-urls.mjs <folder> <base>`), and the base support is no longer checked: keep it with a check, or remove it (`href()`, `isPreview`). From the code review of PR #48. Noted on 2026-10-30.
 
 ## Edge cases
 
