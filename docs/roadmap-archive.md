@@ -14,6 +14,14 @@ Step 18, retrospective (2026-10-31): the public template [aunimhsn/astro-static-
 
 The retrospective of the project in `process.md` (content tree in Excalidraw before the wireframes, brand assets to ask for, scripts chosen after the mock-up, a scale of tokens from the start, the mock-up checked on the owner's phone, a mock-up server of its own port without cache, the width check from the skeleton, a launch checklist) and in its table of lessons; three lessons in `design-journal.md`; the `excalidraw-wireframes` and `html-mockups` skills copied into `.claude/skills/`, the owner's personal copy removed (one source of truth per project).
 
+## 14d. Publication (2026-10-31)
+
+Step 14, launch: the owner published the teaser, the launch video and the post on LinkedIn and Facebook, with the links `https://sylent.art/?ref=linkedin` and `?ref=facebook` that GoatCounter tells apart, and added `https://sylent.art/?ref=google` to their Google Business Profile (the home address hidden, a service area instead). Confirmed by the owner on 2026-10-31, who then no longer needed the videos: they were deleted from `outputs/`.
+
+## 14c. Switch (#48)
+
+Step 14, launch, on 2026-10-30 evening: the DNS records set by the owner at Squarespace (GitHub Pages `A` and `AAAA` on the apex, `www` CNAME `aunimhsn.github.io.`), `SITE_URL`, `BASE_PATH` and `check:base` removed from the deployment (#48), the custom domain set in the Pages settings and HTTPS enforced. Checked on 2026-10-31: `https://sylent.art/` answers with a Let's Encrypt certificate (renewed by GitHub, valid until 2027-01-28); `http://`, `www.sylent.art` and `https://aunimhsn.github.io/sylent.art/` redirect to it (301); the former addresses lead to their French pages (`/about` → `/a-propos/`), an unknown address to the not-found page; `robots.txt`, `sitemap.xml`, the favicon, the Open Graph tags and the preview card (JPEG 1200 × 630) are served, and GoatCounter counts on `sylent.art`. The cards of the links were checked by the owner in their own posts; the owner stops counting their own visits with `https://sylent.art/#toggle-goatcounter` in each browser ([External services](external-services.md)).
+
 ## 14b. Site ready to share (#46, #47)
 
 Step 14, launch: what the site needs before its links are shared, in two pull requests.
