@@ -1,6 +1,10 @@
 # Roadmap
 
-Steps of the redesign described in [specs.md](specs.md), following the phases of [process.md](process.md). Each step is delivered in its own pull request, which checks its box.
+The steps chosen for the site described in [specs.md](specs.md), following [process.md](process.md). Each step is delivered in its own pull request, which checks its box. What is noted and not chosen yet lives in [backlog.md](backlog.md).
+
+## Size of the project
+
+A brand site of a few page types: every tool, in order, for the first cycle (steps 0 to 14); since the launch, each change runs only the tools it needs (`process.md`, Size a change).
 
 ## Reference
 
@@ -10,8 +14,11 @@ Read only by the steps that need them:
 - [Branding](docs/branding.md): the visual identity and every design decision of the mock-up (colors, fonts, components, motion, the orange).
 - [External services](docs/external-services.md): limits and terms of GitHub Pages, Formspree and GoatCounter, and the risks accepted by the owner.
 - [Roadmap archive](docs/roadmap-archive.md): the detail of the steps done, moved there once their pull request is merged.
+- [Backlog](backlog.md): what is noted and not chosen yet (testimonials, more modules, the polish…), read when the next work is chosen.
 
 ## Steps
+
+### Cycle 1: the site online
 
 - [x] **0. Project setup** (#1): conventions, process, folders, Claude Code setup, first draft of `specs.md`.
 - [x] **1. Specifications** (#2): audiences, value proposition, offers by domain, form, URLs, legal information; Formspree and GoatCounter chosen.
@@ -32,13 +39,6 @@ Read only by the steps that need them:
   - [x] 14b. Site ready to share (#46, #47): 404 page, French redirect pages, sitemap, `robots.txt`, GoatCounter on `sylent.art` only, Open Graph tags and preview card.
   - [ ] 14c. Switch, on 2026-10-30 evening, as soon as possible as the owner asked (TTL left at 4 hours). Done: on the preview, the LinkedIn Post Inspector keeps `?ref=linkedin` in the link and shows a card for `/about/` (it follows the redirect page); its card of the home page is a blurry 160 px thumbnail, to check in a draft post after the switch. The DNS records given to the owner (GitHub Pages `A` and `AAAA` on the apex, `www` CNAME `aunimhsn.github.io.`); `SITE_URL`, `BASE_PATH` and `check:base` removed. To do: set the custom domain in the Pages settings and enforce HTTPS; check that `www.sylent.art`, the address shown on the preview card, redirects to `sylent.art` (see [Deployment](docs/technical-choices.md#deployment)); check the cards of the links with the LinkedIn Post Inspector and the Facebook Sharing Debugger; show the owner how to stop counting their own visits (`#toggle-goatcounter`, [External services](docs/external-services.md)).
   - [ ] 14d. Publication by the owner: the teaser before the switch, which it announces on 3 November 2026; the launch video and the post once `sylent.art` is online, the link `https://sylent.art/?ref=linkedin` on LinkedIn and `?ref=facebook` on Facebook, so that GoatCounter tells the networks apart. The owner's Google Business Profile (asked on 2026-10-30): before the switch, the address hidden (a service area instead, the home address is never shown), the description of the new positioning, the category (« Formateur »), the phone; after the switch only, the link to the site `https://sylent.art/?ref=google`.
-- [ ] **15. Testimonials**: once the owner has collected at least three (LinkedIn recommendations, feedback from schools and learners, with consent to publish), add a testimonials section.
-- [ ] **16. More modules** (after the launch): TypeScript, C, an advanced Python module (data classes, Pydantic), and the modules to come of the tree of step 13 (DOM, PDO, POO in JavaScript, data visualization, CSS split into Flexbox and Grid), from the course material of `sylent-courses`; update the offers of `specs.md` first. Publish « UX / UI » (a draft in « Conception logicielle » since 2026-10-30, its program from the owner's course « Maquetter une application », brought up to Excalidraw, HTML and Claude Code) when the owner decides: a scene of its own instead of `layout`, its place among the formations of the domain, and the summary of the domain widened to the interface (e.g. « Penser un logiciel avant de l’écrire : ses données, sa structure, son interface. »). A formation card lists four modules at most, then a row « Et 6 autres » in gray to the page of the formation, so that a large formation doesn't stretch its row of cards (asked by the owner on 2026-10-30; four at most at the launch).
-- [ ] **17. Site in line with the course material**: the owner writes, in `sylent-courses`, the material of the 16 modules that have none yet, some of them from the owner's slides on Google Slides (HTML, CSS, PHP, Vue, Alpine, Laravel, Django, Cypress, Robomind, Machine learning, PostgreSQL, UML, Design patterns, CI/CD, Claude Code, Prompt engineering); then each module page is updated from its lessons and exercises, as in step 8b (chapter themes and exercise names only, the repository being private).
+- [x] **18. Retrospective** (#52, #53, #54): lessons in `process.md` and `design-journal.md`; [astro-static-website-template](https://github.com/aunimhsn/astro-static-website-template) ([#1](https://github.com/aunimhsn/astro-static-website-template/pull/1), [#4](https://github.com/aunimhsn/astro-static-website-template/pull/4)); [rust-cli-template](https://github.com/aunimhsn/rust-cli-template) ([#17](https://github.com/aunimhsn/rust-cli-template/pull/17), [#18](https://github.com/aunimhsn/rust-cli-template/pull/18)); the process as a toolbox around a backlog, with its diagram.
 
-- [ ] **18. Retrospective** (phase 8 of `process.md`, asked on 2026-10-31).
-  - [x] 18a. Lessons of the project (#52).
-  - [x] 18b. The [astro-static-website-template](https://github.com/aunimhsn/astro-static-website-template) repository ([#1](https://github.com/aunimhsn/astro-static-website-template/pull/1)).
-  - [ ] 18c. The lessons that apply to every project brought to the Rust template, renamed `rust-cli-template`, with the two phases added to the web template (9. Polish, optional; 10. Next cycle, fed by a « Later » list of `roadmap.md`); the same two phases brought back to the `process.md` of this project.
-
-The steps may be split into sub-steps when a pull request grows too large.
+The steps may be split into sub-steps when a pull request grows too large. When no step is left, Claude Code proposes the next items of the backlog to the owner.
